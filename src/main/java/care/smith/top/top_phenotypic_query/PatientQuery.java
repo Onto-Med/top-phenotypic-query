@@ -41,7 +41,7 @@ public class PatientQuery {
     this.output = output;
   }
 
-  public String getParameterQuery(FHIRDataConfig conf, String... params) {
+  public String getParameterQuery(DataAdapterConfig conf, String... params) {
     return getParameterQueryBase() + conf.getParametersAsString(params);
   }
 

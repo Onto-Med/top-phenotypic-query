@@ -9,10 +9,10 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-public class FHIRDataConfig {
+public class DataAdapterConfig {
 
   private String id;
-  private String base;
+  private Map<String, String> connection;
   private String valueSeparator;
   private String parameterSeparator;
   private Operators operators;
@@ -20,11 +20,11 @@ public class FHIRDataConfig {
   private PatientQuery patientQuery;
   private Map<String, PropertyQuery> propertyQueries = new HashMap<>();
 
-  public static FHIRDataConfig getInstance(String yamlFilePath) {
+  public static DataAdapterConfig getInstance(String yamlFilePath) {
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-    FHIRDataConfig config = null;
+    DataAdapterConfig config = null;
     try {
-      config = mapper.readValue(new File(yamlFilePath), FHIRDataConfig.class);
+      config = mapper.readValue(new File(yamlFilePath), DataAdapterConfig.class);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -39,12 +39,16 @@ public class FHIRDataConfig {
     this.id = id;
   }
 
-  public String getBase() {
-    return base;
+  public Map<String, String> getConnection() {
+    return connection;
   }
 
-  public void setBase(String base) {
-    this.base = base;
+  public String getConnectionAttribute(String name) {
+    return connection.get(name);
+  }
+
+  public void setConnection(Map<String, String> connection) {
+    this.connection = connection;
   }
 
   public String getValueSeparator() {
@@ -110,10 +114,10 @@ public class FHIRDataConfig {
 
   @Override
   public String toString() {
-    return "FHIRDataAdapter [id="
+    return "FHIRDataConfig [id="
         + id
-        + ", base="
-        + base
+        + ", connection="
+        + connection
         + ", valueSeparator="
         + valueSeparator
         + ", parameterSeparator="

@@ -1,5 +1,6 @@
 id: SMITH_FHIR_Adapter
-base: http://localhost:8080/baseR4/
+connection:
+    base: http://localhost:8080/baseR4/
 valueSeparator: ','
 parameterSeparator: '&'
 operators:

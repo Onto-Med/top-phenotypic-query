@@ -53,7 +53,7 @@ public class GlobalParameters {
     return getId().replace("{id}", id);
   }
 
-  public String getId(FHIRDataConfig conf, String... ids) {
+  public String getId(DataAdapterConfig conf, String... ids) {
     return getId().replace("{id}", conf.getValuesAsString(ids));
   }
 
@@ -69,7 +69,7 @@ public class GlobalParameters {
     return getSubject().replace("{subject}", subject);
   }
 
-  public String getSubject(FHIRDataConfig conf, String... subjects) {
+  public String getSubject(DataAdapterConfig conf, String... subjects) {
     return getSubject().replace("{subject}", conf.getValuesAsString(subjects));
   }
 
