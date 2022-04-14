@@ -9,6 +9,8 @@ public class GlobalParameters {
   private String id;
   private String subject;
 
+  private DataAdapterConfig dataAdapterConfig;
+
   public String getOnlyId() {
     return onlyId;
   }
@@ -69,12 +71,17 @@ public class GlobalParameters {
     return getSubject().replace("{subject}", subject);
   }
 
-  public String getSubject(DataAdapterConfig conf, String... subjects) {
-    return getSubject().replace("{subject}", conf.getValuesAsString(subjects));
+  public String getSubject(String... subjects) {
+    return getSubject().replace("{subject}", dataAdapterConfig.getValuesAsString(subjects));
   }
 
   public void setSubject(String subject) {
     this.subject = subject;
+  }
+
+  protected GlobalParameters setDataAdapterConfig(DataAdapterConfig dataAdapterConfig) {
+    this.dataAdapterConfig = dataAdapterConfig;
+    return this;
   }
 
   @Override

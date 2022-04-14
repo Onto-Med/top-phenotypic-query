@@ -9,6 +9,8 @@ public class PatientQuery {
   private PatientQueryParameters parameters;
   private Map<String, String> output;
 
+  private DataAdapterConfig dataAdapterConfig;
+
   public String getAllQuery() {
     return allQuery;
   }
@@ -41,8 +43,13 @@ public class PatientQuery {
     this.output = output;
   }
 
-  public String getParameterQuery(DataAdapterConfig conf, String... params) {
-    return getParameterQueryBase() + conf.getParametersAsString(params);
+  public String getParameterQuery(String... params) {
+    return getParameterQueryBase() + dataAdapterConfig.getParametersAsString(params);
+  }
+
+  protected PatientQuery setDataAdapterConfig(DataAdapterConfig dataAdapterConfig) {
+    this.dataAdapterConfig = dataAdapterConfig;
+    return this;
   }
 
   @Override

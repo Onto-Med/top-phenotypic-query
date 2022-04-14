@@ -14,7 +14,6 @@ public class Test {
 
     System.out.println(
         q.getParameterQuery(
-            conf,
             params.getGender("male"),
             params.getBirthdate(ge, "1990-01-01"),
             params.getBirthdate(lt, "2000-31-12"),

@@ -84,7 +84,7 @@ public class DataAdapterConfig {
   }
 
   public PatientQuery getPatientQuery() {
-    return patientQuery;
+    return patientQuery.setDataAdapterConfig(this);
   }
 
   public void setPatientQuery(PatientQuery patientQuery) {
