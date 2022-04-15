@@ -1,0 +1,50 @@
+id: SMITH_FHIR_Adapter
+connection:
+    base: http://localhost:8080/baseR4/
+valueSeparator: ','
+paramSeparator: '&'
+operEQ: '='
+operGT: '=gt'
+operGE: '=ge'
+operLT: '=lt'
+operLE: '=le'
+paramOnlyId: _elements=id
+paramOnlyCount: _summary=count
+paramOnlySubject: _elements=subject
+paramLimit: _count={limit}
+paramId: _id={id}
+paramSubject: subject={subject}
+patientQuery: 
+    allQuery: Patient
+    paramQueryBase: Patient?
+    paramGender: gender={gender}
+    paramBirthdate: birthdate{operator}{birthdate}       
+    output:
+      id: Patient.id
+      gender: Patient.gender
+      birthdate: Patient.birthdate
+propertyQueries:
+    - type: SingleObservation
+      allQuery: Observation
+      paramQueryBase: Observation?
+      paramCode: code={code}
+      paramValueQuantity: value-quantity{operator}{value}
+      paramValueConcept: value-concept={value}
+      paramDate: date{operator}{date}
+      paramSortInc: _sort=date
+      paramSortDec: _sort=-date
+      output:
+        id: Observation.id
+        code: Observation.code
+        value: Observation.value
+    - type: CompositeObservation
+      allQuery: Observation
+      paramQueryBase: Observation?
+      paramCode: component-code={code}
+      paramDate: date{operator}{date}
+      paramSortInc: _sort=date
+      paramSortDec: _sort=-date
+      output:
+        id: Observation.id
+        code: Observation.component.code
+        value: Observation.component.value
