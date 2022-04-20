@@ -17,7 +17,7 @@ public class QueryTest {
     DataAdapterConfig conf = getConfig("SMITH_FHIR_Adapter.yaml");
 
     String qExp =
-        "Patient?gender=male,female&birthdate=ge1990-01-02&birthdate=lt2000-03-04&_id=id1,id2,id3&_count=5&_summary=count&_elements=id&_elements=subject&subject=s1,s2";
+        "Patient?gender=male,female&birthdate=ge1990-01-02&birthdate=lt2000-03-04&_id=id1,id2,id3&_count=5&_summary=count&_elements=id&_elements=subject&subject=s1,s2&_has:Observation:patient:code=O1,O2&_has:Condition:patient:code=C1,C2";
 
     String qAct =
         conf.getPatientQuery()
@@ -31,6 +31,8 @@ public class QueryTest {
             .onlyId()
             .onlySubject()
             .subject("s1", "s2")
+            .hasProp("SingleObservation", "O1", "O2")
+            .hasProp("Condition", "C1", "C2")
             .build();
 
     assertEquals(qExp, qAct);

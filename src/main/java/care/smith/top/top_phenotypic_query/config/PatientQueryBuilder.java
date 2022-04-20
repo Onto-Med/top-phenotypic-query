@@ -69,6 +69,14 @@ public class PatientQueryBuilder extends QueryBuilder {
     return this;
   }
 
+  public PatientQueryBuilder hasProp(String queryType, String... codes) {
+    addParam(
+        conf.getPropertyQuery(queryType)
+            .getParamPatientHasProp()
+            .replace("{code}", getValuesAsString(codes)));
+    return this;
+  }
+
   public String build() {
     return build(query.getParamQueryBase());
   }

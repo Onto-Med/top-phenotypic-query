@@ -24,6 +24,18 @@ patientQuery:
       gender: Patient.gender
       birthdate: Patient.birthdate
 propertyQueries:
+    - type: Condition
+      allQuery: Condition
+      paramQueryBase: Condition?
+      paramCode: code={code}
+      paramDate: recorded-date{operator}{date}
+      paramSortInc: _sort=recorded-date
+      paramSortDec: _sort=-recorded-date
+      paramPatientHasProp: _has:Condition:patient:code={code}
+      output:
+        id: Condition.id
+        code: Condition.code
+        subject: Condition.subject
     - type: SingleObservation
       allQuery: Observation
       paramQueryBase: Observation?
@@ -33,10 +45,12 @@ propertyQueries:
       paramDate: date{operator}{date}
       paramSortInc: _sort=date
       paramSortDec: _sort=-date
+      paramPatientHasProp: _has:Observation:patient:code={code}
       output:
         id: Observation.id
         code: Observation.code
         value: Observation.value
+        subject: Observation.subject
     - type: CompositeObservation
       allQuery: Observation
       paramQueryBase: Observation?
@@ -44,7 +58,9 @@ propertyQueries:
       paramDate: date{operator}{date}
       paramSortInc: _sort=date
       paramSortDec: _sort=-date
+      paramPatientHasProp: _has:Observation:patient:code={code}
       output:
         id: Observation.id
         code: Observation.component.code
         value: Observation.component.value
+        subject: Observation.subject

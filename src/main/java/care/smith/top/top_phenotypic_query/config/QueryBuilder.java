@@ -6,7 +6,7 @@ import java.util.List;
 
 public class QueryBuilder {
 
-  private DataAdapterConfig conf;
+  protected DataAdapterConfig conf;
   private List<String> params = new ArrayList<>();
 
   protected QueryBuilder(DataAdapterConfig conf) {

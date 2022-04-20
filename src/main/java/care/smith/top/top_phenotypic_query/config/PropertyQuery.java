@@ -14,6 +14,7 @@ public class PropertyQuery {
   private String paramDate;
   private String paramSortInc;
   private String paramSortDec;
+  private String paramPatientHasProp;
   private Map<String, String> output = new HashMap<>();
 
   private DataAdapterConfig conf;
@@ -88,6 +89,14 @@ public class PropertyQuery {
 
   public void setParamSortDec(String paramSortDec) {
     this.paramSortDec = paramSortDec;
+  }
+
+  public String getParamPatientHasProp() {
+    return paramPatientHasProp;
+  }
+
+  public void setParamPatientHasProp(String paramPatientHasProp) {
+    this.paramPatientHasProp = paramPatientHasProp;
   }
 
   public Map<String, String> getOutput() {
