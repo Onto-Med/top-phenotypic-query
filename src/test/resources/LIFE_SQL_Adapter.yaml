@@ -18,7 +18,7 @@ patientQuery:
   baseQueryOnlyId: 'SELECT id FROM Patient'
   baseQueryOnlyCount: 'SELECT count(id) FROM Patient'
   paramGender: gender={gender}
-  paramBirthdate: birthdate{operator}{birthdate}
+  paramBirthdate: "birthdate {operator} '{birthdate}'::date"
   paramId: 'id IN ({id})'
   output:
     id: id
@@ -30,9 +30,9 @@ propertyQueries:
     baseQueryOnlyCount: 'SELECT count({prop}) FROM Assessment1'
     baseQueryOnlySubject: 'SELECT DISTINCT patientId FROM Assessment1 WHERE {prop} IS NOT NULL'
     baseQueryOnlySubjectCount: 'SELECT count(DISTINCT patientId) FROM Assessment1 WHERE {prop} IS NOT NULL'
-    paramValueQuantity: { prop }{ operator }{ value }
-    paramValueText: { prop }{ operator }{ value }
-    paramDate: recorded_date{operator}{date}
+    paramValueQuantity: {prop} {operator} {value}
+    paramValueText: "{prop} {operator} '{value}'"
+    paramDate: "recorded_date {operator} '{date}'::date"
     paramPatientHasProp: 'EXISTS (SELECT {prop} FROM Assessment1 WHERE Assessment1.patientId = Patient.id)'
     paramId: 'id IN ({id})'
     paramSubject: 'patientId IN ({subject})'
