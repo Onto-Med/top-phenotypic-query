@@ -1,67 +1,64 @@
 id: SMITH_FHIR_Adapter
 connection:
-    base: http://localhost:8080/baseR4/
-valueSeparator: ','
-paramSeparator: '&'
-queryParamSeparator: '?'
-paramLimit: _count={limit}
-standardQueriesWithParam: true
-operEQ: '='
-operGT: '=gt'
-operGE: '=ge'
-operLT: '=lt'
-operLE: '=le'
+  base: http://localhost:8080/baseR4/
+valueSeparator: ","
+operEQ: "="
+operGT: "=gt"
+operGE: "=ge"
+operLT: "=lt"
+operLE: "=le"
 subjectQuery: 
-    baseQuery: Patient
-    baseQueryOnlyId: Patient?_elements=id
-    baseQueryOnlyCount: Patient?_summary=count
-    paramGender: gender={gender}
-    paramBirthdate: birthdate{operator}{birthdate}
-    paramId: _id={id} 
-    output:
-      id: Patient.id
-      gender: Patient.gender
-      birthdate: Patient.birthdate
+  baseQuery: "Patient?_format=json"
+  baseQueryOnlyId: "Patient?_elements=id"
+  baseQueryOnlyCount: "Patient?_summary=count"
+  paramId: "&_id={id}" 
+  paramGender: "&gender={gender}"
+  paramBirthdate: "&birthdate{operator}{birthdate}"
+  output:
+    id: Patient.id
+    gender: Patient.gender
+    birthdate: Patient.birthdate
 propertyQueries:
-    - type: Condition
-      baseQuery: Condition?code={prop}
-      baseQueryOnlyCount: Condition?code={prop}&_summary=count
-      baseQueryOnlySubject: Condition?code={prop}&_elements=subject
-      paramId: _id={id}
-      paramSubject: subject={subject}
-      paramDate: recorded-date{operator}{date}
-      paramSubjectHasProp: _has:Condition:patient:code={prop}
-      paramFirstRecord: _sort=recorded-date&_count=1
-      paramLastRecord: _sort=-recorded-date&_count=1
-      output:
-        id: Condition.id
-        code: Condition.code
-        subject: Condition.subject
-    - type: SingleObservation
-      allQuery: Observation
-      paramQueryBase: Observation?
-      paramCode: code={code}
-      paramValueQuantity: value-quantity{operator}{value}
-      paramValueConcept: value-concept={value}
-      paramDate: date{operator}{date}
-      paramSortInc: _sort=date
-      paramSortDec: _sort=-date
-      paramPatientHasProp: _has:Observation:patient:code={code}
-      output:
-        id: Observation.id
-        code: Observation.code
-        value: Observation.value
-        subject: Observation.subject
-    - type: CompositeObservation
-      allQuery: Observation
-      paramQueryBase: Observation?
-      paramCode: component-code={code}
-      paramDate: date{operator}{date}
-      paramSortInc: _sort=date
-      paramSortDec: _sort=-date
-      paramPatientHasProp: _has:Observation:patient:code={code}
-      output:
-        id: Observation.id
-        code: Observation.component.code
-        value: Observation.component.value
-        subject: Observation.subject
+  - type: Condition
+    baseQuery: "Condition?code={prop}"
+    baseQueryOnlyCount: "Condition?code={prop}&_summary=count"
+    baseQueryOnlySubject: "Condition?code={prop}&_elements=subject"
+    paramId: "&_id={id}"
+    paramSubject: "&subject={subject}"
+    paramDate: "&recorded-date{operator}{date}"
+    paramFirstRecord: "&_sort=recorded-date&_count=1"
+    paramLastRecord: "&_sort=-recorded-date&_count=1"
+    paramSubjectHasProp: "&_has:Condition:patient:code={prop}"
+    output:
+      subject: Condition.subject
+      prop: Condition.code
+  - type: Observation
+    baseQuery: "Observation?code={prop}"
+    baseQueryOnlyCount: "Observation?code={prop}&_summary=count"
+    baseQueryOnlySubject: "Observation?code={prop}&_elements=subject"
+    paramId: "&_id={id}"
+    paramSubject: "&subject={subject}"
+    paramDate: "&date{operator}{date}"
+    paramFirstRecord: "&_sort=date&_count=1"
+    paramLastRecord: "&_sort=-date&_count=1"
+    paramValueQuantity: "&value-quantity{operator}{value}"
+    paramValueConcept: "&value-concept={value}"
+    paramSubjectHasProp: "&_has:Observation:patient:code={prop}"
+    output:
+      subject: Observation.subject
+      prop: Observation.code
+      value: Observation.value
+  - type: ObservationComponent
+    baseQuery: "Observation?component-code={prop}"
+    baseQueryOnlyCount: "Observation?component-code={prop}&_summary=count"
+    baseQueryOnlySubject: "Observation?component-code={prop}&_elements=subject"
+    paramId: "&_id={id}"
+    paramSubject: "&subject={subject}"
+    paramDate: "&date{operator}{date}"
+    paramFirstRecord: "&_sort=date&_count=1"
+    paramLastRecord: "&_sort=-date&_count=1"
+    paramSubjectHasProp: "&_has:Observation:patient:component-code={prop}"
+    output:
+      subject: Observation.subject
+      prop: Observation.component.code
+      value: Observation.component.value

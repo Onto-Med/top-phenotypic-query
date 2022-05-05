@@ -11,44 +11,48 @@ operGE: ">="
 operLT: "<"
 operLE: "<="
 subjectQuery: 
-  baseQuery: "SELECT p.id, b.gender, b.birthdate FROM Patient p, Basic_Properties b WHERE b.pat_id = p.id 
-  baseQueryOnlyId: "SELECT p.id FROM Patient p WHERE TRUE"
-  baseQueryOnlyCount: "SELECT count(p.id) FROM Patient p WHERE TRUE"
-  paramGender: " AND (SELECT gender FROM Basic_Properties WHERE pat_id = p.id) IN ({gender})"
-  paramBirthdate: " AND (SELECT birthdate FROM Basic_Properties WHERE pat_id = p.id) {operator} '{birthdate}'::date"
-  paramId: " AND p.id IN ({id})"    
+  baseQuery: "SELECT p.id, b.gender, b.birthdate FROM Patient p, Basic_Properties b\nWHERE p.id = b.pat_id"
+  baseQueryOnlyId: "SELECT p.id FROM Patient p, Basic_Properties b\nWHERE p.id = b.pat_id"
+  baseQueryOnlyCount: "SELECT count(p.id) FROM Patient p, Basic_Properties b\nWHERE p.id = b.pat_id"
+  paramId: "\nAND p.id IN ({id})"    
+  paramGender: "\nAND b.gender IN ({gender})"
+  paramBirthdate: "\nAND b.birthdate {operator} '{birthdate}'::date"
   output:
     id: p.id
     gender: b.gender
     birthdate: b.birthdate
 propertyQueries:
   - type: Assessment1
-    baseQuery: "SELECT pat_id, {prop}, recorded_date FROM Assessment1 WHERE TRUE"
-    baseQueryOnlyCount: "SELECT count({prop}) FROM Assessment1 WHERE TRUE"
-    baseQueryOnlySubject: "SELECT DISTINCT pat_id FROM Assessment1 WHERE {prop} IS NOT NULL"
-    paramId: " AND id IN ({id})"
-    paramSubject: " AND pat_id IN ({subject})"
-    paramDate: " AND recorded_date {operator} '{date}'::date"
-    paramSubjectHasProp: " AND EXISTS (SELECT a.{prop} FROM Assessment1 a WHERE a.pat_id = Patient.id AND a.{prop} IS NOT NULL)"
-    paramValueQuantity: " AND {prop} {operator} {value}"
-    paramValueText: " AND {prop} {operator} '{value}'"
-    paramFirstRecord: " ORDER BY recorded_date LIMIT 1"
-    paramLastRecord: " ORDER BY recorded_date DESC LIMIT 1"
+    baseQuery: "SELECT pat_id, {prop}, recorded_date FROM Assessment1\nWHERE TRUE"
+    baseQueryOnlyCount: "SELECT count({prop}) FROM Assessment1\nWHERE TRUE"
+    baseQueryOnlySubject: "SELECT DISTINCT pat_id FROM Assessment1\nWHERE {prop} IS NOT NULL"
+    paramId: "\nAND id IN ({id})"
+    paramSubject: "\nAND pat_id IN ({subject})"
+    paramDate: "\nAND recorded_date {operator} '{date}'::date"
+    paramFirstRecord: "\nORDER BY recorded_date\nLIMIT 1"
+    paramLastRecord: "\nORDER BY recorded_date DESC\nLIMIT 1"
+    paramValueQuantity: "\nAND {prop} {operator} {value}"
+    paramValueText: "\nAND {prop} = '{value}'"
+    paramSubjectHasProp: "\nAND EXISTS (SELECT a.{prop} FROM Assessment1 a WHERE a.pat_id = Patient.id AND a.{prop} IS NOT NULL)"
     output:
       subject: pat_id
-      prop: {prop}
+      prop: "{prop}"
+      value: "{prop}"
       date: recorded_date
   - type: Assessment2
-    baseQuery: "SELECT a.pat_id, a.prop_val, a.recorded_date FROM Assessment2 a, Property p WHERE p.id = a.prop_id AND p.name IN ({prop})"
-    baseQueryOnlyCount: "SELECT count(a.prop_val) FROM Assessment2 a, Property p WHERE p.id = a.prop_id AND p.name IN ({prop})"
-    baseQueryOnlySubject: "SELECT DISTINCT a.pat_id FROM Assessment2 a, Property p WHERE p.id = a.prop_id AND p.name IN ({prop})"
-    paramId: " AND p.id IN ({id})"
-    paramSubject: " AND a.pat_id IN ({subject})"
-    paramDate: " AND a.recorded_date {operator} '{date}'::date"
-    paramSubjectHasProp: " AND EXISTS (SELECT a.prop_val FROM Assessment2 a, Property p WHERE p.id = a.prop_id AND p.name IN ({prop}) AND a.prop_val IS NOT NULL)"
-    paramValueQuantity: " AND {prop} {operator} {value}"
-    paramValueText: " AND {prop} {operator} '{value}'"
-    paramFirstRecord: " ORDER BY recorded_date LIMIT 1"
-    paramLastRecord: " ORDER BY recorded_date DESC LIMIT 1"
+    baseQuery: "SELECT a.pat_id, a.prop_val, a.recorded_date FROM Assessment2 a, Property p\nWHERE p.id = a.prop_id AND p.name = '{prop}'"
+    baseQueryOnlyCount: "SELECT count(a.prop_val) FROM Assessment2 a, Property p\nWHERE p.id = a.prop_id AND p.name = '{prop}'"
+    baseQueryOnlySubject: "SELECT DISTINCT a.pat_id FROM Assessment2 a, Property p\nWHERE p.id = a.prop_id AND p.name = '{prop}'"
+    paramId: "\nAND p.id IN ({id})"
+    paramSubject: "\nAND a.pat_id IN ({subject})"
+    paramDate: "\nAND a.recorded_date {operator} '{date}'::date"
+    paramFirstRecord: "\nORDER BY a.recorded_date\nLIMIT 1"
+    paramLastRecord: "\nORDER BY a.recorded_date DESC\nLIMIT 1"
+    paramValueQuantity: "\nAND a.prop_val {operator} {value}"
+    paramValueText: "\nAND a.prop_val = '{value}'"
+    paramSubjectHasProp: "\nAND EXISTS (SELECT a.prop_val FROM Assessment2 a, Property p WHERE p.id = a.prop_id AND p.name = '{prop}' AND a.prop_val IS NOT NULL)"
     output:
-      subject: patientId
+      subject: a.pat_id
+      prop: "{prop}"
+      value: a.prop_val
+      date: a.recorded_date

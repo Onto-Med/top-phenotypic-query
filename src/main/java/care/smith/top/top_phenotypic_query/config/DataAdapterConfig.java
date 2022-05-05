@@ -14,19 +14,12 @@ public class DataAdapterConfig {
   private String id;
   private Map<String, String> connection;
   private String valueSeparator;
-  private String paramSeparator;
   private String operEQ;
   private String operGT;
   private String operGE;
   private String operLT;
   private String operLE;
-  private String paramOnlyId;
-  private String paramOnlyCount;
-  private String paramOnlySubject;
-  private String paramLimit;
-  private String paramId;
-  private String paramSubject;
-  private PatientQuery patientQuery;
+  private SubjectQuery subjectQuery;
   private Map<String, PropertyQuery> propertyQueries = new HashMap<>();
 
   public static DataAdapterConfig getInstance(String yamlFilePath) {
@@ -66,14 +59,6 @@ public class DataAdapterConfig {
 
   public void setValueSeparator(String valueSeparator) {
     this.valueSeparator = valueSeparator;
-  }
-
-  public String getParamSeparator() {
-    return paramSeparator;
-  }
-
-  public void setParamSeparator(String paramSeparator) {
-    this.paramSeparator = paramSeparator;
   }
 
   public String getOperEQ() {
@@ -116,60 +101,12 @@ public class DataAdapterConfig {
     this.operLE = operLE;
   }
 
-  public String getParamOnlyId() {
-    return paramOnlyId;
+  public SubjectQuery getSubjectQuery() {
+    return subjectQuery.setDataAdapterConfig(this);
   }
 
-  public void setParamOnlyId(String paramOnlyId) {
-    this.paramOnlyId = paramOnlyId;
-  }
-
-  public String getParamOnlyCount() {
-    return paramOnlyCount;
-  }
-
-  public void setParamOnlyCount(String paramOnlyCount) {
-    this.paramOnlyCount = paramOnlyCount;
-  }
-
-  public String getParamOnlySubject() {
-    return paramOnlySubject;
-  }
-
-  public void setParamOnlySubject(String paramOnlySubject) {
-    this.paramOnlySubject = paramOnlySubject;
-  }
-
-  public String getParamLimit() {
-    return paramLimit;
-  }
-
-  public void setParamLimit(String paramLimit) {
-    this.paramLimit = paramLimit;
-  }
-
-  public String getParamId() {
-    return paramId;
-  }
-
-  public void setParamId(String paramId) {
-    this.paramId = paramId;
-  }
-
-  public String getParamSubject() {
-    return paramSubject;
-  }
-
-  public void setParamSubject(String paramSubject) {
-    this.paramSubject = paramSubject;
-  }
-
-  public PatientQuery getPatientQuery() {
-    return patientQuery.setDataAdapterConfig(this);
-  }
-
-  public void setPatientQuery(PatientQuery patientQuery) {
-    this.patientQuery = patientQuery;
+  public void setSubjectQuery(SubjectQuery subjectQuery) {
+    this.subjectQuery = subjectQuery;
   }
 
   public Map<String, PropertyQuery> getPropertyQueries() {
@@ -193,8 +130,6 @@ public class DataAdapterConfig {
         + connection
         + ", valueSeparator="
         + valueSeparator
-        + ", paramSeparator="
-        + paramSeparator
         + ", operEQ="
         + operEQ
         + ", operGT="
@@ -205,20 +140,8 @@ public class DataAdapterConfig {
         + operLT
         + ", operLE="
         + operLE
-        + ", paramOnlyId="
-        + paramOnlyId
-        + ", paramOnlyCount="
-        + paramOnlyCount
-        + ", paramOnlySubject="
-        + paramOnlySubject
-        + ", paramLimit="
-        + paramLimit
-        + ", paramId="
-        + paramId
-        + ", paramSubject="
-        + paramSubject
         + ", patientQuery="
-        + patientQuery
+        + subjectQuery
         + ", propertyQueries="
         + propertyQueries
         + "]";

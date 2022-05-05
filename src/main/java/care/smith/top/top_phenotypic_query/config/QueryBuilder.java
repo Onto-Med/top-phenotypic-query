@@ -1,48 +1,22 @@
 package care.smith.top.top_phenotypic_query.config;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class QueryBuilder {
 
   protected DataAdapterConfig conf;
-  private List<String> params = new ArrayList<>();
+  private StringBuffer queryString = new StringBuffer();
 
   protected QueryBuilder(DataAdapterConfig conf) {
     this.conf = conf;
   }
 
-  protected void addParam(String param) {
-    params.add(param);
+  protected void add(String queryPart) {
+    queryString.append(queryPart);
   }
 
-  protected void addParamOnlyId() {
-    addParam(conf.getParamOnlyId());
-  }
-
-  protected void addParamOnlyCount() {
-    addParam(conf.getParamOnlyCount());
-  }
-
-  protected void addParamOnlySubject() {
-    addParam(conf.getParamOnlySubject());
-  }
-
-  protected void addParamLimit(int limit) {
-    addParam(conf.getParamLimit().replace("{limit}", Integer.valueOf(limit).toString()));
-  }
-
-  protected void addParamId(String... ids) {
-    addParam(conf.getParamId().replace("{id}", getValuesAsString(ids)));
-  }
-
-  protected void addParamSubject(String... subjects) {
-    addParam(conf.getParamSubject().replace("{subject}", getValuesAsString(subjects)));
-  }
-
-  protected String build(String paramQueryBase) {
-    return paramQueryBase + String.join(conf.getParamSeparator(), params);
+  public String build() {
+    return queryString.toString();
   }
 
   protected String getValuesAsString(String... values) {

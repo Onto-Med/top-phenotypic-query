@@ -6,15 +6,18 @@ import java.util.Map;
 public class PropertyQuery {
 
   private String type;
-  private String allQuery;
-  private String paramQueryBase;
-  private String paramCode;
+  private String baseQuery;
+  private String baseQueryOnlyCount;
+  private String baseQueryOnlySubject;
+  private String paramId;
+  private String paramSubject;
+  private String paramDate;
   private String paramValueQuantity;
   private String paramValueConcept;
-  private String paramDate;
-  private String paramSortInc;
-  private String paramSortDec;
-  private String paramPatientHasProp;
+  private String paramValueText;
+  private String paramFirstRecord;
+  private String paramLastRecord;
+  private String paramSubjectHasProp;
   private Map<String, String> output = new HashMap<>();
 
   private DataAdapterConfig conf;
@@ -27,28 +30,52 @@ public class PropertyQuery {
     this.type = type;
   }
 
-  public String getAllQuery() {
-    return allQuery;
+  public String getBaseQuery() {
+    return baseQuery;
   }
 
-  public void setAllQuery(String allQuery) {
-    this.allQuery = allQuery;
+  public void setBaseQuery(String baseQuery) {
+    this.baseQuery = baseQuery;
   }
 
-  public String getParamQueryBase() {
-    return paramQueryBase;
+  public String getBaseQueryOnlyCount() {
+    return baseQueryOnlyCount;
   }
 
-  public void setParamQueryBase(String paramQueryBase) {
-    this.paramQueryBase = paramQueryBase;
+  public void setBaseQueryOnlyCount(String baseQueryOnlyCount) {
+    this.baseQueryOnlyCount = baseQueryOnlyCount;
   }
 
-  public String getParamCode() {
-    return paramCode;
+  public String getBaseQueryOnlySubject() {
+    return baseQueryOnlySubject;
   }
 
-  public void setParamCode(String paramCode) {
-    this.paramCode = paramCode;
+  public void setBaseQueryOnlySubject(String baseQueryOnlySubject) {
+    this.baseQueryOnlySubject = baseQueryOnlySubject;
+  }
+
+  public String getParamId() {
+    return paramId;
+  }
+
+  public void setParamId(String paramId) {
+    this.paramId = paramId;
+  }
+
+  public String getParamSubject() {
+    return paramSubject;
+  }
+
+  public void setParamSubject(String paramSubject) {
+    this.paramSubject = paramSubject;
+  }
+
+  public String getParamDate() {
+    return paramDate;
+  }
+
+  public void setParamDate(String paramDate) {
+    this.paramDate = paramDate;
   }
 
   public String getParamValueQuantity() {
@@ -67,36 +94,36 @@ public class PropertyQuery {
     this.paramValueConcept = paramValueConcept;
   }
 
-  public String getParamDate() {
-    return paramDate;
+  public String getParamValueText() {
+    return paramValueText;
   }
 
-  public void setParamDate(String paramDate) {
-    this.paramDate = paramDate;
+  public void setParamValueText(String paramValueText) {
+    this.paramValueText = paramValueText;
   }
 
-  public String getParamSortInc() {
-    return paramSortInc;
+  public String getParamFirstRecord() {
+    return paramFirstRecord;
   }
 
-  public void setParamSortInc(String paramSortInc) {
-    this.paramSortInc = paramSortInc;
+  public void setParamFirstRecord(String paramFirstRecord) {
+    this.paramFirstRecord = paramFirstRecord;
   }
 
-  public String getParamSortDec() {
-    return paramSortDec;
+  public String getParamLastRecord() {
+    return paramLastRecord;
   }
 
-  public void setParamSortDec(String paramSortDec) {
-    this.paramSortDec = paramSortDec;
+  public void setParamLastRecord(String paramLastRecord) {
+    this.paramLastRecord = paramLastRecord;
   }
 
-  public String getParamPatientHasProp() {
-    return paramPatientHasProp;
+  public String getParamSubjectHasProp() {
+    return paramSubjectHasProp;
   }
 
-  public void setParamPatientHasProp(String paramPatientHasProp) {
-    this.paramPatientHasProp = paramPatientHasProp;
+  public void setParamSubjectHasProp(String paramSubjectHasProp) {
+    this.paramSubjectHasProp = paramSubjectHasProp;
   }
 
   public Map<String, String> getOutput() {
@@ -107,37 +134,12 @@ public class PropertyQuery {
     this.output = output;
   }
 
-  public PropertyQueryBuilder getQueryBuilder() {
-    return new PropertyQueryBuilder(conf, this);
+  public PropertyQueryBuilder getQueryBuilder(String... props) {
+    return new PropertyQueryBuilder(conf, this, props);
   }
 
   protected PropertyQuery setDataAdapterConfig(DataAdapterConfig conf) {
     this.conf = conf;
     return this;
-  }
-
-  @Override
-  public String toString() {
-    return "PropertyQuery [type="
-        + type
-        + ", allQuery="
-        + allQuery
-        + ", paramQueryBase="
-        + paramQueryBase
-        + ", paramCode="
-        + paramCode
-        + ", paramValueQuantity="
-        + paramValueQuantity
-        + ", paramValueConcept="
-        + paramValueConcept
-        + ", paramDate="
-        + paramDate
-        + ", paramSortInc="
-        + paramSortInc
-        + ", paramSortDec="
-        + paramSortDec
-        + ", output="
-        + output
-        + "]";
   }
 }
