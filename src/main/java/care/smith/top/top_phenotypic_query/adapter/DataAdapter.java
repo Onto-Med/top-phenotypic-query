@@ -13,6 +13,10 @@ public abstract class DataAdapter {
     this.conf = conf;
   }
 
+  // call terminology server
+  // fetch id attributes, column/table names
+  // build atomic queries using DataAdapterConfig
+  // execute queries and normalize/return ResultSet
   public abstract ResultSet findSubjects(SubjectSearch search);
 
   public abstract ResultSet findProperties(PropertySearch search);

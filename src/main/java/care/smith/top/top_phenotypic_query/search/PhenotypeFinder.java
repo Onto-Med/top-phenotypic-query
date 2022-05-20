@@ -15,6 +15,11 @@ public class PhenotypeFinder {
   }
 
   public ResultSet find() {
+    // create SubjectSearch and PropertySearch objects
+
+    // call findSubjects() and findProperties() methods of DataAdapter
+
+    // calculate and return ResultSet
     return null;
   }
 }
