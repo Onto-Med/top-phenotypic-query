@@ -14,12 +14,17 @@
 
     <repositories>
         <repository>
-            <id>simple-onto-api</id>
-            <url>https://maven.pkg.github.com/onto-med/simple-onto-api</url>
+            <id>top-api</id>
+            <url>https://maven.pkg.github.com/onto-med/top-api</url>
         </repository>
     </repositories>
 
     <dependencies>
+    	<dependency> 
+            <groupId>care.smith.top</groupId>
+            <artifactId>top-api</artifactId>
+            <version>0.3.7</version>
+        </dependency>
         <dependency>
             <groupId>care.smith.top.simple_onto_api</groupId>
             <artifactId>simple-onto-api</artifactId>
