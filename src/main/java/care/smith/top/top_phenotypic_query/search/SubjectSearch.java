@@ -4,75 +4,78 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import care.smith.top.simple_onto_api.model.property.data.range.DateRange;
-import care.smith.top.simple_onto_api.util.ToString;
+import care.smith.top.backend.model.Query;
+import care.smith.top.backend.model.QueryCriterion;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
 
 public class SubjectSearch {
 
-  private List<DateRange> birthdateRanges = new ArrayList<>();
-  private List<String> genders = new ArrayList<>();
-  private List<String> ids = new ArrayList<>();
+  private DataAdapter adapter;
+  private Query query;
 
-  public List<DateRange> getBirthdateRanges() {
-    return birthdateRanges;
+  private List<QueryCriterion> ageRanges = new ArrayList<>();
+  private List<QueryCriterion> genders = new ArrayList<>();
+  private List<QueryCriterion> requiredPhenotypes = new ArrayList<>();
+
+  public SubjectSearch(Query query, DataAdapter adapter) {
+    this.query = query;
+    this.adapter = adapter;
   }
 
-  public SubjectSearch addBirthdateRange(DateRange range) {
-    this.birthdateRanges.add(range);
-    return this;
+  public List<QueryCriterion> getAgeRanges() {
+    return ageRanges;
   }
 
-  public SubjectSearch setBirthdateRanges(List<DateRange> birthdateRanges) {
-    this.birthdateRanges = birthdateRanges;
-    return this;
+  public void addAgeRange(QueryCriterion range) {
+    this.ageRanges.add(range);
   }
 
-  public SubjectSearch setBirthdateRanges(DateRange... ranges) {
-    return setBirthdateRanges(Arrays.asList(ranges));
+  public void setAgeRanges(List<QueryCriterion> ranges) {
+    this.ageRanges = ranges;
   }
 
-  public List<String> getGenders() {
+  public void setAgeRanges(QueryCriterion... ranges) {
+    setAgeRanges(Arrays.asList(ranges));
+  }
+
+  public List<QueryCriterion> getGenders() {
     return genders;
   }
 
-  public SubjectSearch addGender(String gender) {
+  public void addGender(QueryCriterion gender) {
     this.genders.add(gender);
-    return this;
   }
 
-  public SubjectSearch setGenders(List<String> genders) {
+  public void setGenders(List<QueryCriterion> genders) {
     this.genders = genders;
-    return this;
   }
 
-  public SubjectSearch setGenders(String... genders) {
-    return setGenders(Arrays.asList(genders));
+  public void setGenders(QueryCriterion... genders) {
+    setGenders(Arrays.asList(genders));
   }
 
-  public List<String> getIds() {
-    return ids;
+  public List<QueryCriterion> getRequiredPhenotypes() {
+    return requiredPhenotypes;
   }
 
-  public SubjectSearch addId(String id) {
-    this.ids.add(id);
-    return this;
+  public void addRequiredPhenotypes(QueryCriterion requiredPhenotype) {
+    this.requiredPhenotypes.add(requiredPhenotype);
   }
 
-  public SubjectSearch setIds(List<String> ids) {
-    this.ids = ids;
-    return this;
+  public void setRequiredPhenotypes(List<QueryCriterion> requiredPhenotypes) {
+    this.requiredPhenotypes = requiredPhenotypes;
   }
 
-  public SubjectSearch setIds(String... ids) {
-    return setIds(Arrays.asList(ids));
+  public void setRequiredPhenotypes(QueryCriterion... requiredPhenotypes) {
+    setRequiredPhenotypes(Arrays.asList(requiredPhenotypes));
   }
 
-  @Override
-  public String toString() {
-    return ToString.get(this)
-        .add("birthdateRanges", birthdateRanges)
-        .add("genders", genders)
-        .add("ids", ids)
-        .toString();
+  public Query getQuery() {
+    return query;
+  }
+
+  public ResultSet execute() {
+    return adapter.findSubjects(this);
   }
 }
