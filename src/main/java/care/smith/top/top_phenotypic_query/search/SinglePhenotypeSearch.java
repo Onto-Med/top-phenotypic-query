@@ -5,17 +5,14 @@ import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 
-public class USiPSearch extends PhenotypeSearch {
+public class SinglePhenotypeSearch extends AdapterSearch {
 
-  private DataAdapter adapter;
-
-  public USiPSearch(Query query, QueryCriterion criterion, DataAdapter adapter) {
-    super(query, criterion);
-    this.adapter = adapter;
+  public SinglePhenotypeSearch(Query query, QueryCriterion criterion, DataAdapter adapter) {
+    super(query, criterion, adapter);
   }
 
   @Override
   public ResultSet execute() {
-    return adapter.findPhenotypes(this);
+    return adapter.execute(this);
   }
 }

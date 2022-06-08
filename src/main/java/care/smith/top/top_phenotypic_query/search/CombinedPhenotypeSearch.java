@@ -4,9 +4,9 @@ import care.smith.top.backend.model.Query;
 import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 
-public class UCoPSearch extends PhenotypeSearch {
+public class CombinedPhenotypeSearch extends PhenotypeSearch {
 
-  public UCoPSearch(Query query, QueryCriterion criterion) {
+  public CombinedPhenotypeSearch(Query query, QueryCriterion criterion) {
     super(query, criterion);
   }
 

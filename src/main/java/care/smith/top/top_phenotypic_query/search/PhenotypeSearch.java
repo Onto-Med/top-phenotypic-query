@@ -11,6 +11,7 @@ public abstract class PhenotypeSearch {
 
   protected PhenotypeSearch(Query query, QueryCriterion criterion) {
     this.query = query;
+    this.criterion = criterion;
   }
 
   public Query getQuery() {

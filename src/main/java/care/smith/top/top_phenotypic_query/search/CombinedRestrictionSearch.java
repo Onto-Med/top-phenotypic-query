@@ -4,9 +4,9 @@ import care.smith.top.backend.model.Query;
 import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 
-public class RCoPSearch extends PhenotypeSearch {
+public class CombinedRestrictionSearch extends PhenotypeSearch {
 
-  public RCoPSearch(Query query, QueryCriterion criterion) {
+  public CombinedRestrictionSearch(Query query, QueryCriterion criterion) {
     super(query, criterion);
   }
 

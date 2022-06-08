@@ -25,7 +25,7 @@ public class PhenotypeFinder {
 
     for (QueryCriterion cri : query.getCriteria()) {
       EntityType type = cri.getSubject().getEntityType();
-      if (type == EntityType.SINGLE_PHENOTYPE) new USiPSearch(query, cri, adapter);
+      if (type == EntityType.SINGLE_PHENOTYPE) new SinglePhenotypeSearch(query, cri, adapter);
       // ...
     }
 

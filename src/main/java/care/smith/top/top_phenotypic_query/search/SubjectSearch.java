@@ -76,6 +76,6 @@ public class SubjectSearch {
   }
 
   public ResultSet execute() {
-    return adapter.findSubjects(this);
+    return adapter.execute(this);
   }
 }

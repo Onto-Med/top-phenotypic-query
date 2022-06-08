@@ -4,9 +4,9 @@ import care.smith.top.backend.model.Query;
 import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 
-public class RSiPSearch extends PhenotypeSearch {
+public class DerivedRestrictionSearch extends PhenotypeSearch {
 
-  public RSiPSearch(Query query, QueryCriterion criterion) {
+  public DerivedRestrictionSearch(Query query, QueryCriterion criterion) {
     super(query, criterion);
   }
 
