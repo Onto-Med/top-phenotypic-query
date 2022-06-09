@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.math;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import care.smith.top.backend.model.ExpressionMultaryOperator;
 import care.smith.top.backend.model.ExpressionOperator;
 import care.smith.top.simple_onto_api.c2reasoner.math.Operator;
 import care.smith.top.simple_onto_api.c2reasoner.math.Operator.Type;
+import care.smith.top.simple_onto_api.c2reasoner.math.evalex.EvalEx;
 
 public class ExpressionOperators {
 
@@ -37,54 +39,16 @@ public class ExpressionOperators {
   }
 
   public static List<ExpressionOperator> getDerivedPhenotypeOperators() {
-    return Arrays.asList(
-        new ExpressionOperator()
-            .id("addition")
-            .title("+")
-            .type(ExpressionOperator.TypeEnum.BINARY)
-            .representation(ExpressionOperator.RepresentationEnum.INFIX),
-        new ExpressionOperator()
-            .id("subtraction")
-            .title("-")
-            .type(ExpressionOperator.TypeEnum.BINARY)
-            .representation(ExpressionOperator.RepresentationEnum.INFIX),
-        new ExpressionOperator()
-            .id("multiplication")
-            .title("*")
-            .type(ExpressionOperator.TypeEnum.BINARY)
-            .representation(ExpressionOperator.RepresentationEnum.INFIX),
-        new ExpressionOperator()
-            .id("division")
-            .title("/")
-            .type(ExpressionOperator.TypeEnum.BINARY)
-            .representation(ExpressionOperator.RepresentationEnum.INFIX),
-        new ExpressionOperator()
-            .id("exponentiation")
-            .title("^")
-            .type(ExpressionOperator.TypeEnum.BINARY)
-            .representation(ExpressionOperator.RepresentationEnum.INFIX),
-        new ExpressionMultaryOperator()
-            .required(2)
-            .id("minimum")
-            .title("min")
-            .type(ExpressionOperator.TypeEnum.MULTARY)
-            .representation(ExpressionOperator.RepresentationEnum.PREFIX),
-        new ExpressionMultaryOperator()
-            .required(2)
-            .id("maximum")
-            .title("max")
-            .type(ExpressionOperator.TypeEnum.MULTARY)
-            .representation(ExpressionOperator.RepresentationEnum.PREFIX),
-        new ExpressionOperator()
-            .id("entity")
-            .title("entity")
-            .type(ExpressionOperator.TypeEnum.UNARY)
-            .representation(ExpressionOperator.RepresentationEnum.PREFIX),
-        new ExpressionOperator()
-            .id("constant")
-            .title("constant")
-            .type(ExpressionOperator.TypeEnum.UNARY)
-            .representation(ExpressionOperator.RepresentationEnum.PREFIX));
+    List<ExpressionOperator> ops = new ArrayList<>();
+    for (Operator op : new EvalEx().getOperators()) ops.add(convert(op));
+    return ops;
+  }
+
+  public static List<care.smith.top.backend.model.Constant> getConstants() {
+    List<care.smith.top.backend.model.Constant> cons = new ArrayList<>();
+    for (care.smith.top.simple_onto_api.c2reasoner.math.Constant co : new EvalEx().getConstants())
+      cons.add(convert(co));
+    return cons;
   }
 
   private static ExpressionOperator convert(Operator o) {
@@ -97,5 +61,10 @@ public class ExpressionOperators {
         ExpressionOperator.RepresentationEnum.valueOf(o.getRepresentation().name()));
     eo.setType(ExpressionOperator.TypeEnum.valueOf(o.getType().name()));
     return eo;
+  }
+
+  private static care.smith.top.backend.model.Constant convert(
+      care.smith.top.simple_onto_api.c2reasoner.math.Constant c) {
+    return new care.smith.top.backend.model.Constant().id(c.getId()).title(c.getTitle());
   }
 }
