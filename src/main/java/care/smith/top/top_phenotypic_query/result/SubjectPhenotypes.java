@@ -1,6 +1,9 @@
 package care.smith.top.top_phenotypic_query.result;
 
 import java.util.HashMap;
+import java.util.List;
+
+import care.smith.top.simple_onto_api.model.property.data.value.Value;
 
 public class SubjectPhenotypes extends HashMap<String, Phenotype> {
 
@@ -13,6 +16,14 @@ public class SubjectPhenotypes extends HashMap<String, Phenotype> {
 
   public void addPhenotype(Phenotype phenotype) {
     put(phenotype.getName(), phenotype);
+  }
+
+  public void addPhenotype(String name, List<Value> values) {
+    addPhenotype(new Phenotype(name, values));
+  }
+
+  public void addPhenotype(String name, Value... values) {
+    addPhenotype(new Phenotype(name, values));
   }
 
   public Phenotype getPhenotype(String name) {
