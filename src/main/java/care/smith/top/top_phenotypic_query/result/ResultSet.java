@@ -11,7 +11,7 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
     put(phenotypes.getSubjectId(), phenotypes);
   }
 
-  public void addPhenotype(String subjectId, Phenotype phenotype) {
+  public void addPhenotype(String subjectId, PhenotypeValues phenotype) {
     SubjectPhenotypes subPhens = get(subjectId);
     if (subPhens == null) {
       subPhens = new SubjectPhenotypes(subjectId);
@@ -28,7 +28,7 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
     return get(subjectId);
   }
 
-  public Phenotype getPhenotype(String subjectId, String phenotypeName) {
+  public PhenotypeValues getPhenotype(String subjectId, String phenotypeName) {
     SubjectPhenotypes subPhens = get(subjectId);
     if (subPhens == null) return null;
     return subPhens.getPhenotype(phenotypeName);

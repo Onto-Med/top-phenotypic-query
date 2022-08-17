@@ -3,7 +3,7 @@ package care.smith.top.top_phenotypic_query.result;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class SubjectPhenotypes extends HashMap<String, Phenotype> {
+public class SubjectPhenotypes extends HashMap<String, PhenotypeValues> {
 
   private static final long serialVersionUID = 1L;
   private String subjectId;
@@ -12,15 +12,15 @@ public class SubjectPhenotypes extends HashMap<String, Phenotype> {
     this.subjectId = subjectId;
   }
 
-  public void addPhenotype(Phenotype phenotype) {
-    put(phenotype.getName(), phenotype);
+  public void addPhenotype(PhenotypeValues phenotype) {
+    put(phenotype.getPhenotypeName(), phenotype);
   }
 
-  public Phenotype getPhenotype(String phenotypeName) {
+  public PhenotypeValues getPhenotype(String phenotypeName) {
     return get(phenotypeName);
   }
 
-  public Collection<Phenotype> getPhenotypes() {
+  public Collection<PhenotypeValues> getPhenotypes() {
     return values();
   }
 

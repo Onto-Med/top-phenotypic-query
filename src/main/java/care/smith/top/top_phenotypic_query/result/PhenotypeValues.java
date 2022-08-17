@@ -8,17 +8,17 @@ import care.smith.top.backend.model.DateTimeRestriction;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.simple_onto_api.util.ToString;
 
-public class Phenotype {
+public class PhenotypeValues {
 
-  private String name;
+  private String phenotypeName;
   private ArrayListMultimap<DateTimeRestriction, Value> values = ArrayListMultimap.create();
 
-  public Phenotype(String name) {
-    this.name = name;
+  public PhenotypeValues(String phenotypeName) {
+    this.phenotypeName = phenotypeName;
   }
 
-  public String getName() {
-    return name;
+  public String getPhenotypeName() {
+    return phenotypeName;
   }
 
   public void addValues(DateTimeRestriction dateRange, Value... values) {
@@ -47,6 +47,6 @@ public class Phenotype {
 
   @Override
   public String toString() {
-    return ToString.get(this).add("name", name).add("values", values).toString();
+    return ToString.get(this).add("name", phenotypeName).add("values", values).toString();
   }
 }
