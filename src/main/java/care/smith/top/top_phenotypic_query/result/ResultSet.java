@@ -1,36 +1,36 @@
 package care.smith.top.top_phenotypic_query.result;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
-public class ResultSet {
+public class ResultSet extends HashMap<String, SubjectPhenotypes> {
 
-  private Map<String, SubjectPhenotypes> rs = new HashMap<>();
+  private static final long serialVersionUID = 1L;
 
-  public void setPhenotypes(String subject, SubjectPhenotypes phenotypes) {
-    rs.put(subject, phenotypes);
+  public void setPhenotypes(SubjectPhenotypes phenotypes) {
+    put(phenotypes.getSubjectId(), phenotypes);
   }
 
-  public void addPhenotype(String subject, Phenotype phenotype) {
-    SubjectPhenotypes subPhens = rs.get(subject);
+  public void addPhenotype(String subjectId, Phenotype phenotype) {
+    SubjectPhenotypes subPhens = get(subjectId);
     if (subPhens == null) {
-      subPhens = new SubjectPhenotypes(subject);
-      rs.put(subject, subPhens);
+      subPhens = new SubjectPhenotypes(subjectId);
+      put(subjectId, subPhens);
     }
     subPhens.addPhenotype(phenotype);
   }
 
-  public SubjectPhenotypes getPhenotypes(String subject) {
-    return rs.get(subject);
+  public Collection<SubjectPhenotypes> getPhenotypes() {
+    return values();
   }
 
-  public Phenotype getPhenotype(String subject, String phenotype) {
-    SubjectPhenotypes subPhens = rs.get(subject);
+  public SubjectPhenotypes getPhenotypes(String subjectId) {
+    return get(subjectId);
+  }
+
+  public Phenotype getPhenotype(String subjectId, String phenotypeName) {
+    SubjectPhenotypes subPhens = get(subjectId);
     if (subPhens == null) return null;
-    return subPhens.getPhenotype(phenotype);
-  }
-
-  public Map<String, SubjectPhenotypes> getResultSet() {
-    return rs;
+    return subPhens.getPhenotype(phenotypeName);
   }
 }
