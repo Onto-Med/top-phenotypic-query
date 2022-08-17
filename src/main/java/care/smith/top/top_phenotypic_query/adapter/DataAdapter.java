@@ -2,8 +2,7 @@ package care.smith.top.top_phenotypic_query.adapter;
 
 import care.smith.top.top_phenotypic_query.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.search.SinglePhenotypeSearch;
-import care.smith.top.top_phenotypic_query.search.SingleRestrictionSearch;
+import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 
 public abstract class DataAdapter {
@@ -20,7 +19,5 @@ public abstract class DataAdapter {
   // execute queries and normalize/return ResultSet
   public abstract ResultSet execute(SubjectSearch search);
 
-  public abstract ResultSet execute(SinglePhenotypeSearch search);
-
-  public abstract ResultSet execute(SingleRestrictionSearch search);
+  public abstract ResultSet execute(SingleSearch search);
 }

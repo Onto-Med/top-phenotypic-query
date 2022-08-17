@@ -9,17 +9,16 @@ import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 
-public class SubjectSearch {
+public class SubjectSearch extends PhenotypeSearch {
 
   private DataAdapter adapter;
-  private Query query;
 
   private List<QueryCriterion> ageRanges = new ArrayList<>();
   private List<QueryCriterion> genders = new ArrayList<>();
   private List<QueryCriterion> requiredPhenotypes = new ArrayList<>();
 
   public SubjectSearch(Query query, DataAdapter adapter) {
-    this.query = query;
+    super(query);
     this.adapter = adapter;
   }
 
@@ -71,10 +70,7 @@ public class SubjectSearch {
     setRequiredPhenotypes(Arrays.asList(requiredPhenotypes));
   }
 
-  public Query getQuery() {
-    return query;
-  }
-
+  @Override
   public ResultSet execute() {
     return adapter.execute(this);
   }
