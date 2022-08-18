@@ -1,6 +1,8 @@
 package care.smith.top.top_phenotypic_query.result;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import com.google.common.collect.ArrayListMultimap;
 
@@ -43,6 +45,25 @@ public class PhenotypeValues {
 
   public boolean hasValues(DateTimeRestriction dateRange) {
     return values.containsKey(dateRange);
+  }
+
+  public Set<DateTimeRestriction> getDateRanges() {
+    return values.keySet();
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(phenotypeName, values);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (getClass() != obj.getClass()) return false;
+    PhenotypeValues other = (PhenotypeValues) obj;
+    return Objects.equals(phenotypeName, other.phenotypeName)
+        && Objects.equals(values, other.values);
   }
 
   @Override

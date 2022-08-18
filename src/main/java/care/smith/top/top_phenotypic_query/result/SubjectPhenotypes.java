@@ -1,7 +1,7 @@
 package care.smith.top.top_phenotypic_query.result;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 public class SubjectPhenotypes extends HashMap<String, PhenotypeValues> {
 
@@ -16,12 +16,20 @@ public class SubjectPhenotypes extends HashMap<String, PhenotypeValues> {
     put(phenotype.getPhenotypeName(), phenotype);
   }
 
+  public void addPhenotypes(PhenotypeValues... phenotypes) {
+    for (PhenotypeValues phenotype : phenotypes) addPhenotype(phenotype);
+  }
+
   public PhenotypeValues getPhenotype(String phenotypeName) {
     return get(phenotypeName);
   }
 
-  public Collection<PhenotypeValues> getPhenotypes() {
-    return values();
+  public Set<String> getPhenotypeNames() {
+    return keySet();
+  }
+
+  public boolean hasPhenotype(String phenotypeName) {
+    return containsKey(phenotypeName);
   }
 
   public String getSubjectId() {

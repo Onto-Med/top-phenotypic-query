@@ -23,7 +23,8 @@ public class PhenotypeFinder {
   }
 
   public ResultSet execute() {
-    // create list of single phenotype searches
+    // create and execute of single phenotype searches
+    ResultSet rs = executeSingleSearches();
 
     // create SubjectSearch and PhenotypeSearch objects (for each criterion)
 
@@ -54,5 +55,6 @@ public class PhenotypeFinder {
   private void addVariables(Expression exp, QueryCriterion cri, QueryMan man) {
     if (exp.getId() != null)
       man.addVariable(new SingleSearch(query, cri, phenotypes.get(exp.getId()), adapter));
+    else for (Expression arg : exp.getArguments()) addVariables(arg, cri, man);
   }
 }
