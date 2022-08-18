@@ -42,7 +42,7 @@ public class PhenotypeFinder {
   }
 
   private ResultSet executeSingleSearches() {
-    QueryMan man = new QueryMan();
+    QueryMan man = new QueryMan(adapter);
     for (QueryCriterion cri : query.getCriteria()) {
       EntityType type = cri.getSubject().getEntityType();
       if (type == EntityType.SINGLE_PHENOTYPE || type == EntityType.SINGLE_RESTRICTION)

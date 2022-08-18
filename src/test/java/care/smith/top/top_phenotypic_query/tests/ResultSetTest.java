@@ -54,6 +54,31 @@ public class ResultSetTest {
         Set.of(getDTR(2004), getDTR(2005), getDTR(2008), getDTR(2009)), p3.getDateRanges());
   }
 
+  @Test
+  public void testInsert() {
+    ResultSet rs1 = new ResultSet();
+    rs1.setPhenotypes(getSubject1(), getSubject2(), getSubject3());
+
+    ResultSet rs2 = new ResultSet();
+    rs2.setPhenotypes(getSubject2(), getSubject3b(), getSubject4());
+
+    ResultSet insert = rs1.insert(rs2);
+
+    assertEquals(Set.of("S1", "S2", "S3"), insert.getSubjectIds());
+
+    SubjectPhenotypes phesS1 = insert.getPhenotypes("S1");
+    SubjectPhenotypes phesS2 = insert.getPhenotypes("S2");
+    SubjectPhenotypes phesS3 = insert.getPhenotypes("S3");
+
+    assertEquals(Set.of("P1"), phesS1.getPhenotypeNames());
+    assertEquals(Set.of("P1", "P2"), phesS2.getPhenotypeNames());
+    assertEquals(Set.of("P2", "P3", "P4"), phesS3.getPhenotypeNames());
+
+    PhenotypeValues p3 = phesS3.getPhenotype("P3");
+    assertEquals(
+        Set.of(getDTR(2004), getDTR(2005), getDTR(2008), getDTR(2009)), p3.getDateRanges());
+  }
+
   private static SubjectPhenotypes getSubject1() {
     SubjectPhenotypes sp = new SubjectPhenotypes("S1");
     sp.addPhenotypes(getPhenotype1());

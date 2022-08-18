@@ -75,4 +75,28 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
     difference.keySet().removeAll(rs2.keySet());
     return difference;
   }
+
+  public ResultSet insert(ResultSet rs2) {
+    ResultSet insert = new ResultSet(this);
+
+    for (String sbjId : insert.getSubjectIds()) {
+      SubjectPhenotypes phenotypes1 = insert.getPhenotypes(sbjId);
+      SubjectPhenotypes phenotypes2 = rs2.getPhenotypes(sbjId);
+      if (phenotypes2 == null) continue;
+      for (String pheName : phenotypes2.getPhenotypeNames()) {
+        if (!phenotypes1.hasPhenotype(pheName))
+          phenotypes1.addPhenotype(phenotypes2.getPhenotype(pheName));
+        else {
+          PhenotypeValues values1 = phenotypes1.getPhenotype(pheName);
+          PhenotypeValues values2 = phenotypes2.getPhenotype(pheName);
+          for (DateTimeRestriction dateRange : values2.getDateRanges()) {
+            if (!values1.hasValues(dateRange))
+              values1.addValues(dateRange, values2.getValues(dateRange));
+          }
+        }
+      }
+    }
+
+    return insert;
+  }
 }
