@@ -3,12 +3,12 @@ package care.smith.top.top_phenotypic_query.search;
 import java.util.Map;
 
 import care.smith.top.backend.model.EntityType;
-import care.smith.top.backend.model.Expression;
 import care.smith.top.backend.model.Phenotype;
 import care.smith.top.backend.model.Query;
 import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
 
 public class PhenotypeFinder {
 
@@ -23,22 +23,19 @@ public class PhenotypeFinder {
   }
 
   public ResultSet execute() {
-    // create and execute of single phenotype searches
-    ResultSet rs = executeSingleSearches();
+    return executeCompositeSearches(executeSingleSearches());
+  }
 
-    // create SubjectSearch and PhenotypeSearch objects (for each criterion)
-
-    // call execute() methods
-
-    // calculate and return ResultSet
-
+  private ResultSet executeCompositeSearches(ResultSet rs) {
     for (QueryCriterion cri : query.getCriteria()) {
       EntityType type = cri.getSubject().getEntityType();
-      if (type == EntityType.SINGLE_PHENOTYPE) new SingleSearch(query, cri, adapter);
-      // ...
+      if (type == EntityType.COMBINED_PHENOTYPE
+          || type == EntityType.COMBINED_RESTRICTION
+          || type == EntityType.DERIVED_PHENOTYPE
+          || type == EntityType.DERIVED_RESTRICTION)
+        new CompositeSearch(query, cri, rs, phenotypes).execute();
     }
-
-    return null;
+    return rs;
   }
 
   private ResultSet executeSingleSearches() {
@@ -47,14 +44,11 @@ public class PhenotypeFinder {
       EntityType type = cri.getSubject().getEntityType();
       if (type == EntityType.SINGLE_PHENOTYPE || type == EntityType.SINGLE_RESTRICTION)
         man.addCriterion(new SingleSearch(query, cri, adapter));
-      else addVariables(cri.getSubject().getExpression(), cri, man);
+      else {
+        for (String var : ExpressionUtil.getVariables(cri.getSubject().getExpression()))
+          man.addVariable(new SingleSearch(query, cri, phenotypes.get(var), adapter));
+      }
     }
     return man.execute();
-  }
-
-  private void addVariables(Expression exp, QueryCriterion cri, QueryMan man) {
-    if (exp.getId() != null)
-      man.addVariable(new SingleSearch(query, cri, phenotypes.get(exp.getId()), adapter));
-    else for (Expression arg : exp.getArguments()) addVariables(arg, cri, man);
   }
 }
