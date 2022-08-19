@@ -51,7 +51,8 @@ public class ResultSetTest {
 
     PhenotypeValues p3 = phesS3.getPhenotype("P3");
     assertEquals(
-        Set.of(getDTR(2004), getDTR(2005), getDTR(2008), getDTR(2009)), p3.getDateRanges());
+        Set.of(getDTR(2004), getDTR(2005), getDTR(2008), getDTR(2009)),
+        p3.getDateTimeRestrictions());
   }
 
   @Test
@@ -76,7 +77,8 @@ public class ResultSetTest {
 
     PhenotypeValues p3 = phesS3.getPhenotype("P3");
     assertEquals(
-        Set.of(getDTR(2004), getDTR(2005), getDTR(2008), getDTR(2009)), p3.getDateRanges());
+        Set.of(getDTR(2004), getDTR(2005), getDTR(2008), getDTR(2009)),
+        p3.getDateTimeRestrictions());
   }
 
   private static SubjectPhenotypes getSubject1() {
@@ -111,37 +113,48 @@ public class ResultSetTest {
 
   private static PhenotypeValues getPhenotype1() {
     PhenotypeValues pv = new PhenotypeValues("P1");
-    pv.addValues(getDTR(2000), new DecimalValue(1), new DecimalValue(2), new DecimalValue(3));
-    pv.addValues(getDTR(2001), new DecimalValue(4), new DecimalValue(5), new DecimalValue(6));
+    pv.setDecimalValues(
+        getDTR(2000), new DecimalValue(1), new DecimalValue(2), new DecimalValue(3));
+    pv.setDecimalValues(
+        getDTR(2001), new DecimalValue(4), new DecimalValue(5), new DecimalValue(6));
     return pv;
   }
 
   private static PhenotypeValues getPhenotype2() {
     PhenotypeValues pv = new PhenotypeValues("P2");
-    pv.addValues(getDTR(2002), new DecimalValue(7), new DecimalValue(8), new DecimalValue(9));
-    pv.addValues(getDTR(2003), new DecimalValue(10), new DecimalValue(11), new DecimalValue(12));
+    pv.setDecimalValues(
+        getDTR(2002), new DecimalValue(7), new DecimalValue(8), new DecimalValue(9));
+    pv.setDecimalValues(
+        getDTR(2003), new DecimalValue(10), new DecimalValue(11), new DecimalValue(12));
     return pv;
   }
 
   private static PhenotypeValues getPhenotype3() {
     PhenotypeValues pv = new PhenotypeValues("P3");
-    pv.addValues(getDTR(2004), new DecimalValue(13), new DecimalValue(14), new DecimalValue(15));
-    pv.addValues(getDTR(2005), new DecimalValue(16), new DecimalValue(17), new DecimalValue(18));
+    pv.setDecimalValues(
+        getDTR(2004), new DecimalValue(13), new DecimalValue(14), new DecimalValue(15));
+    pv.setDecimalValues(
+        getDTR(2005), new DecimalValue(16), new DecimalValue(17), new DecimalValue(18));
     return pv;
   }
 
   private static PhenotypeValues getPhenotype3b() {
     PhenotypeValues pv = new PhenotypeValues("P3");
-    pv.addValues(getDTR(2004), new DecimalValue(13), new DecimalValue(14), new DecimalValue(15));
-    pv.addValues(getDTR(2008), new DecimalValue(25), new DecimalValue(26), new DecimalValue(27));
-    pv.addValues(getDTR(2009), new DecimalValue(28), new DecimalValue(29), new DecimalValue(30));
+    pv.setDecimalValues(
+        getDTR(2004), new DecimalValue(13), new DecimalValue(14), new DecimalValue(15));
+    pv.setDecimalValues(
+        getDTR(2008), new DecimalValue(25), new DecimalValue(26), new DecimalValue(27));
+    pv.setDecimalValues(
+        getDTR(2009), new DecimalValue(28), new DecimalValue(29), new DecimalValue(30));
     return pv;
   }
 
   private static PhenotypeValues getPhenotype4() {
     PhenotypeValues pv = new PhenotypeValues("P4");
-    pv.addValues(getDTR(2006), new DecimalValue(19), new DecimalValue(20), new DecimalValue(21));
-    pv.addValues(getDTR(2007), new DecimalValue(22), new DecimalValue(23), new DecimalValue(24));
+    pv.setDecimalValues(
+        getDTR(2006), new DecimalValue(19), new DecimalValue(20), new DecimalValue(21));
+    pv.setDecimalValues(
+        getDTR(2007), new DecimalValue(22), new DecimalValue(23), new DecimalValue(24));
     return pv;
   }
 

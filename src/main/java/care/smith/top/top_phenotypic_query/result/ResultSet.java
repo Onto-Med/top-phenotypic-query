@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import care.smith.top.backend.model.DateTimeRestriction;
+import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
 
 public class ResultSet extends HashMap<String, SubjectPhenotypes> {
 
@@ -59,9 +60,9 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
         else {
           PhenotypeValues values1 = phenotypes1.getPhenotype(pheName);
           PhenotypeValues values2 = phenotypes2.getPhenotype(pheName);
-          for (DateTimeRestriction dateRange : values2.getDateRanges()) {
-            if (!values1.hasValues(dateRange))
-              values1.addValues(dateRange, values2.getValues(dateRange));
+          for (DateTimeRestriction dateRange : values2.getDateTimeRestrictions()) {
+            if (!values1.hasDateTimeRestriction(dateRange))
+              values1.setValues(dateRange, values2.getValues(dateRange));
           }
         }
       }
@@ -89,14 +90,21 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
         else {
           PhenotypeValues values1 = phenotypes1.getPhenotype(pheName);
           PhenotypeValues values2 = phenotypes2.getPhenotype(pheName);
-          for (DateTimeRestriction dateRange : values2.getDateRanges()) {
-            if (!values1.hasValues(dateRange))
-              values1.addValues(dateRange, values2.getValues(dateRange));
+          for (DateTimeRestriction dateRange : values2.getDateTimeRestrictions()) {
+            if (!values1.hasDateTimeRestriction(dateRange))
+              values1.setValues(dateRange, values2.getValues(dateRange));
           }
         }
       }
     }
 
     return insert;
+  }
+
+  public ValueList getValues(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
+    PhenotypeValues values = getPhenotype(subjectId, phenotypeName);
+    if (values == null) return null;
+    return values.getValues(dateRange);
   }
 }
