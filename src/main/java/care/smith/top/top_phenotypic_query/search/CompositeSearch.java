@@ -1,9 +1,7 @@
 package care.smith.top.top_phenotypic_query.search;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import care.smith.top.backend.model.DateTimeRestriction;
 import care.smith.top.backend.model.Expression;
@@ -37,27 +35,12 @@ public class CompositeSearch extends PhenotypeSearch {
     if (exp != null) {
       Set<String> vars = ExpressionUtil.getVariables(exp);
       for (SubjectPhenotypes sbjPhens : rs.values())
-        executeForSubject(sbjPhens, exp, vars, criterion.getDateTimeRestrictions());
+        executeForSubject(sbjPhens, exp, vars, criterion.getDateTimeRestriction());
     }
     return rs;
   }
 
   public void executeForSubject(
-      SubjectPhenotypes sbjPhens,
-      Expression exp,
-      Set<String> vars,
-      List<DateTimeRestriction> dateRanges) {
-    List<Boolean> values =
-        dateRanges.stream()
-            .map(d -> executeForDateTimeRestriction(sbjPhens, exp, vars, d))
-            .collect(Collectors.toList());
-
-    if ((criterion.isExclusion() && !values.contains(Boolean.FALSE))
-        || (!criterion.isExclusion() && !values.contains(Boolean.TRUE)))
-      rs.remove(sbjPhens.getSubjectId());
-  }
-
-  public Boolean executeForDateTimeRestriction(
       SubjectPhenotypes sbjPhens, Expression exp, Set<String> vars, DateTimeRestriction dateRange) {
 
     Calculator calc = new Calculator();
@@ -65,7 +48,12 @@ public class CompositeSearch extends PhenotypeSearch {
 
     MathExpression mathExp = null;
 
-    return calc.calculate(mathExp).asBooleanValue().getValue();
+    boolean res = calc.calculate(mathExp).asBooleanValue().getValue();
+
+    if ((criterion.isExclusion() && res) || (!criterion.isExclusion() && !res))
+      rs.remove(sbjPhens.getSubjectId());
+    // else add value to result set
+
   }
 
   public ValueList getValues(
@@ -80,7 +68,7 @@ public class CompositeSearch extends PhenotypeSearch {
     if (res == null) {
       Expression newExp = phenotypes.get(var).getExpression();
       Set<String> newVars = ExpressionUtil.getVariables(newExp);
-      executeForDateTimeRestriction(sbjPhens, newExp, newVars, dateRange);
+      executeForSubject(sbjPhens, newExp, newVars, dateRange);
     }
 
     return sbjPhens.getValues(var, dateRange);

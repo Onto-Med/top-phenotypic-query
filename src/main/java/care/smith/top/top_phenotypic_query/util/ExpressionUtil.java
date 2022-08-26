@@ -14,7 +14,7 @@ public class ExpressionUtil {
   }
 
   private static void addVariables(Expression exp, Set<String> vars) {
-    if (exp.getId() != null) vars.add(exp.getId());
+    if (exp.getEntityId() != null) vars.add(exp.getEntityId());
     else for (Expression arg : exp.getArguments()) addVariables(arg, vars);
   }
 }

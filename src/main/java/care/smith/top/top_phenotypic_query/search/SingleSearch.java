@@ -62,7 +62,7 @@ public class SingleSearch extends PhenotypeSearch {
 
   @Override
   public int hashCode() {
-    return Objects.hash(criterion.getDateTimeRestrictions(), phenotype.getId());
+    return Objects.hash(criterion.getDateTimeRestriction(), phenotype.getId());
   }
 
   @Override
@@ -72,7 +72,7 @@ public class SingleSearch extends PhenotypeSearch {
     if (getClass() != obj.getClass()) return false;
     SingleSearch other = (SingleSearch) obj;
     return Objects.equals(
-            criterion.getDateTimeRestrictions(), other.criterion.getDateTimeRestrictions())
+            criterion.getDateTimeRestriction(), other.criterion.getDateTimeRestriction())
         && Objects.equals(phenotype.getId(), other.phenotype.getId());
   }
 }
