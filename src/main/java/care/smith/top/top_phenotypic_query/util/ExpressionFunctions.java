@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.reasoner;
+package care.smith.top.top_phenotypic_query.util;
 
 import java.util.List;
 import java.util.stream.Collectors;
