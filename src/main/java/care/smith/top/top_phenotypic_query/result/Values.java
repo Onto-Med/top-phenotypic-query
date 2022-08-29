@@ -16,12 +16,12 @@ import care.smith.top.simple_onto_api.model.property.data.value.list.StringValue
 import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
 import care.smith.top.simple_onto_api.util.ToString;
 
-public class PhenotypeValues extends HashMap<DateTimeRestriction, ValueList> {
+public class Values extends HashMap<DateTimeRestriction, ValueList> {
 
   private static final long serialVersionUID = 1L;
   private String phenotypeName;
 
-  public PhenotypeValues(String phenotypeName) {
+  public Values(String phenotypeName) {
     this.phenotypeName = phenotypeName;
   }
 
@@ -71,7 +71,7 @@ public class PhenotypeValues extends HashMap<DateTimeRestriction, ValueList> {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    PhenotypeValues other = (PhenotypeValues) obj;
+    Values other = (Values) obj;
     return Objects.equals(phenotypeName, other.phenotypeName)
         && Objects.equals(entrySet(), other.entrySet());
   }

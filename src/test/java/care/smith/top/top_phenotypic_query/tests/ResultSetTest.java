@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test;
 import care.smith.top.backend.model.DateTimeRestriction;
 import care.smith.top.backend.model.RestrictionOperator;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
-import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
+import care.smith.top.top_phenotypic_query.result.Values;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
+import care.smith.top.top_phenotypic_query.result.Phenotypes;
 
 public class ResultSetTest {
 
@@ -43,13 +43,13 @@ public class ResultSetTest {
 
     assertEquals(Set.of("S2", "S3"), intersection.getSubjectIds());
 
-    SubjectPhenotypes phesS2 = intersection.getPhenotypes("S2");
-    SubjectPhenotypes phesS3 = intersection.getPhenotypes("S3");
+    Phenotypes phesS2 = intersection.getPhenotypes("S2");
+    Phenotypes phesS3 = intersection.getPhenotypes("S3");
 
     assertEquals(Set.of("P1", "P2"), phesS2.getPhenotypeNames());
     assertEquals(Set.of("P2", "P3", "P4"), phesS3.getPhenotypeNames());
 
-    PhenotypeValues p3 = phesS3.getPhenotype("P3");
+    Values p3 = phesS3.getValues("P3");
     assertEquals(
         Set.of(getDTR(2004), getDTR(2005), getDTR(2008), getDTR(2009)),
         p3.getDateTimeRestrictions());
@@ -67,52 +67,52 @@ public class ResultSetTest {
 
     assertEquals(Set.of("S1", "S2", "S3"), insert.getSubjectIds());
 
-    SubjectPhenotypes phesS1 = insert.getPhenotypes("S1");
-    SubjectPhenotypes phesS2 = insert.getPhenotypes("S2");
-    SubjectPhenotypes phesS3 = insert.getPhenotypes("S3");
+    Phenotypes phesS1 = insert.getPhenotypes("S1");
+    Phenotypes phesS2 = insert.getPhenotypes("S2");
+    Phenotypes phesS3 = insert.getPhenotypes("S3");
 
     assertEquals(Set.of("P1"), phesS1.getPhenotypeNames());
     assertEquals(Set.of("P1", "P2"), phesS2.getPhenotypeNames());
     assertEquals(Set.of("P2", "P3", "P4"), phesS3.getPhenotypeNames());
 
-    PhenotypeValues p3 = phesS3.getPhenotype("P3");
+    Values p3 = phesS3.getValues("P3");
     assertEquals(
         Set.of(getDTR(2004), getDTR(2005), getDTR(2008), getDTR(2009)),
         p3.getDateTimeRestrictions());
   }
 
-  private static SubjectPhenotypes getSubject1() {
-    SubjectPhenotypes sp = new SubjectPhenotypes("S1");
-    sp.addPhenotypes(getPhenotype1());
+  private static Phenotypes getSubject1() {
+    Phenotypes sp = new Phenotypes("S1");
+    sp.setValues(getPhenotype1());
     return sp;
   }
 
-  private static SubjectPhenotypes getSubject2() {
-    SubjectPhenotypes sp = new SubjectPhenotypes("S2");
-    sp.addPhenotypes(getPhenotype1(), getPhenotype2());
+  private static Phenotypes getSubject2() {
+    Phenotypes sp = new Phenotypes("S2");
+    sp.setValues(getPhenotype1(), getPhenotype2());
     return sp;
   }
 
-  private static SubjectPhenotypes getSubject3() {
-    SubjectPhenotypes sp = new SubjectPhenotypes("S3");
-    sp.addPhenotypes(getPhenotype2(), getPhenotype3());
+  private static Phenotypes getSubject3() {
+    Phenotypes sp = new Phenotypes("S3");
+    sp.setValues(getPhenotype2(), getPhenotype3());
     return sp;
   }
 
-  private static SubjectPhenotypes getSubject3b() {
-    SubjectPhenotypes sp = new SubjectPhenotypes("S3");
-    sp.addPhenotypes(getPhenotype3b(), getPhenotype4());
+  private static Phenotypes getSubject3b() {
+    Phenotypes sp = new Phenotypes("S3");
+    sp.setValues(getPhenotype3b(), getPhenotype4());
     return sp;
   }
 
-  private static SubjectPhenotypes getSubject4() {
-    SubjectPhenotypes sp = new SubjectPhenotypes("S4");
-    sp.addPhenotypes(getPhenotype1());
+  private static Phenotypes getSubject4() {
+    Phenotypes sp = new Phenotypes("S4");
+    sp.setValues(getPhenotype1());
     return sp;
   }
 
-  private static PhenotypeValues getPhenotype1() {
-    PhenotypeValues pv = new PhenotypeValues("P1");
+  private static Values getPhenotype1() {
+    Values pv = new Values("P1");
     pv.setDecimalValues(
         getDTR(2000), new DecimalValue(1), new DecimalValue(2), new DecimalValue(3));
     pv.setDecimalValues(
@@ -120,8 +120,8 @@ public class ResultSetTest {
     return pv;
   }
 
-  private static PhenotypeValues getPhenotype2() {
-    PhenotypeValues pv = new PhenotypeValues("P2");
+  private static Values getPhenotype2() {
+    Values pv = new Values("P2");
     pv.setDecimalValues(
         getDTR(2002), new DecimalValue(7), new DecimalValue(8), new DecimalValue(9));
     pv.setDecimalValues(
@@ -129,8 +129,8 @@ public class ResultSetTest {
     return pv;
   }
 
-  private static PhenotypeValues getPhenotype3() {
-    PhenotypeValues pv = new PhenotypeValues("P3");
+  private static Values getPhenotype3() {
+    Values pv = new Values("P3");
     pv.setDecimalValues(
         getDTR(2004), new DecimalValue(13), new DecimalValue(14), new DecimalValue(15));
     pv.setDecimalValues(
@@ -138,8 +138,8 @@ public class ResultSetTest {
     return pv;
   }
 
-  private static PhenotypeValues getPhenotype3b() {
-    PhenotypeValues pv = new PhenotypeValues("P3");
+  private static Values getPhenotype3b() {
+    Values pv = new Values("P3");
     pv.setDecimalValues(
         getDTR(2004), new DecimalValue(13), new DecimalValue(14), new DecimalValue(15));
     pv.setDecimalValues(
@@ -149,8 +149,8 @@ public class ResultSetTest {
     return pv;
   }
 
-  private static PhenotypeValues getPhenotype4() {
-    PhenotypeValues pv = new PhenotypeValues("P4");
+  private static Values getPhenotype4() {
+    Values pv = new Values("P4");
     pv.setDecimalValues(
         getDTR(2006), new DecimalValue(19), new DecimalValue(20), new DecimalValue(21));
     pv.setDecimalValues(

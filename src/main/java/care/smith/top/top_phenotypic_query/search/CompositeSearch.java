@@ -10,9 +10,10 @@ import care.smith.top.backend.model.Query;
 import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.simple_onto_api.calculator.Calculator;
 import care.smith.top.simple_onto_api.calculator.expressions.MathExpression;
+import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
+import care.smith.top.top_phenotypic_query.result.Phenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
 
 public class CompositeSearch extends PhenotypeSearch {
@@ -31,46 +32,46 @@ public class CompositeSearch extends PhenotypeSearch {
 
   @Override
   public ResultSet execute() {
-    Expression exp = criterion.getSubject().getExpression();
+    Phenotype phe = criterion.getSubject();
+    Expression exp = phe.getExpression();
     if (exp != null) {
       Set<String> vars = ExpressionUtil.getVariables(exp);
-      for (SubjectPhenotypes sbjPhens : rs.values())
-        executeForSubject(sbjPhens, exp, vars, criterion.getDateTimeRestriction());
+      for (Phenotypes sbjPhens : rs.values())
+        executeForSubject(sbjPhens, phe.getId(), exp, vars, criterion.getDateTimeRestriction());
     }
     return rs;
   }
 
-  public void executeForSubject(
-      SubjectPhenotypes sbjPhens, Expression exp, Set<String> vars, DateTimeRestriction dateRange) {
-
-    Calculator calc = new Calculator();
-    for (String var : vars) calc.setVariable(var, getValues(sbjPhens, exp, var, dateRange, calc));
-
-    MathExpression mathExp = null;
-
-    boolean res = calc.calculate(mathExp).asBooleanValue().getValue();
-
+  private void executeForSubject(
+      Phenotypes sbjPhens,
+      String pheId,
+      Expression exp,
+      Set<String> vars,
+      DateTimeRestriction dateRange) {
+    boolean res = calculate(sbjPhens, pheId, exp, vars, dateRange).asBooleanValue().getValue();
     if ((criterion.isExclusion() && res) || (!criterion.isExclusion() && !res))
       rs.remove(sbjPhens.getSubjectId());
-    // else add value to result set
-
   }
 
-  public ValueList getValues(
-      SubjectPhenotypes sbjPhens,
+  private Value calculate(
+      Phenotypes sbjPhens,
+      String pheId,
       Expression exp,
-      String var,
-      DateTimeRestriction dateRange,
-      Calculator calc) {
+      Set<String> vars,
+      DateTimeRestriction dateRange) {
+    Calculator calc = new Calculator();
+    for (String var : vars) calc.setVariable(var, getValues(sbjPhens, var, dateRange));
+    MathExpression mathExp = null; // map exp to mathExp
+    Value res = calc.calculate(mathExp);
+    sbjPhens.setValues(pheId, dateRange, ValueList.get(res));
+    return res;
+  }
 
-    ValueList res = sbjPhens.getValues(var, dateRange);
-
-    if (res == null) {
-      Expression newExp = phenotypes.get(var).getExpression();
-      Set<String> newVars = ExpressionUtil.getVariables(newExp);
-      executeForSubject(sbjPhens, newExp, newVars, dateRange);
-    }
-
-    return sbjPhens.getValues(var, dateRange);
+  private ValueList getValues(Phenotypes sbjPhens, String var, DateTimeRestriction dateRange) {
+    ValueList vals = sbjPhens.getValues(var, dateRange);
+    if (vals != null) return vals;
+    Expression newExp = phenotypes.get(var).getExpression();
+    Set<String> newVars = ExpressionUtil.getVariables(newExp);
+    return ValueList.get(calculate(sbjPhens, var, newExp, newVars, dateRange));
   }
 }
