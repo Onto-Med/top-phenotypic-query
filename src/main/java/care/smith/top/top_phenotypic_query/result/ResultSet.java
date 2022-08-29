@@ -98,4 +98,14 @@ public class ResultSet extends HashMap<String, Phenotypes> {
 
     return insert;
   }
+
+  @Override
+  public String toString() {
+    StringBuffer sb =
+        new StringBuffer("Result Set:")
+            .append(System.lineSeparator())
+            .append(System.lineSeparator());
+    for (Phenotypes phes : values()) sb.append(phes);
+    return sb.toString();
+  }
 }

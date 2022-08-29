@@ -14,7 +14,6 @@ import care.smith.top.simple_onto_api.model.property.data.value.list.DateTimeVal
 import care.smith.top.simple_onto_api.model.property.data.value.list.DecimalValueList;
 import care.smith.top.simple_onto_api.model.property.data.value.list.StringValueList;
 import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
-import care.smith.top.simple_onto_api.util.ToString;
 
 public class Values extends HashMap<DateTimeRestriction, ValueList> {
 
@@ -78,6 +77,26 @@ public class Values extends HashMap<DateTimeRestriction, ValueList> {
 
   @Override
   public String toString() {
-    return ToString.get(this).add("name", phenotypeName).add("values", super.toString()).toString();
+    StringBuffer sb =
+        new StringBuffer("    Phenotype '")
+            .append(phenotypeName)
+            .append("':")
+            .append(System.lineSeparator());
+    for (Entry<DateTimeRestriction, ValueList> entry : entrySet())
+      sb.append("    ")
+          .append(restrictionToString(entry.getKey()))
+          .append("::")
+          .append(entry.getValue().getRepresentation())
+          .append(System.lineSeparator());
+    return sb.toString();
+  }
+
+  private StringBuffer restrictionToString(DateTimeRestriction dtr) {
+    StringBuffer sb = new StringBuffer("[ ");
+    if (dtr.getMinOperator() != null)
+      sb.append(dtr.getMinOperator()).append(dtr.getValues().get(0)).append(" ");
+    if (dtr.getMaxOperator() != null)
+      sb.append(dtr.getMaxOperator()).append(dtr.getValues().get(1)).append(" ");
+    return sb.append("]");
   }
 }

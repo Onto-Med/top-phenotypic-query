@@ -12,11 +12,41 @@ import org.junit.jupiter.api.Test;
 import care.smith.top.backend.model.DateTimeRestriction;
 import care.smith.top.backend.model.RestrictionOperator;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
-import care.smith.top.top_phenotypic_query.result.Values;
-import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.Phenotypes;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.result.Values;
 
 public class ResultSetTest {
+
+  @Test
+  public void testValues() {
+    Values weightVals1 = new Values("Weight");
+    weightVals1.setDecimalValues(getDTR(2001), new DecimalValue(75));
+    Values heightVals1 = new Values("Height");
+    heightVals1.setDecimalValues(getDTR(2001), new DecimalValue(1.7));
+    Values ageVals1 = new Values("Age");
+    ageVals1.setDecimalValues(getDTR(2001), new DecimalValue(20));
+
+    Values weightVals2 = new Values("Weight");
+    weightVals2.setDecimalValues(getDTR(2001), new DecimalValue(80));
+    Values heightVals2 = new Values("Height");
+    heightVals2.setDecimalValues(getDTR(2001), new DecimalValue(1.6));
+    Values ageVals2 = new Values("Age");
+    ageVals2.setDecimalValues(getDTR(2001), new DecimalValue(40));
+
+    Phenotypes phes1 = new Phenotypes("Subject1");
+    phes1.setValues(weightVals1, heightVals1, ageVals1);
+
+    Phenotypes phes2 = new Phenotypes("Subject2");
+    phes2.setValues(weightVals2, heightVals2, ageVals2);
+
+    ResultSet rs = new ResultSet();
+    rs.setPhenotypes(phes1, phes2);
+
+    System.out.println(rs);
+
+    assertEquals(true, true);
+  }
 
   @Test
   public void testSubtract() {

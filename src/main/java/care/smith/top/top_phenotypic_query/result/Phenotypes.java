@@ -50,4 +50,17 @@ public class Phenotypes extends HashMap<String, Values> {
   public String getSubjectId() {
     return subjectId;
   }
+
+  @Override
+  public String toString() {
+    StringBuffer sb =
+        new StringBuffer("  Subject '")
+            .append(subjectId)
+            .append("':")
+            .append(System.lineSeparator())
+            .append(System.lineSeparator());
+    for (care.smith.top.top_phenotypic_query.result.Values values : values())
+      sb.append(values).append(System.lineSeparator());
+    return sb.toString();
+  }
 }
