@@ -19,6 +19,14 @@
         </repository>
     </repositories>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Onto-Med Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/Onto-Med/top-phenotypic-query</url>
+        </repository>
+    </distributionManagement>
+
     <dependencies>
     	<dependency> 
             <groupId>care.smith.top</groupId>
