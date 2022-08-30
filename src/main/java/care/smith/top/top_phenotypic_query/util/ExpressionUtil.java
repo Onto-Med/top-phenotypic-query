@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import care.smith.top.backend.model.Constant;
-import care.smith.top.backend.model.DataType;
 import care.smith.top.backend.model.Expression;
 import care.smith.top.backend.model.Value;
 import care.smith.top.simple_onto_api.calculator.expressions.ConstantExpression;
@@ -26,7 +25,8 @@ public class ExpressionUtil {
 
   private static void addVariables(Expression exp, Set<String> vars) {
     if (exp.getEntityId() != null) vars.add(exp.getEntityId());
-    else for (Expression arg : exp.getArguments()) addVariables(arg, vars);
+    else if (exp.getArguments() != null)
+      for (Expression arg : exp.getArguments()) addVariables(arg, vars);
   }
 
   public static MathExpression convert(Expression exp) {
@@ -38,14 +38,14 @@ public class ExpressionUtil {
 
   private static MathExpression getConstantExpression(Constant constant, Value value) {
     if (constant != null) return new ConstantExpression(constant.getId());
-    if (value.getDataType() == DataType.BOOLEAN)
+    if (value instanceof care.smith.top.backend.model.BooleanValue)
       return new ConstantExpression(
           new BooleanValue(((care.smith.top.backend.model.BooleanValue) value).isValue()));
-    if (value.getDataType() == DataType.DATE_TIME)
+    if (value instanceof care.smith.top.backend.model.DateTimeValue)
       return new ConstantExpression(
           new DateTimeValue(
               ((care.smith.top.backend.model.DateTimeValue) value).getValue().toLocalDateTime()));
-    if (value.getDataType() == DataType.NUMBER)
+    if (value instanceof care.smith.top.backend.model.NumberValue)
       return new ConstantExpression(
           new DecimalValue(((care.smith.top.backend.model.NumberValue) value).getValue()));
     return new ConstantExpression(

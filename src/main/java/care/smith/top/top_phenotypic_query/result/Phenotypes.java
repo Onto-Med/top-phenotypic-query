@@ -25,7 +25,10 @@ public class Phenotypes extends HashMap<String, Values> {
 
   public void setValues(String phenotypeName, DateTimeRestriction dateRange, ValueList vals) {
     Values values = get(phenotypeName);
-    if (values == null) values = new Values(phenotypeName);
+    if (values == null) {
+      values = new Values(phenotypeName);
+      setValues(values);
+    }
     values.setValues(dateRange, vals);
   }
 
