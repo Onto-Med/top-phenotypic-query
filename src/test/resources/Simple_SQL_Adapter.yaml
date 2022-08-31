@@ -1,0 +1,16 @@
+id: Simple_SQL_Adapter
+connection:
+  driver: org.postgresql.Driver
+  url: jdbc:postgresql://server/database
+  user: user1
+  password: password1
+queries:
+  - type: Observation
+    baseQuery: "SELECT subject_id, {value_col}, {date_col} FROM Assessment1\nWHERE {value_col} IS NOT NULL"
+    valueRangePart: "\nAND {value_col} {operator} {value}"
+    dateRangePart: "\nAND {date_col} {operator} '{value}'::date"
+    subjectsPart: "\nAND subject_id IN ({subject_ids})"
+    output:
+      subject: subject_id
+      value: "{value_col}"
+      date: "{date_col}"
