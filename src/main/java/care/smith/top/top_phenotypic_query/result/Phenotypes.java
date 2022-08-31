@@ -3,13 +3,19 @@ package care.smith.top.top_phenotypic_query.result;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import care.smith.top.backend.model.DateTimeRestriction;
 import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
+import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
 
 public class Phenotypes extends HashMap<String, Values> {
 
   private static final long serialVersionUID = 1L;
   private String subjectId;
+
+  private Logger log = LoggerFactory.getLogger(Phenotypes.class);
 
   public Phenotypes(String subjectId) {
     this.subjectId = subjectId;
@@ -30,6 +36,12 @@ public class Phenotypes extends HashMap<String, Values> {
       setValues(values);
     }
     values.setValues(dateRange, vals);
+    log.info(
+        "values are set: {}::{}::{}::{}",
+        subjectId,
+        phenotypeName,
+        RestrictionUtil.toString(dateRange),
+        vals.getRepresentation());
   }
 
   public Values getValues(String phenotypeName) {
