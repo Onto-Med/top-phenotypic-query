@@ -4,13 +4,21 @@ connection:
   url: jdbc:postgresql://server/database
   user: user1
   password: password1
-queries:
-  - type: Observation
-    baseQuery: "SELECT subject_id, {value_col}, {date_col} FROM Assessment1\nWHERE {value_col} IS NOT NULL"
-    valueRangePart: "\nAND {value_col} {operator} {value}"
-    dateRangePart: "\nAND {date_col} {operator} '{value}'::date"
+subjectQuery: 
+  baseQuery: "SELECT subject_id, birth_date, sex FROM subject\nWHERE TRUE"
+  sexRangePart: "\nAND sex IN ({sexes})"
+  birthdateRangePart: "\nAND birth_date {operator} '{value}'::date"
+  output:
+    id: subject_id
+    sex: sex
+    birthdate: birth_date
+phenotypeQueries:
+  - type: Assessment1
+    baseQuery: "SELECT subject_id, created_at, {phenotype} FROM assessment1\nWHERE {phenotype} IS NOT NULL"
+    valueRangePart: "\nAND {phenotype} {operator} {value}"
+    dateRangePart: "\nAND created_at {operator} '{value}'::date"
     subjectsPart: "\nAND subject_id IN ({subject_ids})"
     output:
       subject: subject_id
-      value: "{value_col}"
-      date: "{date_col}"
+      phenotype: "{phenotype}"
+      date: created_at
