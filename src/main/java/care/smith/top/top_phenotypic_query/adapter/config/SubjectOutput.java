@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.simple_config;
+package care.smith.top.top_phenotypic_query.adapter.config;
 
 public class SubjectOutput {
 

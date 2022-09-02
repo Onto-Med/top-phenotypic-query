@@ -1,6 +1,6 @@
 package care.smith.top.top_phenotypic_query.adapter;
 
-import care.smith.top.top_phenotypic_query.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
@@ -11,6 +11,10 @@ public abstract class DataAdapter {
 
   protected DataAdapter(DataAdapterConfig conf) {
     this.conf = conf;
+  }
+
+  protected DataAdapter(String confFile) {
+    this.conf = DataAdapterConfig.getInstance(confFile);
   }
 
   // call terminology server

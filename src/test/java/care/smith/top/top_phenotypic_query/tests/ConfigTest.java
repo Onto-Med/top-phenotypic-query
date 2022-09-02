@@ -8,17 +8,13 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-import care.smith.top.top_phenotypic_query.simple_config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 
-public class SimpleConfigTest {
-
-  private DataAdapterConfig getConfig(String name) {
-    return DataAdapterConfig.getInstance(getClass().getClassLoader().getResource(name).getFile());
-  }
+public class ConfigTest {
 
   @Test
   public void testSubjectQuery() {
-    DataAdapterConfig conf = getConfig("Simple_SQL_Adapter.yaml");
+    DataAdapterConfig conf = DataAdapterConfig.getInstance("test_files/Simple_SQL_Config.yaml");
 
     String expected =
         "SELECT subject_id, birth_date, sex FROM subject\n"
@@ -41,7 +37,9 @@ public class SimpleConfigTest {
 
   @Test
   public void testPhenotypeQuery() {
-    DataAdapterConfig conf = getConfig("Simple_SQL_Adapter.yaml");
+    DataAdapterConfig conf = DataAdapterConfig.getInstance("test_files/Simple_SQL_Config.yaml");
+
+    System.out.println(conf);
 
     String expected =
         "SELECT subject_id, created_at, weight FROM assessment1\n"

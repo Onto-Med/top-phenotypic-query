@@ -1,23 +1,14 @@
-package care.smith.top.top_phenotypic_query.simple_config;
+package care.smith.top.top_phenotypic_query.adapter.config;
 
 import java.util.Map;
 
 public class PhenotypeQuery {
 
-  private String type;
   private String baseQuery;
   private String valueRangePart;
   private String dateRangePart;
   private String subjectsPart;
   private PhenotypeOutput output;
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
 
   public String getBaseQuery() {
     return baseQuery;
@@ -65,9 +56,7 @@ public class PhenotypeQuery {
 
   @Override
   public String toString() {
-    return "PhenotypeQuery [type="
-        + type
-        + ", baseQuery="
+    return "PhenotypeQuery [baseQuery="
         + baseQuery
         + ", valueRangePart="
         + valueRangePart

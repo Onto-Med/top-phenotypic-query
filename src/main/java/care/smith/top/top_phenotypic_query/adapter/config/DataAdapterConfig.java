@@ -1,9 +1,8 @@
-package care.smith.top.top_phenotypic_query.simple_config;
+package care.smith.top.top_phenotypic_query.adapter.config;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,9 +62,8 @@ public class DataAdapterConfig {
     return phenotypeQueries.get(type);
   }
 
-  public void setPhenotypeQueries(List<PhenotypeQuery> phenotypeQueries) {
-    for (PhenotypeQuery phenotypeQuery : phenotypeQueries)
-      this.phenotypeQueries.put(phenotypeQuery.getType(), phenotypeQuery);
+  public void setPhenotypeQueries(Map<String, PhenotypeQuery> phenotypeQueries) {
+    this.phenotypeQueries = phenotypeQueries;
   }
 
   @Override
