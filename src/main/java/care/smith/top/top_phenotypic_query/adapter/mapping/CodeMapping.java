@@ -52,9 +52,11 @@ public class CodeMapping {
   }
 
   public Restriction getSourceRestriction(Restriction modelRestriction) {
+    Restriction sourceRestriction =
+        restrictionMappings.get(RestrictionUtil.copyWithoutBasicAttributes(modelRestriction));
+    if (sourceRestriction == null) return null;
     return RestrictionUtil.setType(
-        restrictionMappings
-            .get(RestrictionUtil.copyWithoutBasicAttributes(modelRestriction))
+        sourceRestriction
             .cardinality(modelRestriction.getCardinality())
             .quantifier(modelRestriction.getQuantifier())
             .negated(modelRestriction.isNegated()));

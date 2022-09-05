@@ -9,6 +9,8 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import care.smith.top.backend.model.Code;
+
 public class DataAdapterMapping {
 
   private CodeMapping birthdateMapping;
@@ -53,6 +55,14 @@ public class DataAdapterMapping {
 
   public CodeMapping getCodeMapping(String code) {
     return codeMappings.get(code);
+  }
+
+  public CodeMapping getCodeMapping(List<Code> codes) {
+    for (Code code : codes) {
+      CodeMapping map = getCodeMapping(code.getCodeSystem() + "|" + code.getCode());
+      if (map != null) return map;
+    }
+    return null;
   }
 
   public void setCodeMappings(List<CodeMapping> codeMappings) {

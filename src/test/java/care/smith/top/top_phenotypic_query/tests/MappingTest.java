@@ -30,7 +30,7 @@ public class MappingTest {
             .addValuesItem("http://hl7.org/fhir/administrative-gender|female")
             .type(DataType.STRING);
     Restriction femaleSourceExpected =
-        new NumberRestriction().addValuesItem(BigDecimal.valueOf(2)).type(DataType.NUMBER);
+        new StringRestriction().addValuesItem("female").type(DataType.STRING);
     Restriction femaleSourceActual = map.getSexMapping().getSourceRestriction(femaleModel);
     assertEquals(femaleSourceExpected, femaleSourceActual);
 
