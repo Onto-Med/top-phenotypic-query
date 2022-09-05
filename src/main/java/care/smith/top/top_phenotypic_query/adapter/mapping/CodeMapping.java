@@ -1,12 +1,26 @@
 package care.smith.top.top_phenotypic_query.adapter.mapping;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import care.smith.top.backend.model.Restriction;
+import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
 
 public class CodeMapping {
 
+  private String code;
   private String type;
-  private Map<String, String> mapping = new HashMap<>();
+  private Map<String, String> phenotypeMappings = new HashMap<>();
+  private Map<Restriction, Restriction> restrictionMappings = new HashMap<>();
+
+  public String getCode() {
+    return code;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
+  }
 
   public String getType() {
     return type;
@@ -16,20 +30,46 @@ public class CodeMapping {
     this.type = type;
   }
 
-  public Map<String, String> getMapping() {
-    return mapping;
+  public String getPhenotypeMapping(String name) {
+    return phenotypeMappings.get(name);
   }
 
-  public void setMapping(Map<String, String> mapping) {
-    this.mapping = mapping;
+  public Map<String, String> getPhenotypeMappings() {
+    return phenotypeMappings;
   }
 
-  public String getValue(String key) {
-    return mapping.get(key);
+  public void setPhenotypeMappings(Map<String, String> phenotypeMappings) {
+    this.phenotypeMappings = phenotypeMappings;
+  }
+
+  public void setRestrictionMappings(List<RestrictionMapping> restrictionMappings) {
+    for (RestrictionMapping rm : restrictionMappings)
+      this.restrictionMappings.put(rm.getModelRestriction(), rm.getSourceRestriction());
+  }
+
+  public boolean hasRestrictionMappings() {
+    return !restrictionMappings.isEmpty();
+  }
+
+  public Restriction getSourceRestriction(Restriction modelRestriction) {
+    return RestrictionUtil.setType(
+        restrictionMappings
+            .get(RestrictionUtil.copyWithoutBasicAttributes(modelRestriction))
+            .cardinality(modelRestriction.getCardinality())
+            .quantifier(modelRestriction.getQuantifier())
+            .negated(modelRestriction.isNegated()));
   }
 
   @Override
   public String toString() {
-    return "Mapping [type=" + type + ", mapping=" + mapping + "]";
+    return "CodeMapping [code="
+        + code
+        + ", type="
+        + type
+        + ", phenotypeMappings="
+        + phenotypeMappings
+        + ", restrictionMappings="
+        + restrictionMappings
+        + "]";
   }
 }

@@ -2,6 +2,8 @@ package care.smith.top.top_phenotypic_query.adapter.mapping;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,10 +11,10 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class DataAdapterMapping {
 
-  private String birthdateCode;
-  private String ageCode;
-  private String sexCode;
-  private Map<String, CodeMapping> mappings;
+  private CodeMapping birthdateMapping;
+  private CodeMapping ageMapping;
+  private CodeMapping sexMapping;
+  private Map<String, CodeMapping> codeMappings = new HashMap<>();
 
   public static DataAdapterMapping getInstance(String yamlFilePath) {
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
@@ -25,52 +27,49 @@ public class DataAdapterMapping {
     return config;
   }
 
+  public CodeMapping getBirthdateMapping() {
+    return birthdateMapping;
+  }
+
+  public void setBirthdateMapping(CodeMapping birthdateMapping) {
+    this.birthdateMapping = birthdateMapping;
+  }
+
+  public CodeMapping getAgeMapping() {
+    return ageMapping;
+  }
+
+  public void setAgeMapping(CodeMapping ageMapping) {
+    this.ageMapping = ageMapping;
+  }
+
+  public CodeMapping getSexMapping() {
+    return sexMapping;
+  }
+
+  public void setSexMapping(CodeMapping sexMapping) {
+    this.sexMapping = sexMapping;
+  }
+
   public CodeMapping getCodeMapping(String code) {
-    return mappings.get(code);
+    return codeMappings.get(code);
   }
 
-  public String getBirthdateCode() {
-    return birthdateCode;
-  }
-
-  public void setBirthdateCode(String birthdateCode) {
-    this.birthdateCode = birthdateCode;
-  }
-
-  public String getAgeCode() {
-    return ageCode;
-  }
-
-  public void setAgeCode(String ageCode) {
-    this.ageCode = ageCode;
-  }
-
-  public String getSexCode() {
-    return sexCode;
-  }
-
-  public void setSexCode(String sexCode) {
-    this.sexCode = sexCode;
-  }
-
-  public Map<String, CodeMapping> getMappings() {
-    return mappings;
-  }
-
-  public void setMappings(Map<String, CodeMapping> mappings) {
-    this.mappings = mappings;
+  public void setCodeMappings(List<CodeMapping> codeMappings) {
+    if (codeMappings != null)
+      for (CodeMapping cm : codeMappings) this.codeMappings.put(cm.getCode(), cm);
   }
 
   @Override
   public String toString() {
-    return "DataAdapterMapping [birthdateCode="
-        + birthdateCode
-        + ", ageCode="
-        + ageCode
-        + ", sexCode="
-        + sexCode
-        + ", mappings="
-        + mappings
+    return "DataAdapterMapping [birthdateMapping="
+        + birthdateMapping
+        + ", ageMapping="
+        + ageMapping
+        + ", sexMapping="
+        + sexMapping
+        + ", codeMappings="
+        + codeMappings
         + "]";
   }
 }
