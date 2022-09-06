@@ -4,8 +4,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
+
+import org.apache.commons.lang3.ObjectUtils;
 
 import care.smith.top.backend.model.BooleanRestriction;
 import care.smith.top.backend.model.DataType;
@@ -120,5 +125,65 @@ public class RestrictionUtil {
     if (r instanceof DateTimeRestriction) return r.type(DataType.DATE_TIME);
     if (r instanceof BooleanRestriction) return r.type(DataType.BOOLEAN);
     return r.type(DataType.STRING);
+  }
+
+  public static boolean hasInterval(Restriction r) {
+    if (r instanceof NumberRestriction) {
+      NumberRestriction nr = (NumberRestriction) r;
+      return nr.getMinOperator() != null || nr.getMaxOperator() != null;
+    }
+    if (r instanceof DateTimeRestriction) {
+      DateTimeRestriction dr = (DateTimeRestriction) r;
+      return dr.getMinOperator() != null || dr.getMaxOperator() != null;
+    }
+    return false;
+  }
+
+  public static Map<RestrictionOperator, String> getInterval(Restriction r) {
+    Map<RestrictionOperator, String> limits = new HashMap<>();
+    if (r instanceof NumberRestriction) {
+      NumberRestriction nr = (NumberRestriction) r;
+      if (nr.getMinOperator() != null) {
+        limits.put(nr.getMinOperator(), nr.getValues().get(0).toPlainString());
+        if (nr.getMaxOperator() != null)
+          limits.put(nr.getMaxOperator(), nr.getValues().get(1).toPlainString());
+      } else if (nr.getMaxOperator() != null)
+        limits.put(nr.getMaxOperator(), nr.getValues().get(0).toPlainString());
+    }
+    if (r instanceof DateTimeRestriction) {
+      DateTimeRestriction dr = (DateTimeRestriction) r;
+      if (dr.getMinOperator() != null) {
+        limits.put(dr.getMinOperator(), DateUtil.format(DateUtil.convert(dr.getValues().get(0))));
+        if (dr.getMaxOperator() != null)
+          limits.put(dr.getMaxOperator(), DateUtil.format(DateUtil.convert(dr.getValues().get(1))));
+      } else if (dr.getMaxOperator() != null)
+        limits.put(dr.getMaxOperator(), DateUtil.format(DateUtil.convert(dr.getValues().get(0))));
+    }
+    return limits;
+  }
+
+  public static boolean hasValues(Restriction r) {
+    if (r instanceof NumberRestriction)
+      return !ObjectUtils.isEmpty(((NumberRestriction) r).getValues());
+    if (r instanceof DateTimeRestriction)
+      return !ObjectUtils.isEmpty(((DateTimeRestriction) r).getValues());
+    if (r instanceof BooleanRestriction)
+      return !ObjectUtils.isEmpty(((BooleanRestriction) r).getValues());
+    return !ObjectUtils.isEmpty(((StringRestriction) r).getValues());
+  }
+
+  public static Stream<String> getValueStrings(Restriction r) {
+    if (r instanceof NumberRestriction)
+      return ((NumberRestriction) r).getValues().stream().map(v -> v.toPlainString());
+    if (r instanceof DateTimeRestriction)
+      return ((DateTimeRestriction) r)
+          .getValues().stream().map(v -> DateUtil.format(DateUtil.convert(v)));
+    if (r instanceof BooleanRestriction)
+      return ((BooleanRestriction) r).getValues().stream().map(v -> v.toString());
+    return ((StringRestriction) r).getValues().stream();
+  }
+
+  public static boolean isNumberRestriction(Restriction r) {
+    return r instanceof NumberRestriction;
   }
 }

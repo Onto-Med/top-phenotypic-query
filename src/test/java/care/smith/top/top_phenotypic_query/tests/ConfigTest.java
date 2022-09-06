@@ -90,33 +90,4 @@ public class ConfigTest {
 
     assertEquals(expected, actual);
   }
-
-  @Test
-  public void testPhenotypeQuery3() {
-    DataAdapterConfig conf = DataAdapterConfig.getInstance("test_files/Simple_SQL_Config.yaml");
-
-    String expected =
-        "SELECT subject_id, created_at, admission_date FROM assessment1\n"
-            + "WHERE admission_date IS NOT NULL\n"
-            + "AND admission_date >= '2020-01-01'::date\n"
-            + "AND admission_date < '2022-01-01'::date\n"
-            + "AND created_at >= '1990-01-01'::date\n"
-            + "AND created_at < '2000-01-01'::date\n"
-            + "AND subject_id IN ('1', '2', '3')";
-
-    Map<String, String> mapping = ImmutableMap.of("phenotype", "admission_date");
-
-    String actual =
-        conf.getPhenotypeQuery("Assessment1")
-            .getQueryBuilder(mapping)
-            .baseQuery()
-            .dateValueIntervalLimit(">=", "2020-01-01")
-            .dateValueIntervalLimit("<", "2022-01-01")
-            .dateIntervalLimit(">=", "1990-01-01")
-            .dateIntervalLimit("<", "2000-01-01")
-            .subjects("'1', '2', '3'")
-            .build();
-
-    assertEquals(expected, actual);
-  }
 }

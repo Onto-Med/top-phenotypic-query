@@ -7,7 +7,6 @@ public class PhenotypeQuery {
   private String baseQuery;
   private String valueIntervalPart;
   private String valueListPart;
-  private String dateValueIntervalPart;
   private String dateIntervalPart;
   private String subjectsPart;
   private PhenotypeOutput output;
@@ -34,14 +33,6 @@ public class PhenotypeQuery {
 
   public void setValueListPart(String valueListPart) {
     this.valueListPart = valueListPart;
-  }
-
-  public String getDateValueIntervalPart() {
-    return dateValueIntervalPart;
-  }
-
-  public void setDateValueIntervalPart(String dateValueIntervalPart) {
-    this.dateValueIntervalPart = dateValueIntervalPart;
   }
 
   public String getDateIntervalPart() {
@@ -80,8 +71,6 @@ public class PhenotypeQuery {
         + valueIntervalPart
         + ", valueListPart="
         + valueListPart
-        + ", dateValueIntervalPart="
-        + dateValueIntervalPart
         + ", dateIntervalPart="
         + dateIntervalPart
         + ", subjectsPart="

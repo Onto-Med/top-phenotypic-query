@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.util;
+package care.smith.top.top_phenotypic_query.adapter.simple_sql_adapter;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

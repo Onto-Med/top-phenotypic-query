@@ -29,7 +29,5 @@ public abstract class DataAdapter {
 
   public abstract ResultSet execute(SingleSearch search);
 
-  public ResultSet executeAllSubjectsQuery() {
-    return null;
-  }
+  public abstract ResultSet executeAllSubjectsQuery();
 }

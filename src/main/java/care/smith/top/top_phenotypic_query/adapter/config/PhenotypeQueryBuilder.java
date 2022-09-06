@@ -29,13 +29,6 @@ public class PhenotypeQueryBuilder extends QueryBuilder {
     return this;
   }
 
-  public PhenotypeQueryBuilder dateValueIntervalLimit(String operator, String value) {
-    add(
-        query.getDateValueIntervalPart().replace("{operator}", operator).replace("{value}", value),
-        mappings);
-    return this;
-  }
-
   public PhenotypeQueryBuilder dateIntervalLimit(String operator, String value) {
     add(
         query.getDateIntervalPart().replace("{operator}", operator).replace("{value}", value),
