@@ -13,6 +13,7 @@ import care.smith.top.backend.model.Code;
 
 public class DataAdapterMapping {
 
+  private String id;
   private CodeMapping birthdateMapping;
   private CodeMapping ageMapping;
   private CodeMapping sexMapping;
@@ -27,6 +28,14 @@ public class DataAdapterMapping {
       e.printStackTrace();
     }
     return config;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public CodeMapping getBirthdateMapping() {
@@ -72,7 +81,9 @@ public class DataAdapterMapping {
 
   @Override
   public String toString() {
-    return "DataAdapterMapping [birthdateMapping="
+    return "DataAdapterMapping [id="
+        + id
+        + ", birthdateMapping="
         + birthdateMapping
         + ", ageMapping="
         + ageMapping

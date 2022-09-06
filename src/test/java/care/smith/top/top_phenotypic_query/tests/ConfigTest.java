@@ -27,19 +27,17 @@ public class ConfigTest {
         conf.getSubjectQuery()
             .getQueryBuilder()
             .baseQuery()
-            .sexRange("'m', 'w'")
-            .birthdateRangeLimit(">=", "1990-01-01")
-            .birthdateRangeLimit("<", "2000-01-01")
+            .sexList("'m', 'w'")
+            .birthdateIntervalLimit(">=", "1990-01-01")
+            .birthdateIntervalLimit("<", "2000-01-01")
             .build();
 
     assertEquals(expected, actual);
   }
 
   @Test
-  public void testPhenotypeQuery() {
+  public void testPhenotypeQuery1() {
     DataAdapterConfig conf = DataAdapterConfig.getInstance("test_files/Simple_SQL_Config.yaml");
-
-    System.out.println(conf);
 
     String expected =
         "SELECT subject_id, created_at, weight FROM assessment1\n"
@@ -56,10 +54,66 @@ public class ConfigTest {
         conf.getPhenotypeQuery("Assessment1")
             .getQueryBuilder(mapping)
             .baseQuery()
-            .valueRangeLimit(">=", "100")
-            .valueRangeLimit("<", "200")
-            .dateRangeLimit(">=", "1990-01-01")
-            .dateRangeLimit("<", "2000-01-01")
+            .valueIntervalLimit(">=", "100")
+            .valueIntervalLimit("<", "200")
+            .dateIntervalLimit(">=", "1990-01-01")
+            .dateIntervalLimit("<", "2000-01-01")
+            .subjects("'1', '2', '3'")
+            .build();
+
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testPhenotypeQuery2() {
+    DataAdapterConfig conf = DataAdapterConfig.getInstance("test_files/Simple_SQL_Config.yaml");
+
+    String expected =
+        "SELECT subject_id, created_at, weight_finding FROM assessment1\n"
+            + "WHERE weight_finding IS NOT NULL\n"
+            + "AND weight_finding IN ('overweight')\n"
+            + "AND created_at >= '1990-01-01'::date\n"
+            + "AND created_at < '2000-01-01'::date\n"
+            + "AND subject_id IN ('1', '2', '3')";
+
+    Map<String, String> mapping = ImmutableMap.of("phenotype", "weight_finding");
+
+    String actual =
+        conf.getPhenotypeQuery("Assessment1")
+            .getQueryBuilder(mapping)
+            .baseQuery()
+            .valueList("'overweight'")
+            .dateIntervalLimit(">=", "1990-01-01")
+            .dateIntervalLimit("<", "2000-01-01")
+            .subjects("'1', '2', '3'")
+            .build();
+
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  public void testPhenotypeQuery3() {
+    DataAdapterConfig conf = DataAdapterConfig.getInstance("test_files/Simple_SQL_Config.yaml");
+
+    String expected =
+        "SELECT subject_id, created_at, admission_date FROM assessment1\n"
+            + "WHERE admission_date IS NOT NULL\n"
+            + "AND admission_date >= '2020-01-01'::date\n"
+            + "AND admission_date < '2022-01-01'::date\n"
+            + "AND created_at >= '1990-01-01'::date\n"
+            + "AND created_at < '2000-01-01'::date\n"
+            + "AND subject_id IN ('1', '2', '3')";
+
+    Map<String, String> mapping = ImmutableMap.of("phenotype", "admission_date");
+
+    String actual =
+        conf.getPhenotypeQuery("Assessment1")
+            .getQueryBuilder(mapping)
+            .baseQuery()
+            .dateValueIntervalLimit(">=", "2020-01-01")
+            .dateValueIntervalLimit("<", "2022-01-01")
+            .dateIntervalLimit(">=", "1990-01-01")
+            .dateIntervalLimit("<", "2000-01-01")
             .subjects("'1', '2', '3'")
             .build();
 

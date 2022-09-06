@@ -5,8 +5,10 @@ import java.util.Map;
 public class PhenotypeQuery {
 
   private String baseQuery;
-  private String valueRangePart;
-  private String dateRangePart;
+  private String valueIntervalPart;
+  private String valueListPart;
+  private String dateValueIntervalPart;
+  private String dateIntervalPart;
   private String subjectsPart;
   private PhenotypeOutput output;
 
@@ -18,20 +20,36 @@ public class PhenotypeQuery {
     this.baseQuery = baseQuery;
   }
 
-  public String getValueRangePart() {
-    return valueRangePart;
+  public String getValueIntervalPart() {
+    return valueIntervalPart;
   }
 
-  public void setValueRangePart(String valueRangePart) {
-    this.valueRangePart = valueRangePart;
+  public void setValueIntervalPart(String valueIntervalPart) {
+    this.valueIntervalPart = valueIntervalPart;
   }
 
-  public String getDateRangePart() {
-    return dateRangePart;
+  public String getValueListPart() {
+    return valueListPart;
   }
 
-  public void setDateRangePart(String dateRangePart) {
-    this.dateRangePart = dateRangePart;
+  public void setValueListPart(String valueListPart) {
+    this.valueListPart = valueListPart;
+  }
+
+  public String getDateValueIntervalPart() {
+    return dateValueIntervalPart;
+  }
+
+  public void setDateValueIntervalPart(String dateValueIntervalPart) {
+    this.dateValueIntervalPart = dateValueIntervalPart;
+  }
+
+  public String getDateIntervalPart() {
+    return dateIntervalPart;
+  }
+
+  public void setDateIntervalPart(String dateIntervalPart) {
+    this.dateIntervalPart = dateIntervalPart;
   }
 
   public String getSubjectsPart() {
@@ -58,10 +76,14 @@ public class PhenotypeQuery {
   public String toString() {
     return "PhenotypeQuery [baseQuery="
         + baseQuery
-        + ", valueRangePart="
-        + valueRangePart
-        + ", dateRangePart="
-        + dateRangePart
+        + ", valueIntervalPart="
+        + valueIntervalPart
+        + ", valueListPart="
+        + valueListPart
+        + ", dateValueIntervalPart="
+        + dateValueIntervalPart
+        + ", dateIntervalPart="
+        + dateIntervalPart
         + ", subjectsPart="
         + subjectsPart
         + ", output="

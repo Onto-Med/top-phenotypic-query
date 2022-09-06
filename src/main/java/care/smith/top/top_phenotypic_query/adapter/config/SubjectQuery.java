@@ -3,8 +3,8 @@ package care.smith.top.top_phenotypic_query.adapter.config;
 public class SubjectQuery {
 
   private String baseQuery;
-  private String sexRangePart;
-  private String birthdateRangePart;
+  private String sexListPart;
+  private String birthdateIntervalPart;
   private SubjectOutput output;
 
   public String getBaseQuery() {
@@ -15,20 +15,20 @@ public class SubjectQuery {
     this.baseQuery = baseQuery;
   }
 
-  public String getSexRangePart() {
-    return sexRangePart;
+  public String getSexListPart() {
+    return sexListPart;
   }
 
-  public void setSexRangePart(String sexRangePart) {
-    this.sexRangePart = sexRangePart;
+  public void setSexListPart(String sexListPart) {
+    this.sexListPart = sexListPart;
   }
 
-  public String getBirthdateRangePart() {
-    return birthdateRangePart;
+  public String getBirthdateIntervalPart() {
+    return birthdateIntervalPart;
   }
 
-  public void setBirthdateRangePart(String birthdateRangePart) {
-    this.birthdateRangePart = birthdateRangePart;
+  public void setBirthdateIntervalPart(String birthdateIntervalPart) {
+    this.birthdateIntervalPart = birthdateIntervalPart;
   }
 
   public SubjectOutput getOutput() {
@@ -47,10 +47,10 @@ public class SubjectQuery {
   public String toString() {
     return "SubjectQuery [baseQuery="
         + baseQuery
-        + ", sexRangePart="
-        + sexRangePart
-        + ", birthdateRangePart="
-        + birthdateRangePart
+        + ", sexListPart="
+        + sexListPart
+        + ", birthdateIntervalPart="
+        + birthdateIntervalPart
         + ", output="
         + output
         + "]";
