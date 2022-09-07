@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import care.smith.top.backend.model.DateTimeRestriction;
+import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
 
 public class ResultSet extends HashMap<String, Phenotypes> {
@@ -30,6 +31,16 @@ public class ResultSet extends HashMap<String, Phenotypes> {
 
   public Phenotypes getPhenotypes(String subjectId) {
     return get(subjectId);
+  }
+
+  public void addValue(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange, Value val) {
+    Phenotypes phes = get(subjectId);
+    if (phes == null) {
+      phes = new Phenotypes(subjectId);
+      setPhenotypes(phes);
+    }
+    phes.addValue(phenotypeName, dateRange, val);
   }
 
   public Values getValues(String subjectId, String phenotypeName) {

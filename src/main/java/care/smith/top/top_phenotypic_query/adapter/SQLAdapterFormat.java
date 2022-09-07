@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.adapter.simple_sql_adapter;
+package care.smith.top.top_phenotypic_query.adapter;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -7,9 +7,17 @@ import java.util.stream.Stream;
 
 import care.smith.top.backend.model.RestrictionOperator;
 import care.smith.top.simple_onto_api.util.DateUtil;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
 
-public class SimpleSQLAdapterFormat implements DataAdapterFormat {
+public class SQLAdapterFormat implements DataAdapterFormat {
+
+  private static SQLAdapterFormat instance = null;
+
+  private SQLAdapterFormat() {}
+
+  public static SQLAdapterFormat get() {
+    if (instance == null) instance = new SQLAdapterFormat();
+    return instance;
+  }
 
   @Override
   public String formatNumber(BigDecimal num) {
@@ -18,7 +26,7 @@ public class SimpleSQLAdapterFormat implements DataAdapterFormat {
 
   @Override
   public String formatDateTime(OffsetDateTime date) {
-    return DateUtil.format(DateUtil.convert(date));
+    return "'" + DateUtil.format(DateUtil.convert(date)) + "'::date";
   }
 
   @Override

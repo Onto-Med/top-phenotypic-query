@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.adapter.config;
 
+import java.util.Map;
+
 public class PhenotypeOutput {
 
   private String subject;
@@ -14,16 +16,16 @@ public class PhenotypeOutput {
     this.subject = subject;
   }
 
-  public String getPhenotype() {
-    return phenotype;
+  public String getPhenotype(Map<String, String> map) {
+    return QueryBuilder.replace(phenotype, map);
   }
 
   public void setPhenotype(String phenotype) {
     this.phenotype = phenotype;
   }
 
-  public String getDate() {
-    return date;
+  public String getDate(Map<String, String> map) {
+    return QueryBuilder.replace(date, map);
   }
 
   public void setDate(String date) {

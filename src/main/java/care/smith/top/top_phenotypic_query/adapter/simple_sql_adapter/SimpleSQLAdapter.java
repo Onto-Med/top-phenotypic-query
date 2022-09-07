@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.adapter.simple_sql_adapter;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
@@ -9,8 +8,9 @@ import care.smith.top.backend.model.EntityType;
 import care.smith.top.backend.model.Phenotype;
 import care.smith.top.backend.model.Quantifier;
 import care.smith.top.backend.model.Restriction;
-import care.smith.top.backend.model.RestrictionOperator;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.adapter.SQLAdapterFormat;
+import care.smith.top.top_phenotypic_query.adapter.SQLConnection;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.adapter.mapping.CodeMapping;
@@ -22,16 +22,24 @@ import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
 
 public class SimpleSQLAdapter extends DataAdapter {
 
-  private Connection con;
+  private SQLConnection con;
 
   public SimpleSQLAdapter(DataAdapterConfig conf, DataAdapterMapping map) {
     super(conf, map);
-    con = SQLUtil.connect(conf);
+    this.con = new SQLConnection(conf);
   }
 
   public SimpleSQLAdapter(String confFile, String mapFile) {
     super(confFile, mapFile);
-    con = SQLUtil.connect(conf);
+    this.con = new SQLConnection(conf);
+  }
+
+  @Override
+  public ResultSet executeAllSubjectsQuery() {
+    //    java.sql.ResultSet rs =
+    //        con.execute(conf.getSubjectQuery().getQueryBuilder().baseQuery().build());
+    //    SQLConnection.print(rs);
+    return null;
   }
 
   @Override
@@ -46,17 +54,17 @@ public class SimpleSQLAdapter extends DataAdapter {
     CodeMapping codeMap = map.getCodeMapping(getCodes(phe));
     Map<String, String> pheMap = codeMap.getPhenotypeMappings();
 
-    PhenotypeQueryBuilder base =
+    PhenotypeQueryBuilder query =
         conf.getPhenotypeQuery(codeMap.getType()).getQueryBuilder(pheMap).baseQuery();
 
     if (phe.getEntityType() == EntityType.SINGLE_RESTRICTION) {
       Restriction r = phe.getRestriction();
       if (r.getQuantifier() != Quantifier.ALL) {
         if (RestrictionUtil.hasInterval(r)) {
-          Map<RestrictionOperator, String> interval = RestrictionUtil.getInterval(r);
-          //          for (RestrictionOperator op : interval.keySet())
-          //        	  base.
-        }
+          Map<String, String> interval = RestrictionUtil.getInterval(r, SQLAdapterFormat.get());
+          for (String key : interval.keySet()) query.valueIntervalLimit(key, interval.get(key));
+        } else if (RestrictionUtil.hasValues(r))
+          query.valueList(RestrictionUtil.getValuesAsString(r, SQLAdapterFormat.get()));
       }
     }
 
@@ -68,23 +76,10 @@ public class SimpleSQLAdapter extends DataAdapter {
     return p.getSuperPhenotype().getCodes();
   }
 
-  public java.sql.ResultSet execute(String query) {
-    return SQLUtil.execute(con, query);
-  }
-
-  public void close() {
-    SQLUtil.close(con);
-  }
-
   public static void main(String[] args) {
     SimpleSQLAdapter a =
         new SimpleSQLAdapter(
             "test_files/Simple_SQL_Config.yaml", "test_files/Simple_SQL_Mapping.yaml");
-    SQLUtil.print(a.execute("SELECT * FROM subject"));
-  }
-
-  @Override
-  public ResultSet executeAllSubjectsQuery() { // TODO Auto-generated method stub
-    return null;
+    a.executeAllSubjectsQuery();
   }
 }

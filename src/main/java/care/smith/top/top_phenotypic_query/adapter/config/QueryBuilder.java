@@ -1,7 +1,6 @@
 package care.smith.top.top_phenotypic_query.adapter.config;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 public class QueryBuilder {
 
@@ -13,10 +12,14 @@ public class QueryBuilder {
     queryString.append(queryPart);
   }
 
-  protected void add(String queryPart, Map<String, String> mappings) {
-    for (Entry<String, String> m : mappings.entrySet())
-      queryPart = queryPart.replace("{" + m.getKey() + "}", m.getValue());
-    queryString.append(queryPart);
+  protected void add(String queryPart, Map<String, String> map) {
+    queryString.append(replace(queryPart, map));
+  }
+
+  public static String replace(String s, Map<String, String> map) {
+    if (map == null) return s;
+    for (String key : map.keySet()) s = s.replace("{" + key + "}", map.get(key));
+    return s;
   }
 
   public String build() {

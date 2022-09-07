@@ -9,6 +9,7 @@ import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
 import care.smith.top.simple_onto_api.model.property.data.value.DateTimeValue;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.simple_onto_api.model.property.data.value.StringValue;
+import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.simple_onto_api.model.property.data.value.list.BooleanValueList;
 import care.smith.top.simple_onto_api.model.property.data.value.list.DateTimeValueList;
 import care.smith.top.simple_onto_api.model.property.data.value.list.DecimalValueList;
@@ -31,6 +32,12 @@ public class Values extends HashMap<DateTimeRestriction, ValueList> {
 
   public void setValues(DateTimeRestriction dateRange, ValueList values) {
     put(dateRange, values);
+  }
+
+  public void addValue(DateTimeRestriction dateRange, Value value) {
+    ValueList vals = get(dateRange);
+    if (vals == null) put(dateRange, ValueList.get(value.getDatatype(), value));
+    else vals.addValueCheked(value);
   }
 
   public void setStringValues(DateTimeRestriction dateRange, StringValue... values) {
