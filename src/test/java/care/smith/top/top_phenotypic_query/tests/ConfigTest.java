@@ -28,8 +28,8 @@ public class ConfigTest {
             .getQueryBuilder()
             .baseQuery()
             .sexList("'m', 'w'")
-            .birthdateIntervalLimit(">=", "1990-01-01")
-            .birthdateIntervalLimit("<", "2000-01-01")
+            .birthdateIntervalLimit(">=", "'1990-01-01'::date")
+            .birthdateIntervalLimit("<", "'2000-01-01'::date")
             .build();
 
     assertEquals(expected, actual);
@@ -56,8 +56,8 @@ public class ConfigTest {
             .baseQuery()
             .valueIntervalLimit(">=", "100")
             .valueIntervalLimit("<", "200")
-            .dateIntervalLimit(">=", "1990-01-01")
-            .dateIntervalLimit("<", "2000-01-01")
+            .dateIntervalLimit(">=", "'1990-01-01'::date")
+            .dateIntervalLimit("<", "'2000-01-01'::date")
             .subjects("'1', '2', '3'")
             .build();
 
@@ -83,8 +83,8 @@ public class ConfigTest {
             .getQueryBuilder(mapping)
             .baseQuery()
             .valueList("'overweight'")
-            .dateIntervalLimit(">=", "1990-01-01")
-            .dateIntervalLimit("<", "2000-01-01")
+            .dateIntervalLimit(">=", "'1990-01-01'::date")
+            .dateIntervalLimit("<", "'2000-01-01'::date")
             .subjects("'1', '2', '3'")
             .build();
 
