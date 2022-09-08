@@ -24,35 +24,24 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 
 public class SQLConnection {
 
-  private DataAdapterConfig conf;
   private Connection con;
 
-  public SQLConnection(DataAdapterConfig conf) {
-    this.conf = conf;
+  public SQLConnection(String url, String user, String password) {
     try {
-      this.con =
-          DriverManager.getConnection(
-              conf.getConnectionAttribute("url"),
-              conf.getConnectionAttribute("user"),
-              conf.getConnectionAttribute("password"));
+      this.con = DriverManager.getConnection(url, user, password);
     } catch (SQLException e) {
       e.printStackTrace();
     }
   }
 
   public ResultSet execute(
-      String query,
-      String type,
-      Phenotype phe,
-      Map<String, String> pheMap,
-      DateTimeRestriction dtr) {
+      String query, Phenotype phe, PhenotypeOutput out, DateTimeRestriction dtr) {
     ResultSet rs = new ResultSet();
     try {
       java.sql.ResultSet sqlRS = con.createStatement().executeQuery(query);
-      PhenotypeOutput out = conf.getPhenotypeQuery(type).getOutput();
       String sbjCol = out.getSubject();
-      String pheCol = out.getPhenotype(pheMap);
-      String dateCol = out.getDate(pheMap);
+      String pheCol = out.getPhenotype();
+      String dateCol = out.getDate();
       DataType datatype = phe.getDataType();
 
       while (sqlRS.next()) {
@@ -108,10 +97,15 @@ public class SQLConnection {
     phe.setId("weight");
     String type = "Assessment1";
     Map<String, String> map = ImmutableMap.of("phenotype", "weight");
+    PhenotypeOutput out = conf.getPhenotypeQuery(type).getOutput().mapping(map);
     String query = conf.getPhenotypeQuery(type).getQueryBuilder(map).baseQuery().build();
     System.out.println(query);
 
-    SQLConnection sql = new SQLConnection(conf);
-    System.out.println(sql.execute(query, type, phe, map, null));
+    SQLConnection sql =
+        new SQLConnection(
+            conf.getConnectionAttribute("url"),
+            conf.getConnectionAttribute("user"),
+            conf.getConnectionAttribute("password"));
+    System.out.println(sql.execute(query, phe, out, null));
   }
 }

@@ -54,7 +54,7 @@ public class CodeMapping {
   public Restriction getSourceRestriction(Restriction modelRestriction) {
     Restriction sourceRestriction =
         restrictionMappings.get(RestrictionUtil.copyWithoutBasicAttributes(modelRestriction));
-    if (sourceRestriction == null) return null;
+    if (sourceRestriction == null) return modelRestriction;
     return RestrictionUtil.setType(
         sourceRestriction
             .cardinality(modelRestriction.getCardinality())

@@ -8,6 +8,13 @@ public class PhenotypeOutput {
   private String phenotype;
   private String date;
 
+  private Map<String, String> mapping;
+
+  public PhenotypeOutput mapping(Map<String, String> mapping) {
+    this.mapping = mapping;
+    return this;
+  }
+
   public String getSubject() {
     return subject;
   }
@@ -16,16 +23,18 @@ public class PhenotypeOutput {
     this.subject = subject;
   }
 
-  public String getPhenotype(Map<String, String> map) {
-    return QueryBuilder.replace(phenotype, map);
+  public String getPhenotype() {
+    if (mapping == null) return phenotype;
+    return QueryBuilder.replace(phenotype, mapping);
   }
 
   public void setPhenotype(String phenotype) {
     this.phenotype = phenotype;
   }
 
-  public String getDate(Map<String, String> map) {
-    return QueryBuilder.replace(date, map);
+  public String getDate() {
+    if (mapping == null) return date;
+    return QueryBuilder.replace(date, mapping);
   }
 
   public void setDate(String date) {

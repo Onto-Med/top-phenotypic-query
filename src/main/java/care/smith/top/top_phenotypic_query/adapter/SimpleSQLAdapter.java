@@ -1,17 +1,16 @@
-package care.smith.top.top_phenotypic_query.adapter.simple_sql_adapter;
+package care.smith.top.top_phenotypic_query.adapter;
 
 import java.util.List;
 import java.util.Map;
 
 import care.smith.top.backend.model.Code;
+import care.smith.top.backend.model.DateTimeRestriction;
 import care.smith.top.backend.model.EntityType;
 import care.smith.top.backend.model.Phenotype;
 import care.smith.top.backend.model.Quantifier;
 import care.smith.top.backend.model.Restriction;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.adapter.SQLAdapterFormat;
-import care.smith.top.top_phenotypic_query.adapter.SQLConnection;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQuery;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.adapter.mapping.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.mapping.DataAdapterMapping;
@@ -26,12 +25,20 @@ public class SimpleSQLAdapter extends DataAdapter {
 
   public SimpleSQLAdapter(DataAdapterConfig conf, DataAdapterMapping map) {
     super(conf, map);
-    this.con = new SQLConnection(conf);
+    this.con =
+        new SQLConnection(
+            conf.getConnectionAttribute("url"),
+            conf.getConnectionAttribute("user"),
+            conf.getConnectionAttribute("password"));
   }
 
   public SimpleSQLAdapter(String confFile, String mapFile) {
     super(confFile, mapFile);
-    this.con = new SQLConnection(conf);
+    this.con =
+        new SQLConnection(
+            conf.getConnectionAttribute("url"),
+            conf.getConnectionAttribute("user"),
+            conf.getConnectionAttribute("password"));
   }
 
   @Override
@@ -53,22 +60,32 @@ public class SimpleSQLAdapter extends DataAdapter {
     Phenotype phe = search.getPhenotype();
     CodeMapping codeMap = map.getCodeMapping(getCodes(phe));
     Map<String, String> pheMap = codeMap.getPhenotypeMappings();
-
-    PhenotypeQueryBuilder query =
-        conf.getPhenotypeQuery(codeMap.getType()).getQueryBuilder(pheMap).baseQuery();
+    DateTimeRestriction dtr = search.getCriterion().getDateTimeRestriction();
+    PhenotypeQuery query = conf.getPhenotypeQuery(codeMap.getType());
+    PhenotypeQueryBuilder builder = query.getQueryBuilder(pheMap).baseQuery();
 
     if (phe.getEntityType() == EntityType.SINGLE_RESTRICTION) {
       Restriction r = phe.getRestriction();
       if (r.getQuantifier() != Quantifier.ALL) {
         if (RestrictionUtil.hasInterval(r)) {
-          Map<String, String> interval = RestrictionUtil.getInterval(r, SQLAdapterFormat.get());
-          for (String key : interval.keySet()) query.valueIntervalLimit(key, interval.get(key));
+          Map<String, String> interval =
+              RestrictionUtil.getInterval(codeMap.getSourceRestriction(r), SQLAdapterFormat.get());
+          for (String key : interval.keySet()) builder.valueIntervalLimit(key, interval.get(key));
         } else if (RestrictionUtil.hasValues(r))
-          query.valueList(RestrictionUtil.getValuesAsString(r, SQLAdapterFormat.get()));
+          builder.valueList(
+              RestrictionUtil.getValuesAsString(
+                  codeMap.getSourceRestriction(r), SQLAdapterFormat.get()));
       }
     }
 
-    return null;
+    if (dtr != null) {
+      if (RestrictionUtil.hasInterval(dtr)) {
+        Map<String, String> interval = RestrictionUtil.getInterval(dtr, SQLAdapterFormat.get());
+        for (String key : interval.keySet()) builder.dateIntervalLimit(key, interval.get(key));
+      }
+    }
+
+    return con.execute(builder.build(), phe, query.getOutput().mapping(pheMap), dtr);
   }
 
   private List<Code> getCodes(Phenotype p) {
