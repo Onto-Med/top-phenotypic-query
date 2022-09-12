@@ -1,76 +1,135 @@
 package care.smith.top.top_phenotypic_query.search;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import care.smith.top.backend.model.Query;
+import care.smith.top.backend.model.Phenotype;
 import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 
-public class SubjectSearch extends PhenotypeSearch {
+public class SubjectSearch {
 
   private DataAdapter adapter;
+  private DataAdapterConfig config;
 
-  private List<QueryCriterion> ageRanges = new ArrayList<>();
-  private List<QueryCriterion> genders = new ArrayList<>();
-  private List<QueryCriterion> requiredPhenotypes = new ArrayList<>();
+  private Phenotype sexInclusion;
+  private Phenotype birthdateInclusion;
+  private Phenotype ageInclusion;
 
-  public SubjectSearch(Query query, DataAdapter adapter) {
-    super(query);
+  private Phenotype sexExclusion;
+  private Phenotype birthdateExclusion;
+  private Phenotype ageExclusion;
+
+  private Set<Phenotype> sexVariables = new HashSet<>();
+  private Set<Phenotype> birthdateVariables = new HashSet<>();
+  private Set<Phenotype> ageVariables = new HashSet<>();
+
+  public SubjectSearch(DataAdapter adapter) {
     this.adapter = adapter;
+    this.config = adapter.getConfig();
   }
 
-  public List<QueryCriterion> getAgeRanges() {
-    return ageRanges;
+  public void setSexCriterion(QueryCriterion criterion) {
+    if (criterion.isExclusion()) this.sexExclusion = criterion.getSubject();
+    else this.sexInclusion = criterion.getSubject();
   }
 
-  public void addAgeRange(QueryCriterion range) {
-    this.ageRanges.add(range);
+  public void setBirthdateCriterion(QueryCriterion criterion) {
+    if (criterion.isExclusion()) this.birthdateExclusion = criterion.getSubject();
+    else this.birthdateInclusion = criterion.getSubject();
   }
 
-  public void setAgeRanges(List<QueryCriterion> ranges) {
-    this.ageRanges = ranges;
+  public void setAgeCriterion(QueryCriterion criterion) {
+    if (criterion.isExclusion()) this.ageExclusion = criterion.getSubject();
+    else this.ageInclusion = criterion.getSubject();
   }
 
-  public void setAgeRanges(QueryCriterion... ranges) {
-    setAgeRanges(Arrays.asList(ranges));
+  public Phenotype getSexInclusion() {
+    return sexInclusion;
   }
 
-  public List<QueryCriterion> getGenders() {
-    return genders;
+  public void setSexInclusion(Phenotype sexInclusion) {
+    this.sexInclusion = sexInclusion;
   }
 
-  public void addGender(QueryCriterion gender) {
-    this.genders.add(gender);
+  public Phenotype getBirthdateInclusion() {
+    return birthdateInclusion;
   }
 
-  public void setGenders(List<QueryCriterion> genders) {
-    this.genders = genders;
+  public void setBirthdateInclusion(Phenotype birthdateInclusion) {
+    this.birthdateInclusion = birthdateInclusion;
   }
 
-  public void setGenders(QueryCriterion... genders) {
-    setGenders(Arrays.asList(genders));
+  public Phenotype getAgeInclusion() {
+    return ageInclusion;
   }
 
-  public List<QueryCriterion> getRequiredPhenotypes() {
-    return requiredPhenotypes;
+  public void setAgeInclusion(Phenotype ageInclusion) {
+    this.ageInclusion = ageInclusion;
   }
 
-  public void addRequiredPhenotypes(QueryCriterion requiredPhenotype) {
-    this.requiredPhenotypes.add(requiredPhenotype);
+  public Phenotype getSexExclusion() {
+    return sexExclusion;
   }
 
-  public void setRequiredPhenotypes(List<QueryCriterion> requiredPhenotypes) {
-    this.requiredPhenotypes = requiredPhenotypes;
+  public void setSexExclusion(Phenotype sexExclusion) {
+    this.sexExclusion = sexExclusion;
   }
 
-  public void setRequiredPhenotypes(QueryCriterion... requiredPhenotypes) {
-    setRequiredPhenotypes(Arrays.asList(requiredPhenotypes));
+  public Phenotype getBirthdateExclusion() {
+    return birthdateExclusion;
   }
 
-  @Override
+  public void setBirthdateExclusion(Phenotype birthdateExclusion) {
+    this.birthdateExclusion = birthdateExclusion;
+  }
+
+  public Phenotype getAgeExclusion() {
+    return ageExclusion;
+  }
+
+  public void setAgeExclusion(Phenotype ageExclusion) {
+    this.ageExclusion = ageExclusion;
+  }
+
+  public Set<Phenotype> getSexVariables() {
+    return sexVariables;
+  }
+
+  public void addSexVariable(Phenotype sexVariable) {
+    this.sexVariables.add(sexVariable);
+  }
+
+  public void setSexVariables(Set<Phenotype> sexVariables) {
+    this.sexVariables = sexVariables;
+  }
+
+  public Set<Phenotype> getBirthdateVariables() {
+    return birthdateVariables;
+  }
+
+  public void addBirthdateVariable(Phenotype birthdateVariable) {
+    this.birthdateVariables.add(birthdateVariable);
+  }
+
+  public void setBirthdateVariables(Set<Phenotype> birthdateVariables) {
+    this.birthdateVariables = birthdateVariables;
+  }
+
+  public Set<Phenotype> getAgeVariables() {
+    return ageVariables;
+  }
+
+  public void addAgeVariable(Phenotype ageVariable) {
+    this.ageVariables.add(ageVariable);
+  }
+
+  public void setAgeVariables(Set<Phenotype> ageVariables) {
+    this.ageVariables = ageVariables;
+  }
+
   public ResultSet execute() {
     return adapter.execute(this);
   }

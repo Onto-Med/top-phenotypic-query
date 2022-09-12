@@ -11,6 +11,7 @@ public class SingleQueryMan {
   private Set<SingleSearch> inclusions = new HashSet<>();
   private Set<SingleSearch> exclusions = new HashSet<>();
   private Set<SingleSearch> variables = new HashSet<>();
+  private SubjectSearch subjectSearch;
 
   private DataAdapter adapter;
 
@@ -37,6 +38,10 @@ public class SingleQueryMan {
 
   public void addVariable(SingleSearch variable) {
     if (!inclusions.contains(variable) && !exclusions.contains(variable)) variables.add(variable);
+  }
+
+  public void setSubjectSearch(SubjectSearch subjectSearch) {
+    this.subjectSearch = subjectSearch;
   }
 
   public ResultSet execute() {

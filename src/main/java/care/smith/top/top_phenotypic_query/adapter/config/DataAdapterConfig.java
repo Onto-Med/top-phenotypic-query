@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import care.smith.top.backend.model.Code;
+import care.smith.top.backend.model.EntityType;
+import care.smith.top.backend.model.Phenotype;
 
 public class DataAdapterConfig {
 
@@ -81,12 +83,26 @@ public class DataAdapterConfig {
     this.birthdateMapping = birthdateMapping;
   }
 
+  public boolean isBirthdate(Phenotype p) {
+    for (Code code : getCodes(p)) {
+      if (birthdateMapping.getCode().equals(getCodeUri(code))) return true;
+    }
+    return false;
+  }
+
   public CodeMapping getAgeMapping() {
     return ageMapping;
   }
 
   public void setAgeMapping(CodeMapping ageMapping) {
     this.ageMapping = ageMapping;
+  }
+
+  public boolean isAge(Phenotype p) {
+    for (Code code : getCodes(p)) {
+      if (ageMapping.getCode().equals(getCodeUri(code))) return true;
+    }
+    return false;
   }
 
   public CodeMapping getSexMapping() {
@@ -97,14 +113,20 @@ public class DataAdapterConfig {
     this.sexMapping = sexMapping;
   }
 
+  public boolean isSex(Phenotype p) {
+    for (Code code : getCodes(p)) {
+      if (sexMapping.getCode().equals(getCodeUri(code))) return true;
+    }
+    return false;
+  }
+
   public CodeMapping getCodeMapping(String code) {
     return codeMappings.get(code);
   }
 
-  public CodeMapping getCodeMapping(List<Code> codes) {
-    for (Code code : codes) {
-      CodeMapping map =
-          getCodeMapping(code.getCodeSystem().getUri().toString() + "|" + code.getCode());
+  public CodeMapping getCodeMapping(Phenotype p) {
+    for (Code code : getCodes(p)) {
+      CodeMapping map = getCodeMapping(getCodeUri(code));
       if (map != null) return map;
     }
     return null;
@@ -113,6 +135,15 @@ public class DataAdapterConfig {
   public void setCodeMappings(List<CodeMapping> codeMappings) {
     if (codeMappings != null)
       for (CodeMapping cm : codeMappings) this.codeMappings.put(cm.getCode(), cm);
+  }
+
+  private String getCodeUri(Code code) {
+    return code.getCodeSystem().getUri().toString() + "|" + code.getCode();
+  }
+
+  private List<Code> getCodes(Phenotype p) {
+    if (p.getEntityType() == EntityType.SINGLE_PHENOTYPE) return p.getCodes();
+    return p.getSuperPhenotype().getCodes();
   }
 
   @Override
