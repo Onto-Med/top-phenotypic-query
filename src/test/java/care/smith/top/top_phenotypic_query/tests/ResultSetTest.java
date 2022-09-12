@@ -2,8 +2,7 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -194,7 +193,7 @@ public class ResultSetTest {
         .maxOperator(RestrictionOperator.LESS_THAN)
         .values(
             List.of(
-                OffsetDateTime.of(year, 1, 1, 0, 0, 0, 0, ZoneOffset.ofHours(2)),
-                OffsetDateTime.of(year + 1, 1, 1, 0, 0, 0, 0, ZoneOffset.ofHours(2))));
+                LocalDateTime.of(year, 1, 1, 0, 0, 0, 0),
+                LocalDateTime.of(year + 1, 1, 1, 0, 0, 0, 0)));
   }
 }

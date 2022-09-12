@@ -1,7 +1,7 @@
 package care.smith.top.top_phenotypic_query.adapter;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,8 +25,8 @@ public class SQLAdapterFormat implements DataAdapterFormat {
   }
 
   @Override
-  public String formatDateTime(OffsetDateTime date) {
-    return "'" + DateUtil.format(DateUtil.convert(date)) + "'::date";
+  public String formatDateTime(LocalDateTime date) {
+    return "'" + DateUtil.format(date) + "'::date";
   }
 
   @Override

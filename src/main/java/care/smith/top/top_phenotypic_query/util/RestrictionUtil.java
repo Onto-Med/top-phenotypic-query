@@ -2,7 +2,6 @@ package care.smith.top.top_phenotypic_query.util;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +17,6 @@ import care.smith.top.backend.model.NumberRestriction;
 import care.smith.top.backend.model.Restriction;
 import care.smith.top.backend.model.RestrictionOperator;
 import care.smith.top.backend.model.StringRestriction;
-import care.smith.top.simple_onto_api.util.DateUtil;
 import care.smith.top.simple_onto_api.util.StringUtil;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
 
@@ -59,10 +57,7 @@ public class RestrictionUtil {
     }
 
     if (withBasicAttributes)
-      copy.cardinality(r.getCardinality())
-          .negated(r.isNegated())
-          .quantifier(r.getQuantifier())
-          .type(r.getType());
+      copy.cardinality(r.getCardinality()).quantifier(r.getQuantifier()).type(r.getType());
 
     return copy;
   }
@@ -79,7 +74,7 @@ public class RestrictionUtil {
     RestrictionOperator minOperator = null;
     RestrictionOperator maxOperator = null;
     List<BigDecimal> decimalValues = new ArrayList<>();
-    List<OffsetDateTime> dateValues = new ArrayList<>();
+    List<LocalDateTime> dateValues = new ArrayList<>();
     List<Boolean> booleanValues = new ArrayList<>();
     List<String> stringValues = new ArrayList<>();
 
@@ -97,7 +92,7 @@ public class RestrictionUtil {
         if (nv.isPresent()) decimalValues.add(nv.get());
         else {
           Optional<LocalDateTime> dv = StringUtil.parseDate(e);
-          if (dv.isPresent()) dateValues.add(DateUtil.convert(dv.get()));
+          if (dv.isPresent()) dateValues.add(dv.get());
           else {
             Optional<Boolean> bv = StringUtil.parseBoolean(e);
             if (bv.isPresent()) booleanValues.add(bv.get());

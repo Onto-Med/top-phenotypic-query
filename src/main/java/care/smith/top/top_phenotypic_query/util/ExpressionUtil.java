@@ -43,8 +43,7 @@ public class ExpressionUtil {
           new BooleanValue(((care.smith.top.backend.model.BooleanValue) value).isValue()));
     if (value instanceof care.smith.top.backend.model.DateTimeValue)
       return new ConstantExpression(
-          new DateTimeValue(
-              ((care.smith.top.backend.model.DateTimeValue) value).getValue().toLocalDateTime()));
+          new DateTimeValue(((care.smith.top.backend.model.DateTimeValue) value).getValue()));
     if (value instanceof care.smith.top.backend.model.NumberValue)
       return new ConstantExpression(
           new DecimalValue(((care.smith.top.backend.model.NumberValue) value).getValue()));

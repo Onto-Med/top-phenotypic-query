@@ -58,8 +58,7 @@ public class CodeMapping {
     return RestrictionUtil.setType(
         sourceRestriction
             .cardinality(modelRestriction.getCardinality())
-            .quantifier(modelRestriction.getQuantifier())
-            .negated(modelRestriction.isNegated()));
+            .quantifier(modelRestriction.getQuantifier()));
   }
 
   @Override

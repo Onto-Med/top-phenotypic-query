@@ -32,10 +32,7 @@ public class PhenotypeFinder {
   private ResultSet executeCompositeSearches(ResultSet rs) {
     for (QueryCriterion cri : query.getCriteria()) {
       EntityType type = cri.getSubject().getEntityType();
-      if (type == EntityType.COMBINED_PHENOTYPE
-          || type == EntityType.COMBINED_RESTRICTION
-          || type == EntityType.DERIVED_PHENOTYPE
-          || type == EntityType.DERIVED_RESTRICTION)
+      if (type == EntityType.COMPOSITE_PHENOTYPE || type == EntityType.COMPOSITE_RESTRICTION)
         new CompositeSearch(query, cri, rs, phenotypes).execute();
     }
     return rs;

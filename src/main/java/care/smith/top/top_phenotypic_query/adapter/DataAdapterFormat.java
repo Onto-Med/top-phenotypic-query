@@ -1,7 +1,7 @@
 package care.smith.top.top_phenotypic_query.adapter;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 import care.smith.top.backend.model.RestrictionOperator;
@@ -9,7 +9,7 @@ import care.smith.top.backend.model.RestrictionOperator;
 public interface DataAdapterFormat {
   public String formatNumber(BigDecimal num);
 
-  public String formatDateTime(OffsetDateTime date);
+  public String formatDateTime(LocalDateTime date);
 
   public String formatBoolean(Boolean bool);
 
