@@ -1,10 +1,8 @@
 package care.smith.top.top_phenotypic_query.search;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import care.smith.top.backend.model.Code;
 import care.smith.top.backend.model.DateTimeRestriction;
 import care.smith.top.backend.model.EntityType;
 import care.smith.top.backend.model.Phenotype;
@@ -122,11 +120,6 @@ public class SingleSearch extends PhenotypeSearch {
     }
 
     return builder.build();
-  }
-
-  private List<Code> getCodes(Phenotype p) {
-    if (p.getEntityType() == EntityType.SINGLE_PHENOTYPE) return p.getCodes();
-    return p.getSuperPhenotype().getCodes();
   }
 
   @Override
