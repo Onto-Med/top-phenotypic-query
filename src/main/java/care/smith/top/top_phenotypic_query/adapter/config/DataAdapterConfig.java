@@ -103,7 +103,8 @@ public class DataAdapterConfig {
 
   public CodeMapping getCodeMapping(List<Code> codes) {
     for (Code code : codes) {
-      CodeMapping map = getCodeMapping(code.getCodeSystem() + "|" + code.getCode());
+      CodeMapping map =
+          getCodeMapping(code.getCodeSystem().getUri().toString() + "|" + code.getCode());
       if (map != null) return map;
     }
     return null;

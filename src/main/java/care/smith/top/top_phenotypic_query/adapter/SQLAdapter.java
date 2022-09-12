@@ -1,18 +1,20 @@
 package care.smith.top.top_phenotypic_query.adapter;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
-
+import care.smith.top.backend.model.Code;
+import care.smith.top.backend.model.CodeSystem;
 import care.smith.top.backend.model.DataType;
-import care.smith.top.backend.model.DateTimeRestriction;
+import care.smith.top.backend.model.EntityType;
 import care.smith.top.backend.model.ItemType;
 import care.smith.top.backend.model.Phenotype;
+import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
 import care.smith.top.simple_onto_api.model.property.data.value.DateTimeValue;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
@@ -21,27 +23,36 @@ import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.search.SingleSearch;
+import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 
-public class SQLConnection {
+public class SQLAdapter extends DataAdapter {
 
   private Connection con;
 
-  public SQLConnection(String url, String user, String password) {
+  public SQLAdapter(DataAdapterConfig config) {
+    super(config);
     try {
-      this.con = DriverManager.getConnection(url, user, password);
+      this.con =
+          DriverManager.getConnection(
+              config.getConnectionAttribute("url"),
+              config.getConnectionAttribute("user"),
+              config.getConnectionAttribute("password"));
     } catch (SQLException e) {
       e.printStackTrace();
     }
   }
 
-  public ResultSet execute(
-      String query, Phenotype phe, PhenotypeOutput out, DateTimeRestriction dtr) {
+  @Override
+  public ResultSet execute(SingleSearch search) {
     ResultSet rs = new ResultSet();
     try {
-      java.sql.ResultSet sqlRS = con.createStatement().executeQuery(query);
+      java.sql.ResultSet sqlRS = con.createStatement().executeQuery(search.getQueryString());
+      PhenotypeOutput out = search.getOutput();
       String sbjCol = out.getSubject();
       String pheCol = out.getPhenotype();
       String dateCol = out.getDate();
+      Phenotype phe = search.getPhenotype();
       DataType datatype = phe.getDataType();
 
       while (sqlRS.next()) {
@@ -54,12 +65,27 @@ public class SQLConnection {
         else if (datatype == DataType.NUMBER)
           val = new DecimalValue(sqlRS.getBigDecimal(pheCol), date);
         else val = new StringValue(sqlRS.getString(pheCol), date);
-        if (val != null) rs.addValue(sbj, phe.getId(), dtr, val);
+        if (val != null) rs.addValue(sbj, phe.getId(), search.getDateTimeRestriction(), val);
       }
     } catch (SQLException e) {
       e.printStackTrace();
     }
     return rs;
+  }
+
+  @Override
+  public ResultSet execute(SubjectSearch search) {
+    return null;
+  }
+
+  @Override
+  public ResultSet executeAllSubjectsQuery() {
+    return null;
+  }
+
+  @Override
+  public DataAdapterFormat getFormat() {
+    return SQLAdapterFormat.get();
   }
 
   public void close() {
@@ -91,21 +117,15 @@ public class SQLConnection {
     }
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws URISyntaxException {
     DataAdapterConfig conf = DataAdapterConfig.getInstance("test_files/Simple_SQL_Config.yaml");
     Phenotype phe = new Phenotype().dataType(DataType.NUMBER).itemType(ItemType.OBSERVATION);
     phe.setId("weight");
-    String type = "Assessment1";
-    Map<String, String> map = ImmutableMap.of("phenotype", "weight");
-    PhenotypeOutput out = conf.getPhenotypeQuery(type).getOutput().mapping(map);
-    String query = conf.getPhenotypeQuery(type).getQueryBuilder(map).baseQuery().build();
-    System.out.println(query);
-
-    SQLConnection sql =
-        new SQLConnection(
-            conf.getConnectionAttribute("url"),
-            conf.getConnectionAttribute("user"),
-            conf.getConnectionAttribute("password"));
-    System.out.println(sql.execute(query, phe, out, null));
+    phe.setEntityType(EntityType.SINGLE_PHENOTYPE);
+    phe.addCodesItem(
+        new Code().code("3141-9").codeSystem(new CodeSystem().uri(new URI("http://loinc.org"))));
+    SQLAdapter sql = new SQLAdapter(conf);
+    SingleSearch search = new SingleSearch(null, new QueryCriterion().subject(phe), sql);
+    System.out.println(sql.execute(search));
   }
 }

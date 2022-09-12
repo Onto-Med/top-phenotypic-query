@@ -7,14 +7,18 @@ import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 
 public abstract class DataAdapter {
 
-  protected DataAdapterConfig conf;
+  protected DataAdapterConfig config;
 
-  protected DataAdapter(DataAdapterConfig conf) {
-    this.conf = conf;
+  protected DataAdapter(DataAdapterConfig config) {
+    this.config = config;
   }
 
-  protected DataAdapter(String confFile, String mapFile) {
-    this.conf = DataAdapterConfig.getInstance(confFile);
+  protected DataAdapter(String configFile) {
+    this.config = DataAdapterConfig.getInstance(configFile);
+  }
+
+  public DataAdapterConfig getConfig() {
+    return config;
   }
 
   // call terminology server
@@ -26,4 +30,6 @@ public abstract class DataAdapter {
   public abstract ResultSet execute(SingleSearch search);
 
   public abstract ResultSet executeAllSubjectsQuery();
+
+  public abstract DataAdapterFormat getFormat();
 }

@@ -6,7 +6,7 @@ import java.util.Set;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 
-public class QueryMan {
+public class SingleQueryMan {
 
   private Set<SingleSearch> inclusions = new HashSet<>();
   private Set<SingleSearch> exclusions = new HashSet<>();
@@ -14,7 +14,7 @@ public class QueryMan {
 
   private DataAdapter adapter;
 
-  public QueryMan(DataAdapter adapter) {
+  public SingleQueryMan(DataAdapter adapter) {
     this.adapter = adapter;
   }
 
