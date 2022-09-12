@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.adapter.mapping;
+package care.smith.top.top_phenotypic_query.adapter.config;
 
 import java.util.HashMap;
 import java.util.List;

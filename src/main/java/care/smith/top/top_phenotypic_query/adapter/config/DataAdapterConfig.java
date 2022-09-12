@@ -3,10 +3,13 @@ package care.smith.top.top_phenotypic_query.adapter.config;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
+import care.smith.top.backend.model.Code;
 
 public class DataAdapterConfig {
 
@@ -14,6 +17,10 @@ public class DataAdapterConfig {
   private Map<String, String> connection;
   private SubjectQuery subjectQuery;
   private Map<String, PhenotypeQuery> phenotypeQueries = new HashMap<>();
+  private CodeMapping birthdateMapping;
+  private CodeMapping ageMapping;
+  private CodeMapping sexMapping;
+  private Map<String, CodeMapping> codeMappings = new HashMap<>();
 
   public static DataAdapterConfig getInstance(String yamlFilePath) {
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
@@ -66,6 +73,47 @@ public class DataAdapterConfig {
     this.phenotypeQueries = phenotypeQueries;
   }
 
+  public CodeMapping getBirthdateMapping() {
+    return birthdateMapping;
+  }
+
+  public void setBirthdateMapping(CodeMapping birthdateMapping) {
+    this.birthdateMapping = birthdateMapping;
+  }
+
+  public CodeMapping getAgeMapping() {
+    return ageMapping;
+  }
+
+  public void setAgeMapping(CodeMapping ageMapping) {
+    this.ageMapping = ageMapping;
+  }
+
+  public CodeMapping getSexMapping() {
+    return sexMapping;
+  }
+
+  public void setSexMapping(CodeMapping sexMapping) {
+    this.sexMapping = sexMapping;
+  }
+
+  public CodeMapping getCodeMapping(String code) {
+    return codeMappings.get(code);
+  }
+
+  public CodeMapping getCodeMapping(List<Code> codes) {
+    for (Code code : codes) {
+      CodeMapping map = getCodeMapping(code.getCodeSystem() + "|" + code.getCode());
+      if (map != null) return map;
+    }
+    return null;
+  }
+
+  public void setCodeMappings(List<CodeMapping> codeMappings) {
+    if (codeMappings != null)
+      for (CodeMapping cm : codeMappings) this.codeMappings.put(cm.getCode(), cm);
+  }
+
   @Override
   public String toString() {
     return "DataAdapterConfig [id="
@@ -76,6 +124,14 @@ public class DataAdapterConfig {
         + subjectQuery
         + ", phenotypeQueries="
         + phenotypeQueries
+        + ", birthdateMapping="
+        + birthdateMapping
+        + ", ageMapping="
+        + ageMapping
+        + ", sexMapping="
+        + sexMapping
+        + ", codeMappings="
+        + codeMappings
         + "]";
   }
 }

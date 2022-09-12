@@ -12,14 +12,14 @@ import care.smith.top.backend.model.Quantifier;
 import care.smith.top.backend.model.Restriction;
 import care.smith.top.backend.model.RestrictionOperator;
 import care.smith.top.backend.model.StringRestriction;
-import care.smith.top.top_phenotypic_query.adapter.mapping.CodeMapping;
-import care.smith.top.top_phenotypic_query.adapter.mapping.DataAdapterMapping;
+import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 
 public class MappingTest {
 
   @Test
   public void test() {
-    DataAdapterMapping map = DataAdapterMapping.getInstance("test_files/Simple_SQL_Mapping.yaml");
+    DataAdapterConfig map = DataAdapterConfig.getInstance("test_files/Simple_SQL_Config.yaml");
 
     assertEquals("http://loinc.org|21112-8", map.getBirthdateMapping().getCode());
     assertEquals("http://loinc.org|30525-0", map.getAgeMapping().getCode());

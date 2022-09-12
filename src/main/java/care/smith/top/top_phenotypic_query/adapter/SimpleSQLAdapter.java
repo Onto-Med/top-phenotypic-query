@@ -9,11 +9,10 @@ import care.smith.top.backend.model.EntityType;
 import care.smith.top.backend.model.Phenotype;
 import care.smith.top.backend.model.Quantifier;
 import care.smith.top.backend.model.Restriction;
+import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQuery;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
-import care.smith.top.top_phenotypic_query.adapter.mapping.CodeMapping;
-import care.smith.top.top_phenotypic_query.adapter.mapping.DataAdapterMapping;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
@@ -23,8 +22,8 @@ public class SimpleSQLAdapter extends DataAdapter {
 
   private SQLConnection con;
 
-  public SimpleSQLAdapter(DataAdapterConfig conf, DataAdapterMapping map) {
-    super(conf, map);
+  public SimpleSQLAdapter(DataAdapterConfig conf) {
+    super(conf);
     this.con =
         new SQLConnection(
             conf.getConnectionAttribute("url"),
@@ -58,7 +57,7 @@ public class SimpleSQLAdapter extends DataAdapter {
   @Override
   public ResultSet execute(SingleSearch search) {
     Phenotype phe = search.getPhenotype();
-    CodeMapping codeMap = map.getCodeMapping(getCodes(phe));
+    CodeMapping codeMap = conf.getCodeMapping(getCodes(phe));
     Map<String, String> pheMap = codeMap.getPhenotypeMappings();
     DateTimeRestriction dtr = search.getCriterion().getDateTimeRestriction();
     PhenotypeQuery query = conf.getPhenotypeQuery(codeMap.getType());
