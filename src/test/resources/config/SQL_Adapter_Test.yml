@@ -1,6 +1,40 @@
 id: Simple_SQL_Adapter
 connection:
-  driver: org.h2.Driver
-  url: jdbc:h2:mem:test-db;INIT=RUNSCRIPT FROM 'classpath:schema.sql'
+  url: jdbc:h2:mem:test-db
   user: user
   password: password
+subjectQuery:
+  baseQuery: "SELECT subject_id, birth_date, sex FROM subject\nWHERE TRUE"
+  sexListPart: "\nAND sex IN ({sexes})"
+  birthdateIntervalPart: "\nAND birth_date {operator} {value}"
+  output:
+    id: subject_id
+    sex: sex
+    birthdate: birth_date
+phenotypeQueries:
+  Assessment1:
+    baseQuery: "SELECT subject_id, created_at, {phenotype} FROM assessment1\nWHERE {phenotype} IS NOT NULL"
+    valueIntervalPart: "\nAND {phenotype} {operator} {value}"
+    valueListPart: "\nAND {phenotype} IN ({values})"
+    dateIntervalPart: "\nAND created_at {operator} {value}"
+    subjectsPart: "\nAND subject_id IN ({subject_ids})"
+    output:
+      subject: subject_id
+      phenotype: "{phenotype}"
+      date: created_at
+sexMapping:
+  code: http://loinc.org|46098-0
+  restrictionMappings:
+    - model: [http://hl7.org/fhir/administrative-gender%7Cmale]
+      source: [male]
+    - model: [http://hl7.org/fhir/administrative-gender%7Cfemale]
+      source: [female]
+    - model: [http://hl7.org/fhir/administrative-gender%7Cother]
+      source: [other]
+    - model: [http://hl7.org/fhir/administrative-gender%7Cunknown]
+      source: [unknown]
+codeMappings:
+  - code: http://loinc.org|3137-7
+    type: Assessment1
+    phenotypeMappings:
+      phenotype: height
