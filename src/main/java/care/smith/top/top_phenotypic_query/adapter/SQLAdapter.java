@@ -11,10 +11,13 @@ import java.time.LocalDateTime;
 import care.smith.top.backend.model.Code;
 import care.smith.top.backend.model.CodeSystem;
 import care.smith.top.backend.model.DataType;
+import care.smith.top.backend.model.DateTimeRestriction;
 import care.smith.top.backend.model.EntityType;
 import care.smith.top.backend.model.ItemType;
 import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.QueryCriterion;
+import care.smith.top.backend.model.Quantifier;
+import care.smith.top.backend.model.RestrictionOperator;
+import care.smith.top.backend.model.StringRestriction;
 import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
 import care.smith.top.simple_onto_api.model.property.data.value.DateTimeValue;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
@@ -22,9 +25,11 @@ import care.smith.top.simple_onto_api.model.property.data.value.StringValue;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
+import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
+import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
 
 public class SQLAdapter extends DataAdapter {
 
@@ -65,7 +70,7 @@ public class SQLAdapter extends DataAdapter {
         else if (datatype == DataType.NUMBER)
           val = new DecimalValue(sqlRS.getBigDecimal(pheCol), date);
         else val = new StringValue(sqlRS.getString(pheCol), date);
-        if (val != null) rs.addValue(sbj, phe.getId(), search.getDateTimeRestriction(), val);
+        if (val != null) addValue(rs, sbj, phe, search.getDateTimeRestriction(), val);
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -75,7 +80,40 @@ public class SQLAdapter extends DataAdapter {
 
   @Override
   public ResultSet execute(SubjectSearch search) {
-    return null;
+    ResultSet rs = new ResultSet();
+    try {
+      java.sql.ResultSet sqlRS = con.createStatement().executeQuery(search.getQueryString());
+      SubjectOutput out = search.getOutput();
+      String sbjCol = out.getId();
+      String bdCol = out.getBirthdate();
+      String sexCol = out.getSex();
+      Phenotype bd = search.getBirthdate();
+      Phenotype sex = search.getSex();
+
+      while (sqlRS.next()) {
+        String sbj = sqlRS.getString(sbjCol);
+        Value bdValue = new DateTimeValue(sqlRS.getTimestamp(bdCol).toLocalDateTime());
+        Value sexValue = new StringValue(sqlRS.getString(sexCol));
+        if (bdValue != null) {
+          if (bd != null) addValue(rs, sbj, bd, null, bdValue);
+          else rs.addValue(sbj, "birthdate", null, bdValue);
+        }
+        if (sexValue != null) {
+          if (sex != null) addValue(rs, sbj, sex, null, sexValue);
+          else rs.addValue(sbj, "sex", null, sexValue);
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return rs;
+  }
+
+  private void addValue(
+      ResultSet rs, String sbj, Phenotype phe, DateTimeRestriction dtr, Value val) {
+    rs.addValue(sbj, PhenotypeUtil.getPhenotypeId(phe), dtr, val);
+    if (PhenotypeUtil.hasExistsQuantifier(phe))
+      rs.addValue(sbj, phe.getId(), dtr, new BooleanValue(true));
   }
 
   @Override
@@ -93,6 +131,18 @@ public class SQLAdapter extends DataAdapter {
       con.close();
     } catch (SQLException e) {
       e.printStackTrace();
+    }
+  }
+
+  public static void printSize(java.sql.ResultSet rs) {
+    if (rs == null) System.out.println("SIZE: NULL");
+    else {
+      try {
+        rs.last();
+        System.out.println("SIZE: " + rs.getRow());
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -119,13 +169,55 @@ public class SQLAdapter extends DataAdapter {
 
   public static void main(String[] args) throws URISyntaxException {
     DataAdapterConfig conf = DataAdapterConfig.getInstance("test_files/Simple_SQL_Config.yaml");
-    Phenotype phe = new Phenotype().dataType(DataType.NUMBER).itemType(ItemType.OBSERVATION);
-    phe.setId("weight");
-    phe.setEntityType(EntityType.SINGLE_PHENOTYPE);
-    phe.addCodesItem(
-        new Code().code("3141-9").codeSystem(new CodeSystem().uri(new URI("http://loinc.org"))));
     SQLAdapter sql = new SQLAdapter(conf);
-    SingleSearch search = new SingleSearch(null, new QueryCriterion().subject(phe), sql);
-    System.out.println(sql.execute(search));
+
+    //    Phenotype phe = new Phenotype().dataType(DataType.NUMBER).itemType(ItemType.OBSERVATION);
+    //    phe.setId("weight");
+    //    phe.setEntityType(EntityType.SINGLE_PHENOTYPE);
+    //    phe.addCodesItem(
+    //        new Code().code("3141-9").codeSystem(new CodeSystem().uri(new
+    // URI("http://loinc.org"))));
+    //    SingleSearch search = new SingleSearch(null, new QueryCriterion().subject(phe), sql);
+    //    System.out.println(sql.execute(search));
+
+    Phenotype bd = new Phenotype().dataType(DataType.NUMBER).itemType(ItemType.OBSERVATION);
+    bd.setId("birthdate");
+    bd.setEntityType(EntityType.SINGLE_PHENOTYPE);
+    bd.addCodesItem(
+        new Code().code("21112-8").codeSystem(new CodeSystem().uri(new URI("http://loinc.org"))));
+
+    DateTimeRestriction bdR =
+        new DateTimeRestriction().addValuesItem(LocalDateTime.of(2000, 1, 1, 0, 0));
+    bdR.setType(DataType.NUMBER);
+    bdR.setQuantifier(Quantifier.MIN);
+    bdR.setCardinality(1);
+    bdR.setMinOperator(RestrictionOperator.GREATER_THAN_OR_EQUAL_TO);
+
+    Phenotype young = new Phenotype().dataType(DataType.NUMBER).restriction(bdR);
+    young.setId("young");
+    young.setEntityType(EntityType.SINGLE_RESTRICTION);
+    young.setSuperPhenotype(bd);
+
+    Phenotype sex = new Phenotype().dataType(DataType.STRING).itemType(ItemType.OBSERVATION);
+    sex.setId("sex");
+    sex.setEntityType(EntityType.SINGLE_PHENOTYPE);
+    sex.addCodesItem(
+        new Code().code("46098-0").codeSystem(new CodeSystem().uri(new URI("http://loinc.org"))));
+
+    StringRestriction femaleR =
+        new StringRestriction().addValuesItem("http://hl7.org/fhir/administrative-gender|female");
+    femaleR.setType(DataType.STRING);
+    femaleR.setQuantifier(Quantifier.MIN);
+    femaleR.setCardinality(1);
+
+    Phenotype female = new Phenotype().dataType(DataType.STRING).restriction(femaleR);
+    female.setId("female");
+    female.setEntityType(EntityType.SINGLE_RESTRICTION);
+    female.setSuperPhenotype(sex);
+
+    SubjectSearch sbjSearch = new SubjectSearch(null, female, young, sql);
+    ResultSet rs = sql.execute(sbjSearch);
+    System.out.println(rs);
+    System.out.println("SIZE: " + rs.size());
   }
 }
