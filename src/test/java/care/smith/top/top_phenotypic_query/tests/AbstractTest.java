@@ -30,6 +30,15 @@ public abstract class AbstractTest {
     return phenotype;
   }
 
+  static Phenotype getCompositePhenotype(
+      String name, Expression exp, String codeSystem, String code) throws URISyntaxException {
+    Phenotype phenotype = (Phenotype) new Phenotype().expression(exp).id(name);
+    if (codeSystem != null && code != null)
+      phenotype.addCodesItem(
+          new Code().code(code).codeSystem(new CodeSystem().uri(new URI(codeSystem))));
+    return phenotype;
+  }
+
   static Phenotype getRestriction(String name, Phenotype parent, Integer min, Integer max) {
     Expression values = new Expression().entityId(parent.getId());
     Expression range = new Expression().function("list");

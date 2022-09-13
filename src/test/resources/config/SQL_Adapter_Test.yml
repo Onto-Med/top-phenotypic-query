@@ -22,19 +22,30 @@ phenotypeQueries:
       subject: subject_id
       phenotype: "{phenotype}"
       date: created_at
+birthdateMapping:
+  code: http://loinc.org|21112-8
+ageMapping:
+  code: http://loinc.org|30525-0
+  restrictionMappings:
+    - model: [ ">=", 18, "<", 34 ]
+      source: [ ">=", 19, "<", 34 ]
 sexMapping:
   code: http://loinc.org|46098-0
   restrictionMappings:
-    - model: [http://hl7.org/fhir/administrative-gender%7Cmale]
-      source: [male]
-    - model: [http://hl7.org/fhir/administrative-gender%7Cfemale]
-      source: [female]
-    - model: [http://hl7.org/fhir/administrative-gender%7Cother]
-      source: [other]
-    - model: [http://hl7.org/fhir/administrative-gender%7Cunknown]
-      source: [unknown]
+    - model: [ http://hl7.org/fhir/administrative-gender|male ]
+      source: [ male ]
+    - model: [ http://hl7.org/fhir/administrative-gender|female ]
+      source: [ female ]
+    - model: [ http://hl7.org/fhir/administrative-gender|other ]
+      source: [ other ]
+    - model: [ http://hl7.org/fhir/administrative-gender|unknown ]
+      source: [ unknown ]
 codeMappings:
   - code: http://loinc.org|3137-7
     type: Assessment1
     phenotypeMappings:
       phenotype: height
+  - code: http://loinc.org|3141-9
+    type: Assessment1
+    phenotypeMappings:
+      phenotype: weight
