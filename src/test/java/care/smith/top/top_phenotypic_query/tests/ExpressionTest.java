@@ -1,0 +1,21 @@
+package care.smith.top.top_phenotypic_query.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.net.URISyntaxException;
+
+import org.junit.jupiter.api.Test;
+
+import care.smith.top.backend.model.Phenotype;
+import care.smith.top.backend.model.Quantifier;
+import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
+
+public class ExpressionTest extends AbstractTest {
+
+  @Test
+  public void test() throws URISyntaxException {
+    Phenotype age = getSinglePhenotype("Age", null, null);
+    Phenotype young = getSingleRestriction("Young", age, 18, 34, Quantifier.EXACT, 5);
+    assertEquals(young.getExpression(), ExpressionUtil.restrictionToExpression(young));
+  }
+}
