@@ -1,21 +1,17 @@
 package care.smith.top.top_phenotypic_query.tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-
-import org.junit.jupiter.api.Test;
-
-import care.smith.top.backend.model.DateTimeRestriction;
-import care.smith.top.backend.model.RestrictionOperator;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.top_phenotypic_query.result.Phenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.Values;
+import org.junit.jupiter.api.Test;
 
-public class ResultSetTest {
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+public class ResultSetTest extends AbstractTest {
 
   @Test
   public void testValues() {
@@ -41,10 +37,9 @@ public class ResultSetTest {
 
     ResultSet rs = new ResultSet();
     rs.setPhenotypes(phes1, phes2);
+    assertEquals(2, rs.size());
 
     System.out.println(rs);
-
-    assertEquals(true, true);
   }
 
   @Test
@@ -185,15 +180,5 @@ public class ResultSetTest {
     pv.setDecimalValues(
         getDTR(2007), new DecimalValue(22), new DecimalValue(23), new DecimalValue(24));
     return pv;
-  }
-
-  private static DateTimeRestriction getDTR(int year) {
-    return new DateTimeRestriction()
-        .minOperator(RestrictionOperator.GREATER_THAN_OR_EQUAL_TO)
-        .maxOperator(RestrictionOperator.LESS_THAN)
-        .values(
-            List.of(
-                LocalDateTime.of(year, 1, 1, 0, 0, 0, 0),
-                LocalDateTime.of(year + 1, 1, 1, 0, 0, 0, 0)));
   }
 }

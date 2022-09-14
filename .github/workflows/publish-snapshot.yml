@@ -28,7 +28,7 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
-    - run: mvn -B install -DskipTests --no-transfer-progress -s .mvn-ci.xml --file pom.xml
+    - run: mvn -B install --no-transfer-progress -s .mvn-ci.xml --file pom.xml
 
   publish-snapshot:
     needs: build
@@ -67,12 +67,12 @@ jobs:
       run: mvn versions:set "-DnewVersion=${{ env.project_version }}-SNAPSHOT"
     
     - name: Build with Maven
-      run: mvn -B package -DskipTests -s .mvn-ci.xml --file pom.xml
+      run: mvn -B package -s .mvn-ci.xml --file pom.xml
       env:
         GH_MAVEN_PKG_AUTH_TOKEN: ${{ secrets.GH_MAVEN_PKG_AUTH_TOKEN }}
         GH_MAVEN_PKG_USER: ${{ secrets.GH_MAVEN_PKG_USER }}
 
     - name: Publish to GitHub Packages Apache Maven
-      run: mvn -B --no-transfer-progress deploy -DskipTests -s $GITHUB_WORKSPACE/settings.xml
+      run: mvn -B --no-transfer-progress deploy -s $GITHUB_WORKSPACE/settings.xml
       env:
         GITHUB_TOKEN: ${{ github.token }}

@@ -1,9 +1,12 @@
 package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.net.URL;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -11,11 +14,20 @@ import com.google.common.collect.ImmutableMap;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 
 public class ConfigTest {
+  DataAdapterConfig conf;
+
+  @BeforeEach
+  void setup() {
+    URL configFile =
+            Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test.yml");
+    assertNotNull(configFile);
+
+    conf = DataAdapterConfig.getInstance(configFile.getPath());
+    assertNotNull(conf);
+  }
 
   @Test
   public void testSubjectQuery() {
-    DataAdapterConfig conf = DataAdapterConfig.getInstance("test_files/Simple_SQL_Config.yaml");
-
     String expected =
         "SELECT subject_id, birth_date, sex FROM subject\n"
             + "WHERE TRUE\n"
@@ -37,8 +49,6 @@ public class ConfigTest {
 
   @Test
   public void testPhenotypeQuery1() {
-    DataAdapterConfig conf = DataAdapterConfig.getInstance("test_files/Simple_SQL_Config.yaml");
-
     String expected =
         "SELECT subject_id, created_at, weight FROM assessment1\n"
             + "WHERE weight IS NOT NULL\n"
@@ -66,8 +76,6 @@ public class ConfigTest {
 
   @Test
   public void testPhenotypeQuery2() {
-    DataAdapterConfig conf = DataAdapterConfig.getInstance("test_files/Simple_SQL_Config.yaml");
-
     String expected =
         "SELECT subject_id, created_at, weight_finding FROM assessment1\n"
             + "WHERE weight_finding IS NOT NULL\n"

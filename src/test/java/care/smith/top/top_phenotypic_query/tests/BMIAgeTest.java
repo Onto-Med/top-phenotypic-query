@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -31,26 +32,26 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.Values;
 import care.smith.top.top_phenotypic_query.search.CompositeSearch;
 
-public class BMIAgeTest {
+public class BMIAgeTest extends AbstractTest {
 
   @Test
-  public void test() {
-    Phenotype weight = getSinglePhenotype("Weight");
-    Phenotype height = getSinglePhenotype("Height");
+  public void test() throws URISyntaxException {
+    Phenotype weight = getSinglePhenotype("Weight", null, null);
+    Phenotype height = getSinglePhenotype("Height", null, null);
 
-    Phenotype age = getSinglePhenotype("Age");
-    Phenotype young = getRestriction("Young", "Age", 18, 34);
-    Phenotype old = getRestriction("Old", "Age", 34, -1);
+    Phenotype age = getSinglePhenotype("Age", null, null);
+    Phenotype young = getRestriction("Young", age, 18, 34);
+    Phenotype old = getRestriction("Old", age, 34, null);
 
-    Phenotype bmi = getCompositePhenotype("BMI", getBMIExpression());
-    Phenotype bmi19_25 = getRestriction("BMI19_25", "BMI", 19, 25);
-    Phenotype bmi19_27 = getRestriction("BMI19_27", "BMI", 19, 27);
-    Phenotype bmi25_30 = getRestriction("BMI25_30", "BMI", 25, 30);
-    Phenotype bmi27_30 = getRestriction("BMI27_30", "BMI", 27, 30);
+    Phenotype bmi = getCompositePhenotype("BMI", getBMIExpression(), null, null);
+    Phenotype bmi19_25 = getRestriction("BMI19_25", bmi, 19, 25);
+    Phenotype bmi19_27 = getRestriction("BMI19_27", bmi, 19, 27);
+    Phenotype bmi25_30 = getRestriction("BMI25_30", bmi, 25, 30);
+    Phenotype bmi27_30 = getRestriction("BMI27_30", bmi, 27, 30);
 
-    Phenotype finding = getCompositePhenotype("Finding", getFindingExpression());
-    //    Phenotype normalWeight = getRestriction("Normal_weight", "Finding", 0, 1);
-    Phenotype overWeight = getRestriction("Overweight", "Finding", 1, 2);
+    Phenotype finding = getCompositePhenotype("Finding", getFindingExpression(), null, null);
+    //    Phenotype normalWeight = getRestriction("Normal_weight", finding, 0, 1);
+    Phenotype overWeight = getRestriction("Overweight", finding, 1, 2);
 
     ExpressionFunction defAgrFunc =
         new ExpressionFunction().id("last").minArgumentNumber(1).notation(NotationEnum.PREFIX);
@@ -104,18 +105,6 @@ public class BMIAgeTest {
 
   private static Value getValue(String pheName, Phenotypes phes) {
     return phes.getValues(pheName, getDTR(2000)).getValues().get(0);
-  }
-
-  private static Phenotype getSinglePhenotype(String name) {
-    Phenotype p = new Phenotype().dataType(DataType.NUMBER).itemType(ItemType.OBSERVATION);
-    p.setId(name);
-    return p;
-  }
-
-  private static Phenotype getCompositePhenotype(String name, Expression exp) {
-    Phenotype p = new Phenotype().expression(exp);
-    p.setId(name);
-    return p;
   }
 
   private static Expression getValue(int value) {
@@ -176,47 +165,6 @@ public class BMIAgeTest {
         .addArgumentsItem(getValue(1));
   }
 
-  private static Phenotype getRestriction(String name, String parent, int min, int max) {
-    Expression values = new Expression().entityId(parent);
-
-    Expression range = new Expression().function("list");
-    if (min > -1)
-      range.addArgumentsItem(
-          new Expression()
-              .value(
-                  new ExpressionValue().value(new NumberValue().value(BigDecimal.valueOf(min)))));
-    if (max > -1)
-      range.addArgumentsItem(
-          new Expression()
-              .value(
-                  new ExpressionValue().value(new NumberValue().value(BigDecimal.valueOf(max)))));
-
-    Expression limits = new Expression().function("list");
-    if (min > -1)
-      limits.addArgumentsItem(
-          new Expression()
-              .value(
-                  new ExpressionValue()
-                      .value(new care.smith.top.backend.model.StringValue().value("ge"))));
-    if (max > -1)
-      limits.addArgumentsItem(
-          new Expression()
-              .value(
-                  new ExpressionValue()
-                      .value(new care.smith.top.backend.model.StringValue().value("lt"))));
-
-    Expression exp =
-        new Expression()
-            .function("in")
-            .addArgumentsItem(values)
-            .addArgumentsItem(range)
-            .addArgumentsItem(limits);
-
-    Phenotype restr = new Phenotype().expression(exp);
-    restr.setId(name);
-    return restr;
-  }
-
   private static ResultSet getResultSet() {
     Values weightVals1 = new Values("Weight");
     weightVals1.setDecimalValues(getDTR(2000), new DecimalValue(75));
@@ -241,15 +189,5 @@ public class BMIAgeTest {
     ResultSet rs = new ResultSet();
     rs.setPhenotypes(phes1, phes2);
     return rs;
-  }
-
-  private static DateTimeRestriction getDTR(int year) {
-    return new DateTimeRestriction()
-        .minOperator(RestrictionOperator.GREATER_THAN_OR_EQUAL_TO)
-        .maxOperator(RestrictionOperator.LESS_THAN)
-        .values(
-            List.of(
-                LocalDateTime.of(year, 1, 1, 0, 0, 0, 0),
-                LocalDateTime.of(year + 1, 1, 1, 0, 0, 0, 0)));
   }
 }
