@@ -43,7 +43,7 @@ public class SqlAdapterTest extends AbstractTest {
     assertEquals(3, rs.getInt(1));
 
     Phenotype height = getSinglePhenotype("height", "http://loinc.org", "3137-7");
-    Phenotype tall = getRestriction("tall", height, 200, null);
+    Phenotype tall = getSingleRestriction("tall", height, 200, null);
 
     phenotypes =
         new HashMap<>() {
@@ -86,6 +86,6 @@ public class SqlAdapterTest extends AbstractTest {
 
     ResultSet rs = search.execute();
     assertNotNull(rs);
-    assertEquals(2, rs.getSubjectIds().size());
+    assertEquals(1, rs.getSubjectIds().size());
   }
 }

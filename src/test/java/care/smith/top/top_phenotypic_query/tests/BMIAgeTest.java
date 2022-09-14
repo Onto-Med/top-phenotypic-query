@@ -6,25 +6,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
 import care.smith.top.backend.model.DataType;
-import care.smith.top.backend.model.DateTimeRestriction;
 import care.smith.top.backend.model.Expression;
 import care.smith.top.backend.model.ExpressionFunction;
 import care.smith.top.backend.model.ExpressionFunction.NotationEnum;
 import care.smith.top.backend.model.ExpressionValue;
-import care.smith.top.backend.model.ItemType;
 import care.smith.top.backend.model.NumberValue;
 import care.smith.top.backend.model.Phenotype;
 import care.smith.top.backend.model.QueryCriterion;
-import care.smith.top.backend.model.RestrictionOperator;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.top_phenotypic_query.result.Phenotypes;
@@ -40,18 +35,18 @@ public class BMIAgeTest extends AbstractTest {
     Phenotype height = getSinglePhenotype("Height", null, null);
 
     Phenotype age = getSinglePhenotype("Age", null, null);
-    Phenotype young = getRestriction("Young", age, 18, 34);
-    Phenotype old = getRestriction("Old", age, 34, null);
+    Phenotype young = getSingleRestriction("Young", age, 18, 34);
+    Phenotype old = getSingleRestriction("Old", age, 34, null);
 
     Phenotype bmi = getCompositePhenotype("BMI", getBMIExpression(), null, null);
-    Phenotype bmi19_25 = getRestriction("BMI19_25", bmi, 19, 25);
-    Phenotype bmi19_27 = getRestriction("BMI19_27", bmi, 19, 27);
-    Phenotype bmi25_30 = getRestriction("BMI25_30", bmi, 25, 30);
-    Phenotype bmi27_30 = getRestriction("BMI27_30", bmi, 27, 30);
+    Phenotype bmi19_25 = getCompositeRestriction("BMI19_25", bmi, 19, 25);
+    Phenotype bmi19_27 = getCompositeRestriction("BMI19_27", bmi, 19, 27);
+    Phenotype bmi25_30 = getCompositeRestriction("BMI25_30", bmi, 25, 30);
+    Phenotype bmi27_30 = getCompositeRestriction("BMI27_30", bmi, 27, 30);
 
     Phenotype finding = getCompositePhenotype("Finding", getFindingExpression(), null, null);
     //    Phenotype normalWeight = getRestriction("Normal_weight", finding, 0, 1);
-    Phenotype overWeight = getRestriction("Overweight", finding, 1, 2);
+    Phenotype overWeight = getCompositeRestriction("Overweight", finding, 1, 2);
 
     ExpressionFunction defAgrFunc =
         new ExpressionFunction().id("last").minArgumentNumber(1).notation(NotationEnum.PREFIX);
