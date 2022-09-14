@@ -1,11 +1,13 @@
 package care.smith.top.top_phenotypic_query.adapter;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import care.smith.top.backend.model.Code;
@@ -92,15 +94,22 @@ public class SQLAdapter extends DataAdapter {
 
       while (sqlRS.next()) {
         String sbj = sqlRS.getString(sbjCol);
-        Value bdValue = new DateTimeValue(sqlRS.getTimestamp(bdCol).toLocalDateTime());
-        Value sexValue = new StringValue(sqlRS.getString(sexCol));
-        if (bdValue != null) {
-          if (bd != null) addValue(rs, sbj, bd, null, bdValue);
-          else rs.addValue(sbj, "birthdate", null, bdValue);
+        if (bd != null) {
+          Timestamp bdSqlVal = sqlRS.getTimestamp(bdCol);
+          if (bdSqlVal != null)
+            addValue(rs, sbj, bd, null, new DateTimeValue(bdSqlVal.toLocalDateTime()));
         }
-        if (sexValue != null) {
-          if (sex != null) addValue(rs, sbj, sex, null, sexValue);
-          else rs.addValue(sbj, "sex", null, sexValue);
+        if (sex != null) {
+          if (sex.getDataType() == DataType.BOOLEAN) {
+            Boolean sexSqlVal = sqlRS.getBoolean(sexCol);
+            if (sexSqlVal != null) addValue(rs, sbj, sex, null, new BooleanValue(sexSqlVal));
+          } else if (sex.getDataType() == DataType.NUMBER) {
+            BigDecimal sexSqlVal = sqlRS.getBigDecimal(sexCol);
+            if (sexSqlVal != null) addValue(rs, sbj, sex, null, new DecimalValue(sexSqlVal));
+          } else {
+            String sexSqlVal = sqlRS.getString(sexCol);
+            if (sexSqlVal != null) addValue(rs, sbj, sex, null, new StringValue(sexSqlVal));
+          }
         }
       }
     } catch (SQLException e) {
