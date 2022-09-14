@@ -67,7 +67,9 @@ public class Phenotypes extends HashMap<String, Values> {
   public ValueList getValues(String phenotypeName, DateTimeRestriction dateRange) {
     Values values = getValues(phenotypeName);
     if (values == null) return null;
-    return values.getValues(dateRange);
+    ValueList list = values.getValues(dateRange);
+    if (list != null) return list;
+    return values.getValues(null);
   }
 
   public Set<String> getPhenotypeNames() {

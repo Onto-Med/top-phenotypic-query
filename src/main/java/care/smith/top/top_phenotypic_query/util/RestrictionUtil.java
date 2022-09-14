@@ -23,7 +23,8 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
 public class RestrictionUtil {
 
   public static StringBuffer toString(DateTimeRestriction dtr) {
-    if (dtr == null) return new StringBuffer("[entire period]");
+    if (dtr == null) return new StringBuffer("[generally valid]");
+    if (isEntirePeriod(dtr)) return new StringBuffer("[entire period]");
     StringBuffer sb = new StringBuffer("[ ");
     if (dtr.getMinOperator() != null)
       sb.append(dtr.getMinOperator()).append(dtr.getValues().get(0)).append(" ");
@@ -190,5 +191,9 @@ public class RestrictionUtil {
           ((BooleanRestriction) r).getValues().stream().map(v -> format.formatBoolean(v)));
     return format.formatList(
         ((StringRestriction) r).getValues().stream().map(v -> format.formatString(v)));
+  }
+
+  public static boolean isEntirePeriod(DateTimeRestriction r) {
+    return !hasInterval(r) && !hasValues(r);
   }
 }
