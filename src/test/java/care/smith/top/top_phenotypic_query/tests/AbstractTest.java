@@ -39,7 +39,8 @@ public abstract class AbstractTest {
     return phenotype;
   }
 
-  static Phenotype getRestriction(String name, Phenotype parent, Integer min, Integer max, EntityType entityType) {
+  static Phenotype getRestriction(
+      String name, Phenotype parent, Integer min, Integer max, EntityType entityType) {
     Expression values = new Expression().entityId(parent.getId());
     Expression range = new Expression().function("list");
     Expression limits = new Expression().function("list");
@@ -50,16 +51,38 @@ public abstract class AbstractTest {
       restriction
           .minOperator(RestrictionOperator.GREATER_THAN_OR_EQUAL_TO)
           .addValuesItem(new BigDecimal(min));
+
+      range.addArgumentsItem(
+          new Expression()
+              .value(
+                  new ExpressionValue().value(new NumberValue().value(BigDecimal.valueOf(min)))));
+      limits.addArgumentsItem(
+          new Expression().value(new ExpressionValue().value(new StringValue().value("ge"))));
     }
 
     if (max != null) {
       restriction.maxOperator(RestrictionOperator.LESS_THAN).addValuesItem(new BigDecimal(max));
+
+      range.addArgumentsItem(
+          new Expression()
+              .value(
+                  new ExpressionValue().value(new NumberValue().value(BigDecimal.valueOf(max)))));
+      limits.addArgumentsItem(
+          new Expression().value(new ExpressionValue().value(new StringValue().value("lt"))));
     }
+
+    Expression exp =
+        new Expression()
+            .function("in")
+            .addArgumentsItem(values)
+            .addArgumentsItem(range)
+            .addArgumentsItem(limits);
 
     return (Phenotype)
         new Phenotype()
             .superPhenotype(parent)
             .restriction(restriction)
+            .expression(exp)
             .entityType(entityType)
             .id(name);
   }
@@ -68,7 +91,8 @@ public abstract class AbstractTest {
     return getRestriction(name, parent, min, max, EntityType.SINGLE_RESTRICTION);
   }
 
-  static Phenotype getCompositeRestriction(String name, Phenotype parent, Integer min, Integer max) {
+  static Phenotype getCompositeRestriction(
+      String name, Phenotype parent, Integer min, Integer max) {
     return getRestriction(name, parent, min, max, EntityType.COMPOSITE_RESTRICTION);
   }
 }
