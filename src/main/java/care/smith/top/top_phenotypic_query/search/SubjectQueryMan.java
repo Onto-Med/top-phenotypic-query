@@ -7,6 +7,7 @@ import care.smith.top.backend.model.Phenotype;
 import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
 
 public class SubjectQueryMan {
 
@@ -98,6 +99,9 @@ public class SubjectQueryMan {
   }
 
   public void addSexVariable(Phenotype sexVariable) {
+    if (sexVariable.getId().equals(sexInclusion.getId())
+        || sexVariable.getId().equals(sexExclusion.getId())) return;
+    if (sexVariable.getId().equals(sexInclusion.getSuperPhenotype().getId())) return;
     this.sexVariables.add(sexVariable);
   }
 
@@ -127,5 +131,17 @@ public class SubjectQueryMan {
 
   public void setAgeVariables(Set<Phenotype> ageVariables) {
     this.ageVariables = ageVariables;
+  }
+
+  public ResultSet executeInclusion() {
+    if (sexInclusion == null && birthdateInclusion == null && ageInclusion == null) return null;
+    return adapter.execute(
+        new SubjectSearch(null, sexInclusion, birthdateInclusion, ageInclusion, adapter));
+  }
+
+  public ResultSet executeExclusion() {
+    if (sexExclusion == null && birthdateExclusion == null && ageExclusion == null) return null;
+    return adapter.execute(
+        new SubjectSearch(null, sexExclusion, birthdateExclusion, ageExclusion, adapter));
   }
 }
