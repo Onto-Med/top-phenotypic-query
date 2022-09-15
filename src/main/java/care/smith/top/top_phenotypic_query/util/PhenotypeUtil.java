@@ -54,7 +54,7 @@ public class PhenotypeUtil {
     return (isRestriction(p)) ? p.getSuperPhenotype().getCodes() : p.getCodes();
   }
 
-  public static boolean hasExistsQuantifier(Phenotype p) {
+  public static boolean hasExistentialQuantifier(Phenotype p) {
     Restriction r = p.getRestriction();
     if (r == null) return false;
     return r.getQuantifier() == Quantifier.MIN && r.getCardinality().intValue() == 1;

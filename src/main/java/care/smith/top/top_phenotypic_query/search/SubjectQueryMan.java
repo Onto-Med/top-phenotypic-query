@@ -7,7 +7,6 @@ import care.smith.top.backend.model.Phenotype;
 import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.result.ResultSet;
 
 public class SubjectQueryMan {
 
@@ -128,9 +127,5 @@ public class SubjectQueryMan {
 
   public void setAgeVariables(Set<Phenotype> ageVariables) {
     this.ageVariables = ageVariables;
-  }
-
-  public ResultSet execute() {
-    return null;
   }
 }

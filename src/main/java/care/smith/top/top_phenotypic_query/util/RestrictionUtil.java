@@ -196,4 +196,15 @@ public class RestrictionUtil {
   public static boolean isEntirePeriod(DateTimeRestriction r) {
     return !hasInterval(r) && !hasValues(r);
   }
+
+  public static BigDecimal getMinIntervalValue(NumberRestriction r) {
+    if (r.getMinOperator() == null) return null;
+    return r.getValues().get(0);
+  }
+
+  public static BigDecimal getMaxIntervalValue(NumberRestriction r) {
+    if (r.getMaxOperator() == null) return null;
+    if (r.getMinOperator() == null) return r.getValues().get(0);
+    return r.getValues().get(1);
+  }
 }

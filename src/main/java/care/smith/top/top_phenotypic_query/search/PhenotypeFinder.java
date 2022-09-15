@@ -39,24 +39,24 @@ public class PhenotypeFinder {
 
   private ResultSet executeSingleSearches() {
     SingleQueryMan man = new SingleQueryMan(adapter);
-    SubjectQueryMan sbj = new SubjectQueryMan(adapter);
+    SubjectQueryMan sbjMan = new SubjectQueryMan(adapter);
     for (QueryCriterion cri : query.getCriteria()) {
       if (PhenotypeUtil.isSingle(cri.getSubject())) {
-        if (config.isAge(cri.getSubject())) sbj.setAgeCriterion(cri);
-        else if (config.isBirthdate(cri.getSubject())) sbj.setBirthdateCriterion(cri);
-        else if (config.isSex(cri.getSubject())) sbj.setSexCriterion(cri);
+        if (config.isAge(cri.getSubject())) sbjMan.setAgeCriterion(cri);
+        else if (config.isBirthdate(cri.getSubject())) sbjMan.setBirthdateCriterion(cri);
+        else if (config.isSex(cri.getSubject())) sbjMan.setSexCriterion(cri);
         else man.addCriterion(new SingleSearch(query, cri, adapter));
       } else {
         for (String var : ExpressionUtil.getVariables(cri.getSubject().getExpression())) {
-          if (config.isAge(cri.getSubject())) sbj.addAgeVariable(phenotypes.get(var));
+          if (config.isAge(cri.getSubject())) sbjMan.addAgeVariable(phenotypes.get(var));
           else if (config.isBirthdate(cri.getSubject()))
-            sbj.addBirthdateVariable(phenotypes.get(var));
-          else if (config.isSex(cri.getSubject())) sbj.addSexVariable(phenotypes.get(var));
+            sbjMan.addBirthdateVariable(phenotypes.get(var));
+          else if (config.isSex(cri.getSubject())) sbjMan.addSexVariable(phenotypes.get(var));
           else man.addVariable(new SingleSearch(query, cri, phenotypes.get(var), adapter));
         }
       }
     }
-    man.setSubjectQueryMan(sbj);
+    man.setSubjectQueryMan(sbjMan);
     return man.execute();
   }
 }

@@ -43,6 +43,10 @@ public class ResultSet extends HashMap<String, Phenotypes> {
     phes.addValue(phenotypeName, dateRange, val);
   }
 
+  public void addSubject(String subjectId) {
+    if (!getSubjectIds().contains(subjectId)) put(subjectId, new Phenotypes(subjectId));
+  }
+
   public Values getValues(String subjectId, String phenotypeName) {
     Phenotypes subPhens = get(subjectId);
     if (subPhens == null) return null;

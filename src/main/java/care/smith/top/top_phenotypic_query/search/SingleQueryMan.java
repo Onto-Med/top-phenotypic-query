@@ -3,8 +3,10 @@ package care.smith.top.top_phenotypic_query.search;
 import java.util.HashSet;
 import java.util.Set;
 
+import care.smith.top.backend.model.Phenotype;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
 
 public class SingleQueryMan {
 
@@ -37,7 +39,18 @@ public class SingleQueryMan {
   }
 
   public void addVariable(SingleSearch variable) {
-    if (!inclusions.contains(variable) && !exclusions.contains(variable)) variables.add(variable);
+    if (inclusions.contains(variable) || exclusions.contains(variable)) return;
+
+    Phenotype varPhe = variable.getPhenotype();
+    if (PhenotypeUtil.isSinglePhenotype(varPhe)) {
+      for (SingleSearch inc : inclusions) {
+        Phenotype incPhe = inc.getPhenotype();
+        if (PhenotypeUtil.isSingleRestriction(incPhe)
+            && incPhe.getSuperPhenotype().getId().equals(varPhe.getId())) return;
+      }
+    }
+
+    variables.add(variable);
   }
 
   public void setSubjectQueryMan(SubjectQueryMan man) {

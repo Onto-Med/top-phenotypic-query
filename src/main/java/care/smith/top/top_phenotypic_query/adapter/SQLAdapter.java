@@ -16,6 +16,7 @@ import care.smith.top.backend.model.DataType;
 import care.smith.top.backend.model.DateTimeRestriction;
 import care.smith.top.backend.model.EntityType;
 import care.smith.top.backend.model.ItemType;
+import care.smith.top.backend.model.NumberRestriction;
 import care.smith.top.backend.model.Phenotype;
 import care.smith.top.backend.model.Quantifier;
 import care.smith.top.backend.model.RestrictionOperator;
@@ -89,15 +90,22 @@ public class SQLAdapter extends DataAdapter {
       String sbjCol = out.getId();
       String bdCol = out.getBirthdate();
       String sexCol = out.getSex();
-      Phenotype bd = search.getBirthdate();
       Phenotype sex = search.getSex();
+      Phenotype bd = search.getBirthdate();
+      Phenotype age = search.getAge();
 
       while (sqlRS.next()) {
         String sbj = sqlRS.getString(sbjCol);
         if (bd != null) {
           Timestamp bdSqlVal = sqlRS.getTimestamp(bdCol);
-          if (bdSqlVal != null)
+          if (bdSqlVal != null) {
             addValue(rs, sbj, bd, null, new DateTimeValue(bdSqlVal.toLocalDateTime()));
+            if (age != null) {
+              Value ageVal =
+                  new DecimalValue(SubjectSearch.birthdateToAge(bdSqlVal.toLocalDateTime()));
+              addValue(rs, sbj, age, null, ageVal);
+            }
+          }
         }
         if (sex != null) {
           if (sex.getDataType() == DataType.BOOLEAN) {
@@ -121,13 +129,22 @@ public class SQLAdapter extends DataAdapter {
   private void addValue(
       ResultSet rs, String sbj, Phenotype phe, DateTimeRestriction dtr, Value val) {
     rs.addValue(sbj, PhenotypeUtil.getPhenotypeId(phe), dtr, val);
-    if (PhenotypeUtil.hasExistsQuantifier(phe))
+    if (PhenotypeUtil.hasExistentialQuantifier(phe))
       rs.addValue(sbj, phe.getId(), dtr, new BooleanValue(true));
   }
 
   @Override
   public ResultSet executeAllSubjectsQuery() {
-    return null;
+    ResultSet rs = new ResultSet();
+    try {
+      java.sql.ResultSet sqlRS =
+          con.createStatement().executeQuery(SubjectSearch.getBaseQuery(config));
+      String sbjCol = SubjectSearch.getIdColumn(config);
+      while (sqlRS.next()) rs.addSubject(sqlRS.getString(sbjCol));
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return rs;
   }
 
   @Override
@@ -189,7 +206,7 @@ public class SQLAdapter extends DataAdapter {
     //    SingleSearch search = new SingleSearch(null, new QueryCriterion().subject(phe), sql);
     //    System.out.println(sql.execute(search));
 
-    Phenotype bd = new Phenotype().dataType(DataType.NUMBER).itemType(ItemType.OBSERVATION);
+    Phenotype bd = new Phenotype().dataType(DataType.DATE_TIME).itemType(ItemType.OBSERVATION);
     bd.setId("birthdate");
     bd.setEntityType(EntityType.SINGLE_PHENOTYPE);
     bd.addCodesItem(
@@ -197,15 +214,32 @@ public class SQLAdapter extends DataAdapter {
 
     DateTimeRestriction bdR =
         new DateTimeRestriction().addValuesItem(LocalDateTime.of(2000, 1, 1, 0, 0));
-    bdR.setType(DataType.NUMBER);
+    bdR.setType(DataType.DATE_TIME);
     bdR.setQuantifier(Quantifier.MIN);
     bdR.setCardinality(1);
     bdR.setMinOperator(RestrictionOperator.GREATER_THAN_OR_EQUAL_TO);
 
-    Phenotype young = new Phenotype().dataType(DataType.NUMBER).restriction(bdR);
+    Phenotype young = new Phenotype().dataType(DataType.DATE_TIME).restriction(bdR);
     young.setId("young");
     young.setEntityType(EntityType.SINGLE_RESTRICTION);
     young.setSuperPhenotype(bd);
+
+    Phenotype age = new Phenotype().dataType(DataType.NUMBER).itemType(ItemType.OBSERVATION);
+    age.setId("age");
+    age.setEntityType(EntityType.SINGLE_PHENOTYPE);
+    age.addCodesItem(
+        new Code().code("30525-0").codeSystem(new CodeSystem().uri(new URI("http://loinc.org"))));
+
+    NumberRestriction ageR = new NumberRestriction().addValuesItem(BigDecimal.valueOf(20));
+    ageR.setType(DataType.NUMBER);
+    ageR.setQuantifier(Quantifier.MIN);
+    ageR.setCardinality(1);
+    ageR.setMaxOperator(RestrictionOperator.LESS_THAN_OR_EQUAL_TO);
+
+    Phenotype youngAge = new Phenotype().dataType(DataType.NUMBER).restriction(ageR);
+    youngAge.setId("youngAge");
+    youngAge.setEntityType(EntityType.SINGLE_RESTRICTION);
+    youngAge.setSuperPhenotype(age);
 
     Phenotype sex = new Phenotype().dataType(DataType.STRING).itemType(ItemType.OBSERVATION);
     sex.setId("sex");
@@ -224,7 +258,7 @@ public class SQLAdapter extends DataAdapter {
     female.setEntityType(EntityType.SINGLE_RESTRICTION);
     female.setSuperPhenotype(sex);
 
-    SubjectSearch sbjSearch = new SubjectSearch(null, female, young, sql);
+    SubjectSearch sbjSearch = new SubjectSearch(null, female, null, youngAge, sql);
     ResultSet rs = sql.execute(sbjSearch);
     System.out.println(rs);
     System.out.println("SIZE: " + rs.size());
