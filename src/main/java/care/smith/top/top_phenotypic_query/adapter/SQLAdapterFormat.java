@@ -26,7 +26,7 @@ public class SQLAdapterFormat implements DataAdapterFormat {
 
   @Override
   public String formatDateTime(LocalDateTime date) {
-    return "'" + DateUtil.format(date) + "'::date";
+    return "'" + DateUtil.format(date) + "'";
   }
 
   @Override

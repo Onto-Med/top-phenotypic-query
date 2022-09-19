@@ -58,9 +58,10 @@ public class SingleQueryMan {
   }
 
   public ResultSet execute() {
-    ResultSet rs = null;
+    ResultSet rs = subjectQueryMan.executeInclusion();
+    if (rs != null && rs.isEmpty()) return rs;
 
-    if (inclusions.isEmpty()) {
+    if (rs == null && inclusions.isEmpty()) {
       rs = adapter.executeAllSubjectsQuery();
       if (rs.isEmpty()) return rs;
     } else {

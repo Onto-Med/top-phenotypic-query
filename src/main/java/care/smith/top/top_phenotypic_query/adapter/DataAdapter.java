@@ -32,4 +32,6 @@ public abstract class DataAdapter {
   public abstract ResultSet executeAllSubjectsQuery();
 
   public abstract DataAdapterFormat getFormat();
+
+  public abstract void close();
 }

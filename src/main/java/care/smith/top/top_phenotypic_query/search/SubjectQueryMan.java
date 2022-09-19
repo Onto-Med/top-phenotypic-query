@@ -5,14 +5,19 @@ import java.util.Set;
 
 import care.smith.top.backend.model.Phenotype;
 import care.smith.top.backend.model.QueryCriterion;
+import care.smith.top.simple_onto_api.calculator.Calculator;
+import care.smith.top.simple_onto_api.calculator.expressions.MathExpression;
+import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.result.Phenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
+import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
 
 public class SubjectQueryMan {
 
   private DataAdapter adapter;
-  private DataAdapterConfig config;
 
   private Phenotype sexInclusion;
   private Phenotype birthdateInclusion;
@@ -22,13 +27,15 @@ public class SubjectQueryMan {
   private Phenotype birthdateExclusion;
   private Phenotype ageExclusion;
 
-  private Set<Phenotype> sexVariables = new HashSet<>();
-  private Set<Phenotype> birthdateVariables = new HashSet<>();
-  private Set<Phenotype> ageVariables = new HashSet<>();
+  private Phenotype sexPhenotypeVariable;
+  private Set<Phenotype> sexRestrictionVariables = new HashSet<>();
+  private Phenotype birthdatePhenotypeVariable;
+  private Set<Phenotype> birthdateRestrictionVariables = new HashSet<>();
+  private Phenotype agePhenotypeVariable;
+  private Set<Phenotype> ageRestrictionVariables = new HashSet<>();
 
   public SubjectQueryMan(DataAdapter adapter) {
     this.adapter = adapter;
-    this.config = adapter.getConfig();
   }
 
   public void setSexCriterion(QueryCriterion criterion) {
@@ -46,91 +53,33 @@ public class SubjectQueryMan {
     else this.ageInclusion = criterion.getSubject();
   }
 
-  public Phenotype getSexInclusion() {
-    return sexInclusion;
-  }
-
-  public void setSexInclusion(Phenotype sexInclusion) {
-    this.sexInclusion = sexInclusion;
-  }
-
-  public Phenotype getBirthdateInclusion() {
-    return birthdateInclusion;
-  }
-
-  public void setBirthdateInclusion(Phenotype birthdateInclusion) {
-    this.birthdateInclusion = birthdateInclusion;
-  }
-
-  public Phenotype getAgeInclusion() {
-    return ageInclusion;
-  }
-
-  public void setAgeInclusion(Phenotype ageInclusion) {
-    this.ageInclusion = ageInclusion;
-  }
-
-  public Phenotype getSexExclusion() {
-    return sexExclusion;
-  }
-
-  public void setSexExclusion(Phenotype sexExclusion) {
-    this.sexExclusion = sexExclusion;
-  }
-
-  public Phenotype getBirthdateExclusion() {
-    return birthdateExclusion;
-  }
-
-  public void setBirthdateExclusion(Phenotype birthdateExclusion) {
-    this.birthdateExclusion = birthdateExclusion;
-  }
-
-  public Phenotype getAgeExclusion() {
-    return ageExclusion;
-  }
-
-  public void setAgeExclusion(Phenotype ageExclusion) {
-    this.ageExclusion = ageExclusion;
-  }
-
-  public Set<Phenotype> getSexVariables() {
-    return sexVariables;
-  }
-
   public void addSexVariable(Phenotype sexVariable) {
-    if (sexVariable.getId().equals(sexInclusion.getId())
-        || sexVariable.getId().equals(sexExclusion.getId())) return;
-    if (sexVariable.getId().equals(sexInclusion.getSuperPhenotype().getId())) return;
-    this.sexVariables.add(sexVariable);
-  }
-
-  public void setSexVariables(Set<Phenotype> sexVariables) {
-    this.sexVariables = sexVariables;
-  }
-
-  public Set<Phenotype> getBirthdateVariables() {
-    return birthdateVariables;
+    addVariable(
+        sexVariable, sexInclusion, sexExclusion, sexPhenotypeVariable, sexRestrictionVariables);
   }
 
   public void addBirthdateVariable(Phenotype birthdateVariable) {
-    this.birthdateVariables.add(birthdateVariable);
-  }
-
-  public void setBirthdateVariables(Set<Phenotype> birthdateVariables) {
-    this.birthdateVariables = birthdateVariables;
-  }
-
-  public Set<Phenotype> getAgeVariables() {
-    return ageVariables;
+    addVariable(
+        birthdateVariable,
+        birthdateInclusion,
+        birthdateExclusion,
+        birthdatePhenotypeVariable,
+        birthdateRestrictionVariables);
   }
 
   public void addAgeVariable(Phenotype ageVariable) {
-    this.ageVariables.add(ageVariable);
+    addVariable(
+        ageVariable, ageInclusion, ageExclusion, agePhenotypeVariable, ageRestrictionVariables);
   }
 
-  public void setAgeVariables(Set<Phenotype> ageVariables) {
-    this.ageVariables = ageVariables;
+  private void addVariable(
+      Phenotype var, Phenotype inc, Phenotype exc, Phenotype pheVar, Set<Phenotype> restrVars) {
+    if (var.getId().equals(inc.getId())
+        || var.getId().equals(exc.getId())
+        || (inc.getSuperPhenotype() != null
+            && (var.getId().equals(inc.getSuperPhenotype().getId())))) return;
+    if (PhenotypeUtil.isPhenotype(var)) pheVar = var;
+    else if (PhenotypeUtil.isRestriction(var)) restrVars.add(var);
   }
 
   public ResultSet executeInclusion() {
@@ -143,5 +92,36 @@ public class SubjectQueryMan {
     if (sexExclusion == null && birthdateExclusion == null && ageExclusion == null) return null;
     return adapter.execute(
         new SubjectSearch(null, sexExclusion, birthdateExclusion, ageExclusion, adapter));
+  }
+
+  public ResultSet executeVariables() {
+    ResultSet rs =
+        adapter.execute(
+            new SubjectSearch(
+                null,
+                sexPhenotypeVariable,
+                birthdatePhenotypeVariable,
+                agePhenotypeVariable,
+                adapter));
+    if (rs == null || rs.isEmpty()) return null;
+    checkRestrictions(rs, sexPhenotypeVariable, sexRestrictionVariables);
+    checkRestrictions(rs, birthdatePhenotypeVariable, birthdateRestrictionVariables);
+    checkRestrictions(rs, agePhenotypeVariable, ageRestrictionVariables);
+    return rs;
+  }
+
+  private void checkRestrictions(ResultSet rs, Phenotype pheVar, Set<Phenotype> restrVars) {
+    if (pheVar == null || restrVars.isEmpty()) return;
+    for (String sbjId : rs.getSubjectIds()) {
+      for (Phenotype restr : restrVars) {
+        Calculator calc = new Calculator();
+        Phenotypes phes = rs.getPhenotypes(sbjId);
+        ValueList vals = phes.getValues(pheVar.getId(), null);
+        calc.setVariable(pheVar.getId(), vals);
+        MathExpression mathExp = ExpressionUtil.convert(restr.getExpression());
+        Value res = calc.calculate(mathExp);
+        phes.setValues(restr.getId(), null, ValueList.get(res));
+      }
+    }
   }
 }

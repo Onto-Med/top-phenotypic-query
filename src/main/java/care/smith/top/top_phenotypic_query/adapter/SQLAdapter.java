@@ -40,6 +40,15 @@ public class SQLAdapter extends DataAdapter {
 
   public SQLAdapter(DataAdapterConfig config) {
     super(config);
+    initConnection();
+  }
+
+  public SQLAdapter(String configFilePath) {
+    super(configFilePath);
+    initConnection();
+  }
+
+  private void initConnection() {
     try {
       this.con =
           DriverManager.getConnection(
@@ -152,6 +161,7 @@ public class SQLAdapter extends DataAdapter {
     return SQLAdapterFormat.get();
   }
 
+  @Override
   public void close() {
     try {
       con.close();

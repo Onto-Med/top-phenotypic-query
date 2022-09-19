@@ -1,15 +1,8 @@
 package care.smith.top.top_phenotypic_query.tests;
 
-import care.smith.top.backend.model.ExpressionFunction;
-import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.QueryCriterion;
-import care.smith.top.top_phenotypic_query.adapter.SQLAdapter;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.search.SingleSearch;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -20,10 +13,20 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import care.smith.top.backend.model.ExpressionFunction;
+import care.smith.top.backend.model.Phenotype;
+import care.smith.top.backend.model.QueryCriterion;
+import care.smith.top.top_phenotypic_query.adapter.SQLAdapter;
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.search.SingleSearch;
 
 public class SqlAdapterTest extends AbstractTest {
-  static final String DB_URL = "jdbc:h2:mem:test-db;INIT=RUNSCRIPT FROM 'classpath:schema.sql'";
+  static final String DB_URL = "jdbc:h2:mem:test0-db;INIT=RUNSCRIPT FROM 'classpath:schema.sql'";
   static final String DB_USER = "user";
   static final String DB_PASS = "password";
 

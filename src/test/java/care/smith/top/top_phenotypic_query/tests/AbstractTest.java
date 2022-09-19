@@ -19,6 +19,7 @@ import care.smith.top.backend.model.NumberValue;
 import care.smith.top.backend.model.Phenotype;
 import care.smith.top.backend.model.Quantifier;
 import care.smith.top.backend.model.RestrictionOperator;
+import care.smith.top.backend.model.StringRestriction;
 import care.smith.top.backend.model.StringValue;
 import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
 
@@ -35,9 +36,18 @@ public abstract class AbstractTest {
 
   static Phenotype getSinglePhenotype(String name, String codeSystem, String code)
       throws URISyntaxException {
+    return getSinglePhenotype(name, codeSystem, code, DataType.NUMBER);
+  }
+
+  static Phenotype getSinglePhenotype(
+      String name, String codeSystem, String code, DataType dataType) throws URISyntaxException {
     Phenotype phenotype =
         (Phenotype)
-            new Phenotype().dataType(DataType.NUMBER).itemType(ItemType.OBSERVATION).id(name);
+            new Phenotype()
+                .dataType(dataType)
+                .itemType(ItemType.OBSERVATION)
+                .id(name)
+                .entityType(EntityType.SINGLE_PHENOTYPE);
     if (codeSystem != null && code != null)
       phenotype.addCodesItem(
           new Code().code(code).codeSystem(new CodeSystem().uri(new URI(codeSystem))));
@@ -89,6 +99,51 @@ public abstract class AbstractTest {
                   new ExpressionValue().value(new NumberValue().value(BigDecimal.valueOf(max)))));
       limits.addArgumentsItem(
           new Expression().value(new ExpressionValue().value(new StringValue().value("<"))));
+    }
+
+    Expression exp =
+        new Expression()
+            .function("in")
+            .addArgumentsItem(values)
+            .addArgumentsItem(range)
+            .addArgumentsItem(limits);
+
+    if (quantifier != null) {
+      restriction.quantifier(quantifier);
+      exp.addArgumentsItem(ExpressionUtil.stringToExpression(quantifier.getValue()));
+      if (cardinality != null) {
+        restriction.cardinality(cardinality);
+        exp.addArgumentsItem(ExpressionUtil.numberToExpression(cardinality));
+      }
+    }
+
+    return (Phenotype)
+        new Phenotype()
+            .superPhenotype(parent)
+            .restriction(restriction)
+            .expression(exp)
+            .entityType(entityType)
+            .id(name);
+  }
+
+  static Phenotype getRestriction(
+      String name,
+      Phenotype parent,
+      EntityType entityType,
+      Quantifier quantifier,
+      Integer cardinality,
+      String... rangeValue) {
+    Expression values = new Expression().entityId(parent.getId());
+    Expression range = new Expression().function("list");
+    Expression limits = new Expression().function("list");
+
+    StringRestriction restriction = new StringRestriction();
+    restriction.setType(DataType.STRING);
+
+    for (String value : rangeValue) {
+      restriction.addValuesItem(value);
+      range.addArgumentsItem(
+          new Expression().value(new ExpressionValue().value(new StringValue().value(value))));
     }
 
     Expression exp =
