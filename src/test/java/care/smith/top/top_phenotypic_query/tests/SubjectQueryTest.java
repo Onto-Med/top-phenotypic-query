@@ -5,19 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
 import care.smith.top.backend.model.DataType;
-import care.smith.top.backend.model.EntityType;
 import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.Quantifier;
 import care.smith.top.backend.model.Query;
 import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.SQLAdapter;
@@ -29,26 +25,15 @@ import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 public class SubjectQueryTest extends AbstractTest {
 
   @Test
-  public void test() throws URISyntaxException {
-    Phenotype age = getSinglePhenotype("Age", "http://loinc.org", "30525-0", DataType.NUMBER);
-    Phenotype young =
-        getRestriction("Young", age, 18, 34, EntityType.SINGLE_RESTRICTION, Quantifier.MIN, 1);
+  public void test() {
+    Phenotype age = getPhenotype("Age", "http://loinc.org", "30525-0");
+    Phenotype young = getInterval("Young", age, 18, 34);
 
-    Phenotype sex = getSinglePhenotype("Sex", "http://loinc.org", "46098-0", DataType.STRING);
+    Phenotype sex = getPhenotype("Sex", "http://loinc.org", "46098-0", DataType.STRING);
     Phenotype female =
-        getRestriction(
-            "Female",
-            sex,
-            EntityType.SINGLE_RESTRICTION,
-            Quantifier.MIN,
-            1,
-            "http://hl7.org/fhir/administrative-gender|female");
+        getRestriction("Female", sex, "http://hl7.org/fhir/administrative-gender|female");
 
-    Map<String, Phenotype> phenotypes = new HashMap<>();
-    phenotypes.put(age.getId(), age);
-    phenotypes.put(young.getId(), young);
-    phenotypes.put(sex.getId(), sex);
-    phenotypes.put(female.getId(), female);
+    Map<String, Phenotype> phenotypes = getPhenotypeMap(age, young, sex, female);
 
     Query query =
         new Query()

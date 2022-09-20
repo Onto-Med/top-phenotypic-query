@@ -14,8 +14,8 @@ public class ExpressionTest extends AbstractTest {
 
   @Test
   public void test() throws URISyntaxException {
-    Phenotype age = getSinglePhenotype("Age", null, null);
-    Phenotype young = getSingleRestriction("Young", age, 18, 34, Quantifier.EXACT, 5);
+    Phenotype age = getPhenotype("Age", null, null);
+    Phenotype young = getRestriction("Young", age, 18, 34, Quantifier.EXACT, 5);
     assertEquals(young.getExpression(), ExpressionUtil.restrictionToExpression(young));
   }
 }

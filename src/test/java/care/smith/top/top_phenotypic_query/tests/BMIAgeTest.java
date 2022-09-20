@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
-import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,23 +28,23 @@ import care.smith.top.top_phenotypic_query.search.CompositeSearch;
 public class BMIAgeTest extends AbstractTest {
 
   @Test
-  public void test() throws URISyntaxException {
-    Phenotype weight = getSinglePhenotype("Weight", null, null);
-    Phenotype height = getSinglePhenotype("Height", null, null);
+  public void test() {
+    Phenotype weight = getPhenotype("Weight");
+    Phenotype height = getPhenotype("Height");
 
-    Phenotype age = getSinglePhenotype("Age", null, null);
-    Phenotype young = getSingleRestriction("Young", age, 18, 34);
-    Phenotype old = getSingleRestriction("Old", age, 34, null);
+    Phenotype age = getPhenotype("Age");
+    Phenotype young = getInterval("Young", age, 18, 34);
+    Phenotype old = getIntervalMin("Old", age, 34);
 
-    Phenotype bmi = getCompositePhenotype("BMI", getBMIExpression(), null, null);
-    Phenotype bmi19_25 = getCompositeRestriction("BMI19_25", bmi, 19, 25);
-    Phenotype bmi19_27 = getCompositeRestriction("BMI19_27", bmi, 19, 27);
-    Phenotype bmi25_30 = getCompositeRestriction("BMI25_30", bmi, 25, 30);
-    Phenotype bmi27_30 = getCompositeRestriction("BMI27_30", bmi, 27, 30);
+    Phenotype bmi = getPhenotype("BMI", getBMIExpression());
+    Phenotype bmi19_25 = getInterval("BMI19_25", bmi, 19, 25);
+    Phenotype bmi19_27 = getInterval("BMI19_27", bmi, 19, 27);
+    Phenotype bmi25_30 = getInterval("BMI25_30", bmi, 25, 30);
+    Phenotype bmi27_30 = getInterval("BMI27_30", bmi, 27, 30);
 
-    Phenotype finding = getCompositePhenotype("Finding", getFindingExpression(), null, null);
+    Phenotype finding = getPhenotype("Finding", getFindingExpression());
     //    Phenotype normalWeight = getRestriction("Normal_weight", finding, 0, 1);
-    Phenotype overWeight = getCompositeRestriction("Overweight", finding, 1, 2);
+    Phenotype overWeight = getInterval("Overweight", finding, 1, 2);
 
     ExpressionFunction defAgrFunc =
         new ExpressionFunction().id("last").minArgumentNumber(1).notation(NotationEnum.PREFIX);
@@ -58,20 +56,20 @@ public class BMIAgeTest extends AbstractTest {
             .subject(overWeight)
             .dateTimeRestriction(getDTR(2000));
 
-    Map<String, Phenotype> phenotypes = new HashMap<>();
-    phenotypes.put(weight.getId(), weight);
-    phenotypes.put(height.getId(), height);
-    phenotypes.put(age.getId(), age);
-    phenotypes.put(young.getId(), young);
-    phenotypes.put(old.getId(), old);
-    phenotypes.put(bmi.getId(), bmi);
-    phenotypes.put(bmi19_25.getId(), bmi19_25);
-    phenotypes.put(bmi19_27.getId(), bmi19_27);
-    phenotypes.put(bmi25_30.getId(), bmi25_30);
-    phenotypes.put(bmi27_30.getId(), bmi27_30);
-    phenotypes.put(finding.getId(), finding);
-    //    phenotypes.put(normalWeight.getId(), normalWeight);
-    phenotypes.put(overWeight.getId(), overWeight);
+    Map<String, Phenotype> phenotypes =
+        getPhenotypeMap(
+            weight,
+            height,
+            age,
+            young,
+            old,
+            bmi,
+            bmi19_25,
+            bmi19_27,
+            bmi25_30,
+            bmi27_30,
+            finding,
+            overWeight);
 
     ResultSet initialRS = getResultSet();
     System.out.println(initialRS);

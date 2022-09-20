@@ -4,13 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
@@ -34,7 +32,7 @@ public class SqlAdapterTest extends AbstractTest {
   Map<String, Phenotype> phenotypes;
 
   @BeforeEach
-  void setup() throws SQLException, URISyntaxException {
+  void setup() throws SQLException {
     con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
     assertNotNull(con);
     assertTrue(con.isValid(0));
@@ -45,16 +43,10 @@ public class SqlAdapterTest extends AbstractTest {
     assertTrue(rs.next());
     assertEquals(3, rs.getInt(1));
 
-    Phenotype height = getSinglePhenotype("height", "http://loinc.org", "3137-7");
-    Phenotype tall = getSingleRestriction("tall", height, 200, null);
+    Phenotype height = getPhenotype("height", "http://loinc.org", "3137-7");
+    Phenotype tall = getIntervalMin("tall", height, 200);
 
-    phenotypes =
-        new HashMap<>() {
-          {
-            put(height.getId(), height);
-            put(tall.getId(), tall);
-          }
-        };
+    phenotypes = getPhenotypeMap(height, tall);
   }
 
   @AfterEach
