@@ -44,7 +44,7 @@ public class BMIAgeTest extends AbstractTest {
 
     Phenotype finding = getPhenotype("Finding", getFindingExpression());
     //    Phenotype normalWeight = getRestriction("Normal_weight", finding, 0, 1);
-    Phenotype overWeight = getInterval("Overweight", finding, 1, 2);
+    Phenotype overWeight = getRestriction("Overweight", finding, 1);
 
     ExpressionFunction defAgrFunc =
         new ExpressionFunction().id("last").minArgumentNumber(1).notation(NotationEnum.PREFIX);

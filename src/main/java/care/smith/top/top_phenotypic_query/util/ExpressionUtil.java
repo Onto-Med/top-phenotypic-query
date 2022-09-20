@@ -67,7 +67,8 @@ public class ExpressionUtil {
 
   private static MathExpression getFunctionExpression(Expression exp) {
     FunctionExpression funcExp = new FunctionExpression(exp.getFunction());
-    for (Expression arg : exp.getArguments()) funcExp.addArgument(convert(arg));
+    if (exp.getArguments() != null)
+      for (Expression arg : exp.getArguments()) funcExp.addArgument(convert(arg));
     return funcExp;
   }
 
