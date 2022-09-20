@@ -83,6 +83,9 @@ public class SingleQueryMan {
       if (rs.isEmpty()) return rs;
     }
 
+    ResultSet sbjExc = subjectQueryMan.executeExclusion();
+    if (sbjExc != null && !sbjExc.isEmpty()) rs = rs.subtract(sbjExc);
+
     for (SingleSearch var : variables) {
       ResultSet res = var.execute();
       if (res.isEmpty()) continue;
