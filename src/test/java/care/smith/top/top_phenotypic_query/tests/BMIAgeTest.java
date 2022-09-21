@@ -113,7 +113,11 @@ public class BMIAgeTest extends AbstractTest {
         .addArgumentsItem(
             new Expression()
                 .function("power")
-                .addArgumentsItem(new Expression().entityId("Height"))
+                .addArgumentsItem(
+                    new Expression()
+                        .function("divide")
+                        .addArgumentsItem(new Expression().entityId("Height"))
+                        .addArgumentsItem(getValue(100)))
                 .addArgumentsItem(getValue(2)));
   }
 
@@ -155,21 +159,22 @@ public class BMIAgeTest extends AbstractTest {
         .addArgumentsItem(normalWeight)
         .addArgumentsItem(getValue(0))
         .addArgumentsItem(overweight)
-        .addArgumentsItem(getValue(1));
+        .addArgumentsItem(getValue(1))
+        .addArgumentsItem(getValue(-1));
   }
 
   private static ResultSet getResultSet() {
     Values weightVals1 = new Values("Weight");
     weightVals1.setDecimalValues(getDTR(2000), new DecimalValue(75));
     Values heightVals1 = new Values("Height");
-    heightVals1.setDecimalValues(getDTR(2000), new DecimalValue(1.7));
+    heightVals1.setDecimalValues(getDTR(2000), new DecimalValue(170));
     Values ageVals1 = new Values("Age");
     ageVals1.setDecimalValues(getDTR(2000), new DecimalValue(20));
 
     Values weightVals2 = new Values("Weight");
     weightVals2.setDecimalValues(getDTR(2000), new DecimalValue(85));
     Values heightVals2 = new Values("Height");
-    heightVals2.setDecimalValues(getDTR(2000), new DecimalValue(1.8));
+    heightVals2.setDecimalValues(getDTR(2000), new DecimalValue(180));
     Values ageVals2 = new Values("Age");
     ageVals2.setDecimalValues(getDTR(2000), new DecimalValue(40));
 

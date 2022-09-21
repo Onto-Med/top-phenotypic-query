@@ -45,14 +45,20 @@ public class CompositeSearch extends PhenotypeSearch {
 
   private void executeForSubject(
       String sbjId, String pheId, Expression exp, Set<String> vars, DateTimeRestriction dateRange) {
-    boolean res = calculate(sbjId, pheId, exp, vars, dateRange).asBooleanValue().getValue();
+    if (exp == null) return;
+    Value resVal = calculate(sbjId, pheId, exp, vars, dateRange);
+    boolean res = (resVal == null) ? false : resVal.asBooleanValue().getValue();
     if ((criterion.isExclusion() && res) || (!criterion.isExclusion() && !res)) rs.remove(sbjId);
   }
 
   private Value calculate(
       String sbjId, String pheId, Expression exp, Set<String> vars, DateTimeRestriction dateRange) {
     Calculator calc = new Calculator();
-    for (String var : vars) calc.setVariable(var, getValues(sbjId, var, dateRange));
+    for (String var : vars) {
+      ValueList vals = getValues(sbjId, var, dateRange);
+      if (vals == null) return null;
+      calc.setVariable(var, vals);
+    }
     MathExpression mathExp = ExpressionUtil.convert(exp);
     Value res = calc.calculate(mathExp);
     rs.getPhenotypes(sbjId).setValues(pheId, dateRange, ValueList.get(res));
@@ -63,7 +69,10 @@ public class CompositeSearch extends PhenotypeSearch {
     ValueList vals = rs.getPhenotypes(sbjId).getValues(var, dateRange);
     if (vals != null) return vals;
     Expression newExp = phenotypes.get(var).getExpression();
+    if (newExp == null) return null;
     Set<String> newVars = ExpressionUtil.getVariables(newExp, phenotypes);
-    return ValueList.get(calculate(sbjId, var, newExp, newVars, dateRange));
+    Value newVal = calculate(sbjId, var, newExp, newVars, dateRange);
+    if (newVal == null) return null;
+    return ValueList.get(newVal);
   }
 }

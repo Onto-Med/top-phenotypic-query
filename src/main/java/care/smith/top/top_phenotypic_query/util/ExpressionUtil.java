@@ -40,6 +40,7 @@ public class ExpressionUtil {
 
   private static void addVariables(
       Expression exp, Set<String> vars, Map<String, Phenotype> phenotypes) {
+    if (exp == null) return;
     if (exp.getEntityId() != null) {
       vars.add(exp.getEntityId());
       Phenotype varPhe = phenotypes.get(exp.getEntityId());
@@ -52,6 +53,7 @@ public class ExpressionUtil {
   }
 
   public static MathExpression convert(Expression exp) {
+    if (exp == null) return null;
     if (exp.getValue() != null)
       return getConstantExpression(exp.getValue().getConstant(), exp.getValue().getValue());
     if (exp.getFunction() != null) return getFunctionExpression(exp);
