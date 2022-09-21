@@ -88,10 +88,15 @@ public class SubjectQueryMan {
         new SubjectSearch(null, sexInclusion, birthdateInclusion, ageInclusion, adapter));
   }
 
-  public ResultSet executeExclusion() {
-    if (sexExclusion == null && birthdateExclusion == null && ageExclusion == null) return null;
+  public ResultSet executeSexExclusion() {
+    if (sexExclusion == null) return null;
+    return adapter.execute(new SubjectSearch(null, sexExclusion, null, null, adapter));
+  }
+
+  public ResultSet executeBirthdateExclusion() {
+    if (birthdateExclusion == null && ageExclusion == null) return null;
     return adapter.execute(
-        new SubjectSearch(null, sexExclusion, birthdateExclusion, ageExclusion, adapter));
+        new SubjectSearch(null, null, birthdateExclusion, ageExclusion, adapter));
   }
 
   public ResultSet executeVariables() {

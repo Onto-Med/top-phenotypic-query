@@ -133,19 +133,6 @@ public class SubjectQueryTest extends AbstractTest {
     ResultSet rs = pf.execute();
     adapter.close();
     System.out.println(rs);
-    assertEquals(Set.of("3"), rs.getSubjectIds());
-
-    Phenotypes phes = rs.getPhenotypes("3");
-    assertEquals(Set.of("Age", "Young", "Sex", "Female", "birthdate"), phes.getPhenotypeNames());
-    assertEquals(
-        BigDecimal.valueOf(32),
-        phes.getValues("Age", null).getValues().get(0).asDecimalValue().getValue());
-    assertEquals(
-        LocalDateTime.parse("1990-01-01T00:00:00"),
-        phes.getValues("birthdate", null).getValues().get(0).asDateTimeValue().getValue());
-    assertEquals(
-        "female", phes.getValues("Sex", null).getValues().get(0).asStringValue().getValue());
-    assertTrue(phes.getValues("Female", null).getValues().get(0).asBooleanValue().getValue());
-    assertTrue(phes.getValues("Young", null).getValues().get(0).asBooleanValue().getValue());
+    assertEquals(Set.of("2"), rs.getSubjectIds());
   }
 }

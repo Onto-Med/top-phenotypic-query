@@ -83,8 +83,11 @@ public class SingleQueryMan {
       if (rs.isEmpty()) return rs;
     }
 
-    ResultSet sbjExc = subjectQueryMan.executeExclusion();
-    if (sbjExc != null && !sbjExc.isEmpty()) rs = rs.subtract(sbjExc);
+    ResultSet sexExc = subjectQueryMan.executeSexExclusion();
+    if (sexExc != null && !sexExc.isEmpty()) rs = rs.subtract(sexExc);
+
+    ResultSet bdExc = subjectQueryMan.executeBirthdateExclusion();
+    if (bdExc != null && !bdExc.isEmpty()) rs = rs.subtract(bdExc);
 
     for (SingleSearch var : variables) {
       ResultSet res = var.execute();
