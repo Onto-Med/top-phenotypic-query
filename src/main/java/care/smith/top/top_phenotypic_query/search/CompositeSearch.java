@@ -35,7 +35,7 @@ public class CompositeSearch extends PhenotypeSearch {
     Phenotype phe = criterion.getSubject();
     Expression exp = phe.getExpression();
     if (exp != null) {
-      Set<String> vars = ExpressionUtil.getVariables(exp);
+      Set<String> vars = ExpressionUtil.getVariables(exp, phenotypes);
       Set<String> sbjIds = new HashSet<>(rs.getSubjectIds());
       for (String sbjId : sbjIds)
         executeForSubject(sbjId, phe.getId(), exp, vars, criterion.getDateTimeRestriction());
@@ -63,7 +63,7 @@ public class CompositeSearch extends PhenotypeSearch {
     ValueList vals = rs.getPhenotypes(sbjId).getValues(var, dateRange);
     if (vals != null) return vals;
     Expression newExp = phenotypes.get(var).getExpression();
-    Set<String> newVars = ExpressionUtil.getVariables(newExp);
+    Set<String> newVars = ExpressionUtil.getVariables(newExp, phenotypes);
     return ValueList.get(calculate(sbjId, var, newExp, newVars, dateRange));
   }
 }

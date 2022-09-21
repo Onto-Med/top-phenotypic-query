@@ -89,11 +89,16 @@ public class SingleQueryMan {
     ResultSet bdExc = subjectQueryMan.executeBirthdateExclusion();
     if (bdExc != null && !bdExc.isEmpty()) rs = rs.subtract(bdExc);
 
+    ResultSet sbjVars = subjectQueryMan.executeVariables();
+    if (sbjVars != null && !sbjVars.isEmpty()) rs = rs.insert(sbjVars);
+
     for (SingleSearch var : variables) {
       ResultSet res = var.execute();
       if (res.isEmpty()) continue;
       rs = rs.insert(res);
     }
+
+    System.out.println(rs);
 
     return rs;
   }

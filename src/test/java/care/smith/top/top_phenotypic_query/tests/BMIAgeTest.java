@@ -96,7 +96,7 @@ public class BMIAgeTest extends AbstractTest {
     assertTrue(getValue("Overweight", phes).asBooleanValue().getValue());
   }
 
-  private static Value getValue(String pheName, Phenotypes phes) {
+  protected static Value getValue(String pheName, Phenotypes phes) {
     return phes.getValues(pheName, getDTR(2000)).getValues().get(0);
   }
 
@@ -106,7 +106,7 @@ public class BMIAgeTest extends AbstractTest {
     return new Expression().value(new ExpressionValue().value(v));
   }
 
-  private static Expression getBMIExpression() {
+  protected static Expression getBMIExpression() {
     return new Expression()
         .function("divide")
         .addArgumentsItem(new Expression().entityId("Weight"))
@@ -117,7 +117,7 @@ public class BMIAgeTest extends AbstractTest {
                 .addArgumentsItem(getValue(2)));
   }
 
-  private static Expression getFindingExpression() {
+  protected static Expression getFindingExpression() {
     Expression youngAndBmi19_25 =
         new Expression()
             .function("and")

@@ -54,32 +54,39 @@ public class SubjectQueryMan {
   }
 
   public void addSexVariable(Phenotype sexVariable) {
-    addVariable(
-        sexVariable, sexInclusion, sexExclusion, sexPhenotypeVariable, sexRestrictionVariables);
+    if (contains(sexVariable, sexInclusion, sexExclusion)) return;
+    if (PhenotypeUtil.isPhenotype(sexVariable)) sexPhenotypeVariable = sexVariable;
+    else if (PhenotypeUtil.isRestriction(sexVariable)) {
+      sexRestrictionVariables.add(sexVariable);
+      sexPhenotypeVariable = sexVariable.getSuperPhenotype();
+    }
   }
 
   public void addBirthdateVariable(Phenotype birthdateVariable) {
-    addVariable(
-        birthdateVariable,
-        birthdateInclusion,
-        birthdateExclusion,
-        birthdatePhenotypeVariable,
-        birthdateRestrictionVariables);
+    if (contains(birthdateVariable, birthdateInclusion, birthdateExclusion)) return;
+    if (PhenotypeUtil.isPhenotype(birthdateVariable))
+      birthdatePhenotypeVariable = birthdateVariable;
+    else if (PhenotypeUtil.isRestriction(birthdateVariable)) {
+      birthdateRestrictionVariables.add(birthdateVariable);
+      birthdatePhenotypeVariable = birthdateVariable.getSuperPhenotype();
+    }
   }
 
   public void addAgeVariable(Phenotype ageVariable) {
-    addVariable(
-        ageVariable, ageInclusion, ageExclusion, agePhenotypeVariable, ageRestrictionVariables);
+    if (contains(ageVariable, ageInclusion, ageExclusion)) return;
+    if (PhenotypeUtil.isPhenotype(ageVariable)) agePhenotypeVariable = ageVariable;
+    else if (PhenotypeUtil.isRestriction(ageVariable)) {
+      ageRestrictionVariables.add(ageVariable);
+      agePhenotypeVariable = ageVariable.getSuperPhenotype();
+    }
   }
 
-  private void addVariable(
-      Phenotype var, Phenotype inc, Phenotype exc, Phenotype pheVar, Set<Phenotype> restrVars) {
-    if (var.getId().equals(inc.getId())
-        || var.getId().equals(exc.getId())
-        || (inc.getSuperPhenotype() != null
-            && (var.getId().equals(inc.getSuperPhenotype().getId())))) return;
-    if (PhenotypeUtil.isPhenotype(var)) pheVar = var;
-    else if (PhenotypeUtil.isRestriction(var)) restrVars.add(var);
+  private boolean contains(Phenotype var, Phenotype inc, Phenotype exc) {
+    return var.equals(inc)
+        || var.equals(exc)
+        || (inc != null
+            && inc.getSuperPhenotype() != null
+            && (var.equals(inc.getSuperPhenotype())));
   }
 
   public ResultSet executeInclusion() {

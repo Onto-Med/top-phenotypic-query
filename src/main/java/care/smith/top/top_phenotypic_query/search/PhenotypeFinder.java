@@ -47,12 +47,15 @@ public class PhenotypeFinder {
         else if (config.isSex(cri.getSubject())) sbjMan.setSexCriterion(cri);
         else man.addCriterion(new SingleSearch(query, cri, adapter));
       } else {
-        for (String var : ExpressionUtil.getVariables(cri.getSubject().getExpression())) {
-          if (config.isAge(cri.getSubject())) sbjMan.addAgeVariable(phenotypes.get(var));
-          else if (config.isBirthdate(cri.getSubject()))
-            sbjMan.addBirthdateVariable(phenotypes.get(var));
-          else if (config.isSex(cri.getSubject())) sbjMan.addSexVariable(phenotypes.get(var));
-          else man.addVariable(new SingleSearch(query, cri, phenotypes.get(var), adapter));
+        for (String var :
+            ExpressionUtil.getVariables(cri.getSubject().getExpression(), phenotypes)) {
+          Phenotype varPhe = phenotypes.get(var);
+          if (PhenotypeUtil.isSingle(varPhe)) {
+            if (config.isAge(varPhe)) sbjMan.addAgeVariable(varPhe);
+            else if (config.isBirthdate(varPhe)) sbjMan.addBirthdateVariable(varPhe);
+            else if (config.isSex(varPhe)) sbjMan.addSexVariable(varPhe);
+            else man.addVariable(new SingleSearch(query, cri, varPhe, adapter));
+          }
         }
       }
     }

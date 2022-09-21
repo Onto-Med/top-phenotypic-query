@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,16 +32,23 @@ import care.smith.top.simple_onto_api.model.property.data.value.StringValue;
 
 public class ExpressionUtil {
 
-  public static Set<String> getVariables(Expression exp) {
+  public static Set<String> getVariables(Expression exp, Map<String, Phenotype> phenotypes) {
     Set<String> vars = new HashSet<>();
-    addVariables(exp, vars);
+    addVariables(exp, vars, phenotypes);
     return vars;
   }
 
-  private static void addVariables(Expression exp, Set<String> vars) {
-    if (exp.getEntityId() != null) vars.add(exp.getEntityId());
-    else if (exp.getArguments() != null)
-      for (Expression arg : exp.getArguments()) addVariables(arg, vars);
+  private static void addVariables(
+      Expression exp, Set<String> vars, Map<String, Phenotype> phenotypes) {
+    if (exp.getEntityId() != null) {
+      vars.add(exp.getEntityId());
+      Phenotype varPhe = phenotypes.get(exp.getEntityId());
+      if (varPhe != null) {
+        Expression varPheExp = varPhe.getExpression();
+        if (varPheExp != null) addVariables(varPheExp, vars, phenotypes);
+      }
+    } else if (exp.getArguments() != null)
+      for (Expression arg : exp.getArguments()) addVariables(arg, vars, phenotypes);
   }
 
   public static MathExpression convert(Expression exp) {
