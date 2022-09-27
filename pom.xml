@@ -79,6 +79,11 @@
 			<version>2.1.214</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.fhir</groupId>
+			<artifactId>ucum</artifactId>
+			<version>1.0.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>
