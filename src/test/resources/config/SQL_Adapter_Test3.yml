@@ -43,6 +43,7 @@ sexMapping:
 codeMappings:
   - code: http://loinc.org|3137-7
     type: Assessment1
+    unit: cm
     phenotypeMappings:
       phenotype: height
   - code: http://loinc.org|3141-9

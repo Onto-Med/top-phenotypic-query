@@ -11,6 +11,7 @@ public class CodeMapping {
 
   private String code;
   private String type;
+  private String unit;
   private Map<String, String> phenotypeMappings = new HashMap<>();
   private Map<Restriction, Restriction> restrictionMappings = new HashMap<>();
 
@@ -28,6 +29,14 @@ public class CodeMapping {
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  public String getUnit() {
+    return unit;
+  }
+
+  public void setUnit(String unit) {
+    this.unit = unit;
   }
 
   public String getPhenotypeMapping(String name) {
@@ -67,6 +76,8 @@ public class CodeMapping {
         + code
         + ", type="
         + type
+        + ", unit="
+        + unit
         + ", phenotypeMappings="
         + phenotypeMappings
         + ", restrictionMappings="
