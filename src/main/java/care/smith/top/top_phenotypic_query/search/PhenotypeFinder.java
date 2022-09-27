@@ -46,7 +46,11 @@ public class PhenotypeFinder {
         else if (config.isBirthdate(cri.getSubject())) sbjMan.setBirthdateCriterion(cri);
         else if (config.isSex(cri.getSubject())) sbjMan.setSexCriterion(cri);
         else man.addCriterion(new SingleSearch(query, cri, adapter));
-      } else {
+      }
+    }
+
+    for (QueryCriterion cri : query.getCriteria()) {
+      if (PhenotypeUtil.isComposite(cri.getSubject())) {
         for (String var :
             ExpressionUtil.getVariables(cri.getSubject().getExpression(), phenotypes)) {
           Phenotype varPhe = phenotypes.get(var);

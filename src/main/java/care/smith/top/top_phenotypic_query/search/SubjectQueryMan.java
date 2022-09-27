@@ -82,11 +82,11 @@ public class SubjectQueryMan {
   }
 
   private boolean contains(Phenotype var, Phenotype inc, Phenotype exc) {
-    return var.equals(inc)
-        || var.equals(exc)
-        || (inc != null
-            && inc.getSuperPhenotype() != null
-            && (var.equals(inc.getSuperPhenotype())));
+    if (inc != null && var.getId().equals(inc.getId())) return true;
+    if (exc != null && var.getId().equals(exc.getId())) return true;
+    if (inc != null && inc.getSuperPhenotype() != null && (var.equals(inc.getSuperPhenotype())))
+      return true;
+    return false;
   }
 
   public ResultSet executeInclusion() {
@@ -135,5 +135,34 @@ public class SubjectQueryMan {
         phes.setValues(restr.getId(), null, ValueList.get(res));
       }
     }
+  }
+
+  @Override
+  public String toString() {
+    return "SubjectQueryMan [sexInclusion="
+        + sexInclusion
+        + ", birthdateInclusion="
+        + birthdateInclusion
+        + ", ageInclusion="
+        + ageInclusion
+        + ", sexExclusion="
+        + sexExclusion
+        + ", birthdateExclusion="
+        + birthdateExclusion
+        + ", ageExclusion="
+        + ageExclusion
+        + ", sexPhenotypeVariable="
+        + sexPhenotypeVariable
+        + ", sexRestrictionVariables="
+        + sexRestrictionVariables
+        + ", birthdatePhenotypeVariable="
+        + birthdatePhenotypeVariable
+        + ", birthdateRestrictionVariables="
+        + birthdateRestrictionVariables
+        + ", agePhenotypeVariable="
+        + agePhenotypeVariable
+        + ", ageRestrictionVariables="
+        + ageRestrictionVariables
+        + "]";
   }
 }

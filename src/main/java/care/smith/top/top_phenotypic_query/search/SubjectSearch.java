@@ -32,7 +32,6 @@ public class SubjectSearch extends PhenotypeSearch {
   private Phenotype age;
   private DataAdapter adapter;
   private DataAdapterConfig config;
-  private int type = 0;
 
   public SubjectSearch(
       Query query, Phenotype sex, Phenotype birthdate, Phenotype age, DataAdapter adapter) {
@@ -44,49 +43,58 @@ public class SubjectSearch extends PhenotypeSearch {
     this.config = adapter.getConfig();
   }
 
-  protected boolean isVariable() {
-    return type == 0;
-  }
-
-  protected SubjectSearch setIsVariable() {
-    type = 0;
-    return this;
-  }
-
-  protected boolean isCriterion() {
-    return type != 0;
-  }
-
-  protected boolean isInclusion() {
-    return type == 1;
-  }
-
-  protected SubjectSearch setIsInclusion() {
-    type = 1;
-    return this;
-  }
-
-  protected boolean isExclusion() {
-    return type == 2;
-  }
-
-  protected SubjectSearch setIsExclusion() {
-    type = 2;
-    return this;
-  }
-
   public Phenotype getSex() {
     return sex;
   }
 
   public Phenotype getBirthdate() {
-    if (birthdate != null) return birthdate;
-    if (age != null) return ageToBirthdate();
-    return null;
+    return birthdate;
   }
 
   public Phenotype getAge() {
     return age;
+  }
+
+  public Phenotype getAgeToBirthdate() {
+    if (age == null) return null;
+    Phenotype bd = new Phenotype().dataType(DataType.DATE_TIME);
+    bd.setId("birthdate");
+    bd.setEntityType(EntityType.SINGLE_PHENOTYPE);
+    if (PhenotypeUtil.isSinglePhenotype(age)) return bd;
+
+    NumberRestriction ageR = (NumberRestriction) age.getRestriction();
+    DateTimeRestriction bdR = new DateTimeRestriction();
+    bdR.setQuantifier(ageR.getQuantifier());
+    bdR.setCardinality(ageR.getCardinality());
+
+    BigDecimal ageMin = RestrictionUtil.getMinIntervalValue(ageR);
+    BigDecimal ageMax = RestrictionUtil.getMaxIntervalValue(ageR);
+
+    if (ageMax != null) {
+      bdR.addValuesItem(ageToBirthdate(ageMax.longValue()));
+      if (ageR.getMaxOperator() == RestrictionOperator.LESS_THAN)
+        bdR.setMinOperator(RestrictionOperator.GREATER_THAN);
+      else if (ageR.getMaxOperator() == RestrictionOperator.LESS_THAN_OR_EQUAL_TO)
+        bdR.setMinOperator(RestrictionOperator.GREATER_THAN_OR_EQUAL_TO);
+    }
+
+    if (ageMin != null) {
+      bdR.addValuesItem(ageToBirthdate(ageMin.longValue()));
+      if (ageR.getMinOperator() == RestrictionOperator.GREATER_THAN)
+        bdR.setMaxOperator(RestrictionOperator.LESS_THAN);
+      else if (ageR.getMinOperator() == RestrictionOperator.GREATER_THAN_OR_EQUAL_TO)
+        bdR.setMaxOperator(RestrictionOperator.LESS_THAN_OR_EQUAL_TO);
+    }
+
+    Phenotype bdRestricted = new Phenotype().restriction(bdR).superPhenotype(bd);
+    bdRestricted.setId(age.getId());
+    bdRestricted.setEntityType(EntityType.SINGLE_RESTRICTION);
+
+    return bdRestricted;
+  }
+
+  public Phenotype getBirthdateDerived() {
+    return (birthdate != null) ? birthdate : getAgeToBirthdate();
   }
 
   public CodeMapping getSexMapping() {
@@ -124,7 +132,7 @@ public class SubjectSearch extends PhenotypeSearch {
                 getSexMapping().getSourceRestriction(sexR), adapter.getFormat()));
     }
 
-    Phenotype bd = getBirthdate();
+    Phenotype bd = getBirthdateDerived();
     if (bd != null && PhenotypeUtil.isSingleRestriction(bd)) {
       Restriction birthdateR = bd.getRestriction();
       if (RestrictionUtil.hasInterval(birthdateR)) {
@@ -151,46 +159,9 @@ public class SubjectSearch extends PhenotypeSearch {
     return ChronoUnit.YEARS.between(birthdate.toLocalDate(), LocalDate.now());
   }
 
-  private Phenotype ageToBirthdate() {
-    Phenotype bd = new Phenotype().dataType(DataType.DATE_TIME);
-    bd.setId("birthdate");
-    bd.setEntityType(EntityType.SINGLE_PHENOTYPE);
-    if (PhenotypeUtil.isSinglePhenotype(age)) return bd;
-
-    NumberRestriction ageR = (NumberRestriction) age.getRestriction();
-    DateTimeRestriction bdR = new DateTimeRestriction();
-    bdR.setQuantifier(ageR.getQuantifier());
-    bdR.setCardinality(ageR.getCardinality());
-
-    BigDecimal ageMin = RestrictionUtil.getMinIntervalValue(ageR);
-    BigDecimal ageMax = RestrictionUtil.getMaxIntervalValue(ageR);
-
-    if (ageMax != null) {
-      bdR.addValuesItem(ageToBirthdate(ageMax.longValue()));
-      if (ageR.getMaxOperator() == RestrictionOperator.LESS_THAN)
-        bdR.setMinOperator(RestrictionOperator.GREATER_THAN);
-      else if (ageR.getMaxOperator() == RestrictionOperator.LESS_THAN_OR_EQUAL_TO)
-        bdR.setMinOperator(RestrictionOperator.GREATER_THAN_OR_EQUAL_TO);
-    }
-
-    if (ageMin != null) {
-      bdR.addValuesItem(ageToBirthdate(ageMin.longValue()));
-      if (ageR.getMinOperator() == RestrictionOperator.GREATER_THAN)
-        bdR.setMaxOperator(RestrictionOperator.LESS_THAN);
-      else if (ageR.getMinOperator() == RestrictionOperator.GREATER_THAN_OR_EQUAL_TO)
-        bdR.setMaxOperator(RestrictionOperator.LESS_THAN_OR_EQUAL_TO);
-    }
-
-    Phenotype bdRestricted = new Phenotype().restriction(bdR).superPhenotype(bd);
-    bdRestricted.setId(age.getId());
-    bdRestricted.setEntityType(EntityType.SINGLE_RESTRICTION);
-
-    return bdRestricted;
-  }
-
   @Override
   public int hashCode() {
-    return Objects.hash(birthdate.getId(), sex.getId(), type);
+    return Objects.hash(birthdate, age, sex);
   }
 
   @Override
@@ -199,8 +170,8 @@ public class SubjectSearch extends PhenotypeSearch {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     SubjectSearch other = (SubjectSearch) obj;
-    return Objects.equals(birthdate.getId(), other.birthdate.getId())
-        && Objects.equals(sex.getId(), other.sex.getId())
-        && type == other.type;
+    return Objects.equals(birthdate, other.birthdate)
+        && Objects.equals(age, other.age)
+        && Objects.equals(sex, other.sex);
   }
 }

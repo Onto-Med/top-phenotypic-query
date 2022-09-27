@@ -100,7 +100,7 @@ public class SQLAdapter extends DataAdapter {
       String bdCol = out.getBirthdate();
       String sexCol = out.getSex();
       Phenotype sex = search.getSex();
-      Phenotype bd = search.getBirthdate();
+      Phenotype bd = search.getBirthdateDerived();
       Phenotype age = search.getAge();
 
       while (sqlRS.next()) {
@@ -108,7 +108,9 @@ public class SQLAdapter extends DataAdapter {
         if (bd != null) {
           Timestamp bdSqlVal = sqlRS.getTimestamp(bdCol);
           if (bdSqlVal != null) {
-            addValue(rs, sbj, bd, null, new DateTimeValue(bdSqlVal.toLocalDateTime()));
+            DateTimeValue val = new DateTimeValue(bdSqlVal.toLocalDateTime());
+            if (search.getBirthdate() != null) addValue(rs, sbj, bd, null, val);
+            else rs.addValue(sbj, PhenotypeUtil.getPhenotypeId(bd), null, val);
             if (age != null) {
               Value ageVal =
                   new DecimalValue(SubjectSearch.birthdateToAge(bdSqlVal.toLocalDateTime()));
