@@ -4,8 +4,11 @@ import java.util.HashMap;
 import java.util.Set;
 
 import care.smith.top.backend.model.DateTimeRestriction;
+import care.smith.top.backend.model.Phenotype;
+import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
+import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
 
 public class ResultSet extends HashMap<String, Phenotypes> {
 
@@ -41,6 +44,18 @@ public class ResultSet extends HashMap<String, Phenotypes> {
       setPhenotypes(phes);
     }
     phes.addValue(phenotypeName, dateRange, val);
+  }
+
+  public void addValue(
+      String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
+    addValue(subjectId, PhenotypeUtil.getPhenotypeId(phenotype), dateRange, val);
+  }
+
+  public void addValueWithRestriction(
+      String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
+    addValue(subjectId, phenotype, dateRange, val);
+    if (PhenotypeUtil.hasExistentialQuantifier(phenotype))
+      addValue(subjectId, phenotype.getId(), dateRange, new BooleanValue(true));
   }
 
   public void addSubject(String subjectId) {
