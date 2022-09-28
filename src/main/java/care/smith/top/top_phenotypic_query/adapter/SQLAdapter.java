@@ -81,7 +81,14 @@ public class SQLAdapter extends DataAdapter {
         else if (datatype == DataType.NUMBER)
           val = new DecimalValue(sqlRS.getBigDecimal(pheCol), date);
         else val = new StringValue(sqlRS.getString(pheCol), date);
-        if (val != null) rs.addValueWithRestriction(sbj, phe, search.getDateTimeRestriction(), val);
+        if (val != null)
+          rs.addValueWithRestriction(
+              sbj,
+              phe,
+              search.getDateTimeRestriction(),
+              val,
+              search.getSourceUnit(),
+              search.getModelUnit());
       }
     } catch (SQLException e) {
       e.printStackTrace();

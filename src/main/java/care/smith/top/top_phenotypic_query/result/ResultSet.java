@@ -6,8 +6,10 @@ import java.util.Set;
 import care.smith.top.backend.model.DateTimeRestriction;
 import care.smith.top.backend.model.Phenotype;
 import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
+import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
+import care.smith.top.top_phenotypic_query.ucum.UCUM;
 import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
 
 public class ResultSet extends HashMap<String, Phenotypes> {
@@ -48,14 +50,42 @@ public class ResultSet extends HashMap<String, Phenotypes> {
 
   public void addValue(
       String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
-    addValue(subjectId, PhenotypeUtil.getPhenotypeId(phenotype), dateRange, val);
+    if (val != null) addValue(subjectId, PhenotypeUtil.getPhenotypeId(phenotype), dateRange, val);
+  }
+
+  public void addValue(
+      String subjectId,
+      Phenotype phenotype,
+      DateTimeRestriction dateRange,
+      Value val,
+      String sourceUnit,
+      String modelUnit) {
+    if (sourceUnit != null && modelUnit != null && val instanceof DecimalValue)
+      val = new DecimalValue(UCUM.convert(val.getValueDecimal(), sourceUnit, modelUnit));
+    addValue(subjectId, phenotype, dateRange, val);
+  }
+
+  private void addRestriction(
+      String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
+    if (val != null && PhenotypeUtil.hasExistentialQuantifier(phenotype))
+      addValue(subjectId, phenotype.getId(), dateRange, new BooleanValue(true));
   }
 
   public void addValueWithRestriction(
       String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
     addValue(subjectId, phenotype, dateRange, val);
-    if (PhenotypeUtil.hasExistentialQuantifier(phenotype))
-      addValue(subjectId, phenotype.getId(), dateRange, new BooleanValue(true));
+    addRestriction(subjectId, phenotype, dateRange, val);
+  }
+
+  public void addValueWithRestriction(
+      String subjectId,
+      Phenotype phenotype,
+      DateTimeRestriction dateRange,
+      Value val,
+      String sourceUnit,
+      String modelUnit) {
+    addValue(subjectId, phenotype, dateRange, val, sourceUnit, modelUnit);
+    addRestriction(subjectId, phenotype, dateRange, val);
   }
 
   public void addSubject(String subjectId) {

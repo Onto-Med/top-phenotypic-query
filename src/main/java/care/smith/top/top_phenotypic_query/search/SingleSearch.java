@@ -10,6 +10,7 @@ import care.smith.top.backend.model.Quantifier;
 import care.smith.top.backend.model.Query;
 import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.backend.model.Restriction;
+import care.smith.top.backend.model.Unit;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
@@ -77,7 +78,9 @@ public class SingleSearch extends PhenotypeSearch {
   }
 
   public String getModelUnit() {
-    return phenotype.getUnit().getUnit();
+    Unit u = phenotype.getUnit();
+    if (u == null) return null;
+    return u.getUnit();
   }
 
   public String getSourceUnit() {

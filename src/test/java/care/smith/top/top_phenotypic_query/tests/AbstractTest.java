@@ -15,6 +15,8 @@ import care.smith.top.backend.model.DataType;
 import care.smith.top.backend.model.DateTimeRestriction;
 import care.smith.top.backend.model.EntityType;
 import care.smith.top.backend.model.Expression;
+import care.smith.top.backend.model.ExpressionFunction;
+import care.smith.top.backend.model.ExpressionFunction.NotationEnum;
 import care.smith.top.backend.model.ExpressionValue;
 import care.smith.top.backend.model.ItemType;
 import care.smith.top.backend.model.NumberRestriction;
@@ -25,6 +27,9 @@ import care.smith.top.backend.model.Restriction;
 import care.smith.top.backend.model.RestrictionOperator;
 import care.smith.top.backend.model.StringRestriction;
 import care.smith.top.backend.model.StringValue;
+import care.smith.top.backend.model.Unit;
+import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.top_phenotypic_query.result.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
 import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
 
@@ -36,6 +41,42 @@ public abstract class AbstractTest {
   private static final RestrictionOperator DEFAULT_MIN_OPERATOR =
       RestrictionOperator.GREATER_THAN_OR_EQUAL_TO;
   private static final RestrictionOperator DEFAULT_MAX_OPERATOR = RestrictionOperator.LESS_THAN;
+
+  static Phenotype age = getPhenotype("Age", "http://loinc.org", "30525-0");
+  static Phenotype young = getInterval("Young", age, 18, 34);
+  static Phenotype old = getIntervalMin("Old", age, 34);
+  static Phenotype sex = getPhenotype("Sex", "http://loinc.org", "46098-0", DataType.STRING);
+  static Phenotype female =
+      getRestriction("Female", sex, "http://hl7.org/fhir/administrative-gender|female");
+  static Phenotype weight = getPhenotype("Weight", "http://loinc.org", "3141-9");
+  static Phenotype height = getPhenotype("Height", "http://loinc.org", "3137-7", "m");
+  static Phenotype bmi = getPhenotype("BMI", getBMIExpression());
+  static Phenotype bmi19_25 = getInterval("BMI19_25", bmi, 19, 25);
+  static Phenotype bmi19_27 = getInterval("BMI19_27", bmi, 19, 27);
+  static Phenotype bmi25_30 = getInterval("BMI25_30", bmi, 25, 30);
+  static Phenotype bmi27_30 = getInterval("BMI27_30", bmi, 27, 30);
+  static Phenotype finding = getPhenotype("Finding", getFindingExpression());
+  static Phenotype overWeight = getRestriction("Overweight", finding, 1);
+
+  static Map<String, Phenotype> phenotypes =
+      getPhenotypeMap(
+          age,
+          young,
+          old,
+          sex,
+          female,
+          weight,
+          height,
+          bmi,
+          bmi19_25,
+          bmi19_27,
+          bmi25_30,
+          bmi27_30,
+          finding,
+          overWeight);
+
+  static ExpressionFunction defAgrFunc =
+      new ExpressionFunction().id("last").minArgumentNumber(1).notation(NotationEnum.PREFIX);
 
   static DateTimeRestriction getDTR(int year) {
     return new DateTimeRestriction()
@@ -55,7 +96,16 @@ public abstract class AbstractTest {
     return getPhenotype(name, codeSystem, code, DEFAULT_DATA_TYPE);
   }
 
+  static Phenotype getPhenotype(String name, String codeSystem, String code, String unit) {
+    return getPhenotype(name, codeSystem, code, DEFAULT_DATA_TYPE, unit);
+  }
+
   static Phenotype getPhenotype(String name, String codeSystem, String code, DataType dataType) {
+    return getPhenotype(name, codeSystem, code, dataType, null);
+  }
+
+  static Phenotype getPhenotype(
+      String name, String codeSystem, String code, DataType dataType, String unit) {
     Phenotype phenotype =
         (Phenotype)
             new Phenotype()
@@ -63,6 +113,7 @@ public abstract class AbstractTest {
                 .itemType(ItemType.OBSERVATION)
                 .id(name)
                 .entityType(EntityType.SINGLE_PHENOTYPE);
+    if (unit != null) phenotype.setUnit(new Unit().unit(unit));
     addCode(phenotype, codeSystem, code);
     return phenotype;
   }
@@ -284,5 +335,68 @@ public abstract class AbstractTest {
 
   static Map<String, Phenotype> getPhenotypeMap(Phenotype... phenotypes) {
     return Stream.of(phenotypes).collect(Collectors.toMap(Phenotype::getId, Function.identity()));
+  }
+
+  static Expression getBMIExpression() {
+    return new Expression()
+        .function("divide")
+        .addArgumentsItem(new Expression().entityId("Weight"))
+        .addArgumentsItem(
+            new Expression()
+                .function("power")
+                .addArgumentsItem(new Expression().entityId("Height"))
+                .addArgumentsItem(getValue(2)));
+  }
+
+  static Expression getFindingExpression() {
+    Expression youngAndBmi19_25 =
+        new Expression()
+            .function("and")
+            .addArgumentsItem(new Expression().entityId("Young"))
+            .addArgumentsItem(new Expression().entityId("BMI19_25"));
+    Expression oldAndBmi19_27 =
+        new Expression()
+            .function("and")
+            .addArgumentsItem(new Expression().entityId("Old"))
+            .addArgumentsItem(new Expression().entityId("BMI19_27"));
+    Expression normalWeight =
+        new Expression()
+            .function("or")
+            .addArgumentsItem(youngAndBmi19_25)
+            .addArgumentsItem(oldAndBmi19_27);
+
+    Expression youngAndBmi25_30 =
+        new Expression()
+            .function("and")
+            .addArgumentsItem(new Expression().entityId("Young"))
+            .addArgumentsItem(new Expression().entityId("BMI25_30"));
+    Expression oldAndBmi27_30 =
+        new Expression()
+            .function("and")
+            .addArgumentsItem(new Expression().entityId("Old"))
+            .addArgumentsItem(new Expression().entityId("BMI27_30"));
+    Expression overweight =
+        new Expression()
+            .function("or")
+            .addArgumentsItem(youngAndBmi25_30)
+            .addArgumentsItem(oldAndBmi27_30);
+
+    return new Expression()
+        .function("switch")
+        .addArgumentsItem(normalWeight)
+        .addArgumentsItem(getValue(0))
+        .addArgumentsItem(overweight)
+        .addArgumentsItem(getValue(1))
+        .addArgumentsItem(getValue(-1));
+  }
+
+  static Value getValue(String pheName, Phenotypes phes) {
+    return phes.getValues(pheName, getDTR(2000)).getValues().get(0);
+  }
+
+  static Expression getValue(int value) {
+    NumberValue v = new NumberValue().value(BigDecimal.valueOf(value));
+    v.setDataType(DataType.NUMBER);
+    return new Expression().value(new ExpressionValue().value(v));
   }
 }

@@ -8,15 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import care.smith.top.backend.model.DataType;
-import care.smith.top.backend.model.ExpressionFunction;
-import care.smith.top.backend.model.ExpressionFunction.NotationEnum;
-import care.smith.top.backend.model.Phenotype;
 import care.smith.top.backend.model.Query;
 import care.smith.top.backend.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.SQLAdapter;
@@ -25,45 +20,8 @@ import care.smith.top.top_phenotypic_query.result.Phenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 
-public class FullBMIAgeTest extends BMIAgeTest {
+public class FullBMIAgeTest extends AbstractTest {
 
-  static Phenotype age = getPhenotype("Age", "http://loinc.org", "30525-0");
-  static Phenotype young = getInterval("Young", age, 18, 34);
-  static Phenotype old = getIntervalMin("Old", age, 34);
-  static Phenotype sex = getPhenotype("Sex", "http://loinc.org", "46098-0", DataType.STRING);
-  static Phenotype female =
-      getRestriction("Female", sex, "http://hl7.org/fhir/administrative-gender|female");
-  static Phenotype weight = getPhenotype("Weight", "http://loinc.org", "3141-9");
-  static Phenotype height = getPhenotype("Height", "http://loinc.org", "3137-7");
-  static Phenotype bmi = getPhenotype("BMI", getBMIExpression());
-  static Phenotype bmi19_25 = getInterval("BMI19_25", bmi, 19, 25);
-  static Phenotype bmi19_27 = getInterval("BMI19_27", bmi, 19, 27);
-  static Phenotype bmi25_30 = getInterval("BMI25_30", bmi, 25, 30);
-  static Phenotype bmi27_30 = getInterval("BMI27_30", bmi, 27, 30);
-  static Phenotype finding = getPhenotype("Finding", getFindingExpression());
-  static Phenotype overWeight = getRestriction("Overweight", finding, 1);
-
-  static Map<String, Phenotype> phenotypes =
-      getPhenotypeMap(
-          age,
-          young,
-          old,
-          sex,
-          female,
-          weight,
-          height,
-          bmi,
-          bmi19_25,
-          bmi19_27,
-          bmi25_30,
-          bmi27_30,
-          finding,
-          overWeight);
-
-  static ExpressionFunction defAgrFunc =
-      new ExpressionFunction().id("last").minArgumentNumber(1).notation(NotationEnum.PREFIX);
-
-  @Override
   @Test
   public void test() {
     QueryCriterion cri1 =
