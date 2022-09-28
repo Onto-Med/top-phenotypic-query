@@ -72,8 +72,12 @@ public class SingleSearch extends PhenotypeSearch {
     return criterion.getDateTimeRestriction();
   }
 
-  public CodeMapping getCodeMapping() {
+  private CodeMapping getCodeMapping() {
     return config.getCodeMapping(phenotype);
+  }
+
+  public String getUnit() {
+    return getCodeMapping().getUnit();
   }
 
   public String getType() {
