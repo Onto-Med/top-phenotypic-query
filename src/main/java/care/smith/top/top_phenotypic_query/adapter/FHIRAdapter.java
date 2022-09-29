@@ -1,20 +1,20 @@
 package care.smith.top.top_phenotypic_query.adapter;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Observation;
+import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
+import org.hl7.fhir.r4.model.OperationOutcome;
+import org.hl7.fhir.r4.model.OperationOutcome.IssueType;
 import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
-import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -176,7 +176,7 @@ public class FHIRAdapter extends DataAdapter {
     return rs;
   }
 
-  public ResourceMap executeQuery(String query) {
+  public List<Resource> executeQuery(String query) {
     Bundle firstPage =
         client
             .search()
@@ -184,16 +184,21 @@ public class FHIRAdapter extends DataAdapter {
             .returnBundle(Bundle.class)
             .cacheControl(new CacheControlDirective().setNoCache(true))
             .execute();
-    ResourceMap results = new ResourceMap(firstPage);
-    addPages(firstPage, results);
-    return results;
+    List<Resource> resources = new ArrayList<>();
+    addResources(firstPage, resources);
+    addPages(firstPage, resources);
+    return resources;
   }
 
-  private void addPages(Bundle lastPage, ResourceMap results) {
+  private void addResources(Bundle bundle, List<Resource> resources) {
+    for (BundleEntryComponent bec : bundle.getEntry()) resources.add(bec.getResource());
+  }
+
+  private void addPages(Bundle lastPage, List<Resource> resources) {
     if (lastPage.getLink(Bundle.LINK_NEXT) != null) {
       Bundle nextPage = client.loadPage().next(lastPage).execute();
-      results.add(nextPage);
-      addPages(nextPage, results);
+      addResources(nextPage, resources);
+      addPages(nextPage, resources);
     }
   }
 
@@ -202,64 +207,9 @@ public class FHIRAdapter extends DataAdapter {
     return create(client.create().resource(res).execute());
   }
 
-  public Bundle parseBundle(File file) throws IOException {
-    Bundle bundle;
-    try {
-      bundle = parser.parseResource(Bundle.class, new FileInputStream(file));
-    } catch (DataFormatException e) {
-      throw new IOException();
-    }
-    return bundle;
-  }
-
-  public void importBundle(Bundle bundle) {
-    Bundle resp = client.transaction().withBundle(bundle).execute();
-    log.info("IMPORT BUNDLE: {}", bundle.getId());
-    log.info(FHIRUtil.toString(resp));
-  }
-
   public boolean deleteResource(String resourceType, String id) {
     log.info("DELETE {}: {}", resourceType.toUpperCase(), id);
     return delete(client.delete().resourceById(new IdDt(resourceType, id)).execute());
-  }
-
-  public Bundle findPatients() {
-    return client
-        .search()
-        .forResource(Patient.class)
-        .where(Patient.IDENTIFIER.hasSystemWithAnyCode(PhenoManCodeSystem.SYSTEM))
-        .returnBundle(Bundle.class)
-        .execute();
-  }
-
-  public Optional<String> findPatientId(String identifier) {
-    Bundle b =
-        client
-            .search()
-            .forResource(Patient.class)
-            .where(
-                Patient.IDENTIFIER.exactly().systemAndCode(PhenoManCodeSystem.SYSTEM, identifier))
-            .returnBundle(Bundle.class)
-            .execute();
-    if (b.getTotal() == 0) return Optional.empty();
-    else return Optional.of(b.getEntryFirstRep().getResource().getIdElement().getIdPart());
-  }
-
-  public Bundle findObservationsByMethod() {
-    return client
-        .search()
-        .forResource(Observation.class)
-        .where(Observation.METHOD.hasSystemWithAnyCode(PhenoManCodeSystem.SYSTEM))
-        .returnBundle(Bundle.class)
-        .execute();
-  }
-
-  public Bundle findItemsByIdentifier(String resourceType) {
-    return client
-        .search()
-        .byUrl(resourceType + "?identifier=" + PhenoManCodeSystem.SYSTEM + "|")
-        .returnBundle(Bundle.class)
-        .execute();
   }
 
   public Optional<Resource> findResource(String type, String id) {
@@ -285,44 +235,6 @@ public class FHIRAdapter extends DataAdapter {
     return client.search().byUrl(q).returnBundle(Bundle.class).execute();
   }
 
-  private boolean deleteAllPatients() {
-    log.info("DELETE ALL PATIENTS:");
-
-    IBaseOperationOutcome resp =
-        client
-            .delete()
-            .resourceConditionalByType("Patient")
-            .where(Patient.IDENTIFIER.hasSystemWithAnyCode(PhenoManCodeSystem.SYSTEM))
-            .execute();
-
-    return delete(resp);
-  }
-
-  private boolean deleteAllItemsByIdentifier(String resourceType) {
-    log.info("DELETE ALL {}S:", resourceType.toUpperCase());
-
-    IBaseOperationOutcome resp =
-        client
-            .delete()
-            .resourceConditionalByUrl(
-                resourceType + "?identifier=" + PhenoManCodeSystem.SYSTEM + "|")
-            .execute();
-
-    return delete(resp);
-  }
-
-  private boolean deleteMDRItems(String resourceType) {
-    log.info("DELETE ALL MDR {}S:", resourceType.toUpperCase());
-
-    IBaseOperationOutcome resp =
-        client
-            .delete()
-            .resourceConditionalByUrl(resourceType + "?identifier=" + MDRMan.getMDRUri() + "|")
-            .execute();
-
-    return delete(resp);
-  }
-
   public Optional<String> findResourceId(String resourceType, String system, String identifier) {
     Bundle b =
         client
@@ -334,34 +246,22 @@ public class FHIRAdapter extends DataAdapter {
     else return Optional.of(b.getEntryFirstRep().getResource().getIdElement().getIdPart());
   }
 
-  private boolean deleteAllObservationsByMethod() {
-    log.info("DELETE ALL OBSERVATIONS:");
-
-    IBaseOperationOutcome resp =
-        client
-            .delete()
-            .resourceConditionalByType("Observation")
-            .where(Observation.METHOD.hasSystemWithAnyCode(PhenoManCodeSystem.SYSTEM))
-            .execute();
-
-    return delete(resp);
+  public void deleteAllResources() {
+    deleteAllResourcesOfType("Patient");
+    deleteAllResourcesOfType("Condition");
+    deleteAllResourcesOfType("Procedure");
+    deleteAllResourcesOfType("MedicationRequest");
+    deleteAllResourcesOfType("MedicationAdministration");
+    deleteAllResourcesOfType("MedicationStatement");
+    deleteAllResourcesOfType("ClinicalImpression");
+    deleteAllResourcesOfType("Observation");
+    deleteAllResourcesOfType("AllergyIntolerance");
   }
 
-  private void deleteAllItems() {
-    deleteAllItemsByIdentifier("Condition");
-    deleteAllItemsByIdentifier("Procedure");
-    deleteAllItemsByIdentifier("MedicationRequest");
-    deleteAllItemsByIdentifier("MedicationAdministration");
-    deleteAllItemsByIdentifier("MedicationStatement");
-    deleteAllItemsByIdentifier("ClinicalImpression");
-    deleteAllItemsByIdentifier("Observation");
-    deleteAllItemsByIdentifier("AllergyIntolerance");
-    deleteAllObservationsByMethod();
-  }
-
-  public void deleteAllPatientsWithItems() {
-    deleteAllItems();
-    deleteAllPatients();
+  public boolean deleteAllResourcesOfType(String resourceType) {
+    log.info("DELETE ALL {}S:", resourceType.toUpperCase());
+    MethodOutcome resp = client.delete().resourceConditionalByUrl(resourceType).execute();
+    return delete(resp.getOperationOutcome());
   }
 
   private Optional<String> create(MethodOutcome outcome) {
@@ -387,7 +287,6 @@ public class FHIRAdapter extends DataAdapter {
           return false;
         } else log.info(outcome.getIssueFirstRep().getDiagnostics());
       }
-
       return true;
     }
   }
@@ -398,44 +297,5 @@ public class FHIRAdapter extends DataAdapter {
   }
 
   @Override
-  public void close() {
-    try {
-      con.close();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public static void printSize(java.sql.ResultSet rs) {
-    if (rs == null) System.out.println("SIZE: NULL");
-    else {
-      try {
-        rs.last();
-        System.out.println("SIZE: " + rs.getRow());
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  public static void print(java.sql.ResultSet rs) {
-    try {
-      ResultSetMetaData rsmd = rs.getMetaData();
-      int columnsNumber = rsmd.getColumnCount();
-      while (rs.next()) {
-        for (int i = 1; i <= columnsNumber; i++) {
-          if (i > 1) System.out.print(" | ");
-          System.out.print(rs.getString(i));
-        }
-        System.out.println("");
-      }
-      for (int i = 1; i <= columnsNumber; i++) {
-        if (i > 1) System.out.print(" | ");
-        System.out.print(rsmd.getColumnName(i));
-      }
-      System.out.println("");
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-  }
+  public void close() {}
 }
