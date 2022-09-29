@@ -42,23 +42,24 @@ public abstract class AbstractTest {
       RestrictionOperator.GREATER_THAN_OR_EQUAL_TO;
   private static final RestrictionOperator DEFAULT_MAX_OPERATOR = RestrictionOperator.LESS_THAN;
 
-  static Phenotype age = getPhenotype("Age", "http://loinc.org", "30525-0");
-  static Phenotype young = getInterval("Young", age, 18, 34);
-  static Phenotype old = getIntervalMin("Old", age, 34);
-  static Phenotype sex = getPhenotype("Sex", "http://loinc.org", "46098-0", DataType.STRING);
-  static Phenotype female =
+  protected static Phenotype age = getPhenotype("Age", "http://loinc.org", "30525-0");
+  protected static Phenotype young = getInterval("Young", age, 18, 34);
+  protected static Phenotype old = getIntervalMin("Old", age, 34);
+  protected static Phenotype sex =
+      getPhenotype("Sex", "http://loinc.org", "46098-0", DataType.STRING);
+  protected static Phenotype female =
       getRestriction("Female", sex, "http://hl7.org/fhir/administrative-gender|female");
-  static Phenotype weight = getPhenotype("Weight", "http://loinc.org", "3141-9");
-  static Phenotype height = getPhenotype("Height", "http://loinc.org", "3137-7", "m");
-  static Phenotype bmi = getPhenotype("BMI", getBMIExpression());
-  static Phenotype bmi19_25 = getInterval("BMI19_25", bmi, 19, 25);
-  static Phenotype bmi19_27 = getInterval("BMI19_27", bmi, 19, 27);
-  static Phenotype bmi25_30 = getInterval("BMI25_30", bmi, 25, 30);
-  static Phenotype bmi27_30 = getInterval("BMI27_30", bmi, 27, 30);
-  static Phenotype finding = getPhenotype("Finding", getFindingExpression());
-  static Phenotype overWeight = getRestriction("Overweight", finding, 1);
+  protected static Phenotype weight = getPhenotype("Weight", "http://loinc.org", "3141-9");
+  protected static Phenotype height = getPhenotype("Height", "http://loinc.org", "3137-7", "m");
+  protected static Phenotype bmi = getPhenotype("BMI", getBMIExpression());
+  protected static Phenotype bmi19_25 = getInterval("BMI19_25", bmi, 19, 25);
+  protected static Phenotype bmi19_27 = getInterval("BMI19_27", bmi, 19, 27);
+  protected static Phenotype bmi25_30 = getInterval("BMI25_30", bmi, 25, 30);
+  protected static Phenotype bmi27_30 = getInterval("BMI27_30", bmi, 27, 30);
+  protected static Phenotype finding = getPhenotype("Finding", getFindingExpression());
+  protected static Phenotype overWeight = getRestriction("Overweight", finding, 1);
 
-  static Map<String, Phenotype> phenotypes =
+  protected static Map<String, Phenotype> phenotypes =
       getPhenotypeMap(
           age,
           young,
@@ -75,10 +76,10 @@ public abstract class AbstractTest {
           finding,
           overWeight);
 
-  static ExpressionFunction defAgrFunc =
+  protected static ExpressionFunction defAgrFunc =
       new ExpressionFunction().id("last").minArgumentNumber(1).notation(NotationEnum.PREFIX);
 
-  static DateTimeRestriction getDTR(int year) {
+  protected static DateTimeRestriction getDTR(int year) {
     return new DateTimeRestriction()
         .minOperator(DEFAULT_MIN_OPERATOR)
         .maxOperator(DEFAULT_MAX_OPERATOR)
@@ -390,7 +391,7 @@ public abstract class AbstractTest {
         .addArgumentsItem(getValue(-1));
   }
 
-  static Value getValue(String pheName, Phenotypes phes) {
+  protected static Value getValue(String pheName, Phenotypes phes) {
     return phes.getValues(pheName, getDTR(2000)).getValues().get(0);
   }
 

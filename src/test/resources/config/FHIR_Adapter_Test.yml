@@ -1,0 +1,44 @@
+id: SMITH_FHIR_Adapter
+connection:
+  endpoint: http://localhost:8080/baseR4/
+  user:
+  password:
+  token:
+subjectQuery: 
+  baseQuery: "Patient?_format=json"
+  sexListPart: "&gender={sexes}"
+  birthdateIntervalPart: "&birthdate{operator}{value}"
+  output:
+    id: identifier
+    sex: gender
+    birthdate: birthDate
+phenotypeQueries:
+  Condition:
+    baseQuery: "Condition?code={codes}"
+    dateIntervalPart: "&recorded-date{operator}{value}"
+    subjectsPart: "&subject={subject_ids}"
+    output:
+      subject: subject
+      phenotype:
+      date: recorded-date
+  Observation:
+    baseQuery: "Observation?code={codes}"
+    valueIntervalPart: "&value-quantity{operator}{value}"
+    valueListPart: "&value-quantity={values}"
+    stringValueListPart: "&value-string={values}"
+    dateIntervalPart: "&date{operator}{value}"
+    subjectsPart: "&subject={subject_ids}"
+    output:
+      subject: subject
+      phenotype: valueQuantity.value
+      date: date
+  ObservationComponent:
+    baseQuery: "Observation?component-code={codes}"
+    valueIntervalPart: "&component-value-quantity{operator}{value}"
+    valueListPart: "&component-value-quantity={values}"
+    dateIntervalPart: "&date{operator}{value}"
+    subjectsPart: "&subject={subject_ids}"
+    output:
+      subject: subject
+      phenotype: component.valueQuantity.value
+      date: date
