@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.adapter;
+package care.smith.top.top_phenotypic_query.adapter.sql;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -26,6 +26,8 @@ import care.smith.top.simple_onto_api.model.property.data.value.DateTimeValue;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.simple_onto_api.model.property.data.value.StringValue;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;

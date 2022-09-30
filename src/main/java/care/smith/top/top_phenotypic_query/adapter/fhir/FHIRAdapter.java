@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.adapter;
+package care.smith.top.top_phenotypic_query.adapter.fhir;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -34,9 +34,11 @@ import care.smith.top.simple_onto_api.model.property.data.value.DateTimeValue;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.simple_onto_api.model.property.data.value.StringValue;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
+import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapterFormat;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
@@ -176,7 +178,7 @@ public class FHIRAdapter extends DataAdapter {
     return rs;
   }
 
-  public List<Resource> executeQuery(String query) {
+  private List<Resource> executeQuery(String query) {
     Bundle firstPage =
         client
             .search()

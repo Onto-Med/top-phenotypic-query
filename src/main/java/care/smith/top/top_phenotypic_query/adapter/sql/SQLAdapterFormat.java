@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.adapter;
+package care.smith.top.top_phenotypic_query.adapter.sql;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -7,15 +7,16 @@ import java.util.stream.Stream;
 
 import care.smith.top.backend.model.RestrictionOperator;
 import care.smith.top.simple_onto_api.util.DateUtil;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
 
-public class FHIRAdapterFormat implements DataAdapterFormat {
+public class SQLAdapterFormat implements DataAdapterFormat {
 
-  private static FHIRAdapterFormat instance = null;
+  private static SQLAdapterFormat instance = null;
 
-  private FHIRAdapterFormat() {}
+  private SQLAdapterFormat() {}
 
-  public static FHIRAdapterFormat get() {
-    if (instance == null) instance = new FHIRAdapterFormat();
+  public static SQLAdapterFormat get() {
+    if (instance == null) instance = new SQLAdapterFormat();
     return instance;
   }
 
@@ -26,7 +27,7 @@ public class FHIRAdapterFormat implements DataAdapterFormat {
 
   @Override
   public String formatDateTime(LocalDateTime date) {
-    return DateUtil.format(date);
+    return "'" + DateUtil.format(date) + "'";
   }
 
   @Override
@@ -36,19 +37,16 @@ public class FHIRAdapterFormat implements DataAdapterFormat {
 
   @Override
   public String formatString(String str) {
-    return str;
+    return "'" + str + "'";
   }
 
   @Override
   public String formatList(Stream<String> values) {
-    return values.collect(Collectors.joining(","));
+    return values.collect(Collectors.joining(", "));
   }
 
   @Override
   public String formatOperator(RestrictionOperator oper) {
-    if (oper == RestrictionOperator.GREATER_THAN) return "=gt";
-    if (oper == RestrictionOperator.GREATER_THAN_OR_EQUAL_TO) return "=ge";
-    if (oper == RestrictionOperator.LESS_THAN) return "=lt";
-    return "=le";
+    return oper.getValue();
   }
 }

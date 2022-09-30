@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test;
 
 import care.smith.top.backend.model.Query;
 import care.smith.top.backend.model.QueryCriterion;
-import care.smith.top.top_phenotypic_query.adapter.SQLAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.result.Phenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
