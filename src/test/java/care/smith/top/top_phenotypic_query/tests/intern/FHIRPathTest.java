@@ -2,44 +2,86 @@ package care.smith.top.top_phenotypic_query.tests.intern;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
-import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.r4.model.DecimalType;
-import org.hl7.fhir.r4.model.Enumeration;
+import org.hl7.fhir.r4.context.IWorkerContext;
+import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext;
+import org.hl7.fhir.r4.model.Base;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.Condition;
+import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.Enumerations;
-import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Quantity;
+import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.utils.FHIRPathEngine;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.util.TerserUtilHelper;
 
 public class FHIRPathTest {
 
-  @SuppressWarnings("unchecked")
   public static void main(String[] args) {
-    Observation observation = new Observation();
-    observation.setStatus(Observation.ObservationStatus.FINAL);
-    observation
-        .getCode()
-        .addCoding()
-        .setSystem("http://loinc.org")
-        .setCode("789-8")
-        .setDisplay("Erythrocytes [#/volume] in Blood by Automated count");
-    observation.setValue(
-        new Quantity()
-            .setValue(4.12)
-            .setUnit("10 trillion/L")
-            .setSystem("http://unitsofmeasure.org")
-            .setCode("10*12/L"));
-    observation.addComponent().setValue(new Quantity().setValue(123));
+    IWorkerContext worker =
+        new HapiWorkerContext(FhirContext.forR4(), FhirContext.forR4().getValidationSupport());
+    FHIRPathEngine engine = new FHIRPathEngine(worker);
 
-    TerserUtilHelper helper = TerserUtilHelper.newHelper(FhirContext.forR4(), observation);
-    IBase val = helper.getFieldValueByFhirPath("valueQuantity.value");
-    System.out.println(((DecimalType) val).getValue());
-    IBase compVal = helper.getFieldValueByFhirPath("component.valueQuantity.value");
-    System.out.println(((DecimalType) compVal).getValue());
+    Condition condition = new Condition().setRecordedDate(new Date(99999999));
+    List<Base> res = engine.evaluate(condition, "recordedDate");
+    System.out.println(res);
+
+    Observation observation =
+        new Observation()
+            .setValue(
+                new Quantity()
+                    .setValue(4.12)
+                    .setUnit("10 trillion/L")
+                    .setSystem("http://unitsofmeasure.org")
+                    .setCode("10*12/L"))
+            .setSubject(new Reference("Patient/123"));
+    res = engine.evaluate(observation, "value.value");
+    System.out.println(res);
+    res = engine.evaluate(observation, "subject.reference.value");
+    System.out.println(res);
+
+    observation = new Observation().setValue(new StringType("abc"));
+    res = engine.evaluate(observation, "value");
+    System.out.println(res);
+
+    observation = new Observation().setValue(new DateTimeType("2000-01-01"));
+    res = engine.evaluate(observation, "value");
+    System.out.println(res);
+
+    observation =
+        new Observation()
+            .setValue(
+                new CodeableConcept(new Coding().setSystem("http://system.com").setCode("1234")));
+    res = engine.evaluate(observation, "value.coding.select(system.value + '|' + code)");
+    System.out.println(res);
+
+    observation
+        .addComponent()
+        .setCode(new CodeableConcept(new Coding().setSystem("http://system.com").setCode("xxx")))
+        .setValue(new Quantity().setValue(111));
+    observation
+        .addComponent()
+        .setCode(new CodeableConcept(new Coding().setSystem("http://system2.com").setCode("bbb")))
+        .setValue(
+            new CodeableConcept(new Coding().setSystem("http://value.system.com").setCode("ccc")));
+
+    res =
+        engine.evaluate(
+            observation,
+            "component.where(code.coding.system.value + '|' + code.coding.code = 'http://system.com|xxx').value.value");
+    System.out.println(res);
+    res =
+        engine.evaluate(
+            observation,
+            "component.where(code.coding.system.value + '|' + code.coding.code = 'http://system2.com|bbb').value.coding.select(system.value + '|' + code)");
+    System.out.println(res);
 
     Patient patient = new Patient();
     patient.addIdentifier().setSystem("http://acme.org/mrns").setValue("12345");
@@ -47,12 +89,11 @@ public class FHIRPathTest {
     patient.setGender(Enumerations.AdministrativeGender.MALE);
     patient.setBirthDate(Timestamp.valueOf(LocalDateTime.of(1990, 1, 1, 0, 0)));
 
-    helper = TerserUtilHelper.newHelper(FhirContext.forR4(), patient);
-    IBase id = helper.getFieldValueByFhirPath("identifier");
-    IBase gender = helper.getFieldValueByFhirPath("gender");
-    IBase birthdate = helper.getFieldValueByFhirPath("birthDate");
-    System.out.println(((Identifier) id).getValue());
-    System.out.println(((Enumeration<Enumerations.AdministrativeGender>) gender).asStringValue());
-    System.out.println(birthdate);
+    res = engine.evaluate(patient, "identifier.system.value");
+    System.out.println(res);
+    res = engine.evaluate(patient, "gender.value");
+    System.out.println(res);
+    res = engine.evaluate(patient, "birthDate");
+    System.out.println(res);
   }
 }
