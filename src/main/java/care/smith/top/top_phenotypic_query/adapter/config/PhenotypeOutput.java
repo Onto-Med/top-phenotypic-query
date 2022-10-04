@@ -6,6 +6,10 @@ public class PhenotypeOutput {
 
   private String subject;
   private String phenotype;
+  private String stringPhenotype;
+  private String numberPhenotype;
+  private String conceptPhenotype;
+  private String datePhenotype;
   private String date;
 
   private Map<String, String> mapping;
@@ -30,6 +34,42 @@ public class PhenotypeOutput {
 
   public void setPhenotype(String phenotype) {
     this.phenotype = phenotype;
+  }
+
+  public String getStringPhenotype() {
+    if (mapping == null) return stringPhenotype;
+    return QueryBuilder.replace(stringPhenotype, mapping);
+  }
+
+  public void setStringPhenotype(String stringPhenotype) {
+    this.stringPhenotype = stringPhenotype;
+  }
+
+  public String getNumberPhenotype() {
+    if (mapping == null) return numberPhenotype;
+    return QueryBuilder.replace(numberPhenotype, mapping);
+  }
+
+  public void setNumberPhenotype(String numberPhenotype) {
+    this.numberPhenotype = numberPhenotype;
+  }
+
+  public String getConceptPhenotype() {
+    if (mapping == null) return conceptPhenotype;
+    return QueryBuilder.replace(conceptPhenotype, mapping);
+  }
+
+  public void setConceptPhenotype(String conceptPhenotype) {
+    this.conceptPhenotype = conceptPhenotype;
+  }
+
+  public String getDatePhenotype() {
+    if (mapping == null) return datePhenotype;
+    return QueryBuilder.replace(datePhenotype, mapping);
+  }
+
+  public void setDatePhenotype(String datePhenotype) {
+    this.datePhenotype = datePhenotype;
   }
 
   public String getDate() {

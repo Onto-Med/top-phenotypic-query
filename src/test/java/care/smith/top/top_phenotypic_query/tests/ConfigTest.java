@@ -19,7 +19,7 @@ public class ConfigTest {
   @BeforeEach
   void setup() {
     URL configFile =
-            Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test.yml");
+        Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test.yml");
     assertNotNull(configFile);
 
     conf = DataAdapterConfig.getInstance(configFile.getPath());

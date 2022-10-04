@@ -24,8 +24,40 @@ public class PhenotypeQueryBuilder extends QueryBuilder {
     return this;
   }
 
+  public PhenotypeQueryBuilder numberValueIntervalLimit(String operator, String value) {
+    add(
+        query
+            .getNumberValueIntervalPart()
+            .replace("{operator}", operator)
+            .replace("{value}", value),
+        mappings);
+    return this;
+  }
+
+  public PhenotypeQueryBuilder dateValueIntervalLimit(String operator, String value) {
+    add(
+        query.getDateValueIntervalPart().replace("{operator}", operator).replace("{value}", value),
+        mappings);
+    return this;
+  }
+
   public PhenotypeQueryBuilder valueList(String values) {
     add(query.getValueListPart().replace("{values}", values), mappings);
+    return this;
+  }
+
+  public PhenotypeQueryBuilder stringValueList(String values) {
+    add(query.getStringValueListPart().replace("{values}", values), mappings);
+    return this;
+  }
+
+  public PhenotypeQueryBuilder numberValueList(String values) {
+    add(query.getNumberValueListPart().replace("{values}", values), mappings);
+    return this;
+  }
+
+  public PhenotypeQueryBuilder conceptValueList(String values) {
+    add(query.getConceptValueListPart().replace("{values}", values), mappings);
     return this;
   }
 

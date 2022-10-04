@@ -6,7 +6,12 @@ public class PhenotypeQuery {
 
   private String baseQuery;
   private String valueIntervalPart;
+  private String numberValueIntervalPart;
+  private String dateValueIntervalPart;
   private String valueListPart;
+  private String stringValueListPart;
+  private String numberValueListPart;
+  private String conceptValueListPart;
   private String dateIntervalPart;
   private String subjectsPart;
   private PhenotypeOutput output;
@@ -27,12 +32,52 @@ public class PhenotypeQuery {
     this.valueIntervalPart = valueIntervalPart;
   }
 
+  public String getNumberValueIntervalPart() {
+    return numberValueIntervalPart;
+  }
+
+  public void setNumberValueIntervalPart(String numberValueIntervalPart) {
+    this.numberValueIntervalPart = numberValueIntervalPart;
+  }
+
+  public String getDateValueIntervalPart() {
+    return dateValueIntervalPart;
+  }
+
+  public void setDateValueIntervalPart(String dateValueIntervalPart) {
+    this.dateValueIntervalPart = dateValueIntervalPart;
+  }
+
   public String getValueListPart() {
     return valueListPart;
   }
 
   public void setValueListPart(String valueListPart) {
     this.valueListPart = valueListPart;
+  }
+
+  public String getStringValueListPart() {
+    return stringValueListPart;
+  }
+
+  public void setStringValueListPart(String stringValueListPart) {
+    this.stringValueListPart = stringValueListPart;
+  }
+
+  public String getNumberValueListPart() {
+    return numberValueListPart;
+  }
+
+  public void setNumberValueListPart(String numberValueListPart) {
+    this.numberValueListPart = numberValueListPart;
+  }
+
+  public String getConceptValueListPart() {
+    return conceptValueListPart;
+  }
+
+  public void setConceptValueListPart(String conceptValueListPart) {
+    this.conceptValueListPart = conceptValueListPart;
   }
 
   public String getDateIntervalPart() {
@@ -69,8 +114,18 @@ public class PhenotypeQuery {
         + baseQuery
         + ", valueIntervalPart="
         + valueIntervalPart
+        + ", numberValueIntervalPart="
+        + numberValueIntervalPart
+        + ", dateValueIntervalPart="
+        + dateValueIntervalPart
         + ", valueListPart="
         + valueListPart
+        + ", stringValueListPart="
+        + stringValueListPart
+        + ", numberValueListPart="
+        + numberValueListPart
+        + ", conceptValueListPart="
+        + conceptValueListPart
         + ", dateIntervalPart="
         + dateIntervalPart
         + ", subjectsPart="
