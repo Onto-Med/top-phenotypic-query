@@ -1,28 +1,33 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir;
 
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.hl7.fhir.r4.model.Resource;
 
 import care.smith.top.backend.model.DataType;
+import care.smith.top.backend.model.DateTimeRestriction;
+import care.smith.top.backend.model.NumberRestriction;
 import care.smith.top.backend.model.Phenotype;
-import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
+import care.smith.top.backend.model.Restriction;
+import care.smith.top.backend.model.StringRestriction;
 import care.smith.top.simple_onto_api.model.property.data.value.DateTimeValue;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.simple_onto_api.model.property.data.value.StringValue;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
+import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
+import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
+import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
 
 public class FHIRAdapter extends DataAdapter {
 
@@ -41,86 +46,69 @@ public class FHIRAdapter extends DataAdapter {
   @Override
   public ResultSet execute(SingleSearch search) {
     ResultSet rs = new ResultSet();
-    List<Resource> resources = client.executeQuery(search.getQueryString()); 
-   PhenotypeOutput out = search.getOutput();
-      String sbjCol = out.getSubject();
-      String pheCol = out.getPhenotype();
-      String dateCol = out.getDate();
-      Phenotype phe = search.getPhenotype();
-      DataType datatype = phe.getDataType();
+    List<Resource> resources = client.executeQuery(search.getQueryString());
+    PhenotypeOutput out = search.getOutput();
+    Phenotype phe = search.getPhenotype();
+    DataType datatype = phe.getDataType();
 
-      for (Resource res : resources) {
-        String sbj = sqlRS.getString(sbjCol);
-        LocalDateTime date = sqlRS.getTimestamp(dateCol).toLocalDateTime();
-        Value val = null;
-        if (datatype == DataType.BOOLEAN) val = new BooleanValue(sqlRS.getBoolean(pheCol), date);
-        else if (datatype == DataType.DATE_TIME)
-          val = new DateTimeValue(sqlRS.getTimestamp(pheCol).toLocalDateTime(), date);
-        else if (datatype == DataType.NUMBER)
-          val = new DecimalValue(sqlRS.getBigDecimal(pheCol), date);
-        else val = new StringValue(sqlRS.getString(pheCol), date);
-        if (val != null)
-          rs.addValueWithRestriction(
-              sbj,
-              phe,
-              search.getDateTimeRestriction(),
-              val,
-              search.getSourceUnit(),
-              search.getModelUnit());
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
+    for (Resource res : resources) {
+      String sbj = FHIRUtil.getString(client.evaluateFHIRPath(res, out.getSubject()));
+      LocalDateTime date = FHIRUtil.getDate(client.evaluateFHIRPath(res, out.getDate()));
+      Value val = null;
+      if (datatype == DataType.DATE_TIME)
+        val =
+            new DateTimeValue(
+                FHIRUtil.getDate(client.evaluateFHIRPath(res, out.getDatePhenotype())), date);
+      else if (datatype == DataType.NUMBER)
+        val =
+            new DecimalValue(
+                FHIRUtil.getNumber(client.evaluateFHIRPath(res, out.getNumberPhenotype())), date);
+      else
+        val =
+            new StringValue(
+                FHIRUtil.getString(client.evaluateFHIRPath(res, out.getStringPhenotype())), date);
+      if (val != null)
+        rs.addValueWithRestriction(
+            sbj,
+            phe,
+            search.getDateTimeRestriction(),
+            val,
+            search.getSourceUnit(),
+            search.getModelUnit());
     }
+
     return rs;
   }
 
   @Override
   public ResultSet execute(SubjectSearch search) {
     ResultSet rs = new ResultSet();
-    try {
-      java.sql.ResultSet sqlRS = con.createStatement().executeQuery(search.getQueryString());
-      SubjectOutput out = search.getOutput();
-      String sbjCol = out.getId();
-      String bdCol = out.getBirthdate();
-      String sexCol = out.getSex();
-      Phenotype sex = search.getSex();
-      Phenotype bd = search.getBirthdateDerived();
-      Phenotype age = search.getAge();
+    List<Resource> resources = client.executeQuery(search.getQueryString());
+    SubjectOutput out = search.getOutput();
+    Phenotype sex = search.getSex();
+    Phenotype bd = search.getBirthdateDerived();
+    Phenotype age = search.getAge();
 
-      while (sqlRS.next()) {
-        String sbj = sqlRS.getString(sbjCol);
-        if (bd != null) {
-          Timestamp bdSqlVal = sqlRS.getTimestamp(bdCol);
-          if (bdSqlVal != null) {
-            DateTimeValue val = new DateTimeValue(bdSqlVal.toLocalDateTime());
-            if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, null, val);
-            else rs.addValue(sbj, bd, null, val);
-            if (age != null) {
-              Value ageVal =
-                  new DecimalValue(SubjectSearch.birthdateToAge(bdSqlVal.toLocalDateTime()));
-              rs.addValueWithRestriction(sbj, age, null, ageVal);
-            }
-          }
-        }
-        if (sex != null) {
-          if (sex.getDataType() == DataType.BOOLEAN) {
-            Boolean sexSqlVal = sqlRS.getBoolean(sexCol);
-            if (sexSqlVal != null)
-              rs.addValueWithRestriction(sbj, sex, null, new BooleanValue(sexSqlVal));
-          } else if (sex.getDataType() == DataType.NUMBER) {
-            BigDecimal sexSqlVal = sqlRS.getBigDecimal(sexCol);
-            if (sexSqlVal != null)
-              rs.addValueWithRestriction(sbj, sex, null, new DecimalValue(sexSqlVal));
-          } else {
-            String sexSqlVal = sqlRS.getString(sexCol);
-            if (sexSqlVal != null)
-              rs.addValueWithRestriction(sbj, sex, null, new StringValue(sexSqlVal));
+    for (Resource res : resources) {
+      String sbj = FHIRUtil.getId(res);
+      if (bd != null) {
+        LocalDateTime bdVal = FHIRUtil.getDate(client.evaluateFHIRPath(res, out.getBirthdate()));
+        if (bdVal != null) {
+          DateTimeValue val = new DateTimeValue(bdVal);
+          if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, null, val);
+          else rs.addValue(sbj, bd, null, val);
+          if (age != null) {
+            Value ageVal = new DecimalValue(SubjectSearch.birthdateToAge(bdVal));
+            rs.addValueWithRestriction(sbj, age, null, ageVal);
           }
         }
       }
-    } catch (SQLException e) {
-      e.printStackTrace();
+      if (sex != null) {
+        String sexVal = FHIRUtil.getString(client.evaluateFHIRPath(res, out.getSex()));
+        if (sexVal != null) rs.addValueWithRestriction(sbj, sex, null, new StringValue(sexVal));
+      }
     }
+
     return rs;
   }
 
@@ -139,4 +127,32 @@ public class FHIRAdapter extends DataAdapter {
 
   @Override
   public void close() {}
+
+  @Override
+  public void addValueIntervalLimit(
+      String operator, String value, PhenotypeQueryBuilder builder, Restriction restriction) {
+    if (restriction instanceof NumberRestriction) builder.numberValueIntervalLimit(operator, value);
+    else if (restriction instanceof DateTimeRestriction)
+      builder.dateValueIntervalLimit(operator, value);
+  }
+
+  @Override
+  public void addValueList(
+      String valuesAsString, PhenotypeQueryBuilder builder, Restriction restriction) {
+    if (restriction instanceof NumberRestriction) builder.numberValueList(valuesAsString);
+    else if (restriction instanceof StringRestriction) {
+      if (valuesAsString.startsWith("http")) builder.conceptValueList(valuesAsString);
+      else builder.stringValueList(valuesAsString);
+    }
+  }
+
+  @Override
+  public Map<String, String> getPhenotypeMappings(Phenotype phenotype, DataAdapterConfig config) {
+    CodeMapping codeMap = config.getCodeMapping(phenotype);
+    if (codeMap == null) return null;
+    Map<String, String> pheMap = codeMap.getPhenotypeMappings();
+    if (pheMap != null) return pheMap;
+    String codes = getFormat().formatList(PhenotypeUtil.getCodeUris(phenotype));
+    return Collections.singletonMap("codes", codes);
+  }
 }

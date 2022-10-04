@@ -1,11 +1,19 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.hl7.fhir.r4.model.Base;
 import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.DateTimeType;
+import org.hl7.fhir.r4.model.DecimalType;
 import org.hl7.fhir.r4.model.Reference;
+import org.springframework.util.CollectionUtils;
 
 import ca.uhn.fhir.context.FhirContext;
 
@@ -33,6 +41,21 @@ public class FHIRUtil {
 
   public static String getIdPart(Reference r) {
     return r.getReferenceElement().getIdPart();
+  }
+
+  public static String getString(List<Base> values) {
+    if (CollectionUtils.isEmpty(values)) return null;
+    return values.get(0).toString();
+  }
+
+  public static LocalDateTime getDate(List<Base> values) {
+    if (CollectionUtils.isEmpty(values)) return null;
+    return new Timestamp((((DateTimeType) values.get(0)).getValue()).getTime()).toLocalDateTime();
+  }
+
+  public static BigDecimal getNumber(List<Base> values) {
+    if (CollectionUtils.isEmpty(values)) return null;
+    return ((DecimalType) values.get(0)).getValue();
   }
 
   public static Stream<String> codeableConceptToCodeUrisStream(CodeableConcept cc) {

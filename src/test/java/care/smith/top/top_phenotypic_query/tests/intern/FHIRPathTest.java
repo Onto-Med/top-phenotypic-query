@@ -45,7 +45,7 @@ public class FHIRPathTest {
     res = engine.evaluate(observation, "value.value");
     System.out.println(res);
     res = engine.evaluate(observation, "subject.reference.value");
-    System.out.println(res);
+    System.out.println(res.get(0).toString());
 
     observation = new Observation().setValue(new StringType("abc"));
     res = engine.evaluate(observation, "value");

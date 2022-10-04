@@ -92,7 +92,7 @@ public class SingleSearch extends PhenotypeSearch {
   }
 
   public Map<String, String> getPhenotypeMappings() {
-    return getCodeMapping().getPhenotypeMappings();
+    return adapter.getPhenotypeMappings(phenotype, config);
   }
 
   public PhenotypeQuery getPhenotypeQuery() {
@@ -115,18 +115,22 @@ public class SingleSearch extends PhenotypeSearch {
         if (RestrictionUtil.hasInterval(r)) {
           Map<String, String> interval =
               RestrictionUtil.getInterval(codeMap.getSourceRestriction(r), adapter.getFormat());
-          for (String key : interval.keySet()) builder.valueIntervalLimit(key, interval.get(key));
-        } else if (RestrictionUtil.hasValues(r))
-          builder.valueList(
+          for (String key : interval.keySet())
+            adapter.addValueIntervalLimit(key, interval.get(key), builder, r);
+        } else if (RestrictionUtil.hasValues(r)) {
+          String values =
               RestrictionUtil.getValuesAsString(
-                  codeMap.getSourceRestriction(r), adapter.getFormat()));
+                  codeMap.getSourceRestriction(r), adapter.getFormat());
+          adapter.addValueList(values, builder, r);
+        }
       }
     }
 
     if (dtr != null) {
       if (RestrictionUtil.hasInterval(dtr)) {
         Map<String, String> interval = RestrictionUtil.getInterval(dtr, adapter.getFormat());
-        for (String key : interval.keySet()) builder.dateIntervalLimit(key, interval.get(key));
+        for (String key : interval.keySet())
+          adapter.addDateIntervalLimit(key, interval.get(key), builder);
       }
     }
 
