@@ -61,11 +61,15 @@ public class SQLAdapter extends DataAdapter {
     }
   }
 
+  public java.sql.ResultSet executeQuery(String query) throws SQLException {
+    return con.createStatement().executeQuery(query);
+  }
+
   @Override
   public ResultSet execute(SingleSearch search) {
     ResultSet rs = new ResultSet();
     try {
-      java.sql.ResultSet sqlRS = con.createStatement().executeQuery(search.getQueryString());
+      java.sql.ResultSet sqlRS = executeQuery(search.getQueryString());
       PhenotypeOutput out = search.getOutput();
       String sbjCol = out.getSubject();
       String pheCol = out.getPhenotype();
@@ -102,7 +106,7 @@ public class SQLAdapter extends DataAdapter {
   public ResultSet execute(SubjectSearch search) {
     ResultSet rs = new ResultSet();
     try {
-      java.sql.ResultSet sqlRS = con.createStatement().executeQuery(search.getQueryString());
+      java.sql.ResultSet sqlRS = executeQuery(search.getQueryString());
       SubjectOutput out = search.getOutput();
       String sbjCol = out.getId();
       String bdCol = out.getBirthdate();
@@ -152,8 +156,7 @@ public class SQLAdapter extends DataAdapter {
   public ResultSet executeAllSubjectsQuery() {
     ResultSet rs = new ResultSet();
     try {
-      java.sql.ResultSet sqlRS =
-          con.createStatement().executeQuery(SubjectSearch.getBaseQuery(config));
+      java.sql.ResultSet sqlRS = executeQuery(SubjectSearch.getBaseQuery(config));
       String sbjCol = SubjectSearch.getIdColumn(config);
       while (sqlRS.next()) rs.addSubject(sqlRS.getString(sbjCol));
     } catch (SQLException e) {

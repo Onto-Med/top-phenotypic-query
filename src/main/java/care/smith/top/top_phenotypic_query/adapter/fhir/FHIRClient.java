@@ -124,21 +124,25 @@ public class FHIRClient {
     else return Optional.of(b.getEntryFirstRep().getResource().getIdElement().getIdPart());
   }
 
-  public void deleteAllResources() {
-    deleteAllResourcesOfType("Patient");
-    deleteAllResourcesOfType("Condition");
-    deleteAllResourcesOfType("Procedure");
-    deleteAllResourcesOfType("MedicationRequest");
-    deleteAllResourcesOfType("MedicationAdministration");
-    deleteAllResourcesOfType("MedicationStatement");
-    deleteAllResourcesOfType("ClinicalImpression");
-    deleteAllResourcesOfType("Observation");
-    deleteAllResourcesOfType("AllergyIntolerance");
+  public void deleteAllResources(String system) {
+    deleteAllResourcesOfType("Condition", system);
+    deleteAllResourcesOfType("Procedure", system);
+    deleteAllResourcesOfType("MedicationRequest", system);
+    deleteAllResourcesOfType("MedicationAdministration", system);
+    deleteAllResourcesOfType("MedicationStatement", system);
+    deleteAllResourcesOfType("ClinicalImpression", system);
+    deleteAllResourcesOfType("Observation", system);
+    deleteAllResourcesOfType("AllergyIntolerance", system);
+    deleteAllResourcesOfType("Patient", system);
   }
 
-  public boolean deleteAllResourcesOfType(String resourceType) {
+  public boolean deleteAllResourcesOfType(String resourceType, String system) {
     log.info("DELETE ALL {}S:", resourceType.toUpperCase());
-    MethodOutcome resp = client.delete().resourceConditionalByUrl(resourceType).execute();
+    MethodOutcome resp =
+        client
+            .delete()
+            .resourceConditionalByUrl(resourceType + "?identifier=" + system + "|")
+            .execute();
     return delete(resp.getOperationOutcome());
   }
 

@@ -22,7 +22,7 @@ import org.hl7.fhir.r4.utils.FHIRPathEngine;
 
 import ca.uhn.fhir.context.FhirContext;
 
-public class FHIRPathTest {
+public class FHIRPathTestIntern {
 
   public static void main(String[] args) {
     IWorkerContext worker =
