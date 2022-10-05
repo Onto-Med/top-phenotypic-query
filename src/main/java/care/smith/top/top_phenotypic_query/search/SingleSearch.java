@@ -3,14 +3,13 @@ package care.smith.top.top_phenotypic_query.search;
 import java.util.Map;
 import java.util.Objects;
 
-import care.smith.top.backend.model.DateTimeRestriction;
-import care.smith.top.backend.model.EntityType;
-import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.Quantifier;
-import care.smith.top.backend.model.Query;
-import care.smith.top.backend.model.QueryCriterion;
-import care.smith.top.backend.model.Restriction;
-import care.smith.top.backend.model.Unit;
+import care.smith.top.model.DateTimeRestriction;
+import care.smith.top.model.EntityType;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Quantifier;
+import care.smith.top.model.Query;
+import care.smith.top.model.QueryCriterion;
+import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
@@ -28,21 +27,21 @@ public class SingleSearch extends PhenotypeSearch {
   private DataAdapterConfig config;
   private int type;
 
-  public SingleSearch(Query query, QueryCriterion criterion, DataAdapter adapter) {
+  public SingleSearch(
+      Query query,
+      QueryCriterion criterion,
+      Phenotype phenotype,
+      DataAdapter adapter,
+      boolean isCriterion) {
     super(query);
     this.criterion = criterion;
+    this.phenotype = phenotype;
     this.adapter = adapter;
     this.config = adapter.getConfig();
-    this.phenotype = criterion.getSubject();
-    if (criterion.isExclusion()) this.type = 2;
-    else this.type = 1;
-  }
-
-  protected SingleSearch(
-      Query query, QueryCriterion criterion, Phenotype phenotype, DataAdapter adapter) {
-    this(query, criterion, adapter);
-    this.phenotype = phenotype;
-    this.type = 0;
+    if (isCriterion) {
+      if (criterion.isInclusion()) this.type = 1;
+      else this.type = 2;
+    } else this.type = 0;
   }
 
   protected boolean isVariable() {
@@ -78,9 +77,7 @@ public class SingleSearch extends PhenotypeSearch {
   }
 
   public String getModelUnit() {
-    Unit u = phenotype.getUnit();
-    if (u == null) return null;
-    return u.getUnit();
+    return phenotype.getUnit();
   }
 
   public String getSourceUnit() {

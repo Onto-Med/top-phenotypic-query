@@ -9,18 +9,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import care.smith.top.backend.model.BooleanRestriction;
-import care.smith.top.backend.model.Constant;
-import care.smith.top.backend.model.DateTimeRestriction;
-import care.smith.top.backend.model.Expression;
-import care.smith.top.backend.model.ExpressionValue;
-import care.smith.top.backend.model.NumberRestriction;
-import care.smith.top.backend.model.NumberValue;
-import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.Restriction;
-import care.smith.top.backend.model.RestrictionOperator;
-import care.smith.top.backend.model.StringRestriction;
-import care.smith.top.backend.model.Value;
+import care.smith.top.model.BooleanRestriction;
+import care.smith.top.model.Constant;
+import care.smith.top.model.DateTimeRestriction;
+import care.smith.top.model.Expression;
+import care.smith.top.model.NumberRestriction;
+import care.smith.top.model.NumberValue;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Restriction;
+import care.smith.top.model.RestrictionOperator;
+import care.smith.top.model.StringRestriction;
+import care.smith.top.model.Value;
 import care.smith.top.simple_onto_api.calculator.expressions.ConstantExpression;
 import care.smith.top.simple_onto_api.calculator.expressions.FunctionExpression;
 import care.smith.top.simple_onto_api.calculator.expressions.MathExpression;
@@ -55,28 +54,28 @@ public class ExpressionUtil {
   public static MathExpression convert(Expression exp) {
     if (exp == null) return null;
     if (exp.getValue() != null)
-      return getConstantExpression(exp.getValue().getConstant(), exp.getValue().getValue());
-    if (exp.getFunction() != null) return getFunctionExpression(exp);
+      return getConstantExpression(exp.getConstantId(), exp.getValue());
+    if (exp.getFunctionId() != null) return getFunctionExpression(exp);
     return new VariableExpression(exp.getEntityId());
   }
 
-  private static MathExpression getConstantExpression(Constant constant, Value value) {
-    if (constant != null) return new ConstantExpression(constant.getId());
-    if (value instanceof care.smith.top.backend.model.BooleanValue)
+  private static MathExpression getConstantExpression(String constantId, Value value) {
+    if (constantId != null) return new ConstantExpression(constantId);
+    if (value instanceof care.smith.top.model.BooleanValue)
       return new ConstantExpression(
-          new BooleanValue(((care.smith.top.backend.model.BooleanValue) value).isValue()));
-    if (value instanceof care.smith.top.backend.model.DateTimeValue)
+          new BooleanValue(((care.smith.top.model.BooleanValue) value).isValue()));
+    if (value instanceof care.smith.top.model.DateTimeValue)
       return new ConstantExpression(
-          new DateTimeValue(((care.smith.top.backend.model.DateTimeValue) value).getValue()));
-    if (value instanceof care.smith.top.backend.model.NumberValue)
+          new DateTimeValue(((care.smith.top.model.DateTimeValue) value).getValue()));
+    if (value instanceof care.smith.top.model.NumberValue)
       return new ConstantExpression(
-          new DecimalValue(((care.smith.top.backend.model.NumberValue) value).getValue()));
+          new DecimalValue(((care.smith.top.model.NumberValue) value).getValue()));
     return new ConstantExpression(
-        new StringValue(((care.smith.top.backend.model.StringValue) value).getValue()));
+        new StringValue(((care.smith.top.model.StringValue) value).getValue()));
   }
 
   private static MathExpression getFunctionExpression(Expression exp) {
-    FunctionExpression funcExp = new FunctionExpression(exp.getFunction());
+    FunctionExpression funcExp = new FunctionExpression(exp.getFunctionId());
     if (exp.getArguments() != null)
       for (Expression arg : exp.getArguments()) funcExp.addArgument(convert(arg));
     return funcExp;
@@ -93,7 +92,7 @@ public class ExpressionUtil {
 
     Expression in =
         new Expression()
-            .function("in")
+            .functionId("in")
             .addArgumentsItem(values)
             .addArgumentsItem(range)
             .addArgumentsItem(limits);
@@ -117,7 +116,7 @@ public class ExpressionUtil {
       if (dr.getMinOperator() != null) limits.add(operatorToExpression(dr.getMinOperator()));
       if (dr.getMaxOperator() != null) limits.add(operatorToExpression(dr.getMaxOperator()));
     }
-    return new Expression().function("list").arguments(limits);
+    return new Expression().functionId("list").arguments(limits);
   }
 
   public static Expression getValuesAsExpression(Restriction r) {
@@ -138,7 +137,7 @@ public class ExpressionUtil {
       values =
           ((StringRestriction) r)
               .getValues().stream().map(v -> stringToExpression(v)).collect(Collectors.toList());
-    return new Expression().function("list").arguments(values);
+    return new Expression().functionId("list").arguments(values);
   }
 
   public static Expression operatorToExpression(RestrictionOperator o) {
@@ -146,11 +145,11 @@ public class ExpressionUtil {
   }
 
   public static Expression valueToExpression(Value v) {
-    return new Expression().value(new ExpressionValue().value(v));
+    return new Expression().value(v);
   }
 
   public static Expression stringToExpression(String v) {
-    return valueToExpression(new care.smith.top.backend.model.StringValue().value(v));
+    return valueToExpression(new care.smith.top.model.StringValue().value(v));
   }
 
   public static Expression numberToExpression(BigDecimal v) {
@@ -162,10 +161,10 @@ public class ExpressionUtil {
   }
 
   public static Expression booleanToExpression(Boolean v) {
-    return valueToExpression(new care.smith.top.backend.model.BooleanValue().value(v));
+    return valueToExpression(new care.smith.top.model.BooleanValue().value(v));
   }
 
   public static Expression dateTimeToExpression(LocalDateTime v) {
-    return valueToExpression(new care.smith.top.backend.model.DateTimeValue().value(v));
+    return valueToExpression(new care.smith.top.model.DateTimeValue().value(v));
   }
 }

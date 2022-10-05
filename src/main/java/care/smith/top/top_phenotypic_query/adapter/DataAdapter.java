@@ -2,8 +2,8 @@ package care.smith.top.top_phenotypic_query.adapter;
 
 import java.util.Map;
 
-import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.Restriction;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;

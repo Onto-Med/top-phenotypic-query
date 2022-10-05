@@ -6,8 +6,8 @@ import java.net.URISyntaxException;
 
 import org.junit.jupiter.api.Test;
 
-import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.Quantifier;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Quantifier;
 import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
 
 public class ExpressionTest extends AbstractTest {

@@ -10,13 +10,13 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-import care.smith.top.backend.model.BooleanRestriction;
-import care.smith.top.backend.model.DataType;
-import care.smith.top.backend.model.DateTimeRestriction;
-import care.smith.top.backend.model.NumberRestriction;
-import care.smith.top.backend.model.Restriction;
-import care.smith.top.backend.model.RestrictionOperator;
-import care.smith.top.backend.model.StringRestriction;
+import care.smith.top.model.BooleanRestriction;
+import care.smith.top.model.DataType;
+import care.smith.top.model.DateTimeRestriction;
+import care.smith.top.model.NumberRestriction;
+import care.smith.top.model.Restriction;
+import care.smith.top.model.RestrictionOperator;
+import care.smith.top.model.StringRestriction;
 import care.smith.top.simple_onto_api.util.StringUtil;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
 

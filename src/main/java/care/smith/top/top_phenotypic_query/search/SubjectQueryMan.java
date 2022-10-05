@@ -3,8 +3,8 @@ package care.smith.top.top_phenotypic_query.search;
 import java.util.HashSet;
 import java.util.Set;
 
-import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.QueryCriterion;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.QueryCriterion;
 import care.smith.top.simple_onto_api.calculator.Calculator;
 import care.smith.top.simple_onto_api.calculator.expressions.MathExpression;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
@@ -38,19 +38,19 @@ public class SubjectQueryMan {
     this.adapter = adapter;
   }
 
-  public void setSexCriterion(QueryCriterion criterion) {
-    if (criterion.isExclusion()) this.sexExclusion = criterion.getSubject();
-    else this.sexInclusion = criterion.getSubject();
+  public void setSexCriterion(QueryCriterion criterion, Phenotype phenotype) {
+    if (criterion.isInclusion()) this.sexInclusion = phenotype;
+    else this.sexExclusion = phenotype;
   }
 
-  public void setBirthdateCriterion(QueryCriterion criterion) {
-    if (criterion.isExclusion()) this.birthdateExclusion = criterion.getSubject();
-    else this.birthdateInclusion = criterion.getSubject();
+  public void setBirthdateCriterion(QueryCriterion criterion, Phenotype phenotype) {
+    if (criterion.isInclusion()) this.birthdateInclusion = phenotype;
+    else this.birthdateExclusion = phenotype;
   }
 
-  public void setAgeCriterion(QueryCriterion criterion) {
-    if (criterion.isExclusion()) this.ageExclusion = criterion.getSubject();
-    else this.ageInclusion = criterion.getSubject();
+  public void setAgeCriterion(QueryCriterion criterion, Phenotype phenotype) {
+    if (criterion.isInclusion()) this.ageInclusion = phenotype;
+    else this.ageExclusion = phenotype;
   }
 
   public void addSexVariable(Phenotype sexVariable) {

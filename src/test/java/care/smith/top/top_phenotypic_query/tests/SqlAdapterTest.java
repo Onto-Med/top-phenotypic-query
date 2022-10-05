@@ -15,9 +15,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import care.smith.top.backend.model.ExpressionFunction;
-import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.QueryCriterion;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
@@ -72,11 +71,11 @@ public class SqlAdapterTest extends AbstractTest {
 
     QueryCriterion cri =
         new QueryCriterion()
-            .exclusion(false)
-            .defaultAggregationFunction(new ExpressionFunction().id("last").minArgumentNumber(1))
-            .subject(tall);
+            .inclusion(true)
+            .defaultAggregationFunctionId("last")
+            .subjectId(tall.getId());
 
-    SingleSearch search = new SingleSearch(null, cri, adapter);
+    SingleSearch search = new SingleSearch(null, cri, tall, adapter, true);
     assertNotNull(search);
 
     ResultSet rs = search.execute();

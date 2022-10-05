@@ -1,6 +1,6 @@
 package care.smith.top.top_phenotypic_query.search;
 
-import care.smith.top.backend.model.Query;
+import care.smith.top.model.Query;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 
 public abstract class PhenotypeSearch {

@@ -3,8 +3,8 @@ package care.smith.top.top_phenotypic_query.result;
 import java.util.HashMap;
 import java.util.Set;
 
-import care.smith.top.backend.model.DateTimeRestriction;
-import care.smith.top.backend.model.Phenotype;
+import care.smith.top.model.DateTimeRestriction;
+import care.smith.top.model.Phenotype;
 import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;

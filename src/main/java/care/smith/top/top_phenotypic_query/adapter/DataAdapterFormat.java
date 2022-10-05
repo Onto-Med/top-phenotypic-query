@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
-import care.smith.top.backend.model.RestrictionOperator;
+import care.smith.top.model.RestrictionOperator;
 
 public interface DataAdapterFormat {
   public String formatNumber(BigDecimal num);

@@ -10,8 +10,8 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.QueryCriterion;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.QueryCriterion;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.top_phenotypic_query.result.Phenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
@@ -24,9 +24,9 @@ public class BMIAgeTest extends AbstractTest {
   public void test() {
     QueryCriterion cri =
         new QueryCriterion()
-            .exclusion(false)
-            .defaultAggregationFunction(defAgrFunc)
-            .subject(overWeight)
+            .inclusion(true)
+            .defaultAggregationFunctionId(defAgrFunc.getId())
+            .subjectId(overWeight.getId())
             .dateTimeRestriction(getDTR(2000));
 
     Map<String, Phenotype> phenotypes =

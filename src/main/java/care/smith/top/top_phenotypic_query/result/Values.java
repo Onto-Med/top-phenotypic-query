@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Set;
 
-import care.smith.top.backend.model.DateTimeRestriction;
+import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
 import care.smith.top.simple_onto_api.model.property.data.value.DateTimeValue;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;

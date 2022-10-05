@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import care.smith.top.backend.model.Restriction;
+import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
 
 public class CodeMapping {
