@@ -68,6 +68,7 @@ sexMapping:
 codeMappings:
   - code: http://loinc.org|3137-7
     type: Observation
+    unit: cm
     phenotypeMappings:
       codes: http://loinc.org|3137-7
   - code: http://loinc.org|3141-9
