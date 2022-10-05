@@ -35,8 +35,8 @@ public class SubjectQueryTest extends AbstractTest {
   public void test1() {
     Query query =
         new Query()
-            .addCriteriaItem(new QueryCriterion().exclusion(false).subjectId(female.getId()))
-            .addCriteriaItem(new QueryCriterion().exclusion(false).subjectId(young.getId()));
+            .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(female.getId()))
+            .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(young.getId()));
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);
@@ -67,8 +67,8 @@ public class SubjectQueryTest extends AbstractTest {
   public void test2() {
     Query query =
         new Query()
-            .addCriteriaItem(new QueryCriterion().exclusion(false).subjectId(female.getId()))
-            .addCriteriaItem(new QueryCriterion().exclusion(true).subjectId(young.getId()));
+            .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(female.getId()))
+            .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(young.getId()));
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);
@@ -92,8 +92,8 @@ public class SubjectQueryTest extends AbstractTest {
   public void test3() {
     Query query =
         new Query()
-            .addCriteriaItem(new QueryCriterion().exclusion(true).subjectId(female.getId()))
-            .addCriteriaItem(new QueryCriterion().exclusion(false).subjectId(young.getId()));
+            .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(female.getId()))
+            .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(young.getId()));
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);
@@ -121,8 +121,8 @@ public class SubjectQueryTest extends AbstractTest {
   public void test4() {
     Query query =
         new Query()
-            .addCriteriaItem(new QueryCriterion().exclusion(true).subjectId(female.getId()))
-            .addCriteriaItem(new QueryCriterion().exclusion(true).subjectId(young.getId()));
+            .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(female.getId()))
+            .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(young.getId()));
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);

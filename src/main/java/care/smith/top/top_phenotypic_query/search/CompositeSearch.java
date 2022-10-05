@@ -48,7 +48,7 @@ public class CompositeSearch extends PhenotypeSearch {
     if (exp == null) return;
     Value resVal = calculate(sbjId, pheId, exp, vars, dateRange);
     boolean res = (resVal == null) ? false : resVal.asBooleanValue().getValue();
-    if ((criterion.isExclusion() && res) || (!criterion.isExclusion() && !res)) rs.remove(sbjId);
+    if ((!criterion.isInclusion() && res) || (criterion.isInclusion() && !res)) rs.remove(sbjId);
   }
 
   private Value calculate(

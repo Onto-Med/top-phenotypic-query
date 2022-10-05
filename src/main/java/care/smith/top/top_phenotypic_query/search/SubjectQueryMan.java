@@ -38,19 +38,19 @@ public class SubjectQueryMan {
     this.adapter = adapter;
   }
 
-  public void setSexCriterion(QueryCriterion criterion) {
-    if (criterion.isExclusion()) this.sexExclusion = criterion.getSubjectId();
-    else this.sexInclusion = criterion.getSubjectId();
+  public void setSexCriterion(QueryCriterion criterion, Phenotype phenotype) {
+    if (criterion.isInclusion()) this.sexInclusion = phenotype;
+    else this.sexExclusion = phenotype;
   }
 
-  public void setBirthdateCriterion(QueryCriterion criterion) {
-    if (criterion.isExclusion()) this.birthdateExclusion = criterion.getSubjectId();
-    else this.birthdateInclusion = criterion.getSubjectId();
+  public void setBirthdateCriterion(QueryCriterion criterion, Phenotype phenotype) {
+    if (criterion.isInclusion()) this.birthdateInclusion = phenotype;
+    else this.birthdateExclusion = phenotype;
   }
 
-  public void setAgeCriterion(QueryCriterion criterion) {
-    if (criterion.isExclusion()) this.ageExclusion = criterion.getSubjectId();
-    else this.ageInclusion = criterion.getSubjectId();
+  public void setAgeCriterion(QueryCriterion criterion, Phenotype phenotype) {
+    if (criterion.isInclusion()) this.ageInclusion = phenotype;
+    else this.ageExclusion = phenotype;
   }
 
   public void addSexVariable(Phenotype sexVariable) {

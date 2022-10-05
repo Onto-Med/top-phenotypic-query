@@ -27,21 +27,21 @@ public class SingleSearch extends PhenotypeSearch {
   private DataAdapterConfig config;
   private int type;
 
-  public SingleSearch(Query query, QueryCriterion criterion, DataAdapter adapter) {
+  public SingleSearch(
+      Query query,
+      QueryCriterion criterion,
+      Phenotype phenotype,
+      DataAdapter adapter,
+      boolean isCriterion) {
     super(query);
     this.criterion = criterion;
+    this.phenotype = phenotype;
     this.adapter = adapter;
     this.config = adapter.getConfig();
-    this.phenotype = criterion.getSubjectId();
-    if (criterion.isExclusion()) this.type = 2;
-    else this.type = 1;
-  }
-
-  protected SingleSearch(
-      Query query, QueryCriterion criterion, Phenotype phenotype, DataAdapter adapter) {
-    this(query, criterion, adapter);
-    this.phenotype = phenotype;
-    this.type = 0;
+    if (isCriterion) {
+      if (criterion.isInclusion()) this.type = 1;
+      else this.type = 2;
+    } else this.type = 0;
   }
 
   protected boolean isVariable() {

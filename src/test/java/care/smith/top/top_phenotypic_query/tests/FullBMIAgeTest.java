@@ -26,11 +26,11 @@ public class FullBMIAgeTest extends AbstractTest {
   public void test() {
     QueryCriterion cri1 =
         new QueryCriterion()
-            .exclusion(false)
+            .inclusion(true)
             .defaultAggregationFunctionId(defAgrFunc.getId())
             .subjectId(overWeight.getId())
             .dateTimeRestriction(getDTR(2000));
-    QueryCriterion cri2 = new QueryCriterion().exclusion(false).subjectId(female.getId());
+    QueryCriterion cri2 = new QueryCriterion().inclusion(true).subjectId(female.getId());
     Query query = new Query().addCriteriaItem(cri1).addCriteriaItem(cri2);
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test3.yml");

@@ -32,12 +32,12 @@ public class FullBMIAgeTestIntern extends AbstractTest {
 
     QueryCriterion cri1 =
         new QueryCriterion()
-            .exclusion(false)
+            .inclusion(true)
             .defaultAggregationFunctionId(defAgrFunc.getId())
             .subjectId(overWeight.getId())
             .dateTimeRestriction(getDTR(2000));
-    QueryCriterion cri2 = new QueryCriterion().exclusion(false).subjectId(female.getId());
-    QueryCriterion cri3 = new QueryCriterion().exclusion(false).subjectId(old.getId());
+    QueryCriterion cri2 = new QueryCriterion().inclusion(true).subjectId(female.getId());
+    QueryCriterion cri3 = new QueryCriterion().inclusion(true).subjectId(old.getId());
     Query query = new Query().addCriteriaItem(cri1).addCriteriaItem(cri2).addCriteriaItem(cri3);
 
     DataAdapterConfig config =
