@@ -1,30 +1,35 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import care.smith.top.backend.model.Query;
 import care.smith.top.backend.model.QueryCriterion;
+import care.smith.top.simple_onto_api.calculator.Calculator;
+import care.smith.top.simple_onto_api.calculator.expressions.ConstantExpression;
+import care.smith.top.simple_onto_api.calculator.expressions.FunctionExpression;
+import care.smith.top.simple_onto_api.calculator.expressions.MathExpression;
+import care.smith.top.simple_onto_api.calculator.expressions.VariableExpression;
+import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
-import care.smith.top.top_phenotypic_query.result.Phenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.tests.AbstractTest;
+import care.smith.top.top_phenotypic_query.ucum.UCUM;
 
 public class FullBMIAgeTestIntern extends AbstractTest {
 
-  @Disabled
-  @Test
-  public void test() {
+  public static void main(String[] args) throws SQLException {
+    //    print();
+    //    System.exit(0);
+
     QueryCriterion cri1 =
         new QueryCriterion()
             .exclusion(false)
@@ -42,29 +47,75 @@ public class FullBMIAgeTestIntern extends AbstractTest {
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
     adapter.close();
-    //    System.out.println(rs);
 
-    assertEquals(Set.of("1"), rs.getSubjectIds());
+    List<String> actualSbjIds = new ArrayList<>(rs.getSubjectIds());
+    Collections.sort(
+        actualSbjIds,
+        new Comparator<String>() {
+          @Override
+          public int compare(String o1, String o2) {
+            return Integer.valueOf(o1).compareTo(Integer.valueOf(o2));
+          }
+        });
 
-    Phenotypes phes = rs.getPhenotypes("1");
-    Set<String> phesExpected = new HashSet<>(phenotypes.keySet());
-    phesExpected.add("birthdate");
-    assertEquals(phesExpected, phes.getPhenotypeNames());
+    System.out.println("ACTUAL:");
+    System.out.println(actualSbjIds);
 
-    assertEquals(new BigDecimal(20), getValue("Age", phes).getValueDecimal());
-    assertFalse(getValue("Old", phes).asBooleanValue().getValue());
-    assertTrue(getValue("Young", phes).asBooleanValue().getValue());
+    List<String> expectedSbjIds = getExpectedSubjectIds();
+    System.out.println("EXPECTED:");
+    System.out.println(expectedSbjIds);
 
-    assertEquals("female", getValue("Sex", phes).asStringValue().getValue());
-    assertTrue(getValue("Female", phes).asBooleanValue().getValue());
+    List<String> onlyActualSbjIds = new ArrayList<>(actualSbjIds);
+    onlyActualSbjIds.removeAll(expectedSbjIds);
+    System.out.println("ONLY ACTUAL:");
+    System.out.println(onlyActualSbjIds);
 
-    assertEquals(new BigDecimal("25.95155709342561"), getValue("BMI", phes).getValueDecimal());
-    assertFalse(getValue("BMI19_25", phes).asBooleanValue().getValue());
-    assertTrue(getValue("BMI19_27", phes).asBooleanValue().getValue());
-    assertTrue(getValue("BMI25_30", phes).asBooleanValue().getValue());
-    assertFalse(getValue("BMI27_30", phes).asBooleanValue().getValue());
+    List<String> onlyExpectedSbjIds = new ArrayList<>(expectedSbjIds);
+    onlyExpectedSbjIds.removeAll(actualSbjIds);
+    System.out.println("ONLY EXPECTED:");
+    System.out.println(onlyExpectedSbjIds);
 
-    assertEquals(BigDecimal.ONE, getValue("Finding", phes).getValueDecimal());
-    assertTrue(getValue("Overweight", phes).asBooleanValue().getValue());
+    assertEquals(expectedSbjIds, actualSbjIds);
+  }
+
+  private static List<String> getExpectedSubjectIds() throws SQLException {
+    DataAdapterConfig sqlConfig =
+        DataAdapterConfig.getInstance("test_files/SQL_Adapter_Test_intern.yml");
+    SQLAdapter sqlAdapter = new SQLAdapter(sqlConfig);
+    java.sql.ResultSet rs =
+        sqlAdapter.executeQuery(
+            "SELECT s.subject_id, birth_date, sex, assessment_id, created_at, height, weight, DATE_PART('year', AGE(CURRENT_DATE, birth_date)) years, (weight/((height/100)^2)) bmi FROM subject s, (select distinct on (subject_id) subject_id, assessment_id, created_at, height, weight from assessment1 where height is not null and weight is not null and created_at >= '2000-01-01'::date and created_at < '2001-01-01'::date order by subject_id, created_at desc) a WHERE s.subject_id = a.subject_id AND sex = 'female' AND DATE_PART('year', AGE(CURRENT_DATE, birth_date)) > 18 AND (weight/((height/100)^2)) >= 27 AND (weight/((height/100)^2)) < 30 ORDER BY s.subject_id");
+    //    SQLAdapter.print(rs);
+
+    List<String> ids = new ArrayList<>();
+    while (rs.next()) ids.add(rs.getString("subject_id"));
+
+    return ids;
+  }
+
+  private static void print() throws SQLException {
+    DataAdapterConfig sqlConfig =
+        DataAdapterConfig.getInstance("test_files/SQL_Adapter_Test_intern.yml");
+    SQLAdapter sqlAdapter = new SQLAdapter(sqlConfig);
+    java.sql.ResultSet rs =
+        sqlAdapter.executeQuery(
+            "SELECT s.subject_id, birth_date, sex, assessment_id, created_at, height, weight FROM subject s, assessment1 a WHERE s.subject_id = a.subject_id AND s.subject_id = 3269 ORDER BY created_at");
+    SQLAdapter.print(rs);
+  }
+
+  public static void testBMI() {
+    Calculator c = new Calculator();
+    MathExpression e =
+        new FunctionExpression("divide")
+            .arg(new VariableExpression("m"))
+            .arg(
+                new FunctionExpression("power")
+                    .arg(new VariableExpression("l"))
+                    .arg(new ConstantExpression(new DecimalValue(2))));
+
+    c.setVariable("m", 76.6057689700064);
+    c.setVariable("l", UCUM.convert(new BigDecimal("167.617921540792"), "cm", "m"));
+
+    System.out.println(c.calculate(e).getValueDecimal());
   }
 }
