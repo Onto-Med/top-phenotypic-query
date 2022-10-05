@@ -3,7 +3,7 @@ package care.smith.top.top_phenotypic_query.search;
 import java.util.HashSet;
 import java.util.Set;
 
-import care.smith.top.backend.model.Phenotype;
+import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;

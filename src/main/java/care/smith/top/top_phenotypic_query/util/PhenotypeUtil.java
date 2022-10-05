@@ -3,11 +3,11 @@ package care.smith.top.top_phenotypic_query.util;
 import java.util.List;
 import java.util.stream.Stream;
 
-import care.smith.top.backend.model.Code;
-import care.smith.top.backend.model.EntityType;
-import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.Quantifier;
-import care.smith.top.backend.model.Restriction;
+import care.smith.top.model.Code;
+import care.smith.top.model.EntityType;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Quantifier;
+import care.smith.top.model.Restriction;
 
 public class PhenotypeUtil {
 

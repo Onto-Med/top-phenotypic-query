@@ -3,8 +3,8 @@ package care.smith.top.top_phenotypic_query.util;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import care.smith.top.backend.model.ExpressionFunction;
-import care.smith.top.backend.model.ExpressionFunction.NotationEnum;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.simple_onto_api.calculator.Calculator;
 import care.smith.top.simple_onto_api.calculator.functions.Function;
 
@@ -15,7 +15,7 @@ public class ExpressionFunctions {
         .getFunctions().stream().map(f -> convert(f)).collect(Collectors.toList());
   }
 
-  public static List<care.smith.top.backend.model.Constant> getConstants() {
+  public static List<care.smith.top.model.Constant> getConstants() {
     return new Calculator()
         .getConstants().stream().map(c -> convert(c)).collect(Collectors.toList());
   }
@@ -31,8 +31,8 @@ public class ExpressionFunctions {
     return ef;
   }
 
-  private static care.smith.top.backend.model.Constant convert(
+  private static care.smith.top.model.Constant convert(
       care.smith.top.simple_onto_api.calculator.constants.Constant c) {
-    return new care.smith.top.backend.model.Constant().id(c.getId()).title(c.getTitle());
+    return new care.smith.top.model.Constant().id(c.getId()).title(c.getTitle());
   }
 }

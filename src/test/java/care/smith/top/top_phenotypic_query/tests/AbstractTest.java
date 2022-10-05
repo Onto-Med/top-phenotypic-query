@@ -9,25 +9,23 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import care.smith.top.backend.model.Code;
-import care.smith.top.backend.model.CodeSystem;
-import care.smith.top.backend.model.DataType;
-import care.smith.top.backend.model.DateTimeRestriction;
-import care.smith.top.backend.model.EntityType;
-import care.smith.top.backend.model.Expression;
-import care.smith.top.backend.model.ExpressionFunction;
-import care.smith.top.backend.model.ExpressionFunction.NotationEnum;
-import care.smith.top.backend.model.ExpressionValue;
-import care.smith.top.backend.model.ItemType;
-import care.smith.top.backend.model.NumberRestriction;
-import care.smith.top.backend.model.NumberValue;
-import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.Quantifier;
-import care.smith.top.backend.model.Restriction;
-import care.smith.top.backend.model.RestrictionOperator;
-import care.smith.top.backend.model.StringRestriction;
-import care.smith.top.backend.model.StringValue;
-import care.smith.top.backend.model.Unit;
+import care.smith.top.model.Code;
+import care.smith.top.model.CodeSystem;
+import care.smith.top.model.DataType;
+import care.smith.top.model.DateTimeRestriction;
+import care.smith.top.model.EntityType;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.model.ItemType;
+import care.smith.top.model.NumberRestriction;
+import care.smith.top.model.NumberValue;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Quantifier;
+import care.smith.top.model.Restriction;
+import care.smith.top.model.RestrictionOperator;
+import care.smith.top.model.StringRestriction;
+import care.smith.top.model.StringValue;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.top_phenotypic_query.result.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
@@ -114,7 +112,7 @@ public abstract class AbstractTest {
                 .itemType(ItemType.OBSERVATION)
                 .id(name)
                 .entityType(EntityType.SINGLE_PHENOTYPE);
-    if (unit != null) phenotype.setUnit(new Unit().unit(unit));
+    if (unit != null) phenotype.setUnit(unit);
     addCode(phenotype, codeSystem, code);
     return phenotype;
   }
@@ -195,8 +193,8 @@ public abstract class AbstractTest {
       Quantifier quantifier,
       Integer cardinality) {
     Expression values = new Expression().entityId(parent.getId());
-    Expression range = new Expression().function("list");
-    Expression limits = new Expression().function("list");
+    Expression range = new Expression().functionId("list");
+    Expression limits = new Expression().functionId("list");
 
     NumberRestriction restriction = getNumberRestriction();
 
@@ -233,8 +231,8 @@ public abstract class AbstractTest {
       Integer cardinality,
       String... rangeValues) {
     Expression values = new Expression().entityId(parent.getId());
-    Expression range = new Expression().function("list");
-    Expression limits = new Expression().function("list");
+    Expression range = new Expression().functionId("list");
+    Expression limits = new Expression().functionId("list");
 
     StringRestriction restriction = getStringRestriction();
 
@@ -256,8 +254,8 @@ public abstract class AbstractTest {
       Integer cardinality,
       Number... rangeValues) {
     Expression values = new Expression().entityId(parent.getId());
-    Expression range = new Expression().function("list");
-    Expression limits = new Expression().function("list");
+    Expression range = new Expression().functionId("list");
+    Expression limits = new Expression().functionId("list");
 
     NumberRestriction restriction = getNumberRestriction();
 
@@ -292,12 +290,12 @@ public abstract class AbstractTest {
 
   private static void addArgument(Expression exp, BigDecimal val) {
     exp.addArgumentsItem(
-        new Expression().value(new ExpressionValue().value(new NumberValue().value(val))));
+        new Expression().value(new NumberValue().value(val)));
   }
 
   private static void addArgument(Expression exp, String val) {
     exp.addArgumentsItem(
-        new Expression().value(new ExpressionValue().value(new StringValue().value(val))));
+        new Expression().value(new StringValue().value(val)));
   }
 
   private static EntityType getRestrictionType(Phenotype parent) {
@@ -309,7 +307,7 @@ public abstract class AbstractTest {
   private static Expression getInExpression(
       Expression values, Expression range, Expression limits) {
     return new Expression()
-        .function("in")
+        .functionId("in")
         .addArgumentsItem(values)
         .addArgumentsItem(range)
         .addArgumentsItem(limits);
@@ -340,11 +338,11 @@ public abstract class AbstractTest {
 
   static Expression getBMIExpression() {
     return new Expression()
-        .function("divide")
+        .functionId("divide")
         .addArgumentsItem(new Expression().entityId("Weight"))
         .addArgumentsItem(
             new Expression()
-                .function("power")
+                .functionId("power")
                 .addArgumentsItem(new Expression().entityId("Height"))
                 .addArgumentsItem(getValue(2)));
   }
@@ -352,38 +350,38 @@ public abstract class AbstractTest {
   static Expression getFindingExpression() {
     Expression youngAndBmi19_25 =
         new Expression()
-            .function("and")
+            .functionId("and")
             .addArgumentsItem(new Expression().entityId("Young"))
             .addArgumentsItem(new Expression().entityId("BMI19_25"));
     Expression oldAndBmi19_27 =
         new Expression()
-            .function("and")
+            .functionId("and")
             .addArgumentsItem(new Expression().entityId("Old"))
             .addArgumentsItem(new Expression().entityId("BMI19_27"));
     Expression normalWeight =
         new Expression()
-            .function("or")
+            .functionId("or")
             .addArgumentsItem(youngAndBmi19_25)
             .addArgumentsItem(oldAndBmi19_27);
 
     Expression youngAndBmi25_30 =
         new Expression()
-            .function("and")
+            .functionId("and")
             .addArgumentsItem(new Expression().entityId("Young"))
             .addArgumentsItem(new Expression().entityId("BMI25_30"));
     Expression oldAndBmi27_30 =
         new Expression()
-            .function("and")
+            .functionId("and")
             .addArgumentsItem(new Expression().entityId("Old"))
             .addArgumentsItem(new Expression().entityId("BMI27_30"));
     Expression overweight =
         new Expression()
-            .function("or")
+            .functionId("or")
             .addArgumentsItem(youngAndBmi25_30)
             .addArgumentsItem(oldAndBmi27_30);
 
     return new Expression()
-        .function("switch")
+        .functionId("switch")
         .addArgumentsItem(normalWeight)
         .addArgumentsItem(getValue(0))
         .addArgumentsItem(overweight)
@@ -398,6 +396,6 @@ public abstract class AbstractTest {
   static Expression getValue(int value) {
     NumberValue v = new NumberValue().value(BigDecimal.valueOf(value));
     v.setDataType(DataType.NUMBER);
-    return new Expression().value(new ExpressionValue().value(v));
+    return new Expression().value(v);
   }
 }

@@ -4,11 +4,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import care.smith.top.backend.model.DateTimeRestriction;
-import care.smith.top.backend.model.Expression;
-import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.Query;
-import care.smith.top.backend.model.QueryCriterion;
+import care.smith.top.model.DateTimeRestriction;
+import care.smith.top.model.Expression;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Query;
+import care.smith.top.model.QueryCriterion;
 import care.smith.top.simple_onto_api.calculator.Calculator;
 import care.smith.top.simple_onto_api.calculator.expressions.MathExpression;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
@@ -32,7 +32,7 @@ public class CompositeSearch extends PhenotypeSearch {
 
   @Override
   public ResultSet execute() {
-    Phenotype phe = criterion.getSubject();
+    Phenotype phe = phenotypes.get(criterion.getSubjectId());
     Expression exp = phe.getExpression();
     if (exp != null) {
       Set<String> vars = ExpressionUtil.getVariables(exp, phenotypes);

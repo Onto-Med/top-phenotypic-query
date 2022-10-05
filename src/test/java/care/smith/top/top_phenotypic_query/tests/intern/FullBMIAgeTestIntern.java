@@ -9,8 +9,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import care.smith.top.backend.model.Query;
-import care.smith.top.backend.model.QueryCriterion;
+import care.smith.top.model.Query;
+import care.smith.top.model.QueryCriterion;
 import care.smith.top.simple_onto_api.calculator.Calculator;
 import care.smith.top.simple_onto_api.calculator.expressions.ConstantExpression;
 import care.smith.top.simple_onto_api.calculator.expressions.FunctionExpression;
@@ -33,11 +33,11 @@ public class FullBMIAgeTestIntern extends AbstractTest {
     QueryCriterion cri1 =
         new QueryCriterion()
             .exclusion(false)
-            .defaultAggregationFunction(defAgrFunc)
-            .subject(overWeight)
+            .defaultAggregationFunctionId(defAgrFunc.getId())
+            .subjectId(overWeight.getId())
             .dateTimeRestriction(getDTR(2000));
-    QueryCriterion cri2 = new QueryCriterion().exclusion(false).subject(female);
-    QueryCriterion cri3 = new QueryCriterion().exclusion(false).subject(old);
+    QueryCriterion cri2 = new QueryCriterion().exclusion(false).subjectId(female.getId());
+    QueryCriterion cri3 = new QueryCriterion().exclusion(false).subjectId(old.getId());
     Query query = new Query().addCriteriaItem(cri1).addCriteriaItem(cri2).addCriteriaItem(cri3);
 
     DataAdapterConfig config =

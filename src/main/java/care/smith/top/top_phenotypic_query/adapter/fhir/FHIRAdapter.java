@@ -7,12 +7,12 @@ import java.util.Map;
 
 import org.hl7.fhir.r4.model.Resource;
 
-import care.smith.top.backend.model.DataType;
-import care.smith.top.backend.model.DateTimeRestriction;
-import care.smith.top.backend.model.NumberRestriction;
-import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.Restriction;
-import care.smith.top.backend.model.StringRestriction;
+import care.smith.top.model.DataType;
+import care.smith.top.model.DateTimeRestriction;
+import care.smith.top.model.NumberRestriction;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Restriction;
+import care.smith.top.model.StringRestriction;
 import care.smith.top.simple_onto_api.model.property.data.value.DateTimeValue;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.simple_onto_api.model.property.data.value.StringValue;

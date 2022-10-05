@@ -12,8 +12,8 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import care.smith.top.backend.model.Query;
-import care.smith.top.backend.model.QueryCriterion;
+import care.smith.top.model.Query;
+import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.result.Phenotypes;
@@ -27,10 +27,10 @@ public class FullBMIAgeTest extends AbstractTest {
     QueryCriterion cri1 =
         new QueryCriterion()
             .exclusion(false)
-            .defaultAggregationFunction(defAgrFunc)
-            .subject(overWeight)
+            .defaultAggregationFunctionId(defAgrFunc.getId())
+            .subjectId(overWeight.getId())
             .dateTimeRestriction(getDTR(2000));
-    QueryCriterion cri2 = new QueryCriterion().exclusion(false).subject(female);
+    QueryCriterion cri2 = new QueryCriterion().exclusion(false).subjectId(female.getId());
     Query query = new Query().addCriteriaItem(cri1).addCriteriaItem(cri2);
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test3.yml");

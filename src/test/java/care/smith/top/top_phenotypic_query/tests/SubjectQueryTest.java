@@ -12,10 +12,10 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import care.smith.top.backend.model.DataType;
-import care.smith.top.backend.model.Phenotype;
-import care.smith.top.backend.model.Query;
-import care.smith.top.backend.model.QueryCriterion;
+import care.smith.top.model.DataType;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Query;
+import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.result.Phenotypes;
@@ -35,8 +35,8 @@ public class SubjectQueryTest extends AbstractTest {
   public void test1() {
     Query query =
         new Query()
-            .addCriteriaItem(new QueryCriterion().exclusion(false).subject(female))
-            .addCriteriaItem(new QueryCriterion().exclusion(false).subject(young));
+            .addCriteriaItem(new QueryCriterion().exclusion(false).subjectId(female.getId()))
+            .addCriteriaItem(new QueryCriterion().exclusion(false).subjectId(young.getId()));
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);
@@ -67,8 +67,8 @@ public class SubjectQueryTest extends AbstractTest {
   public void test2() {
     Query query =
         new Query()
-            .addCriteriaItem(new QueryCriterion().exclusion(false).subject(female))
-            .addCriteriaItem(new QueryCriterion().exclusion(true).subject(young));
+            .addCriteriaItem(new QueryCriterion().exclusion(false).subjectId(female.getId()))
+            .addCriteriaItem(new QueryCriterion().exclusion(true).subjectId(young.getId()));
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);
@@ -92,8 +92,8 @@ public class SubjectQueryTest extends AbstractTest {
   public void test3() {
     Query query =
         new Query()
-            .addCriteriaItem(new QueryCriterion().exclusion(true).subject(female))
-            .addCriteriaItem(new QueryCriterion().exclusion(false).subject(young));
+            .addCriteriaItem(new QueryCriterion().exclusion(true).subjectId(female.getId()))
+            .addCriteriaItem(new QueryCriterion().exclusion(false).subjectId(young.getId()));
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);
@@ -121,8 +121,8 @@ public class SubjectQueryTest extends AbstractTest {
   public void test4() {
     Query query =
         new Query()
-            .addCriteriaItem(new QueryCriterion().exclusion(true).subject(female))
-            .addCriteriaItem(new QueryCriterion().exclusion(true).subject(young));
+            .addCriteriaItem(new QueryCriterion().exclusion(true).subjectId(female.getId()))
+            .addCriteriaItem(new QueryCriterion().exclusion(true).subjectId(young.getId()));
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);

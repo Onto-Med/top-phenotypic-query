@@ -9,8 +9,8 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import care.smith.top.backend.model.Code;
-import care.smith.top.backend.model.Phenotype;
+import care.smith.top.model.Code;
+import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
 
 public class DataAdapterConfig {

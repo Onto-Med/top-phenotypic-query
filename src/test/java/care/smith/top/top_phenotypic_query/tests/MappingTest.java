@@ -9,12 +9,12 @@ import java.net.URL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import care.smith.top.backend.model.DataType;
-import care.smith.top.backend.model.NumberRestriction;
-import care.smith.top.backend.model.Quantifier;
-import care.smith.top.backend.model.Restriction;
-import care.smith.top.backend.model.RestrictionOperator;
-import care.smith.top.backend.model.StringRestriction;
+import care.smith.top.model.DataType;
+import care.smith.top.model.NumberRestriction;
+import care.smith.top.model.Quantifier;
+import care.smith.top.model.Restriction;
+import care.smith.top.model.RestrictionOperator;
+import care.smith.top.model.StringRestriction;
 import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 
