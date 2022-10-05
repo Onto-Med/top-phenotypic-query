@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
+import care.smith.top.model.Phenotype;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.simple_onto_api.calculator.Calculator;
@@ -19,7 +21,10 @@ import care.smith.top.simple_onto_api.calculator.expressions.VariableExpression;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
+import care.smith.top.top_phenotypic_query.result.Phenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.result.Values;
+import care.smith.top.top_phenotypic_query.search.CompositeSearch;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.tests.AbstractTest;
 import care.smith.top.top_phenotypic_query.ucum.UCUM;
@@ -28,6 +33,7 @@ public class FullBMIAgeTestIntern extends AbstractTest {
 
   public static void main(String[] args) throws SQLException {
     //    print();
+    //    test();
     //    System.exit(0);
 
     QueryCriterion cri1 =
@@ -117,5 +123,48 @@ public class FullBMIAgeTestIntern extends AbstractTest {
     c.setVariable("l", UCUM.convert(new BigDecimal("167.617921540792"), "cm", "m"));
 
     System.out.println(c.calculate(e).getValueDecimal());
+  }
+
+  private static void test() {
+    Values weightVals1 = new Values("Weight");
+    weightVals1.setDecimalValues(getDTR(2000), new DecimalValue(76.6057689700064));
+    Values heightVals1 = new Values("Height");
+    heightVals1.setDecimalValues(getDTR(2000), new DecimalValue(1.67617921540792));
+    Values ageVals1 = new Values("Age");
+    ageVals1.setDecimalValues(getDTR(2000), new DecimalValue(57));
+
+    Phenotypes phes1 = new Phenotypes("Subject1");
+    phes1.setValues(weightVals1, heightVals1, ageVals1);
+
+    ResultSet rs = new ResultSet();
+    rs.setPhenotypes(phes1);
+
+    QueryCriterion cri =
+        new QueryCriterion()
+            .inclusion(true)
+            .defaultAggregationFunctionId(defAgrFunc.getId())
+            .subjectId(overWeight.getId())
+            .dateTimeRestriction(getDTR(2000));
+
+    Map<String, Phenotype> phenotypes =
+        getPhenotypeMap(
+            weight,
+            height,
+            age,
+            young,
+            old,
+            bmi,
+            bmi19_25,
+            bmi19_27,
+            bmi25_30,
+            bmi27_30,
+            finding,
+            overWeight);
+
+    System.out.println(rs);
+
+    CompositeSearch search = new CompositeSearch(null, cri, rs, phenotypes);
+    ResultSet finalRS = search.execute();
+    System.out.println(finalRS);
   }
 }

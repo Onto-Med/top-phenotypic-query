@@ -289,13 +289,11 @@ public abstract class AbstractTest {
   }
 
   private static void addArgument(Expression exp, BigDecimal val) {
-    exp.addArgumentsItem(
-        new Expression().value(new NumberValue().value(val)));
+    exp.addArgumentsItem(new Expression().value(new NumberValue().value(val)));
   }
 
   private static void addArgument(Expression exp, String val) {
-    exp.addArgumentsItem(
-        new Expression().value(new StringValue().value(val)));
+    exp.addArgumentsItem(new Expression().value(new StringValue().value(val)));
   }
 
   private static EntityType getRestrictionType(Phenotype parent) {
@@ -332,7 +330,7 @@ public abstract class AbstractTest {
     return (StringRestriction) new StringRestriction().type(DataType.STRING);
   }
 
-  static Map<String, Phenotype> getPhenotypeMap(Phenotype... phenotypes) {
+  protected static Map<String, Phenotype> getPhenotypeMap(Phenotype... phenotypes) {
     return Stream.of(phenotypes).collect(Collectors.toMap(Phenotype::getId, Function.identity()));
   }
 

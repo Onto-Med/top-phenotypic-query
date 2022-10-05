@@ -61,7 +61,9 @@ public class ResultSet extends HashMap<String, Phenotypes> {
       String sourceUnit,
       String modelUnit) {
     if (sourceUnit != null && modelUnit != null && val instanceof DecimalValue)
-      val = new DecimalValue(UCUM.convert(val.getValueDecimal(), sourceUnit, modelUnit));
+      val =
+          new DecimalValue(
+              UCUM.convert(val.getValueDecimal(), sourceUnit, modelUnit), val.getDateTime());
     addValue(subjectId, phenotype, dateRange, val);
   }
 
