@@ -69,8 +69,11 @@ public class ResultSet extends HashMap<String, Phenotypes> {
 
   private void addRestriction(
       String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
-    if (val != null && PhenotypeUtil.hasExistentialQuantifier(phenotype))
-      addValue(subjectId, phenotype.getId(), dateRange, new BooleanValue(true));
+    if (val != null && PhenotypeUtil.hasExistentialQuantifier(phenotype)) {
+      ValueList vals = getValues(subjectId, phenotype.getId(), dateRange);
+      if (vals == null || vals.isEmpty())
+        addValue(subjectId, phenotype.getId(), dateRange, new BooleanValue(true));
+    }
   }
 
   public void addValueWithRestriction(
