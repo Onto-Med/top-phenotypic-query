@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import care.smith.top.model.BooleanRestriction;
-import care.smith.top.model.Constant;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Expression;
 import care.smith.top.model.NumberRestriction;
@@ -53,8 +52,7 @@ public class ExpressionUtil {
 
   public static MathExpression convert(Expression exp) {
     if (exp == null) return null;
-    if (exp.getValue() != null)
-      return getConstantExpression(exp.getConstantId(), exp.getValue());
+    if (exp.getValue() != null) return getConstantExpression(exp.getConstantId(), exp.getValue());
     if (exp.getFunctionId() != null) return getFunctionExpression(exp);
     return new VariableExpression(exp.getEntityId());
   }
