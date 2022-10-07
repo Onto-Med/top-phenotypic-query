@@ -55,8 +55,9 @@ public abstract class DataAdapter {
     builder.dateIntervalLimit(operator, value);
   }
 
-  public Map<String, String> getPhenotypeMappings(Phenotype phenotype, DataAdapterConfig config) {
-    CodeMapping codeMap = config.getCodeMapping(phenotype);
+  public Map<String, String> getPhenotypeMappings(
+      Phenotype phenotype, DataAdapterConfig config, Map<String, Phenotype> phenotypes) {
+    CodeMapping codeMap = config.getCodeMapping(phenotype, phenotypes);
     if (codeMap == null) return null;
     return codeMap.getPhenotypeMappings();
   }

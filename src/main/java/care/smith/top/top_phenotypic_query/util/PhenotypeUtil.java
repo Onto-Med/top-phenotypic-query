@@ -1,6 +1,7 @@
 package care.smith.top.top_phenotypic_query.util;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import care.smith.top.model.Code;
@@ -51,12 +52,14 @@ public class PhenotypeUtil {
     return code.getCodeSystem().getUri().toString() + "|" + code.getCode();
   }
 
-  public static List<Code> getCodes(Phenotype p) {
-    return (isRestriction(p)) ? p.getSuperPhenotype().getCodes() : p.getCodes();
+  public static List<Code> getCodes(Phenotype p, Map<String, Phenotype> phenotypes) {
+    return (isRestriction(p))
+        ? phenotypes.get(p.getSuperPhenotype().getId()).getCodes()
+        : p.getCodes();
   }
 
-  public static Stream<String> getCodeUris(Phenotype p) {
-    return getCodes(p).stream().map(c -> getCodeUri(c));
+  public static Stream<String> getCodeUris(Phenotype p, Map<String, Phenotype> phenotypes) {
+    return getCodes(p, phenotypes).stream().map(c -> getCodeUri(c));
   }
 
   public static boolean hasExistentialQuantifier(Phenotype p) {

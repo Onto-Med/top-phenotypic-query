@@ -43,14 +43,14 @@ public class PhenotypeFinder {
 
   private ResultSet executeSingleSearches() {
     SingleQueryMan man = new SingleQueryMan(adapter);
-    SubjectQueryMan sbjMan = new SubjectQueryMan(adapter);
+    SubjectQueryMan sbjMan = new SubjectQueryMan(adapter, phenotypes);
     for (QueryCriterion cri : query.getCriteria()) {
       Phenotype phe = phenotypes.get(cri.getSubjectId());
       if (PhenotypeUtil.isSingle(phe)) {
-        if (config.isAge(phe)) sbjMan.setAgeCriterion(cri, phe);
-        else if (config.isBirthdate(phe)) sbjMan.setBirthdateCriterion(cri, phe);
-        else if (config.isSex(phe)) sbjMan.setSexCriterion(cri, phe);
-        else man.addCriterion(new SingleSearch(query, cri, phe, adapter, true));
+        if (config.isAge(phe, phenotypes)) sbjMan.setAgeCriterion(cri, phe);
+        else if (config.isBirthdate(phe, phenotypes)) sbjMan.setBirthdateCriterion(cri, phe);
+        else if (config.isSex(phe, phenotypes)) sbjMan.setSexCriterion(cri, phe);
+        else man.addCriterion(new SingleSearch(query, cri, phe, adapter, phenotypes, true));
       }
     }
 
@@ -60,10 +60,10 @@ public class PhenotypeFinder {
         for (String var : ExpressionUtil.getVariables(phe.getExpression(), phenotypes)) {
           Phenotype varPhe = phenotypes.get(var);
           if (PhenotypeUtil.isSingle(varPhe)) {
-            if (config.isAge(varPhe)) sbjMan.addAgeVariable(varPhe);
-            else if (config.isBirthdate(varPhe)) sbjMan.addBirthdateVariable(varPhe);
-            else if (config.isSex(varPhe)) sbjMan.addSexVariable(varPhe);
-            else man.addVariable(new SingleSearch(query, cri, varPhe, adapter, false));
+            if (config.isAge(varPhe, phenotypes)) sbjMan.addAgeVariable(varPhe);
+            else if (config.isBirthdate(varPhe, phenotypes)) sbjMan.addBirthdateVariable(varPhe);
+            else if (config.isSex(varPhe, phenotypes)) sbjMan.addSexVariable(varPhe);
+            else man.addVariable(new SingleSearch(query, cri, varPhe, adapter, phenotypes, false));
           }
         }
       }

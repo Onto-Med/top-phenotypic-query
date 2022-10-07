@@ -25,6 +25,7 @@ public class SingleSearch extends PhenotypeSearch {
   private Phenotype phenotype;
   private DataAdapter adapter;
   private DataAdapterConfig config;
+  private Map<String, Phenotype> phenotypes;
   private int type;
 
   public SingleSearch(
@@ -32,12 +33,14 @@ public class SingleSearch extends PhenotypeSearch {
       QueryCriterion criterion,
       Phenotype phenotype,
       DataAdapter adapter,
+      Map<String, Phenotype> phenotypes,
       boolean isCriterion) {
     super(query);
     this.criterion = criterion;
     this.phenotype = phenotype;
     this.adapter = adapter;
     this.config = adapter.getConfig();
+    this.phenotypes = phenotypes;
     if (isCriterion) {
       if (criterion.isInclusion()) this.type = 1;
       else this.type = 2;
@@ -73,7 +76,7 @@ public class SingleSearch extends PhenotypeSearch {
   }
 
   private CodeMapping getCodeMapping() {
-    return config.getCodeMapping(phenotype);
+    return config.getCodeMapping(phenotype, phenotypes);
   }
 
   public String getModelUnit() {
@@ -89,7 +92,7 @@ public class SingleSearch extends PhenotypeSearch {
   }
 
   public Map<String, String> getPhenotypeMappings() {
-    return adapter.getPhenotypeMappings(phenotype, config);
+    return adapter.getPhenotypeMappings(phenotype, config, phenotypes);
   }
 
   public PhenotypeQuery getPhenotypeQuery() {
