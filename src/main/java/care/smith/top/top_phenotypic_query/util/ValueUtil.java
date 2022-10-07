@@ -66,8 +66,8 @@ public class ValueUtil {
   }
 
   private static String addDate(String str, Value val) {
-    if (val.getDateTime() != null) str += " (" + getDateAsString(val) + ")";
-    return str;
+    if (val.getDateTime() != null) str += " :: " + getDateAsString(val);
+    return str + " ]";
   }
 
   public static String getDateAsString(Value val) {
@@ -75,7 +75,11 @@ public class ValueUtil {
   }
 
   public static String toString(Value val) {
-    return addDate(getValueAsString(val), val);
+    return "[ " + addDate(getValueAsString(val), val);
+  }
+
+  public static String toString(List<Value> vals) {
+    return vals.stream().map(v -> toString(v)).collect(Collectors.toList()).toString();
   }
 
   public static String getValueAsString(Value val) {

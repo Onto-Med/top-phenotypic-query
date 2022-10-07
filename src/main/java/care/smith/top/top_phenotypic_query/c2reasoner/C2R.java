@@ -182,13 +182,13 @@ public class C2R {
   }
 
   private String toString(Expression exp) {
-    if (exp.getConstantId() != null) return toStringConstant(exp);
     if (exp.getEntityId() != null) return exp.getEntityId();
+    if (exp.getConstantId() != null)
+      return getConstant(exp.getConstantId()).getConstant().getTitle();
+    if (exp.getValue() != null) return ValueUtil.toString(exp.getValue());
+    if (exp.getValues() != null) return ValueUtil.toString(exp.getValues());
+    if (exp.getRestriction() != null) return ValueUtil.toString(exp.getValues());
     return toStringFunction(exp);
-  }
-
-  private String toStringConstant(Expression exp) {
-    return getConstant(exp.getConstantId()).getConstant().getTitle();
   }
 
   private String toStringFunction(Expression exp) {
