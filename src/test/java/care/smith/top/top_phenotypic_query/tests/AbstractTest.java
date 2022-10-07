@@ -25,10 +25,8 @@ import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
-import care.smith.top.model.StringValue;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.top_phenotypic_query.result.Phenotypes;
-import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
 import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
 
 public abstract class AbstractTest {
@@ -36,9 +34,9 @@ public abstract class AbstractTest {
   private static final DataType DEFAULT_DATA_TYPE = DataType.NUMBER;
   private static final Quantifier DEFAULT_QUANTIFIER = Quantifier.MIN;
   private static final Integer DEFAULT_CARDINALITY = Integer.valueOf(1);
-  private static final RestrictionOperator DEFAULT_MIN_OPERATOR =
+  protected static final RestrictionOperator DEFAULT_MIN_OPERATOR =
       RestrictionOperator.GREATER_THAN_OR_EQUAL_TO;
-  private static final RestrictionOperator DEFAULT_MAX_OPERATOR = RestrictionOperator.LESS_THAN;
+  protected static final RestrictionOperator DEFAULT_MAX_OPERATOR = RestrictionOperator.LESS_THAN;
 
   protected static Phenotype age = getPhenotype("Age", "http://loinc.org", "30525-0");
   protected static Phenotype young = getInterval("Young", age, 18, 34);
@@ -192,28 +190,28 @@ public abstract class AbstractTest {
       Number max,
       Quantifier quantifier,
       Integer cardinality) {
-    Expression values = new Expression().entityId(parent.getId());
-    Expression range = new Expression().functionId("list");
-    Expression limits = new Expression().functionId("list");
+    //    Expression values = new Expression().entityId(parent.getId());
+    //    Expression range = new Expression().functionId("list");
+    //    Expression limits = new Expression().functionId("list");
 
     NumberRestriction restriction = getNumberRestriction();
 
     if (min != null) {
       restriction.minOperator(minOperator).addValuesItem(new BigDecimal(min.toString()));
-      addArgument(range, new BigDecimal(min.toString()));
-      addArgument(limits, minOperator.getValue());
+      //      addArgument(range, new BigDecimal(min.toString()));
+      //      addArgument(limits, minOperator.getValue());
     }
 
     if (max != null) {
       restriction.maxOperator(maxOperator).addValuesItem(new BigDecimal(max.toString()));
-      addArgument(range, new BigDecimal(max.toString()));
-      addArgument(limits, maxOperator.getValue());
+      //      addArgument(range, new BigDecimal(max.toString()));
+      //      addArgument(limits, maxOperator.getValue());
     }
 
-    Expression exp = getInExpression(values, range, limits);
-    addQuantifier(restriction, exp, quantifier, cardinality);
+    //    Expression exp = getInExpression(values, range, limits);
+    addQuantifier(restriction, null, quantifier, cardinality);
 
-    return getRestriction(name, parent, restriction, exp);
+    return getRestriction(name, parent, restriction, null);
   }
 
   static Phenotype getRestriction(String name, Phenotype parent, String... rangeValues) {
@@ -230,21 +228,21 @@ public abstract class AbstractTest {
       Quantifier quantifier,
       Integer cardinality,
       String... rangeValues) {
-    Expression values = new Expression().entityId(parent.getId());
-    Expression range = new Expression().functionId("list");
-    Expression limits = new Expression().functionId("list");
+    //    Expression values = new Expression().entityId(parent.getId());
+    //    Expression range = new Expression().functionId("list");
+    //    Expression limits = new Expression().functionId("list");
 
     StringRestriction restriction = getStringRestriction();
 
     for (String value : rangeValues) {
       restriction.addValuesItem(value);
-      addArgument(range, value);
+      //      addArgument(range, value);
     }
 
-    Expression exp = getInExpression(values, range, limits);
-    addQuantifier(restriction, exp, quantifier, cardinality);
+    //    Expression exp = getInExpression(values, range, limits);
+    addQuantifier(restriction, null, quantifier, cardinality);
 
-    return getRestriction(name, parent, restriction, exp);
+    return getRestriction(name, parent, restriction, null);
   }
 
   static Phenotype getRestriction(
@@ -253,21 +251,21 @@ public abstract class AbstractTest {
       Quantifier quantifier,
       Integer cardinality,
       Number... rangeValues) {
-    Expression values = new Expression().entityId(parent.getId());
-    Expression range = new Expression().functionId("list");
-    Expression limits = new Expression().functionId("list");
+    //    Expression values = new Expression().entityId(parent.getId());
+    //    Expression range = new Expression().functionId("list");
+    //    Expression limits = new Expression().functionId("list");
 
     NumberRestriction restriction = getNumberRestriction();
 
     for (Number value : rangeValues) {
       restriction.addValuesItem(new BigDecimal(value.toString()));
-      addArgument(range, new BigDecimal(value.toString()));
+      //      addArgument(range, new BigDecimal(value.toString()));
     }
 
-    Expression exp = getInExpression(values, range, limits);
-    addQuantifier(restriction, exp, quantifier, cardinality);
+    //    Expression exp = getInExpression(values, range, limits);
+    addQuantifier(restriction, null, quantifier, cardinality);
 
-    return getRestriction(name, parent, restriction, exp);
+    return getRestriction(name, parent, restriction, null);
   }
 
   private static void addCode(Phenotype phenotype, String codeSystem, String code) {
@@ -280,21 +278,21 @@ public abstract class AbstractTest {
       Restriction restr, Expression exp, Quantifier quant, Integer card) {
     if (quant != null) {
       restr.quantifier(quant);
-      exp.addArgumentsItem(ExpressionUtil.stringToExpression(quant.getValue()));
+      //      exp.addArgumentsItem(ExpressionUtil.stringToExpression(quant.getValue()));
       if (card != null) {
         restr.cardinality(card);
-        exp.addArgumentsItem(ExpressionUtil.numberToExpression(card));
+        //        exp.addArgumentsItem(ExpressionUtil.numberToExpression(card));
       }
     }
   }
 
-  private static void addArgument(Expression exp, BigDecimal val) {
-    exp.addArgumentsItem(new Expression().value(new NumberValue().value(val)));
-  }
-
-  private static void addArgument(Expression exp, String val) {
-    exp.addArgumentsItem(new Expression().value(new StringValue().value(val)));
-  }
+  //  private static void addArgument(Expression exp, BigDecimal val) {
+  //    exp.addArgumentsItem(new Expression().value(new NumberValue().value(val)));
+  //  }
+  //
+  //  private static void addArgument(Expression exp, String val) {
+  //    exp.addArgumentsItem(new Expression().value(new StringValue().value(val)));
+  //  }
 
   private static EntityType getRestrictionType(Phenotype parent) {
     return PhenotypeUtil.isSinglePhenotype(parent)
@@ -302,14 +300,14 @@ public abstract class AbstractTest {
         : EntityType.COMPOSITE_RESTRICTION;
   }
 
-  private static Expression getInExpression(
-      Expression values, Expression range, Expression limits) {
-    return new Expression()
-        .functionId("in")
-        .addArgumentsItem(values)
-        .addArgumentsItem(range)
-        .addArgumentsItem(limits);
-  }
+  //  private static Expression getInExpression(
+  //      Expression values, Expression range, Expression limits) {
+  //    return new Expression()
+  //        .functionId("in")
+  //        .addArgumentsItem(values)
+  //        .addArgumentsItem(range)
+  //        .addArgumentsItem(limits);
+  //  }
 
   private static Phenotype getRestriction(
       String name, Phenotype parent, Restriction restr, Expression exp) {
@@ -317,7 +315,7 @@ public abstract class AbstractTest {
         new Phenotype()
             .superPhenotype(parent)
             .restriction(restr)
-            .expression(exp)
+            //            .expression(exp)
             .entityType(getRestrictionType(parent))
             .id(name);
   }

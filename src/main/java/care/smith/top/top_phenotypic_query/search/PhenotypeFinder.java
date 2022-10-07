@@ -23,6 +23,10 @@ public class PhenotypeFinder {
     this.phenotypes = phenotypes;
     this.adapter = adapter;
     this.config = adapter.getConfig();
+    for (Phenotype p : this.phenotypes.values()) {
+      if (PhenotypeUtil.isRestriction(p))
+        p.setExpression(ExpressionUtil.restrictionToExpression(p));
+    }
   }
 
   public ResultSet execute() {
