@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.hl7.fhir.r4.model.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
@@ -32,6 +34,7 @@ import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
 public class FHIRAdapter extends DataAdapter {
 
   private FHIRClient client;
+  private static final Logger log = LoggerFactory.getLogger(FHIRAdapter.class);
 
   public FHIRAdapter(DataAdapterConfig config) {
     super(config);
@@ -45,8 +48,10 @@ public class FHIRAdapter extends DataAdapter {
 
   @Override
   public ResultSet execute(SingleSearch search) {
+    String query = search.getQueryString();
+    log.info("Execute FHIR query: {}", query);
     ResultSet rs = new ResultSet();
-    List<Resource> resources = client.executeQuery(search.getQueryString());
+    List<Resource> resources = client.executeQuery(query);
     PhenotypeOutput out = search.getOutput();
     Phenotype phe = search.getPhenotype();
     DataType datatype = phe.getDataType();
@@ -82,8 +87,10 @@ public class FHIRAdapter extends DataAdapter {
 
   @Override
   public ResultSet execute(SubjectSearch search) {
+    String query = search.getQueryString();
+    log.info("Execute FHIR query: {}", query);
     ResultSet rs = new ResultSet();
-    List<Resource> resources = client.executeQuery(search.getQueryString());
+    List<Resource> resources = client.executeQuery(query);
     SubjectOutput out = search.getOutput();
     Phenotype sex = search.getSex();
     Phenotype bd = search.getBirthdateDerived();
@@ -114,8 +121,10 @@ public class FHIRAdapter extends DataAdapter {
 
   @Override
   public ResultSet executeAllSubjectsQuery() {
+    String query = SubjectSearch.getBaseQuery(config);
+    log.info("Execute FHIR query: {}", query);
     ResultSet rs = new ResultSet();
-    List<Resource> resources = client.executeQuery(SubjectSearch.getBaseQuery(config));
+    List<Resource> resources = client.executeQuery(query);
     for (Resource res : resources) rs.addSubject(FHIRUtil.getId(res));
     return rs;
   }

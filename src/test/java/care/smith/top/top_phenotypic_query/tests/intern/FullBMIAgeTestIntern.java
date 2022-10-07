@@ -8,12 +8,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+
+import org.hl7.fhir.r4.model.Patient;
 
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRAdapter;
+import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRClient;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
@@ -22,7 +26,7 @@ import care.smith.top.top_phenotypic_query.tests.AbstractTest;
 public class FullBMIAgeTestIntern extends AbstractTest {
 
   public static void main(String[] args) throws SQLException {
-    test(getSQLAdapter());
+    test(getFHIRAdapter());
   }
 
   private static FHIRAdapter getFHIRAdapter() {
@@ -50,7 +54,7 @@ public class FullBMIAgeTestIntern extends AbstractTest {
     ResultSet rs = pf.execute();
     adapter.close();
 
-    List<String> actualSbjIds = new ArrayList<>(rs.getSubjectIds());
+    List<String> actualSbjIds = getDBIds(rs.getSubjectIds());
     Collections.sort(
         actualSbjIds,
         new Comparator<String>() {
@@ -78,6 +82,23 @@ public class FullBMIAgeTestIntern extends AbstractTest {
     System.out.println(onlyExpectedSbjIds);
 
     assertEquals(expectedSbjIds, actualSbjIds);
+  }
+
+  private static List<String> getDBIds(Set<String> ids) {
+    URL configFile =
+        Thread.currentThread().getContextClassLoader().getResource("config/FHIR_Adapter_Test.yml");
+    DataAdapterConfig conf = DataAdapterConfig.getInstance(configFile.getPath());
+    FHIRClient client = new FHIRClient(conf);
+
+    List<String> dbIds = new ArrayList<>();
+
+    for (String id : ids)
+      dbIds.add(
+          ((Patient) client.executeQuery("http://localhost:8080/baseR4/Patient?_id=" + id).get(0))
+              .getIdentifierFirstRep()
+              .getValue());
+
+    return dbIds;
   }
 
   private static List<String> getExpectedSubjectIds() throws SQLException {

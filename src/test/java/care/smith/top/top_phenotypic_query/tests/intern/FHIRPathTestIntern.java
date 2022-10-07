@@ -41,11 +41,14 @@ public class FHIRPathTestIntern {
                     .setUnit("10 trillion/L")
                     .setSystem("http://unitsofmeasure.org")
                     .setCode("10*12/L"))
-            .setSubject(new Reference("Patient/123"));
+            .setSubject(new Reference("Patient/123"))
+            .setEffective(new DateTimeType("2000-01-01"));
     res = engine.evaluate(observation, "value.value");
     System.out.println(res);
     res = engine.evaluate(observation, "subject.reference.value");
     System.out.println(res.get(0).toString());
+    res = engine.evaluate(observation, "effective");
+    System.out.println("Date:" + res);
 
     observation = new Observation().setValue(new StringType("abc"));
     res = engine.evaluate(observation, "value");

@@ -11,6 +11,7 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Base;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.DateTimeType;
+import org.hl7.fhir.r4.model.DateType;
 import org.hl7.fhir.r4.model.DecimalType;
 import org.hl7.fhir.r4.model.Reference;
 import org.springframework.util.CollectionUtils;
@@ -50,10 +51,18 @@ public class FHIRUtil {
 
   public static LocalDateTime getDate(List<Base> values) {
     if (CollectionUtils.isEmpty(values)) return null;
-    return new Timestamp((((DateTimeType) values.get(0)).getValue()).getTime()).toLocalDateTime();
+    Base date = values.get(0);
+    if (date instanceof DateTimeType)
+      return new Timestamp((((DateTimeType) date).getValue()).getTime()).toLocalDateTime();
+    return new Timestamp((((DateType) date).getValue()).getTime()).toLocalDateTime();
   }
 
   public static BigDecimal getNumber(List<Base> values) {
+    if (CollectionUtils.isEmpty(values)) return null;
+    return ((DecimalType) values.get(0)).getValue();
+  }
+
+  public static BigDecimal getIdentifier(List<Base> values) {
     if (CollectionUtils.isEmpty(values)) return null;
     return ((DecimalType) values.get(0)).getValue();
   }

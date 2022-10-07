@@ -1,6 +1,6 @@
 id: SMITH_FHIR_Adapter
 connection:
-  endpoint: http://localhost:8080/baseR4/
+  endpoint: http://localhost:8080/baseR4
   user:
   password:
   token:
@@ -34,7 +34,7 @@ phenotypeQueries:
       stringPhenotype: value
       conceptPhenotype: value.coding.select(system.value + '|' + code)
       datePhenotype: value
-      date: date
+      date: effective
   ObservationComponent:
     baseQuery: "Observation?component-code={codes}"
     numberValueIntervalPart: "&component-value-quantity{operator}{value}"
@@ -46,7 +46,7 @@ phenotypeQueries:
       subject: subject.reference.value
       numberPhenotype: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.value
       conceptPhenotype: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.coding.select(system.value + '|' + code)
-      date: date
+      date: effective
 birthdateMapping:
   code: http://loinc.org|21112-8
 ageMapping:
@@ -73,3 +73,5 @@ codeMappings:
       codes: http://loinc.org|3137-7
   - code: http://loinc.org|3141-9
     type: Observation
+    phenotypeMappings:
+      codes: http://loinc.org|3141-9
