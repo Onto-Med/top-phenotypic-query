@@ -21,6 +21,12 @@ import care.smith.top.top_phenotypic_query.c2reasoner.constants.Pi;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.True;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Last;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Add;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Multiply;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Subtract;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Sum;
 import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
 import care.smith.top.top_phenotypic_query.util.ValueUtil;
 
@@ -50,33 +56,33 @@ public class C2R {
     addFunction(Divide.get());
     addFunction(Power.get());
     addFunction(Sum.get());
-    addFunction(Avg.get());
-    addFunction(Count.get());
-    addFunction(First.get());
+    //    addFunction(Avg.get());
+    //    addFunction(Count.get());
+    //    addFunction(First.get());
     addFunction(Last.get());
-    addFunction(Min.get());
-    addFunction(Max.get());
-    addFunction(Date.get());
-    addFunction(DiffYears.get());
-    addFunction(DiffMonths.get());
-    addFunction(DiffDays.get());
-    addFunction(PlusYears.get());
-    addFunction(PlusMonths.get());
-    addFunction(PlusDays.get());
-    addFunction(And.get());
-    addFunction(Or.get());
-    addFunction(Not.get());
-    addFunction(MinTrue.get());
-    addFunction(Eq.get());
-    addFunction(Ge.get());
-    addFunction(Gt.get());
-    addFunction(Le.get());
-    addFunction(Lt.get());
-    addFunction(Ne.get());
-    addFunction(In.get());
-    addFunction(Switch.get());
-    addFunction(Li.get());
-    addFunction(Restrict.get());
+    //    addFunction(Min.get());
+    //    addFunction(Max.get());
+    //    addFunction(Date.get());
+    //    addFunction(DiffYears.get());
+    //    addFunction(DiffMonths.get());
+    //    addFunction(DiffDays.get());
+    //    addFunction(PlusYears.get());
+    //    addFunction(PlusMonths.get());
+    //    addFunction(PlusDays.get());
+    //    addFunction(And.get());
+    //    addFunction(Or.get());
+    //    addFunction(Not.get());
+    //    addFunction(MinTrue.get());
+    //    addFunction(Eq.get());
+    //    addFunction(Ge.get());
+    //    addFunction(Gt.get());
+    //    addFunction(Le.get());
+    //    addFunction(Lt.get());
+    //    addFunction(Ne.get());
+    //    addFunction(In.get());
+    //    addFunction(Switch.get());
+    //    addFunction(Li.get());
+    //    addFunction(Restrict.get());
   }
 
   public MathContext getMathContext() {
@@ -87,21 +93,26 @@ public class C2R {
     return calculate(exp, Last.get());
   }
 
+  public List<Expression> calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction) {
+    return args.stream()
+        .map(a -> calculate(a, defaultAggregateFunction))
+        .collect(Collectors.toList());
+  }
+
   public Expression calculate(Expression exp, FunctionEntity defaultAggregateFunction) {
     String expStr = toString(exp);
     log.info("start calculating math expression: {} ...", expStr);
     Expression result = calc(exp, defaultAggregateFunction);
-    log.info(
-        "result of calculating math expression: {} = {}",
-        expStr,
-        ValueUtil.toString(result.getValue()));
+    log.info("result of calculating math expression: {} = {}", expStr, toString(result));
     return result;
   }
 
   private Expression calc(Expression exp, FunctionEntity defaultAggregateFunction) {
     if (exp.getConstantId() != null) return calcConstant(exp);
     if (exp.getEntityId() != null) return calcVariable(exp);
-    return calcFunction(exp, defaultAggregateFunction);
+    if (exp.getFunctionId() != null) return calcFunction(exp, defaultAggregateFunction);
+    return exp;
   }
 
   private Expression calcConstant(Expression exp) {
@@ -125,7 +136,7 @@ public class C2R {
 
   public Expression calcFunction(Expression exp, FunctionEntity defaultAggregateFunction) {
     Exceptions.checkFunctionExists(exp, functions);
-    log.info("start calculating calculating function: {} ...", exp.getFunctionId());
+    log.info("start calculating function '{}': {} ...", exp.getFunctionId(), toString(exp));
     FunctionEntity func = getFunction(exp.getFunctionId());
     return func.calculate(exp.getArguments(), defaultAggregateFunction, this);
   }

@@ -67,7 +67,7 @@ public class ValueUtil {
 
   private static String addDateTime(String str, Value val) {
     if (val.getDateTime() != null) str += "|" + toStringDateTime(val);
-    return "|" + str + "|";
+    return str;
   }
 
   public static String toStringDateTime(Value val) {

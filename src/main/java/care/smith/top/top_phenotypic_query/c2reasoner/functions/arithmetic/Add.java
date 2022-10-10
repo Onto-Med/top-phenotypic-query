@@ -1,34 +1,49 @@
-package care.smith.top.simple_onto_api.calculator.functions.arithmetic;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic;
 
+import java.math.BigDecimal;
 import java.util.List;
 
-import care.smith.top.simple_onto_api.calculator.Exceptions;
-import care.smith.top.simple_onto_api.calculator.functions.Function;
-import care.smith.top.simple_onto_api.calculator.functions.aggregate.Aggregator;
-import care.smith.top.simple_onto_api.model.enums.Datatype;
-import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.DataType;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
+import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
+import care.smith.top.top_phenotypic_query.util.ValueUtil;
 
-public class Add extends Function {
+public class Add extends FunctionEntity {
 
-  private static Add instance = null;
+  private static Add INSTANCE = new Add();
 
   private Add() {
-    super("add", "+", Notation.INFIX);
-    minArgumentsNumber(2);
-    maxArgumentsNumber(2);
+    super(
+        new ExpressionFunction()
+            .id("add")
+            .title("+")
+            .minArgumentNumber(2)
+            .maxArgumentNumber(2)
+            .notation(NotationEnum.INFIX));
   }
 
   public static Add get() {
-    if (instance == null) instance = new Add();
-    return instance;
+    return INSTANCE;
   }
 
   @Override
-  public Value calculate(List<Value> values, Function defaultAggregateFunction) {
-    Exceptions.checkArgumentsNumber(this, values);
-    Exceptions.checkArgumentsType(this, Datatype.DECIMAL, values);
-    values = Aggregator.aggregate(values, defaultAggregateFunction);
-    return new DecimalValue(values.get(0).getValueDecimal().add(values.get(1).getValueDecimal()));
+  public Expression calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+    Exceptions.checkArgumentsNumber(getFunction(), args);
+    args = c2r.calculate(args, defaultAggregateFunction);
+    Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
+    args = Aggregator.aggregate(args, defaultAggregateFunction, c2r);
+    BigDecimal arg1 = ExpressionUtil.getValueNumber(args.get(0));
+    BigDecimal arg2 = ExpressionUtil.getValueNumber(args.get(1));
+    BigDecimal sum = arg1.add(arg2);
+    Expression res = ValueUtil.toExpression(sum);
+    logResult(res);
+    return res;
   }
 }

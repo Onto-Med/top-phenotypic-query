@@ -64,7 +64,7 @@ public abstract class FunctionEntity {
 
   protected void logResult(Expression result) {
     log.info(
-        "result of calculating function: {} = {}",
+        "result of calculating function '{}': {}",
         getFunction().getId(),
         ValueUtil.toString(result.getValue()));
   }

@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import care.smith.top.model.BooleanRestriction;
+import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Expression;
 import care.smith.top.model.NumberRestriction;
@@ -29,6 +30,22 @@ import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.simple_onto_api.model.property.data.value.StringValue;
 
 public class ExpressionUtil {
+
+  public static BigDecimal getValueNumber(Expression exp) {
+    return ((NumberValue) exp.getValue()).getValue();
+  }
+
+  public static DataType getDataType(Expression exp) {
+    if (exp.getValue() != null) return exp.getValue().getDataType();
+    if (exp.getValues() != null && !exp.getValues().isEmpty()) exp.getValues().get(0).getDataType();
+    return null;
+  }
+
+  public static String toStringValues(Expression exp) {
+    if (exp.getValue() != null) return ValueUtil.toString(exp.getValue());
+    if (exp.getValues() != null) return ValueUtil.toString(exp.getValues());
+    return null;
+  }
 
   public static Set<String> getVariables(Expression exp, Map<String, Phenotype> phenotypes) {
     Set<String> vars = new HashSet<>();

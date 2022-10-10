@@ -16,15 +16,12 @@ public class Last extends FunctionEntity {
   private static final Last INSTANCE = new Last();
 
   private Last() {
-    super(createFunction());
-  }
-
-  private static ExpressionFunction createFunction() {
-    return new ExpressionFunction()
-        .id("last")
-        .title("last")
-        .minArgumentNumber(1)
-        .notation(NotationEnum.PREFIX);
+    super(
+        new ExpressionFunction()
+            .id("last")
+            .title("last")
+            .minArgumentNumber(1)
+            .notation(NotationEnum.PREFIX));
   }
 
   public static Last get() {
@@ -35,6 +32,7 @@ public class Last extends FunctionEntity {
   public Expression calculate(
       List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
+    args = c2r.calculate(args, defaultAggregateFunction);
     args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
     Collections.sort(args, ValueUtil.VALUE_DATE_COMPARATOR);
     Expression res = args.get(args.size() - 1);
