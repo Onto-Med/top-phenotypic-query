@@ -4,6 +4,9 @@ import java.math.MathContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
@@ -15,6 +18,7 @@ public abstract class FunctionEntity {
 
   private ExpressionFunction function;
   protected MathContext mc = MathContext.DECIMAL64;
+  private Logger log = LoggerFactory.getLogger(FunctionEntity.class);
 
   protected FunctionEntity(ExpressionFunction function) {
     this.function = function;
@@ -50,11 +54,18 @@ public abstract class FunctionEntity {
 
   public String toStringValues(List<Value> args) {
     return toString(
-        args.stream().map(v -> ValueUtil.getValueAsString(v)).collect(Collectors.toList()));
+        args.stream().map(v -> ValueUtil.toStringValue(v)).collect(Collectors.toList()));
   }
 
   public String toStringDates(List<Value> args) {
     return toString(
-        args.stream().map(v -> ValueUtil.getDateAsString(v)).collect(Collectors.toList()));
+        args.stream().map(v -> ValueUtil.toStringDateTime(v)).collect(Collectors.toList()));
+  }
+
+  protected void logResult(Expression result) {
+    log.info(
+        "result of calculating function: {} = {}",
+        getFunction().getId(),
+        ValueUtil.toString(result.getValue()));
   }
 }

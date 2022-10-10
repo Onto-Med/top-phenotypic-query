@@ -42,7 +42,7 @@ public class Aggregator {
       log.info(
           "aggregate: {} = {}",
           function.toStringValues(arg.getValues()),
-          ValueUtil.getValueAsString(ag.getValue()));
+          ValueUtil.toStringValue(ag.getValue()));
       return ag;
     }
   }

@@ -22,15 +22,16 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
 
 public class RestrictionUtil {
 
-  public static StringBuffer toString(DateTimeRestriction dtr) {
-    if (dtr == null) return new StringBuffer("[generally valid]");
-    if (isEntirePeriod(dtr)) return new StringBuffer("[entire period]");
-    StringBuffer sb = new StringBuffer("[ ");
-    if (dtr.getMinOperator() != null)
-      sb.append(dtr.getMinOperator()).append(dtr.getValues().get(0)).append(" ");
-    if (dtr.getMaxOperator() != null)
-      sb.append(dtr.getMaxOperator()).append(dtr.getValues().get(1)).append(" ");
-    return sb.append("]");
+  public static String toString(Restriction r) {
+    if (r == null) return "|generally valid|";
+    if (r instanceof DateTimeRestriction && isEntirePeriod((DateTimeRestriction) r))
+      return "|entire period|";
+    String s = "";
+    if (r.getQuantifier() != null) s += "|" + r.getQuantifier().name();
+    if (r.getCardinality() != null) s += "|" + r.getCardinality().intValue();
+    if (hasInterval(r)) s += getIntervalAsString(r);
+    else if (hasValues(r)) s += "|" + getValuesAsString(r);
+    return s + "|";
   }
 
   private static Restriction copy(Restriction r, boolean withBasicAttributes) {
@@ -141,32 +142,33 @@ public class RestrictionUtil {
     if (r instanceof NumberRestriction) {
       NumberRestriction nr = (NumberRestriction) r;
       if (nr.getMinOperator() != null) {
-        limits.put(
-            format.formatOperator(nr.getMinOperator()), format.formatNumber(nr.getValues().get(0)));
+        limits.put(format(nr.getMinOperator(), format), format(nr.getValues().get(0), format));
         if (nr.getMaxOperator() != null)
-          limits.put(
-              format.formatOperator(nr.getMaxOperator()),
-              format.formatNumber(nr.getValues().get(1)));
+          limits.put(format(nr.getMaxOperator(), format), format(nr.getValues().get(1), format));
       } else if (nr.getMaxOperator() != null)
-        limits.put(
-            format.formatOperator(nr.getMaxOperator()), format.formatNumber(nr.getValues().get(0)));
+        limits.put(format(nr.getMaxOperator(), format), format(nr.getValues().get(0), format));
     }
     if (r instanceof DateTimeRestriction) {
       DateTimeRestriction dr = (DateTimeRestriction) r;
       if (dr.getMinOperator() != null) {
-        limits.put(
-            format.formatOperator(dr.getMinOperator()),
-            format.formatDateTime(dr.getValues().get(0)));
+        limits.put(format(dr.getMinOperator(), format), format(dr.getValues().get(0), format));
         if (dr.getMaxOperator() != null)
-          limits.put(
-              format.formatOperator(dr.getMaxOperator()),
-              format.formatDateTime(dr.getValues().get(1)));
+          limits.put(format(dr.getMaxOperator(), format), format(dr.getValues().get(1), format));
       } else if (dr.getMaxOperator() != null)
-        limits.put(
-            format.formatOperator(dr.getMaxOperator()),
-            format.formatDateTime(dr.getValues().get(0)));
+        limits.put(format(dr.getMaxOperator(), format), format(dr.getValues().get(0), format));
     }
     return limits;
+  }
+
+  public static Map<String, String> getInterval(Restriction r) {
+    return getInterval(r, null);
+  }
+
+  public static String getIntervalAsString(Restriction r) {
+    String s = "";
+    Map<String, String> in = getInterval(r);
+    for (String op : in.keySet()) s += "|" + op + " " + in.get(op);
+    return s;
   }
 
   public static boolean hasValues(Restriction r) {
@@ -179,18 +181,22 @@ public class RestrictionUtil {
     return !ObjectUtils.isEmpty(((StringRestriction) r).getValues());
   }
 
+  public static String getValuesAsString(Restriction r) {
+    return getValuesAsString(r, null);
+  }
+
   public static String getValuesAsString(Restriction r, DataAdapterFormat format) {
     if (r instanceof NumberRestriction)
       return format.formatList(
-          ((NumberRestriction) r).getValues().stream().map(v -> format.formatNumber(v)));
+          ((NumberRestriction) r).getValues().stream().map(v -> format(v, format)));
     if (r instanceof DateTimeRestriction)
       return format.formatList(
-          ((DateTimeRestriction) r).getValues().stream().map(v -> format.formatDateTime(v)));
+          ((DateTimeRestriction) r).getValues().stream().map(v -> format(v, format)));
     if (r instanceof BooleanRestriction)
       return format.formatList(
-          ((BooleanRestriction) r).getValues().stream().map(v -> format.formatBoolean(v)));
+          ((BooleanRestriction) r).getValues().stream().map(v -> format(v, format)));
     return format.formatList(
-        ((StringRestriction) r).getValues().stream().map(v -> format.formatString(v)));
+        ((StringRestriction) r).getValues().stream().map(v -> format(v, format)));
   }
 
   public static boolean isEntirePeriod(DateTimeRestriction r) {
@@ -206,5 +212,25 @@ public class RestrictionUtil {
     if (r.getMaxOperator() == null) return null;
     if (r.getMinOperator() == null) return r.getValues().get(0);
     return r.getValues().get(1);
+  }
+
+  private static String format(String val, DataAdapterFormat format) {
+    return (format == null) ? val : format.formatString(val);
+  }
+
+  private static String format(Boolean val, DataAdapterFormat format) {
+    return (format == null) ? val.toString() : format.formatBoolean(val);
+  }
+
+  private static String format(BigDecimal val, DataAdapterFormat format) {
+    return (format == null) ? val.toPlainString() : format.formatNumber(val);
+  }
+
+  private static String format(LocalDateTime val, DataAdapterFormat format) {
+    return (format == null) ? DateUtil.format(val) : format.formatDateTime(val);
+  }
+
+  private static String format(RestrictionOperator op, DataAdapterFormat format) {
+    return (format == null) ? op.getValue() : format.formatOperator(op);
   }
 }

@@ -65,39 +65,43 @@ public class ValueUtil {
     return toExpression(toValueList(numbers));
   }
 
-  private static String addDate(String str, Value val) {
-    if (val.getDateTime() != null) str += " :: " + getDateAsString(val);
-    return str + " ]";
+  private static String addDateTime(String str, Value val) {
+    if (val.getDateTime() != null) str += "|" + toStringDateTime(val);
+    return "|" + str + "|";
   }
 
-  public static String getDateAsString(Value val) {
+  public static String toStringDateTime(Value val) {
     return DateUtil.format(val.getDateTime());
   }
 
   public static String toString(Value val) {
-    return "[ " + addDate(getValueAsString(val), val);
+    return addDateTime(toStringValue(val), val);
   }
 
   public static String toString(List<Value> vals) {
     return vals.stream().map(v -> toString(v)).collect(Collectors.toList()).toString();
   }
 
-  public static String getValueAsString(Value val) {
-    if (val instanceof NumberValue) return getValueAsString((NumberValue) val);
-    if (val instanceof DateTimeValue) return getValueAsString((DateTimeValue) val);
-    if (val instanceof BooleanValue) return getValueAsString((BooleanValue) val);
-    return ((StringValue) val).getValue();
+  public static String toStringValue(Value val) {
+    if (val instanceof NumberValue) return toStringValue((NumberValue) val);
+    if (val instanceof DateTimeValue) return toStringValue((DateTimeValue) val);
+    if (val instanceof BooleanValue) return toStringValue((BooleanValue) val);
+    return toStringValue((StringValue) val);
   }
 
-  public static String getValueAsString(BooleanValue val) {
+  public static String toStringValue(StringValue val) {
+    return val.getValue();
+  }
+
+  public static String toStringValue(BooleanValue val) {
     return val.isValue().toString();
   }
 
-  public static String getValueAsString(NumberValue val) {
+  public static String toStringValue(NumberValue val) {
     return val.getValue().toPlainString();
   }
 
-  public static String getValueAsString(DateTimeValue val) {
+  public static String toStringValue(DateTimeValue val) {
     return DateUtil.format(val.getValue());
   }
 }

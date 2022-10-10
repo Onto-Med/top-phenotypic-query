@@ -21,6 +21,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.constants.Pi;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.True;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Last;
+import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
 import care.smith.top.top_phenotypic_query.util.ValueUtil;
 
 public class C2R {
@@ -97,20 +98,20 @@ public class C2R {
     return result;
   }
 
-  public Expression calc(Expression exp, FunctionEntity defaultAggregateFunction) {
+  private Expression calc(Expression exp, FunctionEntity defaultAggregateFunction) {
     if (exp.getConstantId() != null) return calcConstant(exp);
     if (exp.getEntityId() != null) return calcVariable(exp);
     return calcFunction(exp, defaultAggregateFunction);
   }
 
-  public Expression calcConstant(Expression exp) {
+  private Expression calcConstant(Expression exp) {
     Exceptions.checkConstantExists(exp, constants);
     Expression result = getConstant(exp.getConstantId()).getValueExpression();
     log.info("set constant: {} = {}", exp.getConstantId(), ValueUtil.toString(result.getValue()));
     return result;
   }
 
-  public Expression calcVariable(Expression exp) {
+  private Expression calcVariable(Expression exp) {
     Exceptions.checkVariableIsSet(exp, variables);
     Expression result = variables.get(exp.getEntityId());
     log.info("set variable: {} = {}", exp.getEntityId(), ValueUtil.toString(result.getValue()));
@@ -187,7 +188,7 @@ public class C2R {
       return getConstant(exp.getConstantId()).getConstant().getTitle();
     if (exp.getValue() != null) return ValueUtil.toString(exp.getValue());
     if (exp.getValues() != null) return ValueUtil.toString(exp.getValues());
-    if (exp.getRestriction() != null) return ValueUtil.toString(exp.getValues());
+    if (exp.getRestriction() != null) return RestrictionUtil.toString(exp.getRestriction());
     return toStringFunction(exp);
   }
 
