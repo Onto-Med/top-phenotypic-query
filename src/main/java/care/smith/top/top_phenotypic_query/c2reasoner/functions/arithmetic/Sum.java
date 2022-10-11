@@ -40,8 +40,6 @@ public class Sum extends FunctionEntity {
     args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
     BigDecimal result = BigDecimal.ZERO;
     for (Expression arg : args) result = result.add(ExpressionUtil.getValueNumber(arg), mc);
-    Expression res = ValueUtil.toExpression(result);
-    logResult(res);
-    return res;
+    return ValueUtil.toExpression(result);
   }
 }

@@ -35,8 +35,6 @@ public class Last extends FunctionEntity {
     args = c2r.calculate(args, defaultAggregateFunction);
     args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
     Collections.sort(args, ValueUtil.VALUE_DATE_COMPARATOR);
-    Expression res = args.get(args.size() - 1);
-    logResult(res);
-    return res;
+    return args.get(args.size() - 1);
   }
 }

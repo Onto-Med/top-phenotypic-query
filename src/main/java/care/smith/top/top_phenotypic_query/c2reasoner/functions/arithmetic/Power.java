@@ -57,8 +57,6 @@ public class Power extends FunctionEntity {
     if (signOf2 == -1)
       result = BigDecimal.ONE.divide(result, mc.getPrecision(), RoundingMode.HALF_UP);
 
-    Expression res = ValueUtil.toExpression(result);
-    logResult(res);
-    return res;
+    return ValueUtil.toExpression(result);
   }
 }

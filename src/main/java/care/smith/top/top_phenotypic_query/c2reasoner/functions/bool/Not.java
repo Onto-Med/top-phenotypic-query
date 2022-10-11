@@ -1,36 +1,41 @@
-package care.smith.top.simple_onto_api.calculator.functions.bool;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.bool;
 
 import java.util.List;
 
-import care.smith.top.simple_onto_api.calculator.Exceptions;
-import care.smith.top.simple_onto_api.calculator.functions.Function;
-import care.smith.top.simple_onto_api.calculator.functions.aggregate.Aggregator;
-import care.smith.top.simple_onto_api.model.enums.Datatype;
-import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.DataType;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.ValueUtil;
 
-public class Not extends Function {
+public class Not extends FunctionEntity {
 
-  private static Not instance = null;
+  private static Not INSTANCE = new Not();
 
   private Not() {
-    super("not", "not", Notation.PREFIX);
-    minArgumentsNumber(1);
-    maxArgumentsNumber(1);
+    super(
+        new ExpressionFunction()
+            .id("not")
+            .title("not")
+            .minArgumentNumber(1)
+            .maxArgumentNumber(1)
+            .notation(NotationEnum.PREFIX));
   }
 
   public static Not get() {
-    if (instance == null) instance = new Not();
-    return instance;
+    return INSTANCE;
   }
 
   @Override
-  public Value calculate(List<Value> values, Function defaultAggregateFunction) {
-    Exceptions.checkArgumentsNumber(this, values);
-    Exceptions.checkArgumentsContainLists(this, values);
-    Exceptions.checkArgumentsType(this, Datatype.BOOLEAN, values);
-    values = Aggregator.flatten(values);
-    BooleanValue value = values.get(0).asBooleanValue();
-    return new BooleanValue(!value.getValue());
+  public Expression calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+    Exceptions.checkArgumentsNumber(getFunction(), args);
+    Expression arg = c2r.calculate(args.get(0), defaultAggregateFunction);
+    Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
+    if (ValueUtil.hasValueTrue(arg)) return ValueUtil.getExpressionFalse();
+    return ValueUtil.getExpressionTrue();
   }
 }

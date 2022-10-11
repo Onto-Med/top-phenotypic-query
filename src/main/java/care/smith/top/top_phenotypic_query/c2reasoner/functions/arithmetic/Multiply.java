@@ -42,8 +42,6 @@ public class Multiply extends FunctionEntity {
     BigDecimal arg1 = ExpressionUtil.getValueNumber(args.get(0));
     BigDecimal arg2 = ExpressionUtil.getValueNumber(args.get(1));
     BigDecimal mul = arg1.multiply(arg2, mc);
-    Expression res = ValueUtil.toExpression(mul);
-    logResult(res);
-    return res;
+    return ValueUtil.toExpression(mul);
   }
 }

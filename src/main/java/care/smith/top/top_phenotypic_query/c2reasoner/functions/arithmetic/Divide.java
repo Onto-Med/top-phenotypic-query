@@ -42,8 +42,6 @@ public class Divide extends FunctionEntity {
     BigDecimal arg1 = ExpressionUtil.getValueNumber(args.get(0));
     BigDecimal arg2 = ExpressionUtil.getValueNumber(args.get(1));
     BigDecimal div = arg1.divide(arg2, mc);
-    Expression res = ValueUtil.toExpression(div);
-    logResult(res);
-    return res;
+    return ValueUtil.toExpression(div);
   }
 }

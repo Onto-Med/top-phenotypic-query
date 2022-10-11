@@ -42,8 +42,6 @@ public class Subtract extends FunctionEntity {
     BigDecimal arg1 = ExpressionUtil.getValueNumber(args.get(0));
     BigDecimal arg2 = ExpressionUtil.getValueNumber(args.get(1));
     BigDecimal sub = arg1.subtract(arg2, mc);
-    Expression res = ValueUtil.toExpression(sub);
-    logResult(res);
-    return res;
+    return ValueUtil.toExpression(sub);
   }
 }

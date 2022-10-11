@@ -28,7 +28,7 @@ public class Exceptions {
 
   public static void checkArgumentType(ExpressionFunction f, DataType dt, Expression arg) {
     String msg = "The argument '%s' has a wrong data type for the function '%s'!";
-    if (dt != arg.getValue().getDataType())
+    if (dt != ExpressionUtil.getDataType(arg))
       throw new ArithmeticException(
           String.format(msg, ExpressionUtil.toStringValues(arg), f.getId()));
   }
@@ -40,13 +40,23 @@ public class Exceptions {
         String.format(msg, ExpressionUtil.toStringValues(arg), f.getId()));
   }
 
-  public static void checkArgumentsContainLists(ExpressionFunction f, List<Expression> args) {
-    String msg =
-        "The arguments of the function '%s' must be either single values or lists of single values!";
-    for (Expression arg : args) {
-      if (arg.getValues() != null && !arg.getValues().isEmpty())
-        throw new ArithmeticException(String.format(msg, f.getId()));
-    }
+  //  public static void checkArgumentsContainLists(ExpressionFunction f, List<Expression> args) {
+  //    String msg = "The arguments of the function '%s' must be single values!";
+  //    for (Expression arg : args) {
+  //      if (arg.getValues() != null && !arg.getValues().isEmpty())
+  //        throw new ArithmeticException(String.format(msg, f.getId()));
+  //    }
+  //  }
+
+  public static void checkArgumentHasValue(ExpressionFunction f, Expression arg) {
+    String msg = "The argument of the function '%s' must have a single value!";
+    if (arg.getValue() == null) throw new ArithmeticException(String.format(msg, f.getId()));
+  }
+
+  public static void checkArgumentHasValueOfType(
+      ExpressionFunction f, DataType dt, Expression arg) {
+    checkArgumentHasValue(f, arg);
+    checkArgumentType(f, dt, arg);
   }
 
   public static void checkArgumentsNumber(ExpressionFunction f, List<Expression> args) {

@@ -42,8 +42,6 @@ public class Add extends FunctionEntity {
     BigDecimal arg1 = ExpressionUtil.getValueNumber(args.get(0));
     BigDecimal arg2 = ExpressionUtil.getValueNumber(args.get(1));
     BigDecimal sum = arg1.add(arg2);
-    Expression res = ValueUtil.toExpression(sum);
-    logResult(res);
-    return res;
+    return ValueUtil.toExpression(sum);
   }
 }

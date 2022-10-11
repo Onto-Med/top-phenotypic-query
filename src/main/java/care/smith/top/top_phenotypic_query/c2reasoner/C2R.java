@@ -27,6 +27,10 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Multi
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Subtract;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Sum;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.MinTrue;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Or;
 import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
 import care.smith.top.top_phenotypic_query.util.ValueUtil;
 
@@ -69,10 +73,10 @@ public class C2R {
     //    addFunction(PlusYears.get());
     //    addFunction(PlusMonths.get());
     //    addFunction(PlusDays.get());
-    //    addFunction(And.get());
-    //    addFunction(Or.get());
-    //    addFunction(Not.get());
-    //    addFunction(MinTrue.get());
+    addFunction(And.get());
+    addFunction(Or.get());
+    addFunction(Not.get());
+    addFunction(MinTrue.get());
     //    addFunction(Eq.get());
     //    addFunction(Ge.get());
     //    addFunction(Gt.get());
@@ -101,14 +105,6 @@ public class C2R {
   }
 
   public Expression calculate(Expression exp, FunctionEntity defaultAggregateFunction) {
-    String expStr = toString(exp);
-    log.info("start calculating math expression: {} ...", expStr);
-    Expression result = calc(exp, defaultAggregateFunction);
-    log.info("result of calculating math expression: {} = {}", expStr, toString(result));
-    return result;
-  }
-
-  private Expression calc(Expression exp, FunctionEntity defaultAggregateFunction) {
     if (exp.getConstantId() != null) return calcConstant(exp);
     if (exp.getEntityId() != null) return calcVariable(exp);
     if (exp.getFunctionId() != null) return calcFunction(exp, defaultAggregateFunction);
@@ -116,29 +112,37 @@ public class C2R {
   }
 
   private Expression calcConstant(Expression exp) {
+    log.info("start setting constant: {} ...", exp.getConstantId());
     Exceptions.checkConstantExists(exp, constants);
     Expression result = getConstant(exp.getConstantId()).getValueExpression();
-    log.info("set constant: {} = {}", exp.getConstantId(), ValueUtil.toString(result.getValue()));
+    log.info(
+        "end setting constant: {} = {}",
+        exp.getConstantId(),
+        ValueUtil.toString(result.getValue()));
     return result;
   }
 
   private Expression calcVariable(Expression exp) {
+    log.info("start setting variable: {} ...", exp.getEntityId());
     Exceptions.checkVariableIsSet(exp, variables);
     Expression result = variables.get(exp.getEntityId());
-    log.info("set variable: {} = {}", exp.getEntityId(), ValueUtil.toString(result.getValue()));
+    log.info(
+        "end setting variable: {} = {}", exp.getEntityId(), ValueUtil.toString(result.getValue()));
     return result;
   }
 
-  //  List<Expression> vals =
-  //	        exp.getArguments().stream()
-  //	            .map(e -> calc(e, defaultAggregateFunction))
-  //	            .collect(Collectors.toList());
-
   public Expression calcFunction(Expression exp, FunctionEntity defaultAggregateFunction) {
+    String expStr = toString(exp);
+    log.info("start calculating function '{}': {} ...", exp.getFunctionId(), expStr);
     Exceptions.checkFunctionExists(exp, functions);
-    log.info("start calculating function '{}': {} ...", exp.getFunctionId(), toString(exp));
     FunctionEntity func = getFunction(exp.getFunctionId());
-    return func.calculate(exp.getArguments(), defaultAggregateFunction, this);
+    Expression result = func.calculate(exp.getArguments(), defaultAggregateFunction, this);
+    log.info(
+        "end calculating function '{}': {} = {}",
+        exp.getFunctionId(),
+        expStr,
+        ValueUtil.toString(result.getValue()));
+    return result;
   }
 
   public void addFunction(FunctionEntity function) {

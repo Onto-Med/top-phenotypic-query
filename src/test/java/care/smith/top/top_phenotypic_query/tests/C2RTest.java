@@ -1,6 +1,8 @@
 package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,6 +14,7 @@ import care.smith.top.model.Expression;
 import care.smith.top.model.NumberValue;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
+import care.smith.top.top_phenotypic_query.util.ValueUtil;
 
 public class C2RTest {
 
@@ -73,23 +76,83 @@ public class C2RTest {
   //        values.stream().map(v -> v.getValueDecimal().intValue()).collect(Collectors.toSet()));
   //  }
   //
-  //  @Test
-  //  public void testMinTrue() {
-  //    DecimalValue minTrueV = new DecimalValue(2);
-  //    ConstantExpression minTrue = new ConstantExpression(minTrueV);
-  //    BooleanValue v1 = new BooleanValue(true);
-  //    BooleanValue v2 = new BooleanValue(false);
-  //    BooleanValue v3 = new BooleanValue(true);
-  //    ConstantExpression s1 = new ConstantExpression(v1);
-  //    ConstantExpression s2 = new ConstantExpression(v2);
-  //    ConstantExpression s3 = new ConstantExpression(v3);
-  //
-  //    Calculator c = new Calculator();
-  //    MathExpression e = new FunctionExpression("minTrue").arg(minTrue).arg(s1).arg(s2);
-  //    assertFalse(c.calculate(e).asBooleanValue().getValue());
-  //    e = new FunctionExpression("minTrue").arg(minTrue).arg(s1).arg(s2).arg(s3);
-  //    assertTrue(c.calculate(e).asBooleanValue().getValue());
-  //  }
+
+  @Test
+  public void testNot() {
+    Expression v1 = ValueUtil.getExpressionFalse();
+    Expression v2 = ValueUtil.getExpressionTrue();
+
+    C2R c = new C2R();
+    Expression e = new Expression().functionId("not").addArgumentsItem(v1);
+    assertTrue(ValueUtil.hasValueTrue(c.calculate(e)));
+
+    e = new Expression().functionId("not").addArgumentsItem(v2);
+    assertFalse(ValueUtil.hasValueTrue(c.calculate(e)));
+  }
+
+  @Test
+  public void testOr() {
+    Expression v1 = ValueUtil.getExpressionFalse();
+    Expression v2 = ValueUtil.getExpressionTrue();
+    Expression v3 = ValueUtil.getExpressionFalse();
+
+    C2R c = new C2R();
+    Expression e =
+        new Expression()
+            .functionId("or")
+            .addArgumentsItem(v1)
+            .addArgumentsItem(v2)
+            .addArgumentsItem(v3);
+    assertTrue(ValueUtil.hasValueTrue(c.calculate(e)));
+
+    e = new Expression().functionId("or").addArgumentsItem(v1).addArgumentsItem(v3);
+    assertFalse(ValueUtil.hasValueTrue(c.calculate(e)));
+  }
+
+  @Test
+  public void testAnd() {
+    Expression v1 = ValueUtil.getExpressionTrue();
+    Expression v2 = ValueUtil.getExpressionFalse();
+    Expression v3 = ValueUtil.getExpressionTrue();
+
+    C2R c = new C2R();
+    Expression e =
+        new Expression()
+            .functionId("and")
+            .addArgumentsItem(v1)
+            .addArgumentsItem(v2)
+            .addArgumentsItem(v3);
+    assertFalse(ValueUtil.hasValueTrue(c.calculate(e)));
+
+    e = new Expression().functionId("and").addArgumentsItem(v1).addArgumentsItem(v3);
+    assertTrue(ValueUtil.hasValueTrue(c.calculate(e)));
+  }
+
+  @Test
+  public void testMinTrue() {
+    Expression minTrue = ValueUtil.toExpression(2);
+    Expression v1 = ValueUtil.getExpressionTrue();
+    Expression v2 = ValueUtil.getExpressionFalse();
+    Expression v3 = ValueUtil.getExpressionTrue();
+
+    C2R c = new C2R();
+    Expression e =
+        new Expression()
+            .functionId("minTrue")
+            .addArgumentsItem(minTrue)
+            .addArgumentsItem(v1)
+            .addArgumentsItem(v2);
+    assertFalse(ValueUtil.hasValueTrue(c.calculate(e)));
+
+    e =
+        new Expression()
+            .functionId("minTrue")
+            .addArgumentsItem(minTrue)
+            .addArgumentsItem(v1)
+            .addArgumentsItem(v2)
+            .addArgumentsItem(v3);
+    assertTrue(ValueUtil.hasValueTrue(c.calculate(e)));
+  }
   //
   //  @Test
   //  public void testList() {

@@ -33,6 +33,34 @@ public class ValueUtil {
     return new BigDecimal(num.toString());
   }
 
+  public static Value toValue(boolean val) {
+    return new BooleanValue().value(val).dataType(DataType.BOOLEAN);
+  }
+
+  public static Value getValueTrue() {
+    return toValue(true);
+  }
+
+  public static Value getValueFalse() {
+    return toValue(false);
+  }
+
+  public static boolean hasValueTrue(Expression exp) {
+    return ((BooleanValue) exp.getValue()).isValue();
+  }
+
+  public static boolean hasValueFalse(Expression exp) {
+    return !hasValueTrue(exp);
+  }
+
+  public static Expression getExpressionTrue() {
+    return toExpression(getValueTrue());
+  }
+
+  public static Expression getExpressionFalse() {
+    return toExpression(getValueFalse());
+  }
+
   public static Value toValue(Number num) {
     return new NumberValue().value(toDecimal(num)).dataType(DataType.NUMBER);
   }
