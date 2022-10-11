@@ -1,31 +1,40 @@
-package care.smith.top.simple_onto_api.calculator.functions.aggregate;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
 
 import java.util.Collections;
 import java.util.List;
 
-import care.smith.top.simple_onto_api.calculator.Exceptions;
-import care.smith.top.simple_onto_api.calculator.functions.Function;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.ValueUtil;
 
-public class First extends Function {
+public class First extends FunctionEntity {
 
-  private static First instance = null;
+  private static final First INSTANCE = new First();
 
   private First() {
-    super("first", "first", Notation.PREFIX);
-    minArgumentsNumber(1);
+    super(
+        new ExpressionFunction()
+            .id("first")
+            .title("first")
+            .minArgumentNumber(1)
+            .notation(NotationEnum.PREFIX));
   }
 
   public static First get() {
-    if (instance == null) instance = new First();
-    return instance;
+    return INSTANCE;
   }
 
   @Override
-  public Value calculate(List<Value> values, Function defaultAggregateFunction) {
-    Exceptions.checkArgumentsNumber(this, values);
-    values = Aggregator.aggregateIfMultiple(values, defaultAggregateFunction);
-    Collections.sort(values);
-    return values.get(0);
+  public Expression calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+    Exceptions.checkArgumentsNumber(getFunction(), args);
+    args = c2r.calculate(args, defaultAggregateFunction);
+    args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
+    Collections.sort(args, ValueUtil.VALUE_DATE_COMPARATOR);
+    return args.get(0);
   }
 }

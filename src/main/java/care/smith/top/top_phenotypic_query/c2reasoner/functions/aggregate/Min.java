@@ -1,34 +1,45 @@
-package care.smith.top.simple_onto_api.calculator.functions.aggregate;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
 
 import java.util.List;
 
-import care.smith.top.simple_onto_api.calculator.Exceptions;
-import care.smith.top.simple_onto_api.calculator.functions.Function;
-import care.smith.top.simple_onto_api.model.enums.Datatype;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.DataType;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
 
-public class Min extends Function {
+public class Min extends FunctionEntity {
 
-  private static Min instance = null;
+  private static final Min INSTANCE = new Min();
 
   private Min() {
-    super("min", "min", Notation.PREFIX);
-    minArgumentsNumber(1);
+    super(
+        new ExpressionFunction()
+            .id("min")
+            .title("min")
+            .minArgumentNumber(1)
+            .notation(NotationEnum.PREFIX));
   }
 
   public static Min get() {
-    if (instance == null) instance = new Min();
-    return instance;
+    return INSTANCE;
   }
 
   @Override
-  public Value calculate(List<Value> values, Function defaultAggregateFunction) {
-    Exceptions.checkArgumentsNumber(this, values);
-    Exceptions.checkArgumentsType(this, Datatype.DECIMAL, values);
-    values = Aggregator.aggregateIfMultiple(values, defaultAggregateFunction);
-    Value min = null;
-    for (Value value : values) {
-      if (min == null || value.getValueDecimal().compareTo(min.getValueDecimal()) < 0) min = value;
+  public Expression calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+    Exceptions.checkArgumentsNumber(getFunction(), args);
+    args = c2r.calculate(args, defaultAggregateFunction);
+    Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
+    args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
+    Expression min = null;
+    for (Expression arg : args) {
+      if (min == null
+          || ExpressionUtil.getValueNumber(arg).compareTo(ExpressionUtil.getValueNumber(min)) < 0)
+        min = arg;
     }
     return min;
   }

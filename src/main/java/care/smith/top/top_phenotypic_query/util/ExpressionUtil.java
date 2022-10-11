@@ -37,7 +37,8 @@ public class ExpressionUtil {
 
   public static DataType getDataType(Expression exp) {
     if (exp.getValue() != null) return exp.getValue().getDataType();
-    if (exp.getValues() != null && !exp.getValues().isEmpty()) exp.getValues().get(0).getDataType();
+    if (exp.getValues() != null && !exp.getValues().isEmpty())
+      return exp.getValues().get(0).getDataType();
     return null;
   }
 

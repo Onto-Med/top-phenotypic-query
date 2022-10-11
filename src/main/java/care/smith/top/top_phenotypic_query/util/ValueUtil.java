@@ -61,6 +61,10 @@ public class ValueUtil {
     return toExpression(getValueFalse());
   }
 
+  public static Value toValue(Number num, LocalDateTime dateTime) {
+    return toValue(num).dateTime(dateTime);
+  }
+
   public static Value toValue(Number num) {
     return new NumberValue().value(toDecimal(num)).dataType(DataType.NUMBER);
   }
@@ -79,6 +83,10 @@ public class ValueUtil {
 
   public static Expression toExpression(Value... vals) {
     return toExpression(List.of(vals));
+  }
+
+  public static Expression toExpression(Number num, LocalDateTime dateTime) {
+    return toExpression(toValue(num, dateTime));
   }
 
   public static Expression toExpression(Number num) {

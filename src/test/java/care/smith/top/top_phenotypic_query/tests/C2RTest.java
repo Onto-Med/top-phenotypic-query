@@ -6,13 +6,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.NumberValue;
+import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Last;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Min;
 import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
 import care.smith.top.top_phenotypic_query.util.ValueUtil;
 
@@ -239,48 +246,64 @@ public class C2RTest {
   //    assertFalse(c.calculate(e4).asBooleanValue().getValue());
   //  }
   //
-  //  @Test
-  //  public void testAvg() {
-  //    Calculator c = new Calculator();
-  //    MathExpression e =
-  //        new FunctionExpression("avg")
-  //            .arg(new ConstantExpression(new DecimalValue(3)))
-  //            .arg(new ConstantExpression(new DecimalValue(5)))
-  //            .arg(new ConstantExpression(new DecimalValue(10)));
-  //
-  //    assertEquals(
-  //        new BigDecimal("6.00"), c.calculate(e).getValueDecimal().setScale(2,
-  // RoundingMode.HALF_UP));
-  //  }
-  //
-  //  @Test
-  //  public void testAvg2() {
-  //    Calculator c = new Calculator();
-  //    MathExpression e =
-  //        new FunctionExpression("avg")
-  //            .arg(new VariableExpression("a"))
-  //            .arg(new ConstantExpression(new DecimalValue(5)));
-  //
-  //    DecimalValue a1 = new DecimalValue(12, LocalDateTime.parse("2020-01-02T00:00"));
-  //    DecimalValue a2 = new DecimalValue(3, LocalDateTime.parse("2021-01-02T00:00"));
-  //    DecimalValue a3 = new DecimalValue(10, LocalDateTime.parse("2022-01-02T00:00"));
-  //    DecimalValue a4 = new DecimalValue(7, LocalDateTime.parse("2019-01-02T00:00"));
-  //
-  //    c.setVariable("a", a1, a2, a3, a4);
-  //
-  //    assertEquals(
-  //        new BigDecimal("4.00"),
-  //        c.calculate(e, Min.get()).getValueDecimal().setScale(2, RoundingMode.HALF_UP));
-  //    assertEquals(
-  //        new BigDecimal("8.50"),
-  //        c.calculate(e, Max.get()).getValueDecimal().setScale(2, RoundingMode.HALF_UP));
-  //    assertEquals(
-  //        new BigDecimal("6.00"),
-  //        c.calculate(e, First.get()).getValueDecimal().setScale(2, RoundingMode.HALF_UP));
-  //    assertEquals(
-  //        new BigDecimal("7.50"),
-  //        c.calculate(e, Last.get()).getValueDecimal().setScale(2, RoundingMode.HALF_UP));
-  //  }
+  @Test
+  public void testAvg() {
+    C2R c = new C2R();
+    Expression e =
+        new Expression()
+            .functionId("avg")
+            .addArgumentsItem(ValueUtil.toExpression(3))
+            .addArgumentsItem(ValueUtil.toExpression(5))
+            .addArgumentsItem(ValueUtil.toExpression(10));
+
+    assertEquals(
+        new BigDecimal("6.00"),
+        ExpressionUtil.getValueNumber(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
+
+    c = new C2R();
+    e =
+        new Expression()
+            .functionId("avg")
+            .addArgumentsItem(ValueUtil.toExpression(2, 3, 4))
+            .addArgumentsItem(ValueUtil.toExpression(5))
+            .addArgumentsItem(ValueUtil.toExpression(10));
+
+    assertEquals(
+        new BigDecimal("6.00"),
+        ExpressionUtil.getValueNumber(c.calculate(e, Avg.get())).setScale(2, RoundingMode.HALF_UP));
+  }
+
+  @Test
+  public void testAvg2() {
+    C2R c = new C2R();
+    Expression e =
+        new Expression()
+            .functionId("avg")
+            .addArgumentsItem(new Expression().entityId("a"))
+            .addArgumentsItem(ValueUtil.toExpression(5));
+
+    Value a1 = ValueUtil.toValue(12, LocalDateTime.parse("2020-01-02T00:00"));
+    Value a2 = ValueUtil.toValue(3, LocalDateTime.parse("2021-01-02T00:00"));
+    Value a3 = ValueUtil.toValue(10, LocalDateTime.parse("2022-01-02T00:00"));
+    Value a4 = ValueUtil.toValue(7, LocalDateTime.parse("2019-01-02T00:00"));
+
+    c.setVariable("a", a1, a2, a3, a4);
+
+    assertEquals(
+        new BigDecimal("4.00"),
+        ExpressionUtil.getValueNumber(c.calculate(e, Min.get())).setScale(2, RoundingMode.HALF_UP));
+    assertEquals(
+        new BigDecimal("8.50"),
+        ExpressionUtil.getValueNumber(c.calculate(e, Max.get())).setScale(2, RoundingMode.HALF_UP));
+    assertEquals(
+        new BigDecimal("6.00"),
+        ExpressionUtil.getValueNumber(c.calculate(e, First.get()))
+            .setScale(2, RoundingMode.HALF_UP));
+    assertEquals(
+        new BigDecimal("7.50"),
+        ExpressionUtil.getValueNumber(c.calculate(e, Last.get()))
+            .setScale(2, RoundingMode.HALF_UP));
+  }
   //
   //  @Test
   //  public void testAvg3() {
@@ -308,33 +331,33 @@ public class C2RTest {
   //        c.calculate(e, Last.get()).getValueDecimal().setScale(2, RoundingMode.HALF_UP));
   //  }
   //
-  //  @Test
-  //  public void testMin() {
-  //    Calculator c = new Calculator();
-  //    MathExpression e =
-  //        new FunctionExpression("min")
-  //            .arg(new ConstantExpression(new DecimalValue(5)))
-  //            .arg(new ConstantExpression(new DecimalValue(3)))
-  //            .arg(new ConstantExpression(new DecimalValue(10)));
-  //
-  //    assertEquals(
-  //        new BigDecimal("3.00"), c.calculate(e).getValueDecimal().setScale(2,
-  // RoundingMode.HALF_UP));
-  //  }
-  //
-  //  @Test
-  //  public void testMax() {
-  //    Calculator c = new Calculator();
-  //    MathExpression e =
-  //        new FunctionExpression("max")
-  //            .arg(new ConstantExpression(new DecimalValue(15)))
-  //            .arg(new ConstantExpression(new DecimalValue(3)))
-  //            .arg(new ConstantExpression(new DecimalValue(10)));
-  //
-  //    assertEquals(
-  //        new BigDecimal("15.00"),
-  //        c.calculate(e).getValueDecimal().setScale(2, RoundingMode.HALF_UP));
-  //  }
+  @Test
+  public void testMin() {
+    C2R c = new C2R();
+    Expression e =
+        new Expression()
+            .functionId("min")
+            .addArgumentsItem(ValueUtil.toExpression(5))
+            .addArgumentsItem(ValueUtil.toExpression(3))
+            .addArgumentsItem(ValueUtil.toExpression(10));
+    assertEquals(
+        new BigDecimal("3.00"),
+        ExpressionUtil.getValueNumber(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
+  }
+
+  @Test
+  public void testMax() {
+    C2R c = new C2R();
+    Expression e =
+        new Expression()
+            .functionId("max")
+            .addArgumentsItem(ValueUtil.toExpression(5))
+            .addArgumentsItem(ValueUtil.toExpression(13))
+            .addArgumentsItem(ValueUtil.toExpression(10));
+    assertEquals(
+        new BigDecimal("13.00"),
+        ExpressionUtil.getValueNumber(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
+  }
 
   @Test
   public void testBMI() {

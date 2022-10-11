@@ -1,35 +1,44 @@
-package care.smith.top.simple_onto_api.calculator.functions.aggregate;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import care.smith.top.simple_onto_api.calculator.Exceptions;
-import care.smith.top.simple_onto_api.calculator.functions.Function;
-import care.smith.top.simple_onto_api.model.enums.Datatype;
-import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.DataType;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
+import care.smith.top.top_phenotypic_query.util.ValueUtil;
 
-public class Avg extends Function {
+public class Avg extends FunctionEntity {
 
-  private static Avg instance = null;
+  private static final Avg INSTANCE = new Avg();
 
   private Avg() {
-    super("avg", "avg", Notation.PREFIX);
-    minArgumentsNumber(1);
+    super(
+        new ExpressionFunction()
+            .id("avg")
+            .title("avg")
+            .minArgumentNumber(1)
+            .notation(NotationEnum.PREFIX));
   }
 
   public static Avg get() {
-    if (instance == null) instance = new Avg();
-    return instance;
+    return INSTANCE;
   }
 
   @Override
-  public Value calculate(List<Value> values, Function defaultAggregateFunction) {
-    Exceptions.checkArgumentsNumber(this, values);
-    Exceptions.checkArgumentsType(this, Datatype.DECIMAL, values);
-    values = Aggregator.aggregateIfMultiple(values, defaultAggregateFunction);
+  public Expression calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+    Exceptions.checkArgumentsNumber(getFunction(), args);
+    args = c2r.calculate(args, defaultAggregateFunction);
+    Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
+    args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
     BigDecimal avg = BigDecimal.ZERO;
-    for (Value value : values) avg = avg.add(value.getValueDecimal(), mc);
-    return new DecimalValue(avg.divide(new BigDecimal(values.size()), mc));
+    for (Expression arg : args) avg = avg.add(ExpressionUtil.getValueNumber(arg), mc);
+    return ValueUtil.toExpression(avg.divide(new BigDecimal(args.size()), mc));
   }
 }

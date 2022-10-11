@@ -1,34 +1,45 @@
-package care.smith.top.simple_onto_api.calculator.functions.aggregate;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
 
 import java.util.List;
 
-import care.smith.top.simple_onto_api.calculator.Exceptions;
-import care.smith.top.simple_onto_api.calculator.functions.Function;
-import care.smith.top.simple_onto_api.model.enums.Datatype;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.DataType;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
 
-public class Max extends Function {
+public class Max extends FunctionEntity {
 
-  private static Max instance = null;
+  private static final Max INSTANCE = new Max();
 
   private Max() {
-    super("max", "max", Notation.PREFIX);
-    minArgumentsNumber(1);
+    super(
+        new ExpressionFunction()
+            .id("max")
+            .title("max")
+            .minArgumentNumber(1)
+            .notation(NotationEnum.PREFIX));
   }
 
   public static Max get() {
-    if (instance == null) instance = new Max();
-    return instance;
+    return INSTANCE;
   }
 
   @Override
-  public Value calculate(List<Value> values, Function defaultAggregateFunction) {
-    Exceptions.checkArgumentsNumber(this, values);
-    Exceptions.checkArgumentsType(this, Datatype.DECIMAL, values);
-    values = Aggregator.aggregateIfMultiple(values, defaultAggregateFunction);
-    Value max = null;
-    for (Value value : values) {
-      if (max == null || value.getValueDecimal().compareTo(max.getValueDecimal()) > 0) max = value;
+  public Expression calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+    Exceptions.checkArgumentsNumber(getFunction(), args);
+    args = c2r.calculate(args, defaultAggregateFunction);
+    Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
+    args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
+    Expression max = null;
+    for (Expression arg : args) {
+      if (max == null
+          || ExpressionUtil.getValueNumber(arg).compareTo(ExpressionUtil.getValueNumber(max)) > 0)
+        max = arg;
     }
     return max;
   }

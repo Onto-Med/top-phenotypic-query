@@ -48,6 +48,11 @@ public class Exceptions {
   //    }
   //  }
 
+  public static void checkArgumentHasValues(ExpressionFunction f, Expression arg) {
+    String msg = "The argument of the function '%s' must have values!";
+    if (arg.getValues() == null) throw new ArithmeticException(String.format(msg, f.getId()));
+  }
+
   public static void checkArgumentHasValue(ExpressionFunction f, Expression arg) {
     String msg = "The argument of the function '%s' must have a single value!";
     if (arg.getValue() == null) throw new ArithmeticException(String.format(msg, f.getId()));

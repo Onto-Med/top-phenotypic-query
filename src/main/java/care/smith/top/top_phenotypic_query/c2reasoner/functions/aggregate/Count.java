@@ -1,31 +1,39 @@
-package care.smith.top.simple_onto_api.calculator.functions.aggregate;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
 
 import java.util.List;
 
-import care.smith.top.simple_onto_api.calculator.Exceptions;
-import care.smith.top.simple_onto_api.calculator.functions.Function;
-import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.ValueUtil;
 
-public class Count extends Function {
+public class Count extends FunctionEntity {
 
-  private static Count instance = null;
+  private static final Count INSTANCE = new Count();
 
   private Count() {
-    super("count", "count", Notation.PREFIX);
-    minArgumentsNumber(1);
-    maxArgumentsNumber(1);
+    super(
+        new ExpressionFunction()
+            .id("count")
+            .title("count")
+            .minArgumentNumber(1)
+            .maxArgumentNumber(1)
+            .notation(NotationEnum.PREFIX));
   }
 
   public static Count get() {
-    if (instance == null) instance = new Count();
-    return instance;
+    return INSTANCE;
   }
 
   @Override
-  public Value calculate(List<Value> values, Function defaultAggregateFunction) {
-    Exceptions.checkArgumentsNumber(this, values);
-    values = Aggregator.valueToList(values.get(0));
-    return new DecimalValue(values.size());
+  public Expression calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+    Exceptions.checkArgumentsNumber(getFunction(), args);
+    Expression arg = c2r.calculate(args.get(0), defaultAggregateFunction);
+    Exceptions.checkArgumentHasValues(getFunction(), arg);
+    return ValueUtil.toExpression(arg.getValues().size());
   }
 }

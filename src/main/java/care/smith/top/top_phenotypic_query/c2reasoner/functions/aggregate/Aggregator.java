@@ -29,7 +29,7 @@ public class Aggregator {
     return argToList(args.get(0));
   }
 
-  public static List<Expression> argToList(Expression arg) {
+  private static List<Expression> argToList(Expression arg) {
     if (arg.getValues() != null) return ValueUtil.toExpressionList(arg.getValues());
     return List.of(arg);
   }
