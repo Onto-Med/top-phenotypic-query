@@ -35,10 +35,15 @@ public class ExpressionUtil {
     return ((NumberValue) exp.getValue()).getValue();
   }
 
+  public static String getValueString(Expression exp) {
+    return ((care.smith.top.model.StringValue) exp.getValue()).getValue();
+  }
+
   public static DataType getDataType(Expression exp) {
     if (exp.getValue() != null) return exp.getValue().getDataType();
     if (exp.getValues() != null && !exp.getValues().isEmpty())
       return exp.getValues().get(0).getDataType();
+    if (exp.getRestriction() != null) return exp.getRestriction().getType();
     return null;
   }
 

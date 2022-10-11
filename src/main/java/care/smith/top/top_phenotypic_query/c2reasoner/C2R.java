@@ -120,10 +120,7 @@ public class C2R {
     log.info("start setting constant: {} ...", exp.getConstantId());
     Exceptions.checkConstantExists(exp, constants);
     Expression result = getConstant(exp.getConstantId()).getValueExpression();
-    log.info(
-        "end setting constant: {} = {}",
-        exp.getConstantId(),
-        ValueUtil.toString(result.getValue()));
+    log.info("end setting constant: {} = {}", exp.getConstantId(), toString(result));
     return result;
   }
 
@@ -131,8 +128,7 @@ public class C2R {
     log.info("start setting variable: {} ...", exp.getEntityId());
     Exceptions.checkVariableIsSet(exp, variables);
     Expression result = variables.get(exp.getEntityId());
-    log.info(
-        "end setting variable: {} = {}", exp.getEntityId(), ValueUtil.toString(result.getValue()));
+    log.info("end setting variable: {} = {}", exp.getEntityId(), toString(result));
     return result;
   }
 
@@ -143,10 +139,7 @@ public class C2R {
     FunctionEntity func = getFunction(exp.getFunctionId());
     Expression result = func.calculate(exp.getArguments(), defaultAggregateFunction, this);
     log.info(
-        "end calculating function '{}': {} = {}",
-        exp.getFunctionId(),
-        expStr,
-        ValueUtil.toString(result.getValue()));
+        "end calculating function '{}': {} = {}", exp.getFunctionId(), expStr, toString(result));
     return result;
   }
 

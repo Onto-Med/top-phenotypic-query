@@ -33,8 +33,44 @@ public class ValueUtil {
     return new BigDecimal(num.toString());
   }
 
-  public static Value toValue(boolean val) {
+  public static Value toValue(Boolean val) {
     return new BooleanValue().value(val).dataType(DataType.BOOLEAN);
+  }
+
+  public static Value toValue(Number val) {
+    return new NumberValue().value(toDecimal(val)).dataType(DataType.NUMBER);
+  }
+
+  public static Value toValue(String val) {
+    return new StringValue().value(val).dataType(DataType.STRING);
+  }
+
+  public static Value toValue(LocalDateTime val) {
+    return new DateTimeValue().value(val).dataType(DataType.DATE_TIME);
+  }
+
+  public static List<Value> toBooleanValues(List<Boolean> vals) {
+    return vals.stream().map(v -> toValue(v)).collect(Collectors.toList());
+  }
+
+  public static List<Value> toNumberValues(List<BigDecimal> vals) {
+    return vals.stream().map(v -> toValue(v)).collect(Collectors.toList());
+  }
+
+  public static List<Value> toStringValues(List<String> vals) {
+    return vals.stream().map(v -> toValue(v)).collect(Collectors.toList());
+  }
+
+  public static List<Value> toDateTimeValues(List<LocalDateTime> vals) {
+    return vals.stream().map(v -> toValue(v)).collect(Collectors.toList());
+  }
+
+  public static List<Value> toValueList(Number... nums) {
+    return Stream.of(nums).map(n -> toValue(n)).collect(Collectors.toList());
+  }
+
+  public static Expression toExpression(boolean val) {
+    return toExpression(toValue(val));
   }
 
   public static Value getValueTrue() {
@@ -65,10 +101,6 @@ public class ValueUtil {
     return toValue(num).dateTime(dateTime);
   }
 
-  public static Value toValue(Number num) {
-    return new NumberValue().value(toDecimal(num)).dataType(DataType.NUMBER);
-  }
-
   public static Expression toExpression(Value val) {
     return new Expression().value(val);
   }
@@ -91,10 +123,6 @@ public class ValueUtil {
 
   public static Expression toExpression(Number num) {
     return toExpression(toValue(num));
-  }
-
-  public static List<Value> toValueList(Number... nums) {
-    return Stream.of(nums).map(n -> toValue(n)).collect(Collectors.toList());
   }
 
   public static Expression toExpression(Number... numbers) {
@@ -139,5 +167,21 @@ public class ValueUtil {
 
   public static String toStringValue(DateTimeValue val) {
     return DateUtil.format(val.getValue());
+  }
+
+  public static String getStringValue(Value val) {
+    return ((StringValue) val).getValue();
+  }
+
+  public static BigDecimal getNumberValue(Value val) {
+    return ((NumberValue) val).getValue();
+  }
+
+  public static LocalDateTime getDateTimeValue(Value val) {
+    return ((DateTimeValue) val).getValue();
+  }
+
+  public static Boolean getBooleanValue(Value val) {
+    return ((BooleanValue) val).isValue();
   }
 }

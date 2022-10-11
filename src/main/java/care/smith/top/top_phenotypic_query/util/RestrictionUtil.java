@@ -11,12 +11,17 @@ import java.util.Optional;
 import org.apache.commons.lang3.ObjectUtils;
 
 import care.smith.top.model.BooleanRestriction;
+import care.smith.top.model.BooleanValue;
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
+import care.smith.top.model.DateTimeValue;
 import care.smith.top.model.NumberRestriction;
+import care.smith.top.model.NumberValue;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
+import care.smith.top.model.StringValue;
+import care.smith.top.model.Value;
 import care.smith.top.simple_onto_api.util.StringUtil;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
 
@@ -197,6 +202,37 @@ public class RestrictionUtil {
           ((BooleanRestriction) r).getValues().stream().map(v -> format(v, format)));
     return format.formatList(
         ((StringRestriction) r).getValues().stream().map(v -> format(v, format)));
+  }
+
+  public static List<Value> getValues(Restriction r) {
+	  if (r instanceof NumberRestriction)
+		  return ValueUtil.toNumberValues((NumberRestriction) r).getValues()));
+	  if (r instanceof DateTimeRestriction)
+		  return format.formatList(
+				  ((DateTimeRestriction) r).getValues().stream().map(v -> format(v, format)));
+	  if (r instanceof BooleanRestriction)
+		  return format.formatList(
+				  ((BooleanRestriction) r).getValues().stream().map(v -> format(v, format)));
+	  return format.formatList(
+			  ((StringRestriction) r).getValues().stream().map(v -> format(v, format)));
+  }
+  
+
+
+  public static List<String> getStringValues(Restriction r) {
+	  return ((StringRestriction) r).getValues();
+  }
+  
+  public static BigDecimal getNumberValue(Value val) {
+	  return ((NumberValue) val).getValue();
+  }
+  
+  public static LocalDateTime getDateTimeValue(Value val) {
+	  return ((DateTimeValue) val).getValue();
+  }
+  
+  public static Boolean getBooleanValue(Value val) {
+	  return ((BooleanValue) val).isValue();
   }
 
   public static boolean isEntirePeriod(DateTimeRestriction r) {

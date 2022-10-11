@@ -1,57 +1,60 @@
-package care.smith.top.simple_onto_api.calculator.functions.advanced;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import care.smith.top.simple_onto_api.calculator.Exceptions;
-import care.smith.top.simple_onto_api.calculator.functions.Function;
-import care.smith.top.simple_onto_api.calculator.functions.aggregate.Aggregator;
-import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
-import care.smith.top.simple_onto_api.model.property.data.value.StringValue;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.DataType;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.model.Quantifier;
+import care.smith.top.model.Restriction;
+import care.smith.top.model.RestrictionOperator;
+import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
+import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
+import care.smith.top.top_phenotypic_query.util.ValueUtil;
 
-public class In extends Function {
+public class In extends FunctionEntity {
 
-  private static In instance = null;
+  private static final In INSTANCE = new In();
 
   private In() {
-    super("in", "in", Function.Notation.PREFIX);
-    minArgumentsNumber(3);
-    maxArgumentsNumber(5);
+    super(
+        new ExpressionFunction()
+            .id("in")
+            .title("in")
+            .minArgumentNumber(2)
+            .maxArgumentNumber(2)
+            .notation(NotationEnum.PREFIX));
   }
 
   public static In get() {
-    if (instance == null) instance = new In();
-    return instance;
+    return INSTANCE;
   }
 
   @Override
-  public Value calculate(List<Value> values, Function defaultAggregateFunction) {
-    Exceptions.checkArgumentsNumber(this, values);
-    Exceptions.checkArgumentsHaveSameType(this, values.subList(0, 2));
+  public Expression calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+    Exceptions.checkArgumentsNumber(getFunction(), args);
+    args = c2r.calculate(args, defaultAggregateFunction);
+    Exceptions.checkArgumentsHaveSameType(getFunction(), args.subList(0, 2));
 
-    List<Value> vals;
-    List<Value> range = Aggregator.valueToList(values.get(1));
-    List<Value> limits = Aggregator.valueToList(values.get(2));
-    Value quantifier = new StringValue("some");
-    Value quantifierValue = null;
+    if (args.get(1).getValues() != null) {
+      Expression val = Aggregator.aggregate(args.get(0), defaultAggregateFunction, c2r);
+      return ValueUtil.toExpression(valueInSet(val.getValue(), args.get(1).getValues()));
+    }
 
-    if (values.size() > 3) {
-      vals = Aggregator.valueToList(values.get(0));
-      quantifier = values.get(3);
-      if (values.size() > 4) quantifierValue = values.get(4);
-    } else vals = List.of(Aggregator.aggregate(values.get(0), defaultAggregateFunction));
-
-    if (limits.isEmpty()) return calculateInSet(vals, range, quantifier, quantifierValue);
-    return calculateInInterval(vals, range, limits, quantifier, quantifierValue);
+    Restriction restr = args.get(1).getRestriction();
+    if (RestrictionUtil.hasInterval(restr))
+      return calculateInInterval(args.get(0).getValues(), restr);
+    return calculateInSet(args.get(0).getValues(), RestrictionUtil.getValuesAsString(restr));
   }
 
-  private Value calculateInInterval(
-      List<Value> values,
-      List<Value> range,
-      List<Value> limits,
-      Value quantifier,
-      Value quantifierValue) {
+  private Expression calculateInInterval(List<Value> values, Restriction restr) {
     int hits = 0;
     for (Value v : values) if (valueInInterval(v, range, limits)) hits++;
     return new BooleanValue(checkQuantifier(values.size(), hits, quantifier, quantifierValue));
@@ -64,46 +67,46 @@ public class In extends Function {
     return true;
   }
 
-  private static boolean checkLimit(Value value, Value limitValue, Value limit) {
-    BigDecimal v = value.getValueDecimal();
-    BigDecimal lv = limitValue.getValueDecimal();
-    String l = limit.getValueString();
-    if (("gt".equals(l) || ">".equals(l)) && v.compareTo(lv) > 0) return true;
-    if (("ge".equals(l) || ">=".equals(l)) && v.compareTo(lv) >= 0) return true;
-    if (("lt".equals(l) || "<".equals(l)) && v.compareTo(lv) < 0) return true;
-    if (("le".equals(l) || "<=".equals(l)) && v.compareTo(lv) <= 0) return true;
+  private static boolean checkLimit(Value value, RestrictionOperator oper, Value limit) {
+    BigDecimal val = ValueUtil.getNumberValue(value);
+    BigDecimal lim = ValueUtil.getNumberValue(limit);
+    if (oper == RestrictionOperator.GREATER_THAN && val.compareTo(lim) > 0) return true;
+    if (oper == RestrictionOperator.GREATER_THAN_OR_EQUAL_TO && val.compareTo(lim) >= 0)
+      return true;
+    if (oper == RestrictionOperator.LESS_THAN && val.compareTo(lim) < 0) return true;
+    if (oper == RestrictionOperator.LESS_THAN_OR_EQUAL_TO && val.compareTo(lim) <= 0) return true;
     return false;
   }
 
-  private Value calculateInSet(
-      List<Value> values, List<Value> range, Value quantifier, Value quantifierValue) {
+  private Expression calculateInSet(
+      List<Value> values, List<Value> set, Quantifier quan, Integer card) {
     int hits = 0;
-    for (Value v : values) if (valueInSet(v, range)) hits++;
-    return new BooleanValue(checkQuantifier(values.size(), hits, quantifier, quantifierValue));
+    for (Value v : values) if (valueInSet(v, Restriction)) hits++;
+    return ValueUtil.toExpression(checkQuantifier(values.size(), hits, quan, card));
   }
 
   public static boolean valueInSet(Value value, List<Value> range) {
     for (Value member : range) {
-      if (value.hasStringDatatype()) {
-        if (value.getValueString().equals(member.getValueString())) return true;
-      } else if (value.getValueDecimal().compareTo(member.getValueDecimal()) == 0) return true;
+      if (value.getDataType() == DataType.STRING) {
+        if (ValueUtil.getStringValue(value).equals(ValueUtil.getStringValue(member))) return true;
+      } else if (value.getDataType() == DataType.NUMBER) {
+        if (ValueUtil.getNumberValue(value).compareTo(ValueUtil.getNumberValue(member)) == 0)
+          return true;
+      } else if (value.getDataType() == DataType.DATE_TIME) {
+        if (ValueUtil.getDateTimeValue(value).equals(ValueUtil.getDateTimeValue(member)))
+          return true;
+      } else if (value.getDataType() == DataType.BOOLEAN) {
+        if (ValueUtil.getBooleanValue(value).equals(ValueUtil.getBooleanValue(member))) return true;
+      }
     }
     return false;
   }
 
-  private boolean checkQuantifier(int size, int hits, Value quantifier, Value quantifierValue) {
-    String q = quantifier.getValueString();
-    if ("some".equals(q) && hits > 0) return true;
-    if ("all".equals(q) && hits == size) return true;
-    if ("exact".equals(q)
-        && quantifierValue != null
-        && hits == quantifierValue.getValueDecimal().intValue()) return true;
-    if ("min".equals(q)
-        && quantifierValue != null
-        && hits >= quantifierValue.getValueDecimal().intValue()) return true;
-    if ("max".equals(q)
-        && quantifierValue != null
-        && hits <= quantifierValue.getValueDecimal().intValue()) return true;
+  private boolean checkQuantifier(int size, int hits, Quantifier quan, Integer card) {
+    if (quan == Quantifier.ALL && hits == size) return true;
+    if (quan == Quantifier.EXACT && card != null && hits == card.intValue()) return true;
+    if (quan == Quantifier.MIN && card != null && hits >= card.intValue()) return true;
+    if (quan == Quantifier.MAX && card != null && hits <= card.intValue()) return true;
     return false;
   }
 }
