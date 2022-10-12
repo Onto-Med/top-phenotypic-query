@@ -110,6 +110,10 @@ public class Expressions {
     return newExpression(Values.newValue(val));
   }
 
+  public static Expression newExpression(LocalDateTime val) {
+    return newExpression(Values.newValue(val));
+  }
+
   public static List<Expression> toExpressionList(List<Value> vals) {
     return vals.stream().map(v -> newExpression(v)).collect(Collectors.toList());
   }

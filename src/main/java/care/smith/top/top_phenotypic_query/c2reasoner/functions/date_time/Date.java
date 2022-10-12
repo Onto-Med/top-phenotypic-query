@@ -1,32 +1,40 @@
-package care.smith.top.simple_onto_api.calculator.functions.date_time;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time;
 
 import java.util.List;
 
-import care.smith.top.simple_onto_api.calculator.Exceptions;
-import care.smith.top.simple_onto_api.calculator.functions.Function;
-import care.smith.top.simple_onto_api.calculator.functions.aggregate.Aggregator;
-import care.smith.top.simple_onto_api.model.property.data.value.DateTimeValue;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 
-public class Date extends Function {
+public class Date extends FunctionEntity {
 
-  private static Date instance = null;
+  private static Date INSTANCE = new Date();
 
   private Date() {
-    super("date", "date", Notation.PREFIX);
-    minArgumentsNumber(1);
-    maxArgumentsNumber(1);
+    super(
+        new ExpressionFunction()
+            .id("date")
+            .title("date")
+            .minArgumentNumber(1)
+            .maxArgumentNumber(1)
+            .notation(NotationEnum.PREFIX));
   }
 
   public static Date get() {
-    if (instance == null) instance = new Date();
-    return instance;
+    return INSTANCE;
   }
 
   @Override
-  public Value calculate(List<Value> values, Function defaultAggregateFunction) {
-    Exceptions.checkArgumentsNumber(this, values);
-    Value value = Aggregator.aggregate(values.get(0), defaultAggregateFunction);
-    return new DateTimeValue(value.getDateTime());
+  public Expression calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+    Exceptions.checkArgumentsNumber(getFunction(), args);
+    Expression arg = c2r.calculate(args.get(0), defaultAggregateFunction);
+    arg = Aggregator.aggregate(arg, defaultAggregateFunction, c2r);
+    return Expressions.newExpression(arg.getValue().getDateTime());
   }
 }

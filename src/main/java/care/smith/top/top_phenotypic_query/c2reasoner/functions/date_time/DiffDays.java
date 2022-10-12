@@ -1,36 +1,44 @@
-package care.smith.top.simple_onto_api.calculator.functions.date_time;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import care.smith.top.simple_onto_api.calculator.Exceptions;
-import care.smith.top.simple_onto_api.calculator.functions.Function;
-import care.smith.top.simple_onto_api.model.enums.Datatype;
-import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
-import care.smith.top.simple_onto_api.util.DateUtil;
+import care.smith.top.model.DataType;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.DateUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 
-public class DiffDays extends Function {
+public class DiffDays extends FunctionEntity {
 
-  private static DiffDays instance = null;
+  private static DiffDays INSTANCE = new DiffDays();
 
   private DiffDays() {
-    super("diffDays", "diffDays", Notation.PREFIX);
-    minArgumentsNumber(2);
-    maxArgumentsNumber(2);
+    super(
+        new ExpressionFunction()
+            .id("diffDays")
+            .title("diffDays")
+            .minArgumentNumber(2)
+            .maxArgumentNumber(2)
+            .notation(NotationEnum.PREFIX));
   }
 
   public static DiffDays get() {
-    if (instance == null) instance = new DiffDays();
-    return instance;
+    return INSTANCE;
   }
 
   @Override
-  public Value calculate(List<Value> values, Function defaultAggregateFunction) {
-    Exceptions.checkArgumentsNumber(this, values);
-    Exceptions.checkArgumentsType(this, Datatype.DATE_TIME, values);
-    LocalDateTime start = values.get(0).asDateTimeValue().getValue();
-    LocalDateTime end = values.get(1).asDateTimeValue().getValue();
-    return new DecimalValue(DateUtil.getPeriodInDays(start, end));
+  public Expression calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+    Exceptions.checkArgumentsNumber(getFunction(), args);
+    args = c2r.calculate(args, defaultAggregateFunction);
+    Exceptions.checkArgumentsType(getFunction(), DataType.DATE_TIME, args);
+    LocalDateTime start = Expressions.getDateTimeValue(args.get(0));
+    LocalDateTime end = Expressions.getDateTimeValue(args.get(1));
+    return Expressions.newExpression(DateUtil.getPeriodInDays(start, end));
   }
 }

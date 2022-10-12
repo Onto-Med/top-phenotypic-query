@@ -22,6 +22,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Last;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Min;
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Values;
 
@@ -483,48 +484,37 @@ public class C2RTest {
         Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
   }
 
-  //  @Test
-  //  public void testAge() {
-  //    Calculator c1 = new Calculator();
-  //    MathExpression ex1 =
-  //        new FunctionExpression("diffYears")
-  //            .arg(new VariableExpression("a"))
-  //            .arg(new VariableExpression("b"));
-  //
-  //    c1.setVariable("a", new DateTimeValue("1990-08-10"));
-  //    c1.setVariable("b", new DateTimeValue("2030-06-16"));
-  //
-  //    assertEquals(39, c1.calculate(ex1).getValueDecimal().intValue());
-  //
-  //    Calculator c2 = new Calculator();
-  //    MathExpression ex2 =
-  //        new FunctionExpression("diffYears")
-  //            .arg(new VariableExpression("a"))
-  //            .arg(new ConstantExpression("now"));
-  //
-  //    c2.setVariable("a", new DateTimeValue("1990-08-10"));
-  //
-  //    assertEquals(
-  //        DateUtil.getPeriodInYears(new DateTimeValue("1990-08-10").getValue()).intValue(),
-  //        c2.calculate(ex2).getValueDecimal().intValue());
-  //  }
-  //
-  //  @Test
-  //  public void testPlusYears() {
-  //    Calculator c1 = new Calculator();
-  //    MathExpression ex1 =
-  //        new FunctionExpression("plusYears")
-  //            .arg(new VariableExpression("a"))
-  //            .arg(new VariableExpression("b"));
-  //
-  //    c1.setVariable("a", new DateTimeValue("1990-08-10"));
-  //    c1.setVariable("b", 2);
-  //
-  //    assertEquals(
-  //        new DateTimeValue("1992-08-10").getValue(),
-  // c1.calculate(ex1).asDateTimeValue().getValue());
-  //  }
-  //
+  @Test
+  public void testAge() {
+    C2R c = new C2R();
+    Expression e =
+        new Expression()
+            .functionId("diffYears")
+            .addArgumentsItem(Expressions.newExpression(DateUtil.parse("1990-08-10")))
+            .addArgumentsItem(Expressions.newExpression(DateUtil.parse("2030-06-16")));
+    assertEquals(39, Expressions.getNumberValue(c.calculate(e)).intValue());
+
+    e =
+        new Expression()
+            .functionId("diffYears")
+            .addArgumentsItem(Expressions.newExpression(DateUtil.parse("1990-08-10")))
+            .addArgumentsItem(new Expression().constantId("now"));
+    assertEquals(
+        DateUtil.getPeriodInYears(DateUtil.parse("1990-08-10")).intValue(),
+        Expressions.getNumberValue(c.calculate(e)).intValue());
+  }
+
+  @Test
+  public void testPlusYears() {
+    C2R c = new C2R();
+    Expression e =
+        new Expression()
+            .functionId("plusYears")
+            .addArgumentsItem(Expressions.newExpression(DateUtil.parse("1990-08-10")))
+            .addArgumentsItem(Expressions.newExpression(2));
+    assertEquals(DateUtil.parse("1992-08-10"), Expressions.getDateTimeValue(c.calculate(e)));
+  }
+
   @Test
   public void testInSet() {
     C2R c = new C2R();
