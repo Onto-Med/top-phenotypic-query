@@ -6,7 +6,7 @@ import java.util.Set;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class SingleQueryMan {
 
@@ -42,10 +42,10 @@ public class SingleQueryMan {
     if (inclusions.contains(variable) || exclusions.contains(variable)) return;
 
     Phenotype varPhe = variable.getPhenotype();
-    if (PhenotypeUtil.isSinglePhenotype(varPhe)) {
+    if (Phenotypes.isSinglePhenotype(varPhe)) {
       for (SingleSearch inc : inclusions) {
         Phenotype incPhe = inc.getPhenotype();
-        if (PhenotypeUtil.isSingleRestriction(incPhe)
+        if (Phenotypes.isSingleRestriction(incPhe)
             && incPhe.getSuperPhenotype().getId().equals(varPhe.getId())) return;
       }
     }

@@ -10,7 +10,7 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 
-public class PhenotypeUtil {
+public class Phenotypes {
 
   public static boolean isSinglePhenotype(Phenotype p) {
     return p.getEntityType() == EntityType.SINGLE_PHENOTYPE;

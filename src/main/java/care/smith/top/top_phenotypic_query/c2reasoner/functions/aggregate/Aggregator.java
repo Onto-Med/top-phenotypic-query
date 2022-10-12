@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 import care.smith.top.model.Expression;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
-import care.smith.top.top_phenotypic_query.util.ValueUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Values;
 
 public class Aggregator {
 
@@ -30,7 +31,7 @@ public class Aggregator {
   }
 
   private static List<Expression> argToList(Expression arg) {
-    if (arg.getValues() != null) return ValueUtil.toExpressionList(arg.getValues());
+    if (arg.getValues() != null) return Expressions.toExpressionList(arg.getValues());
     return List.of(arg);
   }
 
@@ -38,11 +39,11 @@ public class Aggregator {
     if (arg.getValues() == null || arg.getValues().isEmpty()) return arg;
     else {
       Expression ag =
-          function.calculate(ValueUtil.toExpressionList(arg.getValues()), function, c2r);
+          function.calculate(Expressions.toExpressionList(arg.getValues()), function, c2r);
       log.info(
           "aggregate: {} = {}",
           function.toStringValues(arg.getValues()),
-          ValueUtil.toStringValue(ag.getValue()));
+          Values.toStringWithoutDateTime(ag.getValue()));
       return ag;
     }
   }
@@ -50,7 +51,7 @@ public class Aggregator {
   public static List<Expression> flatten(List<Expression> args) {
     List<Expression> vals = new ArrayList<>();
     for (Expression arg : args) {
-      if (arg.getValues() != null) vals.addAll(ValueUtil.toExpressionList(arg.getValues()));
+      if (arg.getValues() != null) vals.addAll(Expressions.toExpressionList(arg.getValues()));
       else vals.add(arg);
     }
     return vals;

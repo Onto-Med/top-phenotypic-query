@@ -9,7 +9,7 @@ import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
-import care.smith.top.top_phenotypic_query.util.ValueUtil;
+import care.smith.top.top_phenotypic_query.util.Values;
 
 public class First extends FunctionEntity {
 
@@ -34,7 +34,7 @@ public class First extends FunctionEntity {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = c2r.calculate(args, defaultAggregateFunction);
     args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
-    Collections.sort(args, ValueUtil.VALUE_DATE_COMPARATOR);
+    Collections.sort(args, Values.VALUE_DATE_COMPARATOR);
     return args.get(0);
   }
 }

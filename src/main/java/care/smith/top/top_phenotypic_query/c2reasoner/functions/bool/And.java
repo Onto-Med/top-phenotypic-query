@@ -9,7 +9,7 @@ import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
-import care.smith.top.top_phenotypic_query.util.ValueUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 
 public class And extends FunctionEntity {
 
@@ -35,8 +35,8 @@ public class And extends FunctionEntity {
     for (Expression arg : args) {
       arg = c2r.calculate(arg, defaultAggregateFunction);
       Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
-      if (ValueUtil.hasValueFalse(arg)) return arg;
+      if (Expressions.hasValueFalse(arg)) return arg;
     }
-    return ValueUtil.getExpressionTrue();
+    return Expressions.newExpressionTrue();
   }
 }

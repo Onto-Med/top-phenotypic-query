@@ -29,7 +29,7 @@ import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
-import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class FHIRAdapter extends DataAdapter {
 
@@ -162,7 +162,7 @@ public class FHIRAdapter extends DataAdapter {
     if (codeMap == null) return null;
     Map<String, String> pheMap = codeMap.getPhenotypeMappings();
     if (pheMap != null) return pheMap;
-    String codes = getFormat().formatList(PhenotypeUtil.getCodeUris(phenotype, phenotypes));
+    String codes = getFormat().formatList(Phenotypes.getCodeUris(phenotype, phenotypes));
     return Collections.singletonMap("codes", codes);
   }
 }

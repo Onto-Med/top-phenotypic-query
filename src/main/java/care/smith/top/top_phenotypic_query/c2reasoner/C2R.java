@@ -20,6 +20,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.constants.Now;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.Pi;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.True;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Count;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
@@ -36,8 +37,9 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.MinTrue;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Or;
-import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
-import care.smith.top.top_phenotypic_query.util.ValueUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
+import care.smith.top.top_phenotypic_query.util.Values;
 
 public class C2R {
 
@@ -88,7 +90,7 @@ public class C2R {
     //    addFunction(Le.get());
     //    addFunction(Lt.get());
     //    addFunction(Ne.get());
-    //    addFunction(In.get());
+    addFunction(In.get());
     //    addFunction(Switch.get());
     //    addFunction(Li.get());
     //    addFunction(Restrict.get());
@@ -176,32 +178,32 @@ public class C2R {
   }
 
   public void setVariable(String name, Value value) {
-    variables.put(name, ValueUtil.toExpression(value));
+    variables.put(name, Expressions.newExpression(value));
   }
 
   public void setVariable(String name, Value... values) {
-    variables.put(name, ValueUtil.toExpression(values));
+    variables.put(name, Expressions.newExpression(values));
   }
 
   public void setVariable(String name, Number value) {
-    setVariable(name, ValueUtil.toExpression(value));
+    setVariable(name, Expressions.newExpression(value));
   }
 
   public void setVariable(String name, NumberValue... values) {
-    setVariable(name, ValueUtil.toExpression(values));
+    setVariable(name, Expressions.newExpression(values));
   }
 
   public void setVariable(String name, Number... values) {
-    setVariable(name, ValueUtil.toExpression(values));
+    setVariable(name, Expressions.newExpression(values));
   }
 
   private String toString(Expression exp) {
     if (exp.getEntityId() != null) return exp.getEntityId();
     if (exp.getConstantId() != null)
       return getConstant(exp.getConstantId()).getConstant().getTitle();
-    if (exp.getValue() != null) return ValueUtil.toString(exp.getValue());
-    if (exp.getValues() != null) return ValueUtil.toString(exp.getValues());
-    if (exp.getRestriction() != null) return RestrictionUtil.toString(exp.getRestriction());
+    if (exp.getValue() != null) return Values.toString(exp.getValue());
+    if (exp.getValues() != null) return Values.toString(exp.getValues());
+    if (exp.getRestriction() != null) return Restrictions.toString(exp.getRestriction());
     return toStringFunction(exp);
   }
 

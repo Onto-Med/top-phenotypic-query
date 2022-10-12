@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import care.smith.top.model.Restriction;
-import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class RestrictionMapping {
 
@@ -28,11 +28,11 @@ public class RestrictionMapping {
   }
 
   public Restriction getModelRestriction() {
-    return RestrictionUtil.getRestriction(model);
+    return Restrictions.getRestriction(model);
   }
 
   public Restriction getSourceRestriction() {
-    return RestrictionUtil.getRestriction(source);
+    return Restrictions.getRestriction(source);
   }
 
   @Override

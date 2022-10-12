@@ -1,9 +1,8 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
-import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
@@ -15,8 +14,9 @@ import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
-import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
-import care.smith.top.top_phenotypic_query.util.ValueUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
+import care.smith.top.top_phenotypic_query.util.Values;
 
 public class In extends FunctionEntity {
 
@@ -45,61 +45,29 @@ public class In extends FunctionEntity {
 
     if (args.get(1).getValues() != null) {
       Expression val = Aggregator.aggregate(args.get(0), defaultAggregateFunction, c2r);
-      return ValueUtil.toExpression(valueInSet(val.getValue(), args.get(1).getValues()));
+      return Expressions.newExpression(Values.contains(args.get(1).getValues(), val.getValue()));
     }
 
-    Restriction restr = args.get(1).getRestriction();
-    if (RestrictionUtil.hasInterval(restr))
-      return calculateInInterval(args.get(0).getValues(), restr);
-    return calculateInSet(args.get(0).getValues(), RestrictionUtil.getValuesAsString(restr));
+    Restriction r = args.get(1).getRestriction();
+    List<Value> vals = args.get(0).getValues();
+    if (Restrictions.hasInterval(r))
+      return calculateInInterval(
+          vals, Restrictions.getInterval(r), r.getQuantifier(), r.getCardinality());
+    return calculateInSet(vals, Restrictions.getValues(r), r.getQuantifier(), r.getCardinality());
   }
 
-  private Expression calculateInInterval(List<Value> values, Restriction restr) {
+  private Expression calculateInInterval(
+      List<Value> values, Map<RestrictionOperator, Value> inter, Quantifier quan, Integer card) {
     int hits = 0;
-    for (Value v : values) if (valueInInterval(v, range, limits)) hits++;
-    return new BooleanValue(checkQuantifier(values.size(), hits, quantifier, quantifierValue));
-  }
-
-  public static boolean valueInInterval(Value value, List<Value> range, List<Value> limits) {
-    for (int i = 0; i < range.size(); i++) {
-      if (!checkLimit(value, range.get(i), limits.get(i))) return false;
-    }
-    return true;
-  }
-
-  private static boolean checkLimit(Value value, RestrictionOperator oper, Value limit) {
-    BigDecimal val = ValueUtil.getNumberValue(value);
-    BigDecimal lim = ValueUtil.getNumberValue(limit);
-    if (oper == RestrictionOperator.GREATER_THAN && val.compareTo(lim) > 0) return true;
-    if (oper == RestrictionOperator.GREATER_THAN_OR_EQUAL_TO && val.compareTo(lim) >= 0)
-      return true;
-    if (oper == RestrictionOperator.LESS_THAN && val.compareTo(lim) < 0) return true;
-    if (oper == RestrictionOperator.LESS_THAN_OR_EQUAL_TO && val.compareTo(lim) <= 0) return true;
-    return false;
+    for (Value v : values) if (Values.contains(inter, v)) hits++;
+    return Expressions.newExpression(checkQuantifier(values.size(), hits, quan, card));
   }
 
   private Expression calculateInSet(
       List<Value> values, List<Value> set, Quantifier quan, Integer card) {
     int hits = 0;
-    for (Value v : values) if (valueInSet(v, Restriction)) hits++;
-    return ValueUtil.toExpression(checkQuantifier(values.size(), hits, quan, card));
-  }
-
-  public static boolean valueInSet(Value value, List<Value> range) {
-    for (Value member : range) {
-      if (value.getDataType() == DataType.STRING) {
-        if (ValueUtil.getStringValue(value).equals(ValueUtil.getStringValue(member))) return true;
-      } else if (value.getDataType() == DataType.NUMBER) {
-        if (ValueUtil.getNumberValue(value).compareTo(ValueUtil.getNumberValue(member)) == 0)
-          return true;
-      } else if (value.getDataType() == DataType.DATE_TIME) {
-        if (ValueUtil.getDateTimeValue(value).equals(ValueUtil.getDateTimeValue(member)))
-          return true;
-      } else if (value.getDataType() == DataType.BOOLEAN) {
-        if (ValueUtil.getBooleanValue(value).equals(ValueUtil.getBooleanValue(member))) return true;
-      }
-    }
-    return false;
+    for (Value v : values) if (Values.contains(set, v)) hits++;
+    return Expressions.newExpression(checkQuantifier(values.size(), hits, quan, card));
   }
 
   private boolean checkQuantifier(int size, int hits, Quantifier quan, Integer card) {

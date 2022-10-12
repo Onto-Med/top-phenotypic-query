@@ -12,7 +12,7 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringValue;
-import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 
 public class ExpressionTest extends AbstractTest {
 
@@ -25,7 +25,7 @@ public class ExpressionTest extends AbstractTest {
     Expression exp =
         getExpression(
             "Young", age, DEFAULT_MIN_OPERATOR, 18, DEFAULT_MAX_OPERATOR, 34, Quantifier.EXACT, 5);
-    assertEquals(exp, ExpressionUtil.restrictionToExpression(res));
+    assertEquals(exp, Expressions.restrictionToExpression(res));
   }
 
   static Expression getExpression(
@@ -59,8 +59,8 @@ public class ExpressionTest extends AbstractTest {
             .addArgumentsItem(limits);
 
     if (quantifier != null) {
-      exp.addArgumentsItem(ExpressionUtil.stringToExpression(quantifier.getValue()));
-      if (cardinality != null) exp.addArgumentsItem(ExpressionUtil.numberToExpression(cardinality));
+      exp.addArgumentsItem(Expressions.stringToExpression(quantifier.getValue()));
+      if (cardinality != null) exp.addArgumentsItem(Expressions.numberToExpression(cardinality));
     }
 
     return exp;

@@ -12,8 +12,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
-import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
-import care.smith.top.top_phenotypic_query.util.ValueUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 
 public class Power extends FunctionEntity {
 
@@ -41,9 +40,9 @@ public class Power extends FunctionEntity {
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
 
     BigDecimal arg1 =
-        ExpressionUtil.getValueNumber(
+        Expressions.getNumberValue(
             Aggregator.aggregate(args.get(0), defaultAggregateFunction, c2r));
-    BigDecimal arg2 = ExpressionUtil.getValueNumber(args.get(1));
+    BigDecimal arg2 = Expressions.getNumberValue(args.get(1));
 
     int signOf2 = arg2.signum();
     double dn1 = arg1.doubleValue();
@@ -57,6 +56,6 @@ public class Power extends FunctionEntity {
     if (signOf2 == -1)
       result = BigDecimal.ONE.divide(result, mc.getPrecision(), RoundingMode.HALF_UP);
 
-    return ValueUtil.toExpression(result);
+    return Expressions.newExpression(result);
   }
 }

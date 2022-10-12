@@ -11,8 +11,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
-import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
-import care.smith.top.top_phenotypic_query.util.ValueUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 
 public class Add extends FunctionEntity {
 
@@ -39,9 +38,9 @@ public class Add extends FunctionEntity {
     args = c2r.calculate(args, defaultAggregateFunction);
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
     args = Aggregator.aggregate(args, defaultAggregateFunction, c2r);
-    BigDecimal arg1 = ExpressionUtil.getValueNumber(args.get(0));
-    BigDecimal arg2 = ExpressionUtil.getValueNumber(args.get(1));
+    BigDecimal arg1 = Expressions.getNumberValue(args.get(0));
+    BigDecimal arg2 = Expressions.getNumberValue(args.get(1));
     BigDecimal sum = arg1.add(arg2, mc);
-    return ValueUtil.toExpression(sum);
+    return Expressions.newExpression(sum);
   }
 }

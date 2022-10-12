@@ -15,7 +15,7 @@ import care.smith.top.simple_onto_api.model.property.data.value.list.DateTimeVal
 import care.smith.top.simple_onto_api.model.property.data.value.list.DecimalValueList;
 import care.smith.top.simple_onto_api.model.property.data.value.list.StringValueList;
 import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
-import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class Values extends HashMap<DateTimeRestriction, ValueList> {
 
@@ -92,7 +92,7 @@ public class Values extends HashMap<DateTimeRestriction, ValueList> {
             .append(System.lineSeparator());
     for (Entry<DateTimeRestriction, ValueList> entry : entrySet())
       sb.append("    ")
-          .append(RestrictionUtil.toString(entry.getKey()))
+          .append(Restrictions.toString(entry.getKey()))
           .append("::")
           .append(entry.getValue().getRepresentation())
           .append(System.lineSeparator());

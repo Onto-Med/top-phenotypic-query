@@ -22,8 +22,8 @@ import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectQuery;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectQueryBuilder;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
-import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class SubjectSearch extends PhenotypeSearch {
 
@@ -60,15 +60,15 @@ public class SubjectSearch extends PhenotypeSearch {
     Phenotype bd = new Phenotype().dataType(DataType.DATE_TIME);
     bd.setId("birthdate");
     bd.setEntityType(EntityType.SINGLE_PHENOTYPE);
-    if (PhenotypeUtil.isSinglePhenotype(age)) return bd;
+    if (Phenotypes.isSinglePhenotype(age)) return bd;
 
     NumberRestriction ageR = (NumberRestriction) age.getRestriction();
     DateTimeRestriction bdR = new DateTimeRestriction();
     bdR.setQuantifier(ageR.getQuantifier());
     bdR.setCardinality(ageR.getCardinality());
 
-    BigDecimal ageMin = RestrictionUtil.getMinIntervalValue(ageR);
-    BigDecimal ageMax = RestrictionUtil.getMaxIntervalValue(ageR);
+    BigDecimal ageMin = Restrictions.getMinIntervalValue(ageR);
+    BigDecimal ageMax = Restrictions.getMaxIntervalValue(ageR);
 
     if (ageMax != null) {
       bdR.addValuesItem(ageToBirthdate(ageMax.longValue()));
@@ -124,20 +124,20 @@ public class SubjectSearch extends PhenotypeSearch {
   public String getQueryString() {
     SubjectQueryBuilder builder = getSubjectQuery().getQueryBuilder().baseQuery();
 
-    if (sex != null && PhenotypeUtil.isSingleRestriction(sex)) {
+    if (sex != null && Phenotypes.isSingleRestriction(sex)) {
       Restriction sexR = sex.getRestriction();
-      if (RestrictionUtil.hasValues(sexR))
+      if (Restrictions.hasValues(sexR))
         builder.sexList(
-            RestrictionUtil.getValuesAsString(
+            Restrictions.getValuesAsString(
                 getSexMapping().getSourceRestriction(sexR), adapter.getFormat()));
     }
 
     Phenotype bd = getBirthdateDerived();
-    if (bd != null && PhenotypeUtil.isSingleRestriction(bd)) {
+    if (bd != null && Phenotypes.isSingleRestriction(bd)) {
       Restriction birthdateR = bd.getRestriction();
-      if (RestrictionUtil.hasInterval(birthdateR)) {
+      if (Restrictions.hasInterval(birthdateR)) {
         Map<String, String> interval =
-            RestrictionUtil.getInterval(
+            Restrictions.getIntervalAsStringMap(
                 getBirthdateMapping().getSourceRestriction(birthdateR), adapter.getFormat());
         for (String key : interval.keySet()) builder.birthdateIntervalLimit(key, interval.get(key));
       }

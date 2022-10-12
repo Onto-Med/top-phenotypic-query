@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import care.smith.top.model.Restriction;
-import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class CodeMapping {
 
@@ -62,9 +62,9 @@ public class CodeMapping {
 
   public Restriction getSourceRestriction(Restriction modelRestriction) {
     Restriction sourceRestriction =
-        restrictionMappings.get(RestrictionUtil.copyWithoutBasicAttributes(modelRestriction));
+        restrictionMappings.get(Restrictions.copyWithoutBasicAttributes(modelRestriction));
     if (sourceRestriction == null) return modelRestriction;
-    return RestrictionUtil.setType(
+    return Restrictions.setType(
         sourceRestriction
             .cardinality(modelRestriction.getCardinality())
             .quantifier(modelRestriction.getQuantifier()));

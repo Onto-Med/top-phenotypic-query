@@ -9,7 +9,7 @@ import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
-import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 
 public class Max extends FunctionEntity {
 
@@ -38,7 +38,7 @@ public class Max extends FunctionEntity {
     Expression max = null;
     for (Expression arg : args) {
       if (max == null
-          || ExpressionUtil.getValueNumber(arg).compareTo(ExpressionUtil.getValueNumber(max)) > 0)
+          || Expressions.getNumberValue(arg).compareTo(Expressions.getNumberValue(max)) > 0)
         max = arg;
     }
     return max;

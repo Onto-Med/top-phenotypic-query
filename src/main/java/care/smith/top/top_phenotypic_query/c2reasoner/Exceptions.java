@@ -8,7 +8,7 @@ import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.ConstantEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
-import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 
 public class Exceptions {
 
@@ -16,9 +16,9 @@ public class Exceptions {
     String msg = "The arguments for the function '%s' have different data types!";
     DataType dt = null;
     for (Expression arg : args) {
-      if (dt != null && dt != ExpressionUtil.getDataType(arg))
+      if (dt != null && dt != Expressions.getDataType(arg))
         throw new ArithmeticException(String.format(msg, f.getId()));
-      else dt = ExpressionUtil.getDataType(arg);
+      else dt = Expressions.getDataType(arg);
     }
   }
 
@@ -28,16 +28,16 @@ public class Exceptions {
 
   public static void checkArgumentType(ExpressionFunction f, DataType dt, Expression arg) {
     String msg = "The argument '%s' has a wrong data type for the function '%s'!";
-    if (dt != ExpressionUtil.getDataType(arg))
+    if (dt != Expressions.getDataType(arg))
       throw new ArithmeticException(
-          String.format(msg, ExpressionUtil.toStringValues(arg), f.getId()));
+          String.format(msg, Expressions.toStringValues(arg), f.getId()));
   }
 
   public static void checkArgumentTypes(ExpressionFunction f, Expression arg, DataType... dts) {
     String msg = "The argument '%s' has a wrong data type for the function '%s'!";
-    for (DataType dt : dts) if (dt == ExpressionUtil.getDataType(arg)) return;
+    for (DataType dt : dts) if (dt == Expressions.getDataType(arg)) return;
     throw new ArithmeticException(
-        String.format(msg, ExpressionUtil.toStringValues(arg), f.getId()));
+        String.format(msg, Expressions.toStringValues(arg), f.getId()));
   }
 
   //  public static void checkArgumentsContainLists(ExpressionFunction f, List<Expression> args) {

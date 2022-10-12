@@ -14,7 +14,7 @@ import care.smith.top.simple_onto_api.calculator.expressions.MathExpression;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 
 public class CompositeSearch extends PhenotypeSearch {
 
@@ -35,7 +35,7 @@ public class CompositeSearch extends PhenotypeSearch {
     Phenotype phe = phenotypes.get(criterion.getSubjectId());
     Expression exp = phe.getExpression();
     if (exp != null) {
-      Set<String> vars = ExpressionUtil.getVariables(exp, phenotypes);
+      Set<String> vars = Expressions.getVariables(exp, phenotypes);
       Set<String> sbjIds = new HashSet<>(rs.getSubjectIds());
       for (String sbjId : sbjIds)
         executeForSubject(sbjId, phe.getId(), exp, vars, criterion.getDateTimeRestriction());
@@ -59,7 +59,7 @@ public class CompositeSearch extends PhenotypeSearch {
       if (vals == null) return null;
       calc.setVariable(var, vals);
     }
-    MathExpression mathExp = ExpressionUtil.convert(exp);
+    MathExpression mathExp = Expressions.convert(exp);
     Value res = calc.calculate(mathExp);
     rs.getPhenotypes(sbjId).setValues(pheId, dateRange, ValueList.get(res));
     return res;
@@ -70,7 +70,7 @@ public class CompositeSearch extends PhenotypeSearch {
     if (vals != null) return vals;
     Expression newExp = phenotypes.get(var).getExpression();
     if (newExp == null) return null;
-    Set<String> newVars = ExpressionUtil.getVariables(newExp, phenotypes);
+    Set<String> newVars = Expressions.getVariables(newExp, phenotypes);
     Value newVal = calculate(sbjId, var, newExp, newVars, dateRange);
     if (newVal == null) return null;
     return ValueList.get(newVal);

@@ -10,8 +10,7 @@ import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
-import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
-import care.smith.top.top_phenotypic_query.util.ValueUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 
 public class Avg extends FunctionEntity {
 
@@ -38,7 +37,7 @@ public class Avg extends FunctionEntity {
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
     args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
     BigDecimal avg = BigDecimal.ZERO;
-    for (Expression arg : args) avg = avg.add(ExpressionUtil.getValueNumber(arg), mc);
-    return ValueUtil.toExpression(avg.divide(new BigDecimal(args.size()), mc));
+    for (Expression arg : args) avg = avg.add(Expressions.getNumberValue(arg), mc);
+    return Expressions.newExpression(avg.divide(new BigDecimal(args.size()), mc));
   }
 }

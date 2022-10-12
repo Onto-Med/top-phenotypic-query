@@ -17,7 +17,7 @@ import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQuery;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class SingleSearch extends PhenotypeSearch {
 
@@ -112,14 +112,14 @@ public class SingleSearch extends PhenotypeSearch {
     if (phenotype.getEntityType() == EntityType.SINGLE_RESTRICTION) {
       Restriction r = phenotype.getRestriction();
       if (r.getQuantifier() != Quantifier.ALL) {
-        if (RestrictionUtil.hasInterval(r)) {
+        if (Restrictions.hasInterval(r)) {
           Map<String, String> interval =
-              RestrictionUtil.getInterval(codeMap.getSourceRestriction(r), adapter.getFormat());
+              Restrictions.getIntervalAsStringMap(codeMap.getSourceRestriction(r), adapter.getFormat());
           for (String key : interval.keySet())
             adapter.addValueIntervalLimit(key, interval.get(key), builder, r);
-        } else if (RestrictionUtil.hasValues(r)) {
+        } else if (Restrictions.hasValues(r)) {
           String values =
-              RestrictionUtil.getValuesAsString(
+              Restrictions.getValuesAsString(
                   codeMap.getSourceRestriction(r), adapter.getFormat());
           adapter.addValueList(values, builder, r);
         }
@@ -127,8 +127,8 @@ public class SingleSearch extends PhenotypeSearch {
     }
 
     if (dtr != null) {
-      if (RestrictionUtil.hasInterval(dtr)) {
-        Map<String, String> interval = RestrictionUtil.getInterval(dtr, adapter.getFormat());
+      if (Restrictions.hasInterval(dtr)) {
+        Map<String, String> interval = Restrictions.getIntervalAsStringMap(dtr, adapter.getFormat());
         for (String key : interval.keySet())
           adapter.addDateIntervalLimit(key, interval.get(key), builder);
       }

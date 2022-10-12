@@ -9,7 +9,7 @@ import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
-import care.smith.top.top_phenotypic_query.util.ValueUtil;
+import care.smith.top.top_phenotypic_query.util.Values;
 
 public abstract class FunctionEntity {
 
@@ -50,11 +50,11 @@ public abstract class FunctionEntity {
 
   public String toStringValues(List<Value> args) {
     return toString(
-        args.stream().map(v -> ValueUtil.toStringValue(v)).collect(Collectors.toList()));
+        args.stream().map(v -> Values.toStringWithoutDateTime(v)).collect(Collectors.toList()));
   }
 
-  public String toStringDates(List<Value> args) {
-    return toString(
-        args.stream().map(v -> ValueUtil.toStringDateTime(v)).collect(Collectors.toList()));
-  }
+  //  public String toStringDates(List<Value> args) {
+  //    return toString(
+  //        args.stream().map(v -> Values.toStringDateTime(v)).collect(Collectors.toList()));
+  //  }
 }

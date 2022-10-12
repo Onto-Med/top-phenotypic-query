@@ -10,7 +10,7 @@ import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
 import care.smith.top.top_phenotypic_query.ucum.UCUM;
-import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class ResultSet extends HashMap<String, Phenotypes> {
 
@@ -50,7 +50,7 @@ public class ResultSet extends HashMap<String, Phenotypes> {
 
   public void addValue(
       String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
-    if (val != null) addValue(subjectId, PhenotypeUtil.getPhenotypeId(phenotype), dateRange, val);
+    if (val != null) addValue(subjectId, Phenotypes.getPhenotypeId(phenotype), dateRange, val);
   }
 
   public void addValue(
@@ -69,7 +69,7 @@ public class ResultSet extends HashMap<String, Phenotypes> {
 
   private void addRestriction(
       String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
-    if (val != null && PhenotypeUtil.hasExistentialQuantifier(phenotype)) {
+    if (val != null && Phenotypes.hasExistentialQuantifier(phenotype)) {
       ValueList vals = getValues(subjectId, phenotype.getId(), dateRange);
       if (vals == null || vals.isEmpty())
         addValue(subjectId, phenotype.getId(), dateRange, new BooleanValue(true));

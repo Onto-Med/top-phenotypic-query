@@ -27,7 +27,7 @@ import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.top_phenotypic_query.result.Phenotypes;
-import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public abstract class AbstractTest {
 
@@ -295,7 +295,7 @@ public abstract class AbstractTest {
   //  }
 
   private static EntityType getRestrictionType(Phenotype parent) {
-    return PhenotypeUtil.isSinglePhenotype(parent)
+    return Phenotypes.isSinglePhenotype(parent)
         ? EntityType.SINGLE_RESTRICTION
         : EntityType.COMPOSITE_RESTRICTION;
   }

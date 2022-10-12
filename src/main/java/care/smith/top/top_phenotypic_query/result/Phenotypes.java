@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
-import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class Phenotypes extends HashMap<String, Values> {
 
@@ -41,7 +41,7 @@ public class Phenotypes extends HashMap<String, Values> {
         "value is added: {}::{}::{}::{}",
         subjectId,
         phenotypeName,
-        RestrictionUtil.toString(dateRange),
+        Restrictions.toString(dateRange),
         val.getRepresentation());
   }
 
@@ -56,7 +56,7 @@ public class Phenotypes extends HashMap<String, Values> {
         "values are set: {}::{}::{}::{}",
         subjectId,
         phenotypeName,
-        RestrictionUtil.toString(dateRange),
+        Restrictions.toString(dateRange),
         vals.getRepresentation());
   }
 

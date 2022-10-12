@@ -9,7 +9,7 @@ import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
-import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 
 public class Min extends FunctionEntity {
 
@@ -38,7 +38,7 @@ public class Min extends FunctionEntity {
     Expression min = null;
     for (Expression arg : args) {
       if (min == null
-          || ExpressionUtil.getValueNumber(arg).compareTo(ExpressionUtil.getValueNumber(min)) < 0)
+          || Expressions.getNumberValue(arg).compareTo(Expressions.getNumberValue(min)) < 0)
         min = arg;
     }
     return min;
