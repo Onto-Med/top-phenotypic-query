@@ -1,36 +1,43 @@
-package care.smith.top.simple_onto_api.calculator.functions.comparison;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison;
 
-import java.math.BigDecimal;
 import java.util.List;
 
-import care.smith.top.simple_onto_api.calculator.Exceptions;
-import care.smith.top.simple_onto_api.calculator.functions.Function;
-import care.smith.top.simple_onto_api.calculator.functions.aggregate.Aggregator;
-import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
+import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Values;
 
-public class Lt extends Function {
+public class Lt extends FunctionEntity {
 
-  private static Lt instance = null;
+  private static Lt INSTANCE = new Lt();
 
   private Lt() {
-    super("lt", "<", Notation.INFIX);
-    minArgumentsNumber(2);
-    maxArgumentsNumber(2);
+    super(
+        new ExpressionFunction()
+            .id("lt")
+            .title("<")
+            .minArgumentNumber(2)
+            .maxArgumentNumber(2)
+            .notation(NotationEnum.INFIX));
   }
 
   public static Lt get() {
-    if (instance == null) instance = new Lt();
-    return instance;
+    return INSTANCE;
   }
 
   @Override
-  public Value calculate(List<Value> values, Function defaultAggregateFunction) {
-    Exceptions.checkArgumentsNumber(this, values);
-    Exceptions.checkArgumentsHaveSameType(this, values);
-    values = Aggregator.aggregate(values, defaultAggregateFunction);
-    BigDecimal v1 = values.get(0).getValueDecimal();
-    BigDecimal v2 = values.get(1).getValueDecimal();
-    return new BooleanValue(v1.compareTo(v2) < 0);
+  public Expression calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+    Exceptions.checkArgumentsNumber(getFunction(), args);
+    args = c2r.calculate(args, defaultAggregateFunction);
+    Exceptions.checkArgumentsHaveSameType(getFunction(), args);
+    args = Aggregator.aggregate(args, defaultAggregateFunction, c2r);
+    return Expressions.newExpression(
+        Values.compare(args.get(0).getValue(), args.get(1).getValue()) < 0);
   }
 }

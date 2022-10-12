@@ -196,41 +196,107 @@ public class C2RTest {
   //    assertEquals("No default value defined for the function 'switch'!", exception.getMessage());
   //  }
   //
-  //  @Test
-  //  public void testComparison() {
-  //    ConstantExpression v1 = new ConstantExpression(new DecimalValue(3));
-  //    ConstantExpression v2 = new ConstantExpression(new DecimalValue(5));
-  //    ConstantExpression v3 = new ConstantExpression(new DecimalValue(10));
-  //    ConstantExpression v4 = new ConstantExpression(new DecimalValue(12));
-  //
-  //    Calculator c = new Calculator();
-  //    MathExpression e1 =
-  //        new FunctionExpression("and")
-  //            .arg(new FunctionExpression("eq").arg(v1).arg(v2))
-  //            .arg(new FunctionExpression("lt").arg(v3).arg(v4));
-  //    assertFalse(c.calculate(e1).asBooleanValue().getValue());
-  //
-  //    MathExpression e2 =
-  //        new FunctionExpression("or")
-  //            .arg(new FunctionExpression("eq").arg(v1).arg(v2))
-  //            .arg(new FunctionExpression("lt").arg(v3).arg(v4));
-  //    assertTrue(c.calculate(e2).asBooleanValue().getValue());
-  //
-  //    MathExpression e3 =
-  //        new FunctionExpression("and")
-  //            .arg(new FunctionExpression("eq").arg(v1).arg(v1))
-  //            .arg(new FunctionExpression("lt").arg(v3).arg(v4));
-  //    assertTrue(c.calculate(e3).asBooleanValue().getValue());
-  //
-  //    MathExpression e4 =
-  //        new FunctionExpression("not")
-  //            .arg(
-  //                new FunctionExpression("and")
-  //                    .arg(new FunctionExpression("eq").arg(v1).arg(v1))
-  //                    .arg(new FunctionExpression("lt").arg(v3).arg(v4)));
-  //    assertFalse(c.calculate(e4).asBooleanValue().getValue());
-  //  }
-  //
+  @Test
+  public void testComparison() {
+    C2R c = new C2R();
+    Expression e =
+        new Expression()
+            .functionId("eq")
+            .addArgumentsItem(Expressions.newExpression(3))
+            .addArgumentsItem(Expressions.newExpression(5));
+    assertFalse(Expressions.hasValueTrue(c.calculate(e)));
+
+    e =
+        new Expression()
+            .functionId("eq")
+            .addArgumentsItem(Expressions.newExpression(3))
+            .addArgumentsItem(Expressions.newExpression(3));
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e =
+        new Expression()
+            .functionId("ne")
+            .addArgumentsItem(Expressions.newExpression(5))
+            .addArgumentsItem(Expressions.newExpression(3));
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e =
+        new Expression()
+            .functionId("ne")
+            .addArgumentsItem(Expressions.newExpression(3))
+            .addArgumentsItem(Expressions.newExpression(3));
+    assertFalse(Expressions.hasValueTrue(c.calculate(e)));
+
+    e =
+        new Expression()
+            .functionId("lt")
+            .addArgumentsItem(Expressions.newExpression(3))
+            .addArgumentsItem(Expressions.newExpression(5));
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e =
+        new Expression()
+            .functionId("lt")
+            .addArgumentsItem(Expressions.newExpression(3))
+            .addArgumentsItem(Expressions.newExpression(3));
+    assertFalse(Expressions.hasValueTrue(c.calculate(e)));
+
+    e =
+        new Expression()
+            .functionId("le")
+            .addArgumentsItem(Expressions.newExpression(3))
+            .addArgumentsItem(Expressions.newExpression(5));
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e =
+        new Expression()
+            .functionId("le")
+            .addArgumentsItem(Expressions.newExpression(3))
+            .addArgumentsItem(Expressions.newExpression(3));
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e =
+        new Expression()
+            .functionId("le")
+            .addArgumentsItem(Expressions.newExpression(3))
+            .addArgumentsItem(Expressions.newExpression(2));
+    assertFalse(Expressions.hasValueTrue(c.calculate(e)));
+    e =
+        new Expression()
+            .functionId("gt")
+            .addArgumentsItem(Expressions.newExpression(5))
+            .addArgumentsItem(Expressions.newExpression(3));
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e =
+        new Expression()
+            .functionId("gt")
+            .addArgumentsItem(Expressions.newExpression(3))
+            .addArgumentsItem(Expressions.newExpression(3));
+    assertFalse(Expressions.hasValueTrue(c.calculate(e)));
+
+    e =
+        new Expression()
+            .functionId("ge")
+            .addArgumentsItem(Expressions.newExpression(5))
+            .addArgumentsItem(Expressions.newExpression(3));
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e =
+        new Expression()
+            .functionId("ge")
+            .addArgumentsItem(Expressions.newExpression(3))
+            .addArgumentsItem(Expressions.newExpression(3));
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e =
+        new Expression()
+            .functionId("ge")
+            .addArgumentsItem(Expressions.newExpression(2))
+            .addArgumentsItem(Expressions.newExpression(3));
+    assertFalse(Expressions.hasValueTrue(c.calculate(e)));
+  }
+
   @Test
   public void testAvg() {
     C2R c = new C2R();

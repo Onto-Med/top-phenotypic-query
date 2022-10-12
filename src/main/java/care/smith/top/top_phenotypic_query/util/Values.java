@@ -188,7 +188,7 @@ public class Values {
     return false;
   }
 
-  private static int compare(Value v1, Value v2) {
+  public static int compare(Value v1, Value v2) {
     if (v1.getDataType() == DataType.NUMBER && v2.getDataType() == DataType.NUMBER)
       return getNumberValue(v1).compareTo(getNumberValue(v2));
     if (v1.getDataType() == DataType.DATE_TIME && v2.getDataType() == DataType.DATE_TIME)
