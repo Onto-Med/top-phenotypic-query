@@ -13,9 +13,9 @@ import org.junit.jupiter.api.Test;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
-import care.smith.top.top_phenotypic_query.result.Phenotypes;
+import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.result.Values;
+import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
 import care.smith.top.top_phenotypic_query.search.CompositeSearch;
 
 public class BMIAgeTest extends AbstractTest {
@@ -53,7 +53,7 @@ public class BMIAgeTest extends AbstractTest {
 
     assertEquals(Set.of("Subject1"), finalRS.getSubjectIds());
 
-    Phenotypes phes = finalRS.getPhenotypes("Subject1");
+    SubjectPhenotypes phes = finalRS.getPhenotypes("Subject1");
     assertEquals(phenotypes.keySet(), phes.getPhenotypeNames());
 
     assertFalse(getValue("Old", phes).asBooleanValue().getValue());
@@ -70,24 +70,24 @@ public class BMIAgeTest extends AbstractTest {
   }
 
   private static ResultSet getResultSet() {
-    Values weightVals1 = new Values("Weight");
+    PhenotypeValues weightVals1 = new PhenotypeValues("Weight");
     weightVals1.setDecimalValues(getDTR(2000), new DecimalValue(75));
-    Values heightVals1 = new Values("Height");
+    PhenotypeValues heightVals1 = new PhenotypeValues("Height");
     heightVals1.setDecimalValues(getDTR(2000), new DecimalValue(1.70));
-    Values ageVals1 = new Values("Age");
+    PhenotypeValues ageVals1 = new PhenotypeValues("Age");
     ageVals1.setDecimalValues(getDTR(2000), new DecimalValue(20));
 
-    Values weightVals2 = new Values("Weight");
+    PhenotypeValues weightVals2 = new PhenotypeValues("Weight");
     weightVals2.setDecimalValues(getDTR(2000), new DecimalValue(85));
-    Values heightVals2 = new Values("Height");
+    PhenotypeValues heightVals2 = new PhenotypeValues("Height");
     heightVals2.setDecimalValues(getDTR(2000), new DecimalValue(1.80));
-    Values ageVals2 = new Values("Age");
+    PhenotypeValues ageVals2 = new PhenotypeValues("Age");
     ageVals2.setDecimalValues(getDTR(2000), new DecimalValue(40));
 
-    Phenotypes phes1 = new Phenotypes("Subject1");
+    SubjectPhenotypes phes1 = new SubjectPhenotypes("Subject1");
     phes1.setValues(weightVals1, heightVals1, ageVals1);
 
-    Phenotypes phes2 = new Phenotypes("Subject2");
+    SubjectPhenotypes phes2 = new SubjectPhenotypes("Subject2");
     phes2.setValues(weightVals2, heightVals2, ageVals2);
 
     ResultSet rs = new ResultSet();

@@ -11,7 +11,7 @@ import care.smith.top.simple_onto_api.calculator.expressions.MathExpression;
 import care.smith.top.simple_onto_api.model.property.data.value.Value;
 import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.result.Phenotypes;
+import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
@@ -59,8 +59,8 @@ public class SubjectQueryMan {
 
   public void addSexVariable(Phenotype sexVariable) {
     if (contains(sexVariable, sexInclusion, sexExclusion)) return;
-    if (Phenotypes.isPhenotype(sexVariable)) sexPhenotypeVariable = sexVariable;
-    else if (Phenotypes.isRestriction(sexVariable)) {
+    if (SubjectPhenotypes.isPhenotype(sexVariable)) sexPhenotypeVariable = sexVariable;
+    else if (SubjectPhenotypes.isRestriction(sexVariable)) {
       sexRestrictionVariables.add(sexVariable);
       sexPhenotypeVariable = phenotypes.get(sexVariable.getSuperPhenotype().getId());
     }
@@ -68,9 +68,9 @@ public class SubjectQueryMan {
 
   public void addBirthdateVariable(Phenotype birthdateVariable) {
     if (contains(birthdateVariable, birthdateInclusion, birthdateExclusion)) return;
-    if (Phenotypes.isPhenotype(birthdateVariable))
+    if (SubjectPhenotypes.isPhenotype(birthdateVariable))
       birthdatePhenotypeVariable = birthdateVariable;
-    else if (Phenotypes.isRestriction(birthdateVariable)) {
+    else if (SubjectPhenotypes.isRestriction(birthdateVariable)) {
       birthdateRestrictionVariables.add(birthdateVariable);
       birthdatePhenotypeVariable = phenotypes.get(birthdateVariable.getSuperPhenotype().getId());
     }
@@ -78,8 +78,8 @@ public class SubjectQueryMan {
 
   public void addAgeVariable(Phenotype ageVariable) {
     if (contains(ageVariable, ageInclusion, ageExclusion)) return;
-    if (Phenotypes.isPhenotype(ageVariable)) agePhenotypeVariable = ageVariable;
-    else if (Phenotypes.isRestriction(ageVariable)) {
+    if (SubjectPhenotypes.isPhenotype(ageVariable)) agePhenotypeVariable = ageVariable;
+    else if (SubjectPhenotypes.isRestriction(ageVariable)) {
       ageRestrictionVariables.add(ageVariable);
       agePhenotypeVariable = phenotypes.get(ageVariable.getSuperPhenotype().getId());
     }
@@ -132,7 +132,7 @@ public class SubjectQueryMan {
     for (String sbjId : rs.getSubjectIds()) {
       for (Phenotype restr : restrVars) {
         Calculator calc = new Calculator();
-        Phenotypes phes = rs.getPhenotypes(sbjId);
+        SubjectPhenotypes phes = rs.getPhenotypes(sbjId);
         ValueList vals = phes.getValues(pheVar.getId(), null);
         calc.setVariable(pheVar.getId(), vals);
         MathExpression mathExp = Expressions.convert(restr.getExpression());

@@ -5,12 +5,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import care.smith.top.model.Constant;
 import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.NumberValue;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.ConstantEntity;
@@ -165,6 +168,10 @@ public class C2R {
     functions.put(function.getFunction().getId(), function.mathContext(mc));
   }
 
+  public Set<ExpressionFunction> getExpressionFunctions() {
+    return getFunctions().stream().map(f -> f.getFunction()).collect(Collectors.toSet());
+  }
+
   public Collection<FunctionEntity> getFunctions() {
     return functions.values();
   }
@@ -175,6 +182,10 @@ public class C2R {
 
   public void addConstant(ConstantEntity constant) {
     constants.put(constant.getConstant().getId(), constant);
+  }
+
+  public Set<Constant> getExpressionConstants() {
+    return getConstants().stream().map(c -> c.getConstant()).collect(Collectors.toSet());
   }
 
   public Collection<ConstantEntity> getConstants() {

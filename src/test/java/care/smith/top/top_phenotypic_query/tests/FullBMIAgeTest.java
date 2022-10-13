@@ -16,7 +16,7 @@ import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
-import care.smith.top.top_phenotypic_query.result.Phenotypes;
+import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 
@@ -45,7 +45,7 @@ public class FullBMIAgeTest extends AbstractTest {
 
     assertEquals(Set.of("1"), rs.getSubjectIds());
 
-    Phenotypes phes = rs.getPhenotypes("1");
+    SubjectPhenotypes phes = rs.getPhenotypes("1");
     Set<String> phesExpected = new HashSet<>(phenotypes.keySet());
     phesExpected.add("birthdate");
     assertEquals(phesExpected, phes.getPhenotypeNames());

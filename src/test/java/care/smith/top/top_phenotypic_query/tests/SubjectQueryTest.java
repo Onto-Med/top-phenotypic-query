@@ -18,7 +18,7 @@ import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
-import care.smith.top.top_phenotypic_query.result.Phenotypes;
+import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 
@@ -49,7 +49,7 @@ public class SubjectQueryTest extends AbstractTest {
     System.out.println(rs);
     assertEquals(Set.of("3"), rs.getSubjectIds());
 
-    Phenotypes phes = rs.getPhenotypes("3");
+    SubjectPhenotypes phes = rs.getPhenotypes("3");
     assertEquals(Set.of("Age", "Young", "Sex", "Female", "birthdate"), phes.getPhenotypeNames());
     assertEquals(
         BigDecimal.valueOf(32),
@@ -81,7 +81,7 @@ public class SubjectQueryTest extends AbstractTest {
     System.out.println(rs);
     assertEquals(Set.of("1"), rs.getSubjectIds());
 
-    Phenotypes phes = rs.getPhenotypes("1");
+    SubjectPhenotypes phes = rs.getPhenotypes("1");
     assertEquals(Set.of("Sex", "Female"), phes.getPhenotypeNames());
     assertEquals(
         "female", phes.getValues("Sex", null).getValues().get(0).asStringValue().getValue());
@@ -106,7 +106,7 @@ public class SubjectQueryTest extends AbstractTest {
     System.out.println(rs);
     assertEquals(Set.of("4"), rs.getSubjectIds());
 
-    Phenotypes phes = rs.getPhenotypes("4");
+    SubjectPhenotypes phes = rs.getPhenotypes("4");
     assertEquals(Set.of("Age", "Young", "birthdate"), phes.getPhenotypeNames());
     assertEquals(
         BigDecimal.valueOf(31),

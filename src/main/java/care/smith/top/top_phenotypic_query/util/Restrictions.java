@@ -2,13 +2,16 @@ package care.smith.top.top_phenotypic_query.util;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import care.smith.top.model.BooleanRestriction;
 import care.smith.top.model.DataType;
@@ -356,5 +359,50 @@ public class Restrictions {
 
   private static String format(RestrictionOperator op, DataAdapterFormat format) {
     return (format == null) ? op.getValue() : format.formatOperator(op);
+  }
+
+  public static Restriction getRestriction(List<String> list) {
+    RestrictionOperator minOperator = null;
+    RestrictionOperator maxOperator = null;
+    List<BigDecimal> decimalValues = new ArrayList<>();
+    List<LocalDateTime> dateValues = new ArrayList<>();
+    List<Boolean> booleanValues = new ArrayList<>();
+    List<String> stringValues = new ArrayList<>();
+
+    for (String e : list) {
+      if (RestrictionOperator.GREATER_THAN.getValue().equals(e))
+        minOperator = RestrictionOperator.GREATER_THAN;
+      else if (RestrictionOperator.GREATER_THAN_OR_EQUAL_TO.getValue().equals(e))
+        minOperator = RestrictionOperator.GREATER_THAN_OR_EQUAL_TO;
+      else if (RestrictionOperator.LESS_THAN.getValue().equals(e))
+        maxOperator = RestrictionOperator.LESS_THAN;
+      else if (RestrictionOperator.LESS_THAN_OR_EQUAL_TO.getValue().equals(e))
+        maxOperator = RestrictionOperator.LESS_THAN_OR_EQUAL_TO;
+      else {
+        if (NumberUtils.isParsable(e)) decimalValues.add(new BigDecimal(e));
+        else {
+          Optional<LocalDateTime> dv = DateUtil.parseOptional(e);
+          if (dv.isPresent()) dateValues.add(dv.get());
+          else {
+            if (e.equalsIgnoreCase("true") || e.equalsIgnoreCase("false"))
+              booleanValues.add(Boolean.parseBoolean(e));
+            else stringValues.add(e);
+          }
+        }
+      }
+    }
+
+    if (!decimalValues.isEmpty())
+      return new NumberRestriction()
+          .values(decimalValues)
+          .minOperator(minOperator)
+          .maxOperator(maxOperator);
+    if (!dateValues.isEmpty())
+      return new DateTimeRestriction()
+          .values(dateValues)
+          .minOperator(minOperator)
+          .maxOperator(maxOperator);
+    if (!booleanValues.isEmpty()) return new BooleanRestriction().values(booleanValues);
+    return new StringRestriction().values(stringValues);
   }
 }

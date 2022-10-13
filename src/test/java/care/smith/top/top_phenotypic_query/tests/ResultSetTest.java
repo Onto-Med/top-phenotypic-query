@@ -1,9 +1,9 @@
 package care.smith.top.top_phenotypic_query.tests;
 
 import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
-import care.smith.top.top_phenotypic_query.result.Phenotypes;
+import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.result.Values;
+import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
@@ -15,24 +15,24 @@ public class ResultSetTest extends AbstractTest {
 
   @Test
   public void testValues() {
-    Values weightVals1 = new Values("Weight");
+    PhenotypeValues weightVals1 = new PhenotypeValues("Weight");
     weightVals1.setDecimalValues(getDTR(2001), new DecimalValue(75));
-    Values heightVals1 = new Values("Height");
+    PhenotypeValues heightVals1 = new PhenotypeValues("Height");
     heightVals1.setDecimalValues(getDTR(2001), new DecimalValue(1.7));
-    Values ageVals1 = new Values("Age");
+    PhenotypeValues ageVals1 = new PhenotypeValues("Age");
     ageVals1.setDecimalValues(getDTR(2001), new DecimalValue(20));
 
-    Values weightVals2 = new Values("Weight");
+    PhenotypeValues weightVals2 = new PhenotypeValues("Weight");
     weightVals2.setDecimalValues(getDTR(2001), new DecimalValue(80));
-    Values heightVals2 = new Values("Height");
+    PhenotypeValues heightVals2 = new PhenotypeValues("Height");
     heightVals2.setDecimalValues(getDTR(2001), new DecimalValue(1.6));
-    Values ageVals2 = new Values("Age");
+    PhenotypeValues ageVals2 = new PhenotypeValues("Age");
     ageVals2.setDecimalValues(getDTR(2001), new DecimalValue(40));
 
-    Phenotypes phes1 = new Phenotypes("Subject1");
+    SubjectPhenotypes phes1 = new SubjectPhenotypes("Subject1");
     phes1.setValues(weightVals1, heightVals1, ageVals1);
 
-    Phenotypes phes2 = new Phenotypes("Subject2");
+    SubjectPhenotypes phes2 = new SubjectPhenotypes("Subject2");
     phes2.setValues(weightVals2, heightVals2, ageVals2);
 
     ResultSet rs = new ResultSet();
@@ -67,13 +67,13 @@ public class ResultSetTest extends AbstractTest {
 
     assertEquals(Set.of("S2", "S3"), intersection.getSubjectIds());
 
-    Phenotypes phesS2 = intersection.getPhenotypes("S2");
-    Phenotypes phesS3 = intersection.getPhenotypes("S3");
+    SubjectPhenotypes phesS2 = intersection.getPhenotypes("S2");
+    SubjectPhenotypes phesS3 = intersection.getPhenotypes("S3");
 
     assertEquals(Set.of("P1", "P2"), phesS2.getPhenotypeNames());
     assertEquals(Set.of("P2", "P3", "P4"), phesS3.getPhenotypeNames());
 
-    Values p3 = phesS3.getValues("P3");
+    PhenotypeValues p3 = phesS3.getValues("P3");
     assertEquals(
         Set.of(getDTR(2004), getDTR(2005), getDTR(2008), getDTR(2009)),
         p3.getDateTimeRestrictions());
@@ -91,52 +91,52 @@ public class ResultSetTest extends AbstractTest {
 
     assertEquals(Set.of("S1", "S2", "S3"), insert.getSubjectIds());
 
-    Phenotypes phesS1 = insert.getPhenotypes("S1");
-    Phenotypes phesS2 = insert.getPhenotypes("S2");
-    Phenotypes phesS3 = insert.getPhenotypes("S3");
+    SubjectPhenotypes phesS1 = insert.getPhenotypes("S1");
+    SubjectPhenotypes phesS2 = insert.getPhenotypes("S2");
+    SubjectPhenotypes phesS3 = insert.getPhenotypes("S3");
 
     assertEquals(Set.of("P1"), phesS1.getPhenotypeNames());
     assertEquals(Set.of("P1", "P2"), phesS2.getPhenotypeNames());
     assertEquals(Set.of("P2", "P3", "P4"), phesS3.getPhenotypeNames());
 
-    Values p3 = phesS3.getValues("P3");
+    PhenotypeValues p3 = phesS3.getValues("P3");
     assertEquals(
         Set.of(getDTR(2004), getDTR(2005), getDTR(2008), getDTR(2009)),
         p3.getDateTimeRestrictions());
   }
 
-  private static Phenotypes getSubject1() {
-    Phenotypes sp = new Phenotypes("S1");
+  private static SubjectPhenotypes getSubject1() {
+    SubjectPhenotypes sp = new SubjectPhenotypes("S1");
     sp.setValues(getPhenotype1());
     return sp;
   }
 
-  private static Phenotypes getSubject2() {
-    Phenotypes sp = new Phenotypes("S2");
+  private static SubjectPhenotypes getSubject2() {
+    SubjectPhenotypes sp = new SubjectPhenotypes("S2");
     sp.setValues(getPhenotype1(), getPhenotype2());
     return sp;
   }
 
-  private static Phenotypes getSubject3() {
-    Phenotypes sp = new Phenotypes("S3");
+  private static SubjectPhenotypes getSubject3() {
+    SubjectPhenotypes sp = new SubjectPhenotypes("S3");
     sp.setValues(getPhenotype2(), getPhenotype3());
     return sp;
   }
 
-  private static Phenotypes getSubject3b() {
-    Phenotypes sp = new Phenotypes("S3");
+  private static SubjectPhenotypes getSubject3b() {
+    SubjectPhenotypes sp = new SubjectPhenotypes("S3");
     sp.setValues(getPhenotype3b(), getPhenotype4());
     return sp;
   }
 
-  private static Phenotypes getSubject4() {
-    Phenotypes sp = new Phenotypes("S4");
+  private static SubjectPhenotypes getSubject4() {
+    SubjectPhenotypes sp = new SubjectPhenotypes("S4");
     sp.setValues(getPhenotype1());
     return sp;
   }
 
-  private static Values getPhenotype1() {
-    Values pv = new Values("P1");
+  private static PhenotypeValues getPhenotype1() {
+    PhenotypeValues pv = new PhenotypeValues("P1");
     pv.setDecimalValues(
         getDTR(2000), new DecimalValue(1), new DecimalValue(2), new DecimalValue(3));
     pv.setDecimalValues(
@@ -144,8 +144,8 @@ public class ResultSetTest extends AbstractTest {
     return pv;
   }
 
-  private static Values getPhenotype2() {
-    Values pv = new Values("P2");
+  private static PhenotypeValues getPhenotype2() {
+    PhenotypeValues pv = new PhenotypeValues("P2");
     pv.setDecimalValues(
         getDTR(2002), new DecimalValue(7), new DecimalValue(8), new DecimalValue(9));
     pv.setDecimalValues(
@@ -153,8 +153,8 @@ public class ResultSetTest extends AbstractTest {
     return pv;
   }
 
-  private static Values getPhenotype3() {
-    Values pv = new Values("P3");
+  private static PhenotypeValues getPhenotype3() {
+    PhenotypeValues pv = new PhenotypeValues("P3");
     pv.setDecimalValues(
         getDTR(2004), new DecimalValue(13), new DecimalValue(14), new DecimalValue(15));
     pv.setDecimalValues(
@@ -162,8 +162,8 @@ public class ResultSetTest extends AbstractTest {
     return pv;
   }
 
-  private static Values getPhenotype3b() {
-    Values pv = new Values("P3");
+  private static PhenotypeValues getPhenotype3b() {
+    PhenotypeValues pv = new PhenotypeValues("P3");
     pv.setDecimalValues(
         getDTR(2004), new DecimalValue(13), new DecimalValue(14), new DecimalValue(15));
     pv.setDecimalValues(
@@ -173,8 +173,8 @@ public class ResultSetTest extends AbstractTest {
     return pv;
   }
 
-  private static Values getPhenotype4() {
-    Values pv = new Values("P4");
+  private static PhenotypeValues getPhenotype4() {
+    PhenotypeValues pv = new PhenotypeValues("P4");
     pv.setDecimalValues(
         getDTR(2006), new DecimalValue(19), new DecimalValue(20), new DecimalValue(21));
     pv.setDecimalValues(
