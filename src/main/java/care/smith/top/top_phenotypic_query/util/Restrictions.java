@@ -383,11 +383,9 @@ public class Restrictions {
         else {
           Optional<LocalDateTime> dv = DateUtil.parseOptional(e);
           if (dv.isPresent()) dateValues.add(dv.get());
-          else {
-            if (e.equalsIgnoreCase("true") || e.equalsIgnoreCase("false"))
-              booleanValues.add(Boolean.parseBoolean(e));
-            else stringValues.add(e);
-          }
+          else if (e.equalsIgnoreCase("true") || e.equalsIgnoreCase("false"))
+            booleanValues.add(Boolean.parseBoolean(e));
+          else stringValues.add(e);
         }
       }
     }
