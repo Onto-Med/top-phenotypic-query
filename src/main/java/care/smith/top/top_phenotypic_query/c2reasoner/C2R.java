@@ -20,7 +20,10 @@ import care.smith.top.top_phenotypic_query.c2reasoner.constants.Now;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.Pi;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.True;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Empty;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Restrict;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Count;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
@@ -104,9 +107,9 @@ public class C2R {
     addFunction(Lt.get());
     addFunction(Ne.get());
     addFunction(In.get());
-    //    addFunction(Switch.get());
-    //    addFunction(Li.get());
-    //    addFunction(Restrict.get());
+    addFunction(Empty.get());
+    addFunction(Switch.get());
+    addFunction(Restrict.get());
   }
 
   public MathContext getMathContext() {

@@ -25,7 +25,7 @@ public class Restrictions {
 
   public static Restriction newRestriction(Integer card, Quantifier quan, Number... vals) {
     return new NumberRestriction()
-        .values(Values.toDecimal(vals))
+        .values(Values.newDecimals(vals))
         .quantifier(quan)
         .cardinality(card)
         .type(DataType.NUMBER);
@@ -36,10 +36,10 @@ public class Restrictions {
     NumberRestriction r = new NumberRestriction();
     if (oper == RestrictionOperator.GREATER_THAN
         || oper == RestrictionOperator.GREATER_THAN_OR_EQUAL_TO)
-      r.minOperator(oper).addValuesItem(Values.toDecimal(val));
+      r.minOperator(oper).addValuesItem(Values.newDecimal(val));
     else if (oper == RestrictionOperator.LESS_THAN
         || oper == RestrictionOperator.LESS_THAN_OR_EQUAL_TO)
-      r.maxOperator(oper).addValuesItem(null).addValuesItem(Values.toDecimal(val));
+      r.maxOperator(oper).addValuesItem(null).addValuesItem(Values.newDecimal(val));
     return r.quantifier(quan).cardinality(card).type(DataType.NUMBER);
   }
 
@@ -53,8 +53,8 @@ public class Restrictions {
     return new NumberRestriction()
         .minOperator(minOper)
         .maxOperator(maxOper)
-        .addValuesItem(Values.toDecimal(minVal))
-        .addValuesItem(Values.toDecimal(maxVal))
+        .addValuesItem(Values.newDecimal(minVal))
+        .addValuesItem(Values.newDecimal(maxVal))
         .quantifier(quan)
         .cardinality(card)
         .type(DataType.NUMBER);
@@ -74,6 +74,61 @@ public class Restrictions {
       Number minVal,
       RestrictionOperator maxOper,
       Number maxVal) {
+    return newRestriction(null, quan, minOper, minVal, maxOper, maxVal);
+  }
+
+  public static Restriction newRestriction(Integer card, Quantifier quan, LocalDateTime... vals) {
+    return new DateTimeRestriction()
+        .values(List.of(vals))
+        .quantifier(quan)
+        .cardinality(card)
+        .type(DataType.DATE_TIME);
+  }
+
+  public static Restriction newRestriction(
+      Integer card, Quantifier quan, RestrictionOperator oper, LocalDateTime val) {
+    DateTimeRestriction r = new DateTimeRestriction();
+    if (oper == RestrictionOperator.GREATER_THAN
+        || oper == RestrictionOperator.GREATER_THAN_OR_EQUAL_TO)
+      r.minOperator(oper).addValuesItem(val);
+    else if (oper == RestrictionOperator.LESS_THAN
+        || oper == RestrictionOperator.LESS_THAN_OR_EQUAL_TO)
+      r.maxOperator(oper).addValuesItem(null).addValuesItem(val);
+    return r.quantifier(quan).cardinality(card).type(DataType.DATE_TIME);
+  }
+
+  public static Restriction newRestriction(
+      Integer card,
+      Quantifier quan,
+      RestrictionOperator minOper,
+      LocalDateTime minVal,
+      RestrictionOperator maxOper,
+      LocalDateTime maxVal) {
+    return new DateTimeRestriction()
+        .minOperator(minOper)
+        .maxOperator(maxOper)
+        .addValuesItem(minVal)
+        .addValuesItem(maxVal)
+        .quantifier(quan)
+        .cardinality(card)
+        .type(DataType.DATE_TIME);
+  }
+
+  public static Restriction newRestriction(Quantifier quan, LocalDateTime... vals) {
+    return newRestriction(null, quan, vals);
+  }
+
+  public static Restriction newRestriction(
+      Quantifier quan, RestrictionOperator oper, LocalDateTime val) {
+    return newRestriction(null, quan, oper, val);
+  }
+
+  public static Restriction newRestriction(
+      Quantifier quan,
+      RestrictionOperator minOper,
+      LocalDateTime minVal,
+      RestrictionOperator maxOper,
+      LocalDateTime maxVal) {
     return newRestriction(null, quan, minOper, minVal, maxOper, maxVal);
   }
 
@@ -226,13 +281,13 @@ public class Restrictions {
     Map<RestrictionOperator, Value> limits = new LinkedHashMap<>();
     if (hasNumberType(r)) {
       NumberRestriction nr = (NumberRestriction) r;
-      List<Value> nVals = Values.toNumberValues(nr.getValues());
+      List<Value> nVals = Values.newNumberValues(nr.getValues());
       if (nr.getMinOperator() != null) limits.put(nr.getMinOperator(), nVals.get(0));
       if (nr.getMaxOperator() != null) limits.put(nr.getMaxOperator(), nVals.get(1));
     }
     if (hasDateTimeType(r)) {
       DateTimeRestriction dr = (DateTimeRestriction) r;
-      List<Value> dVals = Values.toDateTimeValues(dr.getValues());
+      List<Value> dVals = Values.newDateTimeValues(dr.getValues());
       if (dr.getMinOperator() != null) limits.put(dr.getMinOperator(), dVals.get(0));
       if (dr.getMaxOperator() != null) limits.put(dr.getMaxOperator(), dVals.get(1));
     }
@@ -240,10 +295,10 @@ public class Restrictions {
   }
 
   public static List<Value> getValues(Restriction r) {
-    if (hasNumberType(r)) return Values.toNumberValues(getNumberValues(r));
-    if (hasDateTimeType(r)) return Values.toDateTimeValues(getDateTimeValues(r));
-    if (hasBooleanType(r)) return Values.toBooleanValues(getBooleanValues(r));
-    return Values.toStringValues(getStringValues(r));
+    if (hasNumberType(r)) return Values.newNumberValues(getNumberValues(r));
+    if (hasDateTimeType(r)) return Values.newDateTimeValues(getDateTimeValues(r));
+    if (hasBooleanType(r)) return Values.newBooleanValues(getBooleanValues(r));
+    return Values.newStringValues(getStringValues(r));
   }
 
   public static List<String> getStringValues(Restriction r) {

@@ -1,71 +1,79 @@
-package care.smith.top.simple_onto_api.calculator.functions.advanced;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import care.smith.top.simple_onto_api.calculator.Exceptions;
-import care.smith.top.simple_onto_api.calculator.functions.Function;
-import care.smith.top.simple_onto_api.calculator.functions.aggregate.Aggregator;
-import care.smith.top.simple_onto_api.model.enums.Datatype;
-import care.smith.top.simple_onto_api.model.property.data.value.DateTimeValue;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
-import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
+import care.smith.top.model.DataType;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.model.Restriction;
+import care.smith.top.model.RestrictionOperator;
+import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
+import care.smith.top.top_phenotypic_query.util.Values;
 
-public class Restrict extends Function {
+public class Restrict extends FunctionEntity {
 
-  private static Restrict instance = null;
+  private static Restrict INSTANCE = new Restrict();
 
   private Restrict() {
-    super("restrict", "restrict", Function.Notation.PREFIX);
-    minArgumentsNumber(2);
-    maxArgumentsNumber(3);
+    super(
+        new ExpressionFunction()
+            .id("restrict")
+            .title("restrict")
+            .minArgumentNumber(2)
+            .maxArgumentNumber(2)
+            .notation(NotationEnum.PREFIX));
   }
 
   public static Restrict get() {
-    if (instance == null) instance = new Restrict();
-    return instance;
+    return INSTANCE;
   }
 
   @Override
-  public Value calculate(List<Value> values, Function defaultAggregateFunction) {
-    Exceptions.checkArgumentsNumber(this, values);
-    Exceptions.checkArgumentTypes(this, values.get(1), Datatype.DECIMAL, Datatype.DATE_TIME);
+  public Expression calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+    Exceptions.checkArgumentsNumber(getFunction(), args);
+    args = c2r.calculate(args, defaultAggregateFunction);
+    Exceptions.checkArgumentTypes(getFunction(), args.get(1), DataType.NUMBER, DataType.DATE_TIME);
 
-    List<Value> vals = Aggregator.valueToList(values.get(0));
-    List<Value> range = Aggregator.valueToList(values.get(1));
-    List<Value> limits = (values.size() > 2) ? Aggregator.valueToList(values.get(2)) : null;
+    List<Value> vals = args.get(0).getValues();
+    Restriction r = args.get(1).getRestriction();
+    List<Value> res = new ArrayList<>();
 
-    ValueList vl = ValueList.get(values.get(0).getDatatype());
-    Datatype rangeDatatype = values.get(1).getDatatype();
-
-    if (limits == null || limits.isEmpty()) {
-      if (rangeDatatype == Datatype.DECIMAL) checkValueRange(vals, range, vl);
-      else checkDateRange(vals, range, vl);
+    if (Restrictions.hasInterval(r)) {
+      if (Restrictions.hasNumberType(r))
+        calculateInNumberInterval(vals, Restrictions.getInterval(r), res);
+      else calculateInDateInterval(vals, Restrictions.getInterval(r), res);
     } else {
-      if (rangeDatatype == Datatype.DECIMAL) checkValueRange(vals, range, limits, vl);
-      else checkDateRange(vals, range, limits, vl);
+      if (Restrictions.hasNumberType(r)) calculateInNumberSet(vals, Restrictions.getValues(r), res);
+      else calculateInDateSet(vals, Restrictions.getValues(r), res);
     }
 
-    return vl;
+    return Expressions.newExpression(res);
   }
 
-  private void checkValueRange(List<Value> vals, List<Value> range, ValueList vl) {
-    for (Value v : vals) if (In.valueInSet(v, range)) vl.addValueCheked(v);
+  private void calculateInNumberInterval(
+      List<Value> vals, Map<RestrictionOperator, Value> inter, List<Value> res) {
+    for (Value v : vals) if (Values.contains(inter, v)) res.add(v);
   }
 
-  private void checkValueRange(
-      List<Value> vals, List<Value> range, List<Value> limits, ValueList vl) {
-    for (Value v : vals) if (In.valueInInterval(v, range, limits)) vl.addValueCheked(v);
+  private void calculateInNumberSet(List<Value> vals, List<Value> set, List<Value> res) {
+    for (Value v : vals) if (Values.contains(set, v)) res.add(v);
   }
 
-  private void checkDateRange(List<Value> vals, List<Value> range, ValueList vl) {
-    for (Value v : vals)
-      if (In.valueInSet(new DateTimeValue(v.getDateTime()), range)) vl.addValueCheked(v);
+  private void calculateInDateInterval(
+      List<Value> vals, Map<RestrictionOperator, Value> inter, List<Value> res) {
+    for (Value v : vals) if (Values.contains(inter, Values.newValue(v.getDateTime()))) res.add(v);
   }
 
-  private void checkDateRange(
-      List<Value> vals, List<Value> range, List<Value> limits, ValueList vl) {
-    for (Value v : vals)
-      if (In.valueInInterval(new DateTimeValue(v.getDateTime()), range, limits))
-        vl.addValueCheked(v);
+  private void calculateInDateSet(List<Value> vals, List<Value> set, List<Value> res) {
+    for (Value v : vals) if (Values.contains(set, Values.newValue(v.getDateTime()))) res.add(v);
   }
 }

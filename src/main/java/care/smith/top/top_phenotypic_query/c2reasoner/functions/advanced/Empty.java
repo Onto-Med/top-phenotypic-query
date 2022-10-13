@@ -1,30 +1,41 @@
-package care.smith.top.simple_onto_api.calculator.functions.advanced;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced;
 
 import java.util.List;
 
-import care.smith.top.simple_onto_api.calculator.Exceptions;
-import care.smith.top.simple_onto_api.calculator.functions.Function;
-import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.Expression;
+import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 
-public class Empty extends Function {
+public class Empty extends FunctionEntity {
 
-  private static Empty instance = null;
+  private static Empty INSTANCE = new Empty();
 
   private Empty() {
-    super("empty", "empty", Notation.PREFIX);
-    minArgumentsNumber(1);
-    maxArgumentsNumber(1);
+    super(
+        new ExpressionFunction()
+            .id("empty")
+            .title("empty")
+            .minArgumentNumber(1)
+            .maxArgumentNumber(1)
+            .notation(NotationEnum.PREFIX));
   }
 
   public static Empty get() {
-    if (instance == null) instance = new Empty();
-    return instance;
+    return INSTANCE;
   }
 
   @Override
-  public Value calculate(List<Value> values, Function defaultAggregateFunction) {
-    Exceptions.checkArgumentsNumber(this, values);
-    return new BooleanValue(values.get(0).isValueList() && values.get(0).asValueList().isEmpty());
+  public Expression calculate(
+      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+    Exceptions.checkArgumentsNumber(getFunction(), args);
+    Expression arg = args.get(0);
+    Value val = arg.getValue();
+    List<Value> vals = arg.getValues();
+    return Expressions.newExpression(val == null && (vals == null || vals.isEmpty()));
   }
 }

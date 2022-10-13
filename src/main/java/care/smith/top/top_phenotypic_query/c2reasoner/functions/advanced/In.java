@@ -41,7 +41,7 @@ public class In extends FunctionEntity {
       List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = c2r.calculate(args, defaultAggregateFunction);
-    Exceptions.checkArgumentsHaveSameType(getFunction(), args.subList(0, 2));
+    Exceptions.checkArgumentsHaveSameType(getFunction(), args);
 
     if (args.get(1).getValues() != null) {
       Expression val = Aggregator.aggregate(args.get(0), defaultAggregateFunction, c2r);
@@ -57,17 +57,17 @@ public class In extends FunctionEntity {
   }
 
   private Expression calculateInInterval(
-      List<Value> values, Map<RestrictionOperator, Value> inter, Quantifier quan, Integer card) {
+      List<Value> vals, Map<RestrictionOperator, Value> inter, Quantifier quan, Integer card) {
     int hits = 0;
-    for (Value v : values) if (Values.contains(inter, v)) hits++;
-    return Expressions.newExpression(checkQuantifier(values.size(), hits, quan, card));
+    for (Value v : vals) if (Values.contains(inter, v)) hits++;
+    return Expressions.newExpression(checkQuantifier(vals.size(), hits, quan, card));
   }
 
   private Expression calculateInSet(
-      List<Value> values, List<Value> set, Quantifier quan, Integer card) {
+      List<Value> vals, List<Value> set, Quantifier quan, Integer card) {
     int hits = 0;
-    for (Value v : values) if (Values.contains(set, v)) hits++;
-    return Expressions.newExpression(checkQuantifier(values.size(), hits, quan, card));
+    for (Value v : vals) if (Values.contains(set, v)) hits++;
+    return Expressions.newExpression(checkQuantifier(vals.size(), hits, quan, card));
   }
 
   private boolean checkQuantifier(int size, int hits, Quantifier quan, Integer card) {

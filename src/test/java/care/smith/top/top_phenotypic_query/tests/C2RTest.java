@@ -2,11 +2,13 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -28,64 +30,55 @@ import care.smith.top.top_phenotypic_query.util.Values;
 
 public class C2RTest {
 
-  //  @Test
-  //  public void testRestrict1() {
-  //    DecimalValue v1 = new DecimalValue(5, "2000-01-01");
-  //    DecimalValue v2 = new DecimalValue(10, "2001-01-01");
-  //    DecimalValue v3 = new DecimalValue(15, "2002-01-01");
-  //    DecimalValueList valList = new DecimalValueList(v1, v2, v3);
-  //    ConstantExpression vals = new ConstantExpression(valList);
-  //
-  //    DecimalValue min = new DecimalValue(5);
-  //    DecimalValue max = new DecimalValue(15);
-  //    DecimalValueList rangeList = new DecimalValueList(min, max);
-  //    ConstantExpression range = new ConstantExpression(rangeList);
-  //
-  //    StringValue ge = new StringValue("ge");
-  //    StringValue lt = new StringValue("lt");
-  //    StringValueList limitsList = new StringValueList(ge, lt);
-  //    ConstantExpression limits = new ConstantExpression(limitsList);
-  //
-  //    Calculator c = new Calculator();
-  //    MathExpression e = new FunctionExpression("restrict").arg(vals).arg(range).arg(limits);
-  //    Value res = c.calculate(e);
-  //    assertTrue(res.isValueList());
-  //
-  //    List<Value> values = res.asValueList().getValues();
-  //    assertEquals(
-  //        Set.of(5, 10),
-  //        values.stream().map(v -> v.getValueDecimal().intValue()).collect(Collectors.toSet()));
-  //  }
-  //
-  //  @Test
-  //  public void testRestrict2() {
-  //    DecimalValue v1 = new DecimalValue(5, "2000-01-01");
-  //    DecimalValue v2 = new DecimalValue(10, "2001-01-01");
-  //    DecimalValue v3 = new DecimalValue(15, "2002-01-01");
-  //    DecimalValueList valList = new DecimalValueList(v1, v2, v3);
-  //    ConstantExpression vals = new ConstantExpression(valList);
-  //
-  //    DateTimeValue min = new DateTimeValue("2001-01-01");
-  //    DateTimeValue max = new DateTimeValue("2002-01-01");
-  //    DateTimeValueList rangeList = new DateTimeValueList(min, max);
-  //    ConstantExpression range = new ConstantExpression(rangeList);
-  //
-  //    StringValue ge = new StringValue("ge");
-  //    StringValue lt = new StringValue("le");
-  //    StringValueList limitsList = new StringValueList(ge, lt);
-  //    ConstantExpression limits = new ConstantExpression(limitsList);
-  //
-  //    Calculator c = new Calculator();
-  //    MathExpression e = new FunctionExpression("restrict").arg(vals).arg(range).arg(limits);
-  //    Value res = c.calculate(e);
-  //    assertTrue(res.isValueList());
-  //
-  //    List<Value> values = res.asValueList().getValues();
-  //    assertEquals(
-  //        Set.of(15, 10),
-  //        values.stream().map(v -> v.getValueDecimal().intValue()).collect(Collectors.toSet()));
-  //  }
-  //
+  @Test
+  public void testRestrict1() {
+    Value v1 = Values.newValue(5, DateUtil.parse("2000-01-01"));
+    Value v2 = Values.newValue(10, DateUtil.parse("2001-01-01"));
+    Value v3 = Values.newValue(15, DateUtil.parse("2002-01-01"));
+    Value v4 = Values.newValue(8, DateUtil.parse("2003-01-01"));
+    Expression vals = Expressions.newExpression(v1, v2, v3, v4);
+
+    Expression rest =
+        Expressions.newExpression(
+            null,
+            RestrictionOperator.GREATER_THAN_OR_EQUAL_TO,
+            5,
+            RestrictionOperator.LESS_THAN,
+            15);
+
+    C2R c = new C2R();
+    Expression e =
+        new Expression().functionId("restrict").addArgumentsItem(vals).addArgumentsItem(rest);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(5), BigDecimal.valueOf(10), BigDecimal.valueOf(8)),
+        Expressions.getNumberValues(c.calculate(e)));
+  }
+
+  @Test
+  public void testRestrict2() {
+    Value v1 = Values.newValue(5, DateUtil.parse("2000-01-01"));
+    Value v2 = Values.newValue(10, DateUtil.parse("2001-01-01"));
+    Value v3 = Values.newValue(15, DateUtil.parse("2002-01-01"));
+    Value v4 = Values.newValue(8, DateUtil.parse("2003-01-01"));
+    Expression vals = Expressions.newExpression(v1, v2, v3, v4);
+
+    Expression rest =
+        Expressions.newExpression(
+            null,
+            RestrictionOperator.GREATER_THAN_OR_EQUAL_TO,
+            DateUtil.parse("2001-01-01"),
+            RestrictionOperator.LESS_THAN,
+            DateUtil.parse("2002-01-02"));
+
+    C2R c = new C2R();
+    Expression e =
+        new Expression().functionId("restrict").addArgumentsItem(vals).addArgumentsItem(rest);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(10), BigDecimal.valueOf(15)),
+        Expressions.getNumberValues(c.calculate(e)));
+  }
 
   @Test
   public void testNot() {
@@ -164,39 +157,62 @@ public class C2RTest {
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
   }
 
-  //  @Test
-  //  public void testSwitch() {
-  //    ConstantExpression s1 = new ConstantExpression(new DecimalValue(1));
-  //    ConstantExpression s2 = new ConstantExpression(new DecimalValue(2));
-  //    ConstantExpression s3 = new ConstantExpression(new DecimalValue(3));
-  //    ConstantExpression d = new ConstantExpression(new DecimalValue(-1));
-  //
-  //    ConstantExpression v1 = new ConstantExpression(new DecimalValue(5));
-  //    ConstantExpression v2 = new ConstantExpression(new DecimalValue(10));
-  //
-  //    Calculator c = new Calculator();
-  //
-  //    MathExpression e1 = new FunctionExpression("eq").arg(v1).arg(v2);
-  //    MathExpression e2 = new FunctionExpression("lt").arg(v1).arg(v2);
-  //    MathExpression e3 = new FunctionExpression("gt").arg(v1).arg(v2);
-  //    MathExpression res =
-  //        new FunctionExpression("switch").arg(e1).arg(s1).arg(e2).arg(s2).arg(e3).arg(s3).arg(d);
-  //    assertEquals(new BigDecimal("2"), c.calculate(res).getValueDecimal());
-  //
-  //    MathExpression res2 = new
-  // FunctionExpression("switch").arg(e1).arg(s1).arg(e3).arg(s3).arg(d);
-  //    assertEquals(new BigDecimal("-1"), c.calculate(res2).getValueDecimal());
-  //
-  //    MathExpression res3 = new FunctionExpression("switch").arg(e1).arg(s1).arg(e3).arg(s3);
-  //    Exception exception =
-  //        assertThrows(
-  //            ArithmeticException.class,
-  //            () -> {
-  //              c.calculate(res3);
-  //            });
-  //    assertEquals("No default value defined for the function 'switch'!", exception.getMessage());
-  //  }
-  //
+  @Test
+  public void testSwitch() {
+    Expression s1 = Expressions.newExpression(1);
+    Expression s2 = Expressions.newExpression(2);
+    Expression s3 = Expressions.newExpression(3);
+    Expression d = Expressions.newExpression(-1);
+
+    Expression v1 = Expressions.newExpression(5);
+    Expression v2 = Expressions.newExpression(10);
+
+    C2R c = new C2R();
+
+    Expression e1 = new Expression().functionId("eq").addArgumentsItem(v1).addArgumentsItem(v2);
+    Expression e2 = new Expression().functionId("lt").addArgumentsItem(v1).addArgumentsItem(v2);
+    Expression e3 = new Expression().functionId("gt").addArgumentsItem(v1).addArgumentsItem(v2);
+
+    Expression res =
+        new Expression()
+            .functionId("switch")
+            .addArgumentsItem(e1)
+            .addArgumentsItem(s1)
+            .addArgumentsItem(e2)
+            .addArgumentsItem(s2)
+            .addArgumentsItem(e3)
+            .addArgumentsItem(s3);
+
+    assertEquals(new BigDecimal("2"), Expressions.getNumberValue(c.calculate(res)));
+
+    res =
+        new Expression()
+            .functionId("switch")
+            .addArgumentsItem(e1)
+            .addArgumentsItem(s1)
+            .addArgumentsItem(e3)
+            .addArgumentsItem(s3)
+            .addArgumentsItem(d);
+
+    assertEquals(new BigDecimal("-1"), Expressions.getNumberValue(c.calculate(res)));
+
+    Expression res1 =
+        new Expression()
+            .functionId("switch")
+            .addArgumentsItem(e1)
+            .addArgumentsItem(s1)
+            .addArgumentsItem(e3)
+            .addArgumentsItem(s3);
+
+    Exception exception =
+        assertThrows(
+            ArithmeticException.class,
+            () -> {
+              c.calculate(res1);
+            });
+    assertEquals("No default value defined for the function 'switch'!", exception.getMessage());
+  }
+
   @Test
   public void testComparison() {
     C2R c = new C2R();

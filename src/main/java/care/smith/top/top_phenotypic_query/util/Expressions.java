@@ -34,6 +34,22 @@ public class Expressions {
     return Values.getDateTimeValue(exp.getValue());
   }
 
+  public static List<BigDecimal> getNumberValues(Expression exp) {
+    return Values.getNumberValues(exp.getValues());
+  }
+
+  public static List<String> getStringValues(Expression exp) {
+    return Values.getStringValues(exp.getValues());
+  }
+
+  public static List<Boolean> getBooleanValues(Expression exp) {
+    return Values.getBooleanValues(exp.getValues());
+  }
+
+  public static List<LocalDateTime> getDateTimeValues(Expression exp) {
+    return Values.getDateTimeValues(exp.getValues());
+  }
+
   public static boolean hasValueTrue(Expression exp) {
     return Values.getBooleanValue(exp.getValue());
   }
@@ -82,6 +98,43 @@ public class Expressions {
     return newExpression(null, quan, minOper, minVal, maxOper, maxVal);
   }
 
+  public static Expression newExpression(Integer card, Quantifier quan, LocalDateTime... vals) {
+    return newExpression(Restrictions.newRestriction(card, quan, vals));
+  }
+
+  public static Expression newExpression(
+      Integer card, Quantifier quan, RestrictionOperator oper, LocalDateTime val) {
+    return newExpression(Restrictions.newRestriction(card, quan, oper, val));
+  }
+
+  public static Expression newExpression(
+      Integer card,
+      Quantifier quan,
+      RestrictionOperator minOper,
+      LocalDateTime minVal,
+      RestrictionOperator maxOper,
+      LocalDateTime maxVal) {
+    return newExpression(Restrictions.newRestriction(card, quan, minOper, minVal, maxOper, maxVal));
+  }
+
+  public static Expression newExpression(Quantifier quan, LocalDateTime... vals) {
+    return newExpression(null, quan, vals);
+  }
+
+  public static Expression newExpression(
+      Quantifier quan, RestrictionOperator oper, LocalDateTime val) {
+    return newExpression(null, quan, oper, val);
+  }
+
+  public static Expression newExpression(
+      Quantifier quan,
+      RestrictionOperator minOper,
+      LocalDateTime minVal,
+      RestrictionOperator maxOper,
+      LocalDateTime maxVal) {
+    return newExpression(null, quan, minOper, minVal, maxOper, maxVal);
+  }
+
   public static Expression newExpression(Value val) {
     return new Expression().value(val);
   }
@@ -103,7 +156,7 @@ public class Expressions {
   }
 
   public static Expression newExpression(Number... numbers) {
-    return newExpression(Values.toValues(numbers));
+    return newExpression(Values.newValues(numbers));
   }
 
   public static Expression newExpression(Boolean val) {

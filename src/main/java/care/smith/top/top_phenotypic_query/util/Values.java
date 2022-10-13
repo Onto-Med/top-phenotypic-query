@@ -31,12 +31,12 @@ public class Values {
         }
       };
 
-  public static BigDecimal toDecimal(Number num) {
+  public static BigDecimal newDecimal(Number num) {
     return new BigDecimal(num.toString());
   }
 
-  public static List<BigDecimal> toDecimal(Number... nums) {
-    return Stream.of(nums).map(n -> toDecimal(n)).collect(Collectors.toList());
+  public static List<BigDecimal> newDecimals(Number... nums) {
+    return Stream.of(nums).map(n -> newDecimal(n)).collect(Collectors.toList());
   }
 
   public static Value newValue(Boolean val) {
@@ -44,7 +44,7 @@ public class Values {
   }
 
   public static Value newValue(Number val) {
-    return new NumberValue().value(toDecimal(val)).dataType(DataType.NUMBER);
+    return new NumberValue().value(newDecimal(val)).dataType(DataType.NUMBER);
   }
 
   public static Value newValue(BigDecimal val) {
@@ -87,23 +87,23 @@ public class Values {
     return newValue(false);
   }
 
-  public static List<Value> toBooleanValues(List<Boolean> vals) {
+  public static List<Value> newBooleanValues(List<Boolean> vals) {
     return vals.stream().map(v -> newValue(v)).collect(Collectors.toList());
   }
 
-  public static List<Value> toNumberValues(List<BigDecimal> vals) {
+  public static List<Value> newNumberValues(List<BigDecimal> vals) {
     return vals.stream().map(v -> newValue(v)).collect(Collectors.toList());
   }
 
-  public static List<Value> toStringValues(List<String> vals) {
+  public static List<Value> newStringValues(List<String> vals) {
     return vals.stream().map(v -> newValue(v)).collect(Collectors.toList());
   }
 
-  public static List<Value> toDateTimeValues(List<LocalDateTime> vals) {
+  public static List<Value> newDateTimeValues(List<LocalDateTime> vals) {
     return vals.stream().map(v -> newValue(v)).collect(Collectors.toList());
   }
 
-  public static List<Value> toValues(Number... nums) {
+  public static List<Value> newValues(Number... nums) {
     return Stream.of(nums).map(n -> newValue(n)).collect(Collectors.toList());
   }
 
@@ -156,6 +156,22 @@ public class Values {
 
   public static Boolean getBooleanValue(Value val) {
     return ((BooleanValue) val).isValue();
+  }
+
+  public static List<String> getStringValues(List<Value> vals) {
+    return vals.stream().map(v -> getStringValue(v)).collect(Collectors.toList());
+  }
+
+  public static List<BigDecimal> getNumberValues(List<Value> vals) {
+    return vals.stream().map(v -> getNumberValue(v)).collect(Collectors.toList());
+  }
+
+  public static List<LocalDateTime> getDateTimeValues(List<Value> vals) {
+    return vals.stream().map(v -> getDateTimeValue(v)).collect(Collectors.toList());
+  }
+
+  public static List<Boolean> getBooleanValues(List<Value> vals) {
+    return vals.stream().map(v -> getBooleanValue(v)).collect(Collectors.toList());
   }
 
   public static boolean contains(List<Value> set, Value value) {
