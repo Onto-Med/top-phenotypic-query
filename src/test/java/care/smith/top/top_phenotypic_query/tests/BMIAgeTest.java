@@ -16,6 +16,8 @@ import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.CompositeSearch;
+import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
 
 public class BMIAgeTest extends AbstractTest {
@@ -43,6 +45,10 @@ public class BMIAgeTest extends AbstractTest {
             bmi27_30,
             finding,
             overWeight);
+
+    for (Phenotype p : phenotypes.values()) {
+      if (Phenotypes.isRestriction(p)) p.setExpression(Expressions.restrictionToExpression(p));
+    }
 
     ResultSet initialRS = getResultSet();
     System.out.println(initialRS);

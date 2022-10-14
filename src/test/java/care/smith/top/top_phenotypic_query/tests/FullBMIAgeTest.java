@@ -2,7 +2,6 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
@@ -35,7 +34,7 @@ public class FullBMIAgeTest extends AbstractTest {
     Query query = new Query().addCriteriaItem(cri1).addCriteriaItem(cri2);
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test3.yml");
-    assertNotNull(configFile);
+    //    assertNotNull(configFile);
     DataAdapterConfig config = DataAdapterConfig.getInstance(configFile.getPath());
     SQLAdapter adapter = new SQLAdapter(config);
 

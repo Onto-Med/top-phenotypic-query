@@ -79,6 +79,7 @@ public class SubjectSearch extends PhenotypeSearch {
     }
 
     if (ageMin != null) {
+      if (ageMax == null) bdR.addValuesItem(null);
       bdR.addValuesItem(ageToBirthdate(ageMin.longValue()));
       if (ageR.getMinOperator() == RestrictionOperator.GREATER_THAN)
         bdR.setMaxOperator(RestrictionOperator.LESS_THAN);

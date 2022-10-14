@@ -203,6 +203,7 @@ public abstract class AbstractTest {
     }
 
     if (max != null) {
+      if (min == null) restriction.addValuesItem(null);
       restriction.maxOperator(maxOperator).addValuesItem(new BigDecimal(max.toString()));
       //      addArgument(range, new BigDecimal(max.toString()));
       //      addArgument(limits, maxOperator.getValue());

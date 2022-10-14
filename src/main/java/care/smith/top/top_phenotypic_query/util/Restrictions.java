@@ -331,7 +331,6 @@ public class Restrictions {
 
   public static BigDecimal getMaxIntervalValue(NumberRestriction r) {
     if (r.getMaxOperator() == null) return null;
-    if (r.getMinOperator() == null) return r.getValues().get(0);
     return r.getValues().get(1);
   }
 
@@ -390,16 +389,22 @@ public class Restrictions {
       }
     }
 
-    if (!decimalValues.isEmpty())
-      return new NumberRestriction()
-          .values(decimalValues)
-          .minOperator(minOperator)
-          .maxOperator(maxOperator);
-    if (!dateValues.isEmpty())
-      return new DateTimeRestriction()
-          .values(dateValues)
-          .minOperator(minOperator)
-          .maxOperator(maxOperator);
+    if (!decimalValues.isEmpty()) {
+      NumberRestriction nr =
+          new NumberRestriction().minOperator(minOperator).maxOperator(maxOperator);
+      if (minOperator == null && maxOperator != null)
+        nr.setValues(List.of(null, decimalValues.get(0)));
+      else nr.setValues(decimalValues);
+      return nr;
+    }
+    if (!dateValues.isEmpty()) {
+      DateTimeRestriction dr =
+          new DateTimeRestriction().minOperator(minOperator).maxOperator(maxOperator);
+      if (minOperator == null && maxOperator != null)
+        dr.setValues(List.of(null, dateValues.get(0)));
+      else dr.setValues(dateValues);
+      return dr;
+    }
     if (!booleanValues.isEmpty()) return new BooleanRestriction().values(booleanValues);
     return new StringRestriction().values(stringValues);
   }

@@ -1,7 +1,7 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
@@ -34,7 +34,7 @@ public class First extends FunctionEntity {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = c2r.calculate(args, defaultAggregateFunction);
     args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
-    Collections.sort(args, Values.VALUE_DATE_COMPARATOR);
+    args = args.stream().sorted(Values.VALUE_DATE_COMPARATOR).collect(Collectors.toList());
     return args.get(0);
   }
 }
