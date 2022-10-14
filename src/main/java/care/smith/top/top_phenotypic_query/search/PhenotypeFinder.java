@@ -8,8 +8,8 @@ import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.util.ExpressionUtil;
-import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
+import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class PhenotypeFinder {
 
@@ -24,8 +24,8 @@ public class PhenotypeFinder {
     this.adapter = adapter;
     this.config = adapter.getConfig();
     for (Phenotype p : this.phenotypes.values()) {
-      if (PhenotypeUtil.isRestriction(p))
-        p.setExpression(ExpressionUtil.restrictionToExpression(p));
+      if (Phenotypes.isRestriction(p))
+        p.setExpression(Expressions.restrictionToExpression(p));
     }
   }
 
@@ -36,7 +36,7 @@ public class PhenotypeFinder {
   private ResultSet executeCompositeSearches(ResultSet rs) {
     for (QueryCriterion cri : query.getCriteria()) {
       Phenotype phe = phenotypes.get(cri.getSubjectId());
-      if (PhenotypeUtil.isComposite(phe)) new CompositeSearch(query, cri, rs, phenotypes).execute();
+      if (Phenotypes.isComposite(phe)) new CompositeSearch(query, cri, rs, phenotypes).execute();
     }
     return rs;
   }
@@ -46,7 +46,7 @@ public class PhenotypeFinder {
     SubjectQueryMan sbjMan = new SubjectQueryMan(adapter, phenotypes);
     for (QueryCriterion cri : query.getCriteria()) {
       Phenotype phe = phenotypes.get(cri.getSubjectId());
-      if (PhenotypeUtil.isSingle(phe)) {
+      if (Phenotypes.isSingle(phe)) {
         if (config.isAge(phe, phenotypes)) sbjMan.setAgeCriterion(cri, phe);
         else if (config.isBirthdate(phe, phenotypes)) sbjMan.setBirthdateCriterion(cri, phe);
         else if (config.isSex(phe, phenotypes)) sbjMan.setSexCriterion(cri, phe);
@@ -56,10 +56,10 @@ public class PhenotypeFinder {
 
     for (QueryCriterion cri : query.getCriteria()) {
       Phenotype phe = phenotypes.get(cri.getSubjectId());
-      if (PhenotypeUtil.isComposite(phe)) {
-        for (String var : ExpressionUtil.getVariables(phe.getExpression(), phenotypes)) {
+      if (Phenotypes.isComposite(phe)) {
+        for (String var : Expressions.getVariables(phe.getExpression(), phenotypes)) {
           Phenotype varPhe = phenotypes.get(var);
-          if (PhenotypeUtil.isSingle(varPhe)) {
+          if (Phenotypes.isSingle(varPhe)) {
             if (config.isAge(varPhe, phenotypes)) sbjMan.addAgeVariable(varPhe);
             else if (config.isBirthdate(varPhe, phenotypes)) sbjMan.addBirthdateVariable(varPhe);
             else if (config.isSex(varPhe, phenotypes)) sbjMan.addSexVariable(varPhe);

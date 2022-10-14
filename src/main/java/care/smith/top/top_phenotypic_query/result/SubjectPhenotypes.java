@@ -1,39 +1,40 @@
 package care.smith.top.top_phenotypic_query.result;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import care.smith.top.model.DateTimeRestriction;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
-import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
-import care.smith.top.top_phenotypic_query.util.RestrictionUtil;
+import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
+import care.smith.top.top_phenotypic_query.util.Values;
 
-public class Phenotypes extends HashMap<String, Values> {
+public class SubjectPhenotypes extends HashMap<String, PhenotypeValues> {
 
   private static final long serialVersionUID = 1L;
   private String subjectId;
 
-  private Logger log = LoggerFactory.getLogger(Phenotypes.class);
+  private Logger log = LoggerFactory.getLogger(SubjectPhenotypes.class);
 
-  public Phenotypes(String subjectId) {
+  public SubjectPhenotypes(String subjectId) {
     this.subjectId = subjectId;
   }
 
-  public void setValues(Values values) {
+  public void setValues(PhenotypeValues values) {
     put(values.getPhenotypeName(), values);
   }
 
-  public void setValues(Values... values) {
-    for (Values vals : values) setValues(vals);
+  public void setValues(PhenotypeValues... values) {
+    for (PhenotypeValues vals : values) setValues(vals);
   }
 
   public void addValue(String phenotypeName, DateTimeRestriction dateRange, Value val) {
-    Values values = get(phenotypeName);
+    PhenotypeValues values = get(phenotypeName);
     if (values == null) {
-      values = new Values(phenotypeName);
+      values = new PhenotypeValues(phenotypeName);
       setValues(values);
     }
     values.addValue(dateRange, val);
@@ -41,14 +42,14 @@ public class Phenotypes extends HashMap<String, Values> {
         "value is added: {}::{}::{}::{}",
         subjectId,
         phenotypeName,
-        RestrictionUtil.toString(dateRange),
-        val.getRepresentation());
+        Restrictions.toString(dateRange),
+        Values.toString(val));
   }
 
-  public void setValues(String phenotypeName, DateTimeRestriction dateRange, ValueList vals) {
-    Values values = get(phenotypeName);
+  public void setValues(String phenotypeName, DateTimeRestriction dateRange, List<Value> vals) {
+    PhenotypeValues values = get(phenotypeName);
     if (values == null) {
-      values = new Values(phenotypeName);
+      values = new PhenotypeValues(phenotypeName);
       setValues(values);
     }
     values.setValues(dateRange, vals);
@@ -56,18 +57,18 @@ public class Phenotypes extends HashMap<String, Values> {
         "values are set: {}::{}::{}::{}",
         subjectId,
         phenotypeName,
-        RestrictionUtil.toString(dateRange),
-        vals.getRepresentation());
+        Restrictions.toString(dateRange),
+        Values.toString(vals));
   }
 
-  public Values getValues(String phenotypeName) {
+  public PhenotypeValues getValues(String phenotypeName) {
     return get(phenotypeName);
   }
 
-  public ValueList getValues(String phenotypeName, DateTimeRestriction dateRange) {
-    Values values = getValues(phenotypeName);
+  public List<Value> getValues(String phenotypeName, DateTimeRestriction dateRange) {
+    PhenotypeValues values = getValues(phenotypeName);
     if (values == null) return null;
-    ValueList list = values.getValues(dateRange);
+    List<Value> list = values.getValues(dateRange);
     if (list != null) return list;
     return values.getValues(null);
   }
@@ -92,7 +93,7 @@ public class Phenotypes extends HashMap<String, Values> {
             .append("':")
             .append(System.lineSeparator())
             .append(System.lineSeparator());
-    for (care.smith.top.top_phenotypic_query.result.Values values : values())
+    for (care.smith.top.top_phenotypic_query.result.PhenotypeValues values : values())
       sb.append(values).append(System.lineSeparator());
     return sb.toString();
   }

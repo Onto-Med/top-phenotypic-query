@@ -18,9 +18,10 @@ import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
-import care.smith.top.top_phenotypic_query.result.Phenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import care.smith.top.top_phenotypic_query.util.Values;
 
 public class SubjectQueryTest extends AbstractTest {
 
@@ -49,18 +50,15 @@ public class SubjectQueryTest extends AbstractTest {
     System.out.println(rs);
     assertEquals(Set.of("3"), rs.getSubjectIds());
 
-    Phenotypes phes = rs.getPhenotypes("3");
+    SubjectPhenotypes phes = rs.getPhenotypes("3");
     assertEquals(Set.of("Age", "Young", "Sex", "Female", "birthdate"), phes.getPhenotypeNames());
-    assertEquals(
-        BigDecimal.valueOf(32),
-        phes.getValues("Age", null).getValues().get(0).asDecimalValue().getValue());
+    assertEquals(BigDecimal.valueOf(32), Values.getNumberValue(phes.getValues("Age", null).get(0)));
     assertEquals(
         LocalDateTime.parse("1990-01-01T00:00:00"),
-        phes.getValues("birthdate", null).getValues().get(0).asDateTimeValue().getValue());
-    assertEquals(
-        "female", phes.getValues("Sex", null).getValues().get(0).asStringValue().getValue());
-    assertTrue(phes.getValues("Female", null).getValues().get(0).asBooleanValue().getValue());
-    assertTrue(phes.getValues("Young", null).getValues().get(0).asBooleanValue().getValue());
+        Values.getDateTimeValue(phes.getValues("birthdate", null).get(0)));
+    assertEquals("female", Values.getStringValue(phes.getValues("Sex", null).get(0)));
+    assertTrue(Values.getBooleanValue(phes.getValues("Female", null).get(0)));
+    assertTrue(Values.getBooleanValue(phes.getValues("Young", null).get(0)));
   }
 
   @Test
@@ -81,11 +79,10 @@ public class SubjectQueryTest extends AbstractTest {
     System.out.println(rs);
     assertEquals(Set.of("1"), rs.getSubjectIds());
 
-    Phenotypes phes = rs.getPhenotypes("1");
+    SubjectPhenotypes phes = rs.getPhenotypes("1");
     assertEquals(Set.of("Sex", "Female"), phes.getPhenotypeNames());
-    assertEquals(
-        "female", phes.getValues("Sex", null).getValues().get(0).asStringValue().getValue());
-    assertTrue(phes.getValues("Female", null).getValues().get(0).asBooleanValue().getValue());
+    assertEquals("female", Values.getStringValue(phes.getValues("Sex", null).get(0)));
+    assertTrue(Values.getBooleanValue(phes.getValues("Female", null).get(0)));
   }
 
   @Test
@@ -106,15 +103,13 @@ public class SubjectQueryTest extends AbstractTest {
     System.out.println(rs);
     assertEquals(Set.of("4"), rs.getSubjectIds());
 
-    Phenotypes phes = rs.getPhenotypes("4");
+    SubjectPhenotypes phes = rs.getPhenotypes("4");
     assertEquals(Set.of("Age", "Young", "birthdate"), phes.getPhenotypeNames());
-    assertEquals(
-        BigDecimal.valueOf(31),
-        phes.getValues("Age", null).getValues().get(0).asDecimalValue().getValue());
+    assertEquals(BigDecimal.valueOf(31), Values.getNumberValue(phes.getValues("Age", null).get(0)));
     assertEquals(
         LocalDateTime.parse("1991-01-01T00:00:00"),
-        phes.getValues("birthdate", null).getValues().get(0).asDateTimeValue().getValue());
-    assertTrue(phes.getValues("Young", null).getValues().get(0).asBooleanValue().getValue());
+        Values.getDateTimeValue(phes.getValues("birthdate", null).get(0)));
+    assertTrue(Values.getBooleanValue(phes.getValues("Young", null).get(0)));
   }
 
   @Test

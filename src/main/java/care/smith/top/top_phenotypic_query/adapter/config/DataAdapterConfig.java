@@ -11,7 +11,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import care.smith.top.model.Code;
 import care.smith.top.model.Phenotype;
-import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class DataAdapterConfig {
 
@@ -84,8 +84,8 @@ public class DataAdapterConfig {
   }
 
   public boolean isBirthdate(Phenotype p, Map<String, Phenotype> phenotypes) {
-    for (Code code : PhenotypeUtil.getCodes(p, phenotypes)) {
-      if (birthdateMapping.getCode().equals(PhenotypeUtil.getCodeUri(code))) return true;
+    for (Code code : Phenotypes.getCodes(p, phenotypes)) {
+      if (birthdateMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
     return false;
   }
@@ -99,8 +99,8 @@ public class DataAdapterConfig {
   }
 
   public boolean isAge(Phenotype p, Map<String, Phenotype> phenotypes) {
-    for (Code code : PhenotypeUtil.getCodes(p, phenotypes)) {
-      if (ageMapping.getCode().equals(PhenotypeUtil.getCodeUri(code))) return true;
+    for (Code code : Phenotypes.getCodes(p, phenotypes)) {
+      if (ageMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
     return false;
   }
@@ -114,8 +114,8 @@ public class DataAdapterConfig {
   }
 
   public boolean isSex(Phenotype p, Map<String, Phenotype> phenotypes) {
-    for (Code code : PhenotypeUtil.getCodes(p, phenotypes)) {
-      if (sexMapping.getCode().equals(PhenotypeUtil.getCodeUri(code))) return true;
+    for (Code code : Phenotypes.getCodes(p, phenotypes)) {
+      if (sexMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
     return false;
   }
@@ -125,8 +125,8 @@ public class DataAdapterConfig {
   }
 
   public CodeMapping getCodeMapping(Phenotype p, Map<String, Phenotype> phenotypes) {
-    for (Code code : PhenotypeUtil.getCodes(p, phenotypes)) {
-      CodeMapping map = getCodeMapping(PhenotypeUtil.getCodeUri(code));
+    for (Code code : Phenotypes.getCodes(p, phenotypes)) {
+      CodeMapping map = getCodeMapping(Phenotypes.getCodeUri(code));
       if (map != null) return map;
     }
     return null;

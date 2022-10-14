@@ -1,18 +1,18 @@
 package care.smith.top.top_phenotypic_query.result;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
+import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
-import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
-import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
-import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
+import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.ucum.UCUM;
-import care.smith.top.top_phenotypic_query.util.PhenotypeUtil;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import care.smith.top.top_phenotypic_query.util.Values;
 
-public class ResultSet extends HashMap<String, Phenotypes> {
+public class ResultSet extends HashMap<String, SubjectPhenotypes> {
 
   private static final long serialVersionUID = 1L;
 
@@ -22,27 +22,27 @@ public class ResultSet extends HashMap<String, Phenotypes> {
     super(rs2);
   }
 
-  public void setPhenotypes(Phenotypes phenotypes) {
+  public void setPhenotypes(SubjectPhenotypes phenotypes) {
     put(phenotypes.getSubjectId(), phenotypes);
   }
 
-  public void setPhenotypes(Phenotypes... phenotypes) {
-    for (Phenotypes p : phenotypes) setPhenotypes(p);
+  public void setPhenotypes(SubjectPhenotypes... phenotypes) {
+    for (SubjectPhenotypes p : phenotypes) setPhenotypes(p);
   }
 
   public Set<String> getSubjectIds() {
     return keySet();
   }
 
-  public Phenotypes getPhenotypes(String subjectId) {
+  public SubjectPhenotypes getPhenotypes(String subjectId) {
     return get(subjectId);
   }
 
   public void addValue(
       String subjectId, String phenotypeName, DateTimeRestriction dateRange, Value val) {
-    Phenotypes phes = get(subjectId);
+    SubjectPhenotypes phes = get(subjectId);
     if (phes == null) {
-      phes = new Phenotypes(subjectId);
+      phes = new SubjectPhenotypes(subjectId);
       setPhenotypes(phes);
     }
     phes.addValue(phenotypeName, dateRange, val);
@@ -50,7 +50,7 @@ public class ResultSet extends HashMap<String, Phenotypes> {
 
   public void addValue(
       String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
-    if (val != null) addValue(subjectId, PhenotypeUtil.getPhenotypeId(phenotype), dateRange, val);
+    if (val != null) addValue(subjectId, Phenotypes.getPhenotypeId(phenotype), dateRange, val);
   }
 
   public void addValue(
@@ -60,19 +60,19 @@ public class ResultSet extends HashMap<String, Phenotypes> {
       Value val,
       String sourceUnit,
       String modelUnit) {
-    if (sourceUnit != null && modelUnit != null && val instanceof DecimalValue)
+    if (sourceUnit != null && modelUnit != null && val.getDataType() == DataType.NUMBER)
       val =
-          new DecimalValue(
-              UCUM.convert(val.getValueDecimal(), sourceUnit, modelUnit), val.getDateTime());
+          Values.newValue(
+              UCUM.convert(Values.getNumberValue(val), sourceUnit, modelUnit), val.getDateTime());
     addValue(subjectId, phenotype, dateRange, val);
   }
 
   private void addRestriction(
       String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
-    if (val != null && PhenotypeUtil.hasExistentialQuantifier(phenotype)) {
-      ValueList vals = getValues(subjectId, phenotype.getId(), dateRange);
+    if (val != null && Phenotypes.hasExistentialQuantifier(phenotype)) {
+      List<Value> vals = getValues(subjectId, phenotype.getId(), dateRange);
       if (vals == null || vals.isEmpty())
-        addValue(subjectId, phenotype.getId(), dateRange, new BooleanValue(true));
+        addValue(subjectId, phenotype.getId(), dateRange, Values.newValueTrue());
     }
   }
 
@@ -94,18 +94,18 @@ public class ResultSet extends HashMap<String, Phenotypes> {
   }
 
   public void addSubject(String subjectId) {
-    if (!getSubjectIds().contains(subjectId)) put(subjectId, new Phenotypes(subjectId));
+    if (!getSubjectIds().contains(subjectId)) put(subjectId, new SubjectPhenotypes(subjectId));
   }
 
-  public Values getValues(String subjectId, String phenotypeName) {
-    Phenotypes subPhens = get(subjectId);
+  public PhenotypeValues getValues(String subjectId, String phenotypeName) {
+    SubjectPhenotypes subPhens = get(subjectId);
     if (subPhens == null) return null;
     return subPhens.getValues(phenotypeName);
   }
 
-  public ValueList getValues(
+  public List<Value> getValues(
       String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
-    Values values = getValues(subjectId, phenotypeName);
+    PhenotypeValues values = getValues(subjectId, phenotypeName);
     if (values == null) return null;
     return values.getValues(dateRange);
   }
@@ -115,14 +115,14 @@ public class ResultSet extends HashMap<String, Phenotypes> {
     intersection.keySet().retainAll(rs2.keySet());
 
     for (String sbjId : intersection.getSubjectIds()) {
-      Phenotypes phenotypes1 = intersection.getPhenotypes(sbjId);
-      Phenotypes phenotypes2 = rs2.getPhenotypes(sbjId);
+      SubjectPhenotypes phenotypes1 = intersection.getPhenotypes(sbjId);
+      SubjectPhenotypes phenotypes2 = rs2.getPhenotypes(sbjId);
       for (String pheName : phenotypes2.getPhenotypeNames()) {
         if (!phenotypes1.hasPhenotype(pheName))
           phenotypes1.setValues(phenotypes2.getValues(pheName));
         else {
-          Values values1 = phenotypes1.getValues(pheName);
-          Values values2 = phenotypes2.getValues(pheName);
+          PhenotypeValues values1 = phenotypes1.getValues(pheName);
+          PhenotypeValues values2 = phenotypes2.getValues(pheName);
           for (DateTimeRestriction dateRange : values2.getDateTimeRestrictions()) {
             if (!values1.hasDateTimeRestriction(dateRange))
               values1.setValues(dateRange, values2.getValues(dateRange));
@@ -144,15 +144,15 @@ public class ResultSet extends HashMap<String, Phenotypes> {
     ResultSet insert = new ResultSet(this);
 
     for (String sbjId : insert.getSubjectIds()) {
-      Phenotypes phenotypes1 = insert.getPhenotypes(sbjId);
-      Phenotypes phenotypes2 = rs2.getPhenotypes(sbjId);
+      SubjectPhenotypes phenotypes1 = insert.getPhenotypes(sbjId);
+      SubjectPhenotypes phenotypes2 = rs2.getPhenotypes(sbjId);
       if (phenotypes2 == null) continue;
       for (String pheName : phenotypes2.getPhenotypeNames()) {
         if (!phenotypes1.hasPhenotype(pheName))
           phenotypes1.setValues(phenotypes2.getValues(pheName));
         else {
-          Values values1 = phenotypes1.getValues(pheName);
-          Values values2 = phenotypes2.getValues(pheName);
+          PhenotypeValues values1 = phenotypes1.getValues(pheName);
+          PhenotypeValues values2 = phenotypes2.getValues(pheName);
           for (DateTimeRestriction dateRange : values2.getDateTimeRestrictions()) {
             if (!values1.hasDateTimeRestriction(dateRange))
               values1.setValues(dateRange, values2.getValues(dateRange));
@@ -170,7 +170,7 @@ public class ResultSet extends HashMap<String, Phenotypes> {
         new StringBuffer("Result Set:")
             .append(System.lineSeparator())
             .append(System.lineSeparator());
-    for (Phenotypes phes : values()) sb.append(phes);
+    for (SubjectPhenotypes phes : values()) sb.append(phes);
     return sb.toString();
   }
 }

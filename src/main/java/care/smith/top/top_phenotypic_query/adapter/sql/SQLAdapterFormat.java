@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import care.smith.top.model.RestrictionOperator;
-import care.smith.top.simple_onto_api.util.DateUtil;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 
 public class SQLAdapterFormat implements DataAdapterFormat {
 

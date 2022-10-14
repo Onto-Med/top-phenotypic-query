@@ -21,11 +21,7 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
-import care.smith.top.simple_onto_api.model.property.data.value.BooleanValue;
-import care.smith.top.simple_onto_api.model.property.data.value.DateTimeValue;
-import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
-import care.smith.top.simple_onto_api.model.property.data.value.StringValue;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
@@ -34,6 +30,7 @@ import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
+import care.smith.top.top_phenotypic_query.util.Values;
 
 public class SQLAdapter extends DataAdapter {
 
@@ -81,12 +78,12 @@ public class SQLAdapter extends DataAdapter {
         String sbj = sqlRS.getString(sbjCol);
         LocalDateTime date = sqlRS.getTimestamp(dateCol).toLocalDateTime();
         Value val = null;
-        if (datatype == DataType.BOOLEAN) val = new BooleanValue(sqlRS.getBoolean(pheCol), date);
+        if (datatype == DataType.BOOLEAN) val = Values.newValue(sqlRS.getBoolean(pheCol), date);
         else if (datatype == DataType.DATE_TIME)
-          val = new DateTimeValue(sqlRS.getTimestamp(pheCol).toLocalDateTime(), date);
+          val = Values.newValue(sqlRS.getTimestamp(pheCol).toLocalDateTime(), date);
         else if (datatype == DataType.NUMBER)
-          val = new DecimalValue(sqlRS.getBigDecimal(pheCol), date);
-        else val = new StringValue(sqlRS.getString(pheCol), date);
+          val = Values.newValue(sqlRS.getBigDecimal(pheCol), date);
+        else val = Values.newValue(sqlRS.getString(pheCol), date);
         if (val != null)
           rs.addValueWithRestriction(
               sbj,
@@ -120,12 +117,12 @@ public class SQLAdapter extends DataAdapter {
         if (bd != null) {
           Timestamp bdSqlVal = sqlRS.getTimestamp(bdCol);
           if (bdSqlVal != null) {
-            DateTimeValue val = new DateTimeValue(bdSqlVal.toLocalDateTime());
+            Value val = Values.newValue(bdSqlVal.toLocalDateTime());
             if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, null, val);
             else rs.addValue(sbj, bd, null, val);
             if (age != null) {
               Value ageVal =
-                  new DecimalValue(SubjectSearch.birthdateToAge(bdSqlVal.toLocalDateTime()));
+                  Values.newValue(SubjectSearch.birthdateToAge(bdSqlVal.toLocalDateTime()));
               rs.addValueWithRestriction(sbj, age, null, ageVal);
             }
           }
@@ -134,15 +131,15 @@ public class SQLAdapter extends DataAdapter {
           if (sex.getDataType() == DataType.BOOLEAN) {
             Boolean sexSqlVal = sqlRS.getBoolean(sexCol);
             if (sexSqlVal != null)
-              rs.addValueWithRestriction(sbj, sex, null, new BooleanValue(sexSqlVal));
+              rs.addValueWithRestriction(sbj, sex, null, Values.newValue(sexSqlVal));
           } else if (sex.getDataType() == DataType.NUMBER) {
             BigDecimal sexSqlVal = sqlRS.getBigDecimal(sexCol);
             if (sexSqlVal != null)
-              rs.addValueWithRestriction(sbj, sex, null, new DecimalValue(sexSqlVal));
+              rs.addValueWithRestriction(sbj, sex, null, Values.newValue(sexSqlVal));
           } else {
             String sexSqlVal = sqlRS.getString(sexCol);
             if (sexSqlVal != null)
-              rs.addValueWithRestriction(sbj, sex, null, new StringValue(sexSqlVal));
+              rs.addValueWithRestriction(sbj, sex, null, Values.newValue(sexSqlVal));
           }
         }
       }

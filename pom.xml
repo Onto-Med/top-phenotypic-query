@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>care.smith.top</groupId>
 	<artifactId>top-phenotypic-query</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1-SNAPSHOT</version>
 
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -30,11 +30,6 @@
 			<groupId>care.smith.top</groupId>
 			<artifactId>top-api</artifactId>
 			<version>0.5.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>care.smith.top.simple_onto_api</groupId>
-			<artifactId>simple-onto-api</artifactId>
-			<version>0.0.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -92,6 +87,11 @@
 			<groupId>ca.uhn.hapi.fhir</groupId>
 			<artifactId>hapi-fhir-base</artifactId>
 			<version>6.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>caffeine</artifactId>
+			<version>3.1.1</version>
 		</dependency>
 	</dependencies>
 

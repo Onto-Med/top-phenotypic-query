@@ -54,7 +54,10 @@ public class FullBMIAgeTestIntern extends AbstractTest {
     ResultSet rs = pf.execute();
     adapter.close();
 
-    List<String> actualSbjIds = getDBIds(rs.getSubjectIds());
+    List<String> actualSbjIds = null;
+    if (adapter instanceof FHIRAdapter) actualSbjIds = getDBIds(rs.getSubjectIds());
+    else actualSbjIds = new ArrayList<String>(rs.getSubjectIds());
+
     Collections.sort(
         actualSbjIds,
         new Comparator<String>() {
