@@ -50,6 +50,12 @@ public class Expressions {
     return Values.getDateTimeValues(exp.getValues());
   }
 
+  public static List<Value> getValueOrValues(Expression exp) {
+    if (exp.getValue() != null) return List.of(exp.getValue());
+    if (exp.getValues() != null) return exp.getValues();
+    return null;
+  }
+
   public static boolean hasValueTrue(Expression exp) {
     return Values.getBooleanValue(exp.getValue());
   }
@@ -211,5 +217,15 @@ public class Expressions {
       }
     } else if (exp.getArguments() != null)
       for (Expression arg : exp.getArguments()) addVariables(arg, vars, phenotypes);
+  }
+
+  public static Expression restrictionToExpression(Phenotype p) {
+    if (!Phenotypes.isRestriction(p)) return null;
+    Restriction r = p.getRestriction();
+    if (r == null) return null;
+    return new Expression()
+        .functionId("in")
+        .addArgumentsItem(new Expression().entityId(p.getSuperPhenotype().getId()))
+        .addArgumentsItem(new Expression().restriction(r));
   }
 }

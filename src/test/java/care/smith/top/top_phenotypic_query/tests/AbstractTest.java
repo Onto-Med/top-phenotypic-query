@@ -25,7 +25,7 @@ import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
@@ -295,7 +295,7 @@ public abstract class AbstractTest {
   //  }
 
   private static EntityType getRestrictionType(Phenotype parent) {
-    return SubjectPhenotypes.isSinglePhenotype(parent)
+    return Phenotypes.isSinglePhenotype(parent)
         ? EntityType.SINGLE_RESTRICTION
         : EntityType.COMPOSITE_RESTRICTION;
   }
@@ -386,7 +386,7 @@ public abstract class AbstractTest {
   }
 
   protected static Value getValue(String pheName, SubjectPhenotypes phes) {
-    return phes.getValues(pheName, getDTR(2000)).getValues().get(0);
+    return phes.getValues(pheName, getDTR(2000)).get(0);
   }
 
   static Expression getValue(int value) {

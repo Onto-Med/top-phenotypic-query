@@ -212,6 +212,10 @@ public class C2R {
     variables.put(name, Expressions.newExpression(values));
   }
 
+  public void setVariable(String name, List<Value> values) {
+    variables.put(name, Expressions.newExpression(values));
+  }
+
   public void setVariable(String name, Number value) {
     setVariable(name, Expressions.newExpression(value));
   }

@@ -1,6 +1,7 @@
 package care.smith.top.top_phenotypic_query.search;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,10 +10,8 @@ import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
-import care.smith.top.simple_onto_api.calculator.Calculator;
-import care.smith.top.simple_onto_api.calculator.expressions.MathExpression;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
-import care.smith.top.simple_onto_api.model.property.data.value.list.ValueList;
+import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 
@@ -46,33 +45,32 @@ public class CompositeSearch extends PhenotypeSearch {
   private void executeForSubject(
       String sbjId, String pheId, Expression exp, Set<String> vars, DateTimeRestriction dateRange) {
     if (exp == null) return;
-    Value resVal = calculate(sbjId, pheId, exp, vars, dateRange);
-    boolean res = (resVal == null) ? false : resVal.asBooleanValue().getValue();
+    Expression resExp = calculate(sbjId, pheId, exp, vars, dateRange);
+    boolean res = (resExp == null) ? false : Expressions.getBooleanValue(resExp);
     if ((!criterion.isInclusion() && res) || (criterion.isInclusion() && !res)) rs.remove(sbjId);
   }
 
-  private Value calculate(
+  private Expression calculate(
       String sbjId, String pheId, Expression exp, Set<String> vars, DateTimeRestriction dateRange) {
-    Calculator calc = new Calculator();
+    C2R calc = new C2R();
     for (String var : vars) {
-      ValueList vals = getValues(sbjId, var, dateRange);
+      List<Value> vals = getValues(sbjId, var, dateRange);
       if (vals == null) return null;
       calc.setVariable(var, vals);
     }
-    MathExpression mathExp = Expressions.convert(exp);
-    Value res = calc.calculate(mathExp);
-    rs.getPhenotypes(sbjId).setValues(pheId, dateRange, ValueList.get(res));
+    Expression res = calc.calculate(exp);
+    rs.getPhenotypes(sbjId).setValues(pheId, dateRange, Expressions.getValueOrValues(res));
     return res;
   }
 
-  private ValueList getValues(String sbjId, String var, DateTimeRestriction dateRange) {
-    ValueList vals = rs.getPhenotypes(sbjId).getValues(var, dateRange);
+  private List<Value> getValues(String sbjId, String var, DateTimeRestriction dateRange) {
+    List<Value> vals = rs.getPhenotypes(sbjId).getValues(var, dateRange);
     if (vals != null) return vals;
     Expression newExp = phenotypes.get(var).getExpression();
     if (newExp == null) return null;
     Set<String> newVars = Expressions.getVariables(newExp, phenotypes);
-    Value newVal = calculate(sbjId, var, newExp, newVars, dateRange);
-    if (newVal == null) return null;
-    return ValueList.get(newVal);
+    Expression newRes = calculate(sbjId, var, newExp, newVars, dateRange);
+    if (newRes == null) return null;
+    return Expressions.getValueOrValues(newRes);
   }
 }

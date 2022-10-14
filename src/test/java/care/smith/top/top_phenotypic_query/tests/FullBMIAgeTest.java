@@ -16,9 +16,10 @@ import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
-import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import care.smith.top.top_phenotypic_query.util.Values;
 
 public class FullBMIAgeTest extends AbstractTest {
 
@@ -50,20 +51,20 @@ public class FullBMIAgeTest extends AbstractTest {
     phesExpected.add("birthdate");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
-    assertEquals(new BigDecimal(20), getValue("Age", phes).getValueDecimal());
-    assertFalse(getValue("Old", phes).asBooleanValue().getValue());
-    assertTrue(getValue("Young", phes).asBooleanValue().getValue());
+    assertEquals(new BigDecimal(20), Values.getNumberValue(getValue("Age", phes)));
+    assertFalse(Values.getBooleanValue(getValue("Old", phes)));
+    assertTrue(Values.getBooleanValue(getValue("Young", phes)));
 
-    assertEquals("female", getValue("Sex", phes).asStringValue().getValue());
-    assertTrue(getValue("Female", phes).asBooleanValue().getValue());
+    assertEquals("female", Values.getStringValue(getValue("Sex", phes)));
+    assertTrue(Values.getBooleanValue(getValue("Female", phes)));
 
-    assertEquals(new BigDecimal("25.95155709342561"), getValue("BMI", phes).getValueDecimal());
-    assertFalse(getValue("BMI19_25", phes).asBooleanValue().getValue());
-    assertTrue(getValue("BMI19_27", phes).asBooleanValue().getValue());
-    assertTrue(getValue("BMI25_30", phes).asBooleanValue().getValue());
-    assertFalse(getValue("BMI27_30", phes).asBooleanValue().getValue());
+    assertEquals(new BigDecimal("25.95155709342561"), Values.getNumberValue(getValue("BMI", phes)));
+    assertFalse(Values.getBooleanValue(getValue("BMI19_25", phes)));
+    assertTrue(Values.getBooleanValue(getValue("BMI19_27", phes)));
+    assertTrue(Values.getBooleanValue(getValue("BMI25_30", phes)));
+    assertFalse(Values.getBooleanValue(getValue("BMI27_30", phes)));
 
-    assertEquals(BigDecimal.ONE, getValue("Finding", phes).getValueDecimal());
-    assertTrue(getValue("Overweight", phes).asBooleanValue().getValue());
+    assertEquals(BigDecimal.ONE, Values.getNumberValue(getValue("Finding", phes)));
+    assertTrue(Values.getBooleanValue(getValue("Overweight", phes)));
   }
 }

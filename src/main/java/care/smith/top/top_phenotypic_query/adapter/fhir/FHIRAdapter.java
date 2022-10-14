@@ -15,10 +15,7 @@ import care.smith.top.model.NumberRestriction;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.StringRestriction;
-import care.smith.top.simple_onto_api.model.property.data.value.DateTimeValue;
-import care.smith.top.simple_onto_api.model.property.data.value.DecimalValue;
-import care.smith.top.simple_onto_api.model.property.data.value.StringValue;
-import care.smith.top.simple_onto_api.model.property.data.value.Value;
+import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
 import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
@@ -30,6 +27,7 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import care.smith.top.top_phenotypic_query.util.Values;
 
 public class FHIRAdapter extends DataAdapter {
 
@@ -62,15 +60,15 @@ public class FHIRAdapter extends DataAdapter {
       Value val = null;
       if (datatype == DataType.DATE_TIME)
         val =
-            new DateTimeValue(
+            Values.newValue(
                 FHIRUtil.getDate(client.evaluateFHIRPath(res, out.getDatePhenotype())), date);
       else if (datatype == DataType.NUMBER)
         val =
-            new DecimalValue(
+            Values.newValue(
                 FHIRUtil.getNumber(client.evaluateFHIRPath(res, out.getNumberPhenotype())), date);
       else
         val =
-            new StringValue(
+            Values.newValue(
                 FHIRUtil.getString(client.evaluateFHIRPath(res, out.getStringPhenotype())), date);
       if (val != null)
         rs.addValueWithRestriction(
@@ -101,18 +99,18 @@ public class FHIRAdapter extends DataAdapter {
       if (bd != null) {
         LocalDateTime bdVal = FHIRUtil.getDate(client.evaluateFHIRPath(res, out.getBirthdate()));
         if (bdVal != null) {
-          DateTimeValue val = new DateTimeValue(bdVal);
+          Value val = Values.newValue(bdVal);
           if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, null, val);
           else rs.addValue(sbj, bd, null, val);
           if (age != null) {
-            Value ageVal = new DecimalValue(SubjectSearch.birthdateToAge(bdVal));
+            Value ageVal = Values.newValue(SubjectSearch.birthdateToAge(bdVal));
             rs.addValueWithRestriction(sbj, age, null, ageVal);
           }
         }
       }
       if (sex != null) {
         String sexVal = FHIRUtil.getString(client.evaluateFHIRPath(res, out.getSex()));
-        if (sexVal != null) rs.addValueWithRestriction(sbj, sex, null, new StringValue(sexVal));
+        if (sexVal != null) rs.addValueWithRestriction(sbj, sex, null, Values.newValue(sexVal));
       }
     }
 
