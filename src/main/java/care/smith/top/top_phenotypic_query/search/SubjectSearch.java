@@ -130,7 +130,7 @@ public class SubjectSearch extends PhenotypeSearch {
       if (Restrictions.hasValues(sexR))
         builder.sexList(
             Restrictions.getValuesAsString(
-                getSexMapping().getSourceRestriction(sexR), adapter.getFormat()));
+                getSexMapping().getSourceRestriction(sexR, null), adapter.getFormat()));
     }
 
     Phenotype bd = getBirthdateDerived();
@@ -139,7 +139,7 @@ public class SubjectSearch extends PhenotypeSearch {
       if (Restrictions.hasInterval(birthdateR)) {
         Map<String, String> interval =
             Restrictions.getIntervalAsStringMap(
-                getBirthdateMapping().getSourceRestriction(birthdateR), adapter.getFormat());
+                getBirthdateMapping().getSourceRestriction(birthdateR, null), adapter.getFormat());
         for (String key : interval.keySet()) builder.birthdateIntervalLimit(key, interval.get(key));
       }
     }

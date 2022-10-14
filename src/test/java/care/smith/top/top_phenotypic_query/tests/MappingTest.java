@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,9 @@ import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
 import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
 
-public class MappingTest {
+public class MappingTest extends AbstractTest {
   DataAdapterConfig config;
 
   @BeforeEach
@@ -32,7 +34,7 @@ public class MappingTest {
   }
 
   @Test
-  public void test() {
+  public void test1() {
     assertEquals("http://loinc.org|21112-8", config.getBirthdateMapping().getCode());
     assertEquals("http://loinc.org|30525-0", config.getAgeMapping().getCode());
     assertEquals("http://loinc.org|46098-0", config.getSexMapping().getCode());
@@ -43,7 +45,7 @@ public class MappingTest {
             .type(DataType.STRING);
     Restriction femaleSourceExpected =
         new StringRestriction().addValuesItem("female").type(DataType.STRING);
-    Restriction femaleSourceActual = config.getSexMapping().getSourceRestriction(femaleModel);
+    Restriction femaleSourceActual = config.getSexMapping().getSourceRestriction(femaleModel, null);
     assertEquals(femaleSourceExpected, femaleSourceActual);
 
     Restriction ageModel =
@@ -64,7 +66,7 @@ public class MappingTest {
             .cardinality(1)
             .quantifier(Quantifier.EXACT)
             .type(DataType.NUMBER);
-    Restriction ageSourceActual = config.getAgeMapping().getSourceRestriction(ageModel);
+    Restriction ageSourceActual = config.getAgeMapping().getSourceRestriction(ageModel, null);
     assertEquals(ageSourceExpected, ageSourceActual);
 
     CodeMapping heightMap = config.getCodeMapping("http://loinc.org|3137-7");
@@ -74,5 +76,21 @@ public class MappingTest {
     CodeMapping weightMap = config.getCodeMapping("http://loinc.org|3141-9");
     assertEquals("Assessment1", weightMap.getType());
     assertEquals("weight", weightMap.getPhenotypeMapping("phenotype"));
+  }
+
+  @Test
+  public void test2() {
+    Restriction model =
+        Restrictions.newRestriction(
+            Quantifier.ALL,
+            RestrictionOperator.GREATER_THAN_OR_EQUAL_TO,
+            1.5,
+            RestrictionOperator.LESS_THAN,
+            2);
+    CodeMapping heightMap = config.getCodeMapping("http://loinc.org|3137-7");
+    Restriction source = heightMap.getSourceRestriction(model, height);
+    assertEquals(
+        List.of(BigDecimal.valueOf(150), BigDecimal.valueOf(200)),
+        Restrictions.getNumberValues(source));
   }
 }

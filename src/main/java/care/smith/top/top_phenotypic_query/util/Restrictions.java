@@ -23,6 +23,7 @@ import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
+import care.smith.top.top_phenotypic_query.ucum.UCUM;
 
 public class Restrictions {
 
@@ -407,5 +408,14 @@ public class Restrictions {
     }
     if (!booleanValues.isEmpty()) return new BooleanRestriction().values(booleanValues);
     return new StringRestriction().values(stringValues);
+  }
+
+  public static Restriction convertValues(Restriction r, String inUnit, String outUnit) {
+    NumberRestriction nr = (NumberRestriction) r;
+    List<BigDecimal> vals =
+        nr.getValues().stream()
+            .map(v -> UCUM.convert(v, inUnit, outUnit))
+            .collect(Collectors.toList());
+    return nr.values(vals);
   }
 }

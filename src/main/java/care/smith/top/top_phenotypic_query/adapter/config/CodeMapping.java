@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 
@@ -60,10 +61,13 @@ public class CodeMapping {
     return !restrictionMappings.isEmpty();
   }
 
-  public Restriction getSourceRestriction(Restriction modelRestriction) {
+  public Restriction getSourceRestriction(Restriction modelRestriction, Phenotype phe) {
     Restriction sourceRestriction =
         restrictionMappings.get(Restrictions.copyWithoutBasicAttributes(modelRestriction));
-    if (sourceRestriction == null) return modelRestriction;
+    if (sourceRestriction == null) {
+      if (unit == null) return modelRestriction;
+      else return Restrictions.convertValues(modelRestriction, phe.getUnit(), unit);
+    }
     return Restrictions.setType(
         sourceRestriction
             .cardinality(modelRestriction.getCardinality())

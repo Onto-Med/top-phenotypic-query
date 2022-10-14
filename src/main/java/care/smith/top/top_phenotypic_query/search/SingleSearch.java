@@ -110,17 +110,19 @@ public class SingleSearch extends PhenotypeSearch {
     DateTimeRestriction dtr = getDateTimeRestriction();
 
     if (phenotype.getEntityType() == EntityType.SINGLE_RESTRICTION) {
+      Phenotype superPhe = phenotypes.get(phenotype.getSuperPhenotype().getId());
       Restriction r = phenotype.getRestriction();
       if (r.getQuantifier() != Quantifier.ALL) {
         if (Restrictions.hasInterval(r)) {
           Map<String, String> interval =
-              Restrictions.getIntervalAsStringMap(codeMap.getSourceRestriction(r), adapter.getFormat());
+              Restrictions.getIntervalAsStringMap(
+                  codeMap.getSourceRestriction(r, superPhe), adapter.getFormat());
           for (String key : interval.keySet())
             adapter.addValueIntervalLimit(key, interval.get(key), builder, r);
         } else if (Restrictions.hasValues(r)) {
           String values =
               Restrictions.getValuesAsString(
-                  codeMap.getSourceRestriction(r), adapter.getFormat());
+                  codeMap.getSourceRestriction(r, superPhe), adapter.getFormat());
           adapter.addValueList(values, builder, r);
         }
       }
@@ -128,7 +130,8 @@ public class SingleSearch extends PhenotypeSearch {
 
     if (dtr != null) {
       if (Restrictions.hasInterval(dtr)) {
-        Map<String, String> interval = Restrictions.getIntervalAsStringMap(dtr, adapter.getFormat());
+        Map<String, String> interval =
+            Restrictions.getIntervalAsStringMap(dtr, adapter.getFormat());
         for (String key : interval.keySet())
           adapter.addDateIntervalLimit(key, interval.get(key), builder);
       }
