@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import care.smith.top.model.Code;
 import care.smith.top.model.CodeSystem;
 import care.smith.top.model.DataType;
@@ -35,6 +38,7 @@ import care.smith.top.top_phenotypic_query.util.Values;
 public class SQLAdapter extends DataAdapter {
 
   private Connection con;
+  private static final Logger log = LoggerFactory.getLogger(SQLAdapter.class);
 
   public SQLAdapter(DataAdapterConfig config) {
     super(config);
@@ -66,6 +70,7 @@ public class SQLAdapter extends DataAdapter {
   public ResultSet execute(SingleSearch search) {
     ResultSet rs = new ResultSet();
     try {
+      log.info("Execute SQL query: {}", search.getQueryString());
       java.sql.ResultSet sqlRS = executeQuery(search.getQueryString());
       PhenotypeOutput out = search.getOutput();
       String sbjCol = out.getSubject();
@@ -78,8 +83,12 @@ public class SQLAdapter extends DataAdapter {
         String sbj = sqlRS.getString(sbjCol);
         LocalDateTime date = sqlRS.getTimestamp(dateCol).toLocalDateTime();
         Value val = null;
-        if (datatype == DataType.BOOLEAN) val = Values.newValue(sqlRS.getBoolean(pheCol), date);
-        else if (datatype == DataType.DATE_TIME)
+        if (datatype == DataType.BOOLEAN) {
+          if (pheCol == null) {
+            rs.addValue(sbj, phe, search.getDateTimeRestriction(), Values.newValueTrue());
+            continue;
+          } else val = Values.newValue(sqlRS.getBoolean(pheCol), date);
+        } else if (datatype == DataType.DATE_TIME)
           val = Values.newValue(sqlRS.getTimestamp(pheCol).toLocalDateTime(), date);
         else if (datatype == DataType.NUMBER)
           val = Values.newValue(sqlRS.getBigDecimal(pheCol), date);
@@ -103,6 +112,7 @@ public class SQLAdapter extends DataAdapter {
   public ResultSet execute(SubjectSearch search) {
     ResultSet rs = new ResultSet();
     try {
+      log.info("Execute SQL query: {}", search.getQueryString());
       java.sql.ResultSet sqlRS = executeQuery(search.getQueryString());
       SubjectOutput out = search.getOutput();
       String sbjCol = out.getId();
@@ -153,6 +163,7 @@ public class SQLAdapter extends DataAdapter {
   public ResultSet executeAllSubjectsQuery() {
     ResultSet rs = new ResultSet();
     try {
+      log.info("Execute SQL query: {}", SubjectSearch.getBaseQuery(config));
       java.sql.ResultSet sqlRS = executeQuery(SubjectSearch.getBaseQuery(config));
       String sbjCol = SubjectSearch.getIdColumn(config);
       while (sqlRS.next()) rs.addSubject(sqlRS.getString(sbjCol));

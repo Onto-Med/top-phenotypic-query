@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
@@ -14,6 +15,8 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import care.smith.top.top_phenotypic_query.util.Values;
 
 public class CompositeSearch extends PhenotypeSearch {
 
@@ -66,7 +69,10 @@ public class CompositeSearch extends PhenotypeSearch {
   private List<Value> getValues(String sbjId, String var, DateTimeRestriction dateRange) {
     List<Value> vals = rs.getPhenotypes(sbjId).getValues(var, dateRange);
     if (vals != null) return vals;
-    Expression newExp = phenotypes.get(var).getExpression();
+    Phenotype phe = phenotypes.get(var);
+    if (Phenotypes.isSingle(phe) && Phenotypes.getDataType(phe, phenotypes) == DataType.BOOLEAN)
+      return List.of(Values.newValueFalse());
+    Expression newExp = phe.getExpression();
     if (newExp == null) return null;
     Set<String> newVars = Expressions.getVariables(newExp, phenotypes);
     Expression newRes = calculate(sbjId, var, newExp, newVars, dateRange);

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import care.smith.top.model.Code;
+import care.smith.top.model.DataType;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
@@ -66,5 +67,11 @@ public class Phenotypes {
     Restriction r = p.getRestriction();
     if (r == null) return false;
     return r.getQuantifier() == Quantifier.MIN && r.getCardinality().intValue() == 1;
+  }
+
+  public static DataType getDataType(Phenotype p, Map<String, Phenotype> phenotypes) {
+    return (isRestriction(p))
+        ? phenotypes.get(p.getSuperPhenotype().getId()).getDataType()
+        : p.getDataType();
   }
 }

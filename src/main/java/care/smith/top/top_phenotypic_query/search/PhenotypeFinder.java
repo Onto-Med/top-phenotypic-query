@@ -24,8 +24,7 @@ public class PhenotypeFinder {
     this.adapter = adapter;
     this.config = adapter.getConfig();
     for (Phenotype p : this.phenotypes.values()) {
-      if (Phenotypes.isRestriction(p))
-        p.setExpression(Expressions.restrictionToExpression(p));
+      if (Phenotypes.isRestriction(p)) p.setExpression(Expressions.restrictionToExpression(p));
     }
   }
 

@@ -66,7 +66,10 @@ public class FHIRAdapter extends DataAdapter {
         val =
             Values.newValue(
                 FHIRUtil.getNumber(client.evaluateFHIRPath(res, out.getNumberPhenotype())), date);
-      else
+      else if (datatype == DataType.BOOLEAN) {
+        rs.addValue(sbj, phe, search.getDateTimeRestriction(), Values.newValueTrue());
+        continue;
+      } else
         val =
             Values.newValue(
                 FHIRUtil.getString(client.evaluateFHIRPath(res, out.getStringPhenotype())), date);

@@ -58,7 +58,7 @@ public class SqlAdapterTest extends AbstractTest {
   void testAdapterConnection() {
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test.yml");
-    assertNotNull(configFile);
+    //    assertNotNull(configFile);
 
     DataAdapterConfig config = DataAdapterConfig.getInstance(configFile.getPath());
     assertNotNull(config);

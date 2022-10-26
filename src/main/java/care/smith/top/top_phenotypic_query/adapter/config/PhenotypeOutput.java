@@ -28,6 +28,7 @@ public class PhenotypeOutput {
   }
 
   public String getPhenotype() {
+    if (phenotype == null) return null;
     if (mapping == null) return phenotype;
     return QueryBuilder.replace(phenotype, mapping);
   }
