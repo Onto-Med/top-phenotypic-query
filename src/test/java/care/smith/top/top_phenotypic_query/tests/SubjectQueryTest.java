@@ -1,5 +1,17 @@
 package care.smith.top.top_phenotypic_query.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.math.BigDecimal;
+import java.net.URL;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+
 import care.smith.top.model.DataType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Query;
@@ -9,15 +21,6 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.util.Values;
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.net.URL;
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class SubjectQueryTest extends AbstractTest {
 

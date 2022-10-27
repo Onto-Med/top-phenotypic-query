@@ -35,7 +35,7 @@ public class FullBMIAgeTestIntern extends AbstractTest {
     return new FHIRAdapter(DataAdapterConfig.getInstance(configFile.getPath()));
   }
 
-  private static SQLAdapter getSQLAdapter() {
+  private static SQLAdapter getSQLAdapter() throws SQLException {
     return new SQLAdapter(DataAdapterConfig.getInstance("test_files/SQL_Adapter_Test_intern.yml"));
   }
 
