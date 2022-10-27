@@ -51,11 +51,9 @@ public class BMIAgeTest extends AbstractTest {
     }
 
     ResultSet initialRS = getResultSet();
-    System.out.println(initialRS);
 
     CompositeSearch search = new CompositeSearch(null, cri, getResultSet(), phenotypes);
     ResultSet finalRS = search.execute();
-    System.out.println(finalRS);
 
     assertEquals(Set.of("Subject1"), finalRS.getSubjectIds());
 
