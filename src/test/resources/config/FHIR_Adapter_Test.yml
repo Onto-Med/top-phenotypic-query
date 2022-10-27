@@ -1,4 +1,5 @@
 id: SMITH_FHIR_Adapter
+adapter: care.smith.top.top_phenotypic_query.adapter.fhir.FHIRAdapter
 connection:
   endpoint: http://localhost:8080/baseR4
   user:

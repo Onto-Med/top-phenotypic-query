@@ -16,6 +16,7 @@ import care.smith.top.top_phenotypic_query.util.Phenotypes;
 public class DataAdapterConfig {
 
   private String id;
+  private String adapter;
   private Map<String, String> connection;
   private SubjectQuery subjectQuery;
   private Map<String, PhenotypeQuery> phenotypeQueries = new HashMap<>();
@@ -33,6 +34,14 @@ public class DataAdapterConfig {
       e.printStackTrace();
     }
     return config;
+  }
+
+  public String getAdapter() {
+    return adapter;
+  }
+
+  public void setAdapter(String adapter) {
+    this.adapter = adapter;
   }
 
   public String getId() {
@@ -141,6 +150,8 @@ public class DataAdapterConfig {
   public String toString() {
     return "DataAdapterConfig [id="
         + id
+        + ", adapter="
+        + adapter
         + ", connection="
         + connection
         + ", subjectQuery="

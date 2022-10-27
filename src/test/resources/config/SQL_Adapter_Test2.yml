@@ -1,4 +1,5 @@
 id: Simple_SQL_Adapter
+adapter: care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter
 connection:
   url: jdbc:h2:mem:test2-db;INIT=RUNSCRIPT FROM 'classpath:schema2.sql'
   user: user
