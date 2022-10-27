@@ -1,8 +1,13 @@
 package care.smith.top.top_phenotypic_query.tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.QueryCriterion;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.search.SingleSearch;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 import java.sql.Connection;
@@ -11,16 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import care.smith.top.model.Phenotype;
-import care.smith.top.model.QueryCriterion;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
-import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.search.SingleSearch;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SqlAdapterTest extends AbstractTest {
   static final String DB_URL = "jdbc:h2:mem:test0-db;INIT=RUNSCRIPT FROM 'classpath:schema.sql'";
@@ -55,15 +51,12 @@ public class SqlAdapterTest extends AbstractTest {
   }
 
   @Test
-  void testAdapterConnection() {
+  void testAdapterConnection() throws InstantiationException {
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test.yml");
-    //    assertNotNull(configFile);
+    assertNotNull(configFile);
 
-    DataAdapterConfig config = DataAdapterConfig.getInstance(configFile.getPath());
-    assertNotNull(config);
-
-    SQLAdapter adapter = new SQLAdapter(config);
+    DataAdapter adapter = DataAdapter.getInstance(configFile.getPath());
     assertNotNull(adapter);
 
     Phenotype tall = phenotypes.get("tall");

@@ -1,42 +1,36 @@
 package care.smith.top.top_phenotypic_query.tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import care.smith.top.model.*;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import care.smith.top.model.DataType;
-import care.smith.top.model.EntityType;
-import care.smith.top.model.Expression;
-import care.smith.top.model.Phenotype;
-import care.smith.top.model.Query;
-import care.smith.top.model.QueryCriterion;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
-import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class BooleanSinglePhenotypeTest extends AbstractTest {
 
-  private SQLAdapter adapter;
+  private DataAdapter adapter;
   private Phenotype h = height.dataType(DataType.BOOLEAN);
   private Phenotype w = weight.dataType(DataType.BOOLEAN);
   private Map<String, Phenotype> phenotypes = getPhenotypeMap(w, h);
 
   @BeforeEach
-  void start() {
+  void start() throws InstantiationException {
     URL configFile =
         BooleanSinglePhenotypeTest.class
             .getClassLoader()
             .getResource("config/SQL_Adapter_Test5.yml");
-    DataAdapterConfig config = DataAdapterConfig.getInstance(configFile.getPath());
-    adapter = new SQLAdapter(config);
+    assertNotNull(configFile);
+    adapter = DataAdapter.getInstance(configFile.getPath());
   }
 
   @AfterEach

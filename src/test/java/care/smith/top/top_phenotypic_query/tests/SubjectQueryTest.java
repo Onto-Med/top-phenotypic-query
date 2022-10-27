@@ -1,8 +1,15 @@
 package care.smith.top.top_phenotypic_query.tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import care.smith.top.model.DataType;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Query;
+import care.smith.top.model.QueryCriterion;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
+import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import care.smith.top.top_phenotypic_query.util.Values;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -10,18 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.jupiter.api.Test;
-
-import care.smith.top.model.DataType;
-import care.smith.top.model.Phenotype;
-import care.smith.top.model.Query;
-import care.smith.top.model.QueryCriterion;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
-import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
-import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
-import care.smith.top.top_phenotypic_query.util.Values;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SubjectQueryTest extends AbstractTest {
 
@@ -33,7 +29,7 @@ public class SubjectQueryTest extends AbstractTest {
   static Map<String, Phenotype> phenotypes = getPhenotypeMap(age, young, sex, female);
 
   @Test
-  public void test1() {
+  public void test1() throws InstantiationException {
     Query query =
         new Query()
             .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(female.getId()))
@@ -41,8 +37,7 @@ public class SubjectQueryTest extends AbstractTest {
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);
-    DataAdapterConfig config = DataAdapterConfig.getInstance(configFile.getPath());
-    SQLAdapter adapter = new SQLAdapter(config);
+    DataAdapter adapter = DataAdapter.getInstance(configFile.getPath());
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
@@ -62,7 +57,7 @@ public class SubjectQueryTest extends AbstractTest {
   }
 
   @Test
-  public void test2() {
+  public void test2() throws InstantiationException {
     Query query =
         new Query()
             .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(female.getId()))
@@ -70,8 +65,7 @@ public class SubjectQueryTest extends AbstractTest {
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);
-    DataAdapterConfig config = DataAdapterConfig.getInstance(configFile.getPath());
-    SQLAdapter adapter = new SQLAdapter(config);
+    DataAdapter adapter = DataAdapter.getInstance(configFile.getPath());
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
@@ -86,7 +80,7 @@ public class SubjectQueryTest extends AbstractTest {
   }
 
   @Test
-  public void test3() {
+  public void test3() throws InstantiationException {
     Query query =
         new Query()
             .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(female.getId()))
@@ -94,8 +88,7 @@ public class SubjectQueryTest extends AbstractTest {
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);
-    DataAdapterConfig config = DataAdapterConfig.getInstance(configFile.getPath());
-    SQLAdapter adapter = new SQLAdapter(config);
+    DataAdapter adapter = DataAdapter.getInstance(configFile.getPath());
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
@@ -113,7 +106,7 @@ public class SubjectQueryTest extends AbstractTest {
   }
 
   @Test
-  public void test4() {
+  public void test4() throws InstantiationException {
     Query query =
         new Query()
             .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(female.getId()))
@@ -121,8 +114,7 @@ public class SubjectQueryTest extends AbstractTest {
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);
-    DataAdapterConfig config = DataAdapterConfig.getInstance(configFile.getPath());
-    SQLAdapter adapter = new SQLAdapter(config);
+    DataAdapter adapter = DataAdapter.getInstance(configFile.getPath());
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();

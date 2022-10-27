@@ -1,29 +1,26 @@
 package care.smith.top.top_phenotypic_query.tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
+import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.util.Values;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class FullBMIAgeTest extends AbstractTest {
 
   @Test
-  public void test() {
+  public void test() throws InstantiationException {
     QueryCriterion cri1 =
         new QueryCriterion()
             .inclusion(true)
@@ -34,9 +31,8 @@ public class FullBMIAgeTest extends AbstractTest {
     Query query = new Query().addCriteriaItem(cri1).addCriteriaItem(cri2);
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test3.yml");
-    //    assertNotNull(configFile);
-    DataAdapterConfig config = DataAdapterConfig.getInstance(configFile.getPath());
-    SQLAdapter adapter = new SQLAdapter(config);
+    assertNotNull(configFile);
+    DataAdapter adapter = DataAdapter.getInstance(configFile.getPath());
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
