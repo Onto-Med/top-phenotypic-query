@@ -20,7 +20,7 @@ public abstract class DataAdapter {
   }
 
   protected DataAdapter(String configFile) {
-    this.config = DataAdapterConfig.getInstance(configFile);
+    this(DataAdapterConfig.getInstance(configFile));
   }
 
   public DataAdapterConfig getConfig() {
