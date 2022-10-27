@@ -17,7 +17,6 @@ import care.smith.top.model.EntityType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
-import care.smith.top.model.ItemType;
 import care.smith.top.model.NumberRestriction;
 import care.smith.top.model.NumberValue;
 import care.smith.top.model.Phenotype;
@@ -107,7 +106,6 @@ public abstract class AbstractTest {
         (Phenotype)
             new Phenotype()
                 .dataType(dataType)
-                .itemType(ItemType.OBSERVATION)
                 .id(name)
                 .entityType(EntityType.SINGLE_PHENOTYPE);
     if (unit != null) phenotype.setUnit(unit);

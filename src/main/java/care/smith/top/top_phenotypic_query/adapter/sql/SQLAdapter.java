@@ -18,7 +18,6 @@ import care.smith.top.model.CodeSystem;
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.EntityType;
-import care.smith.top.model.ItemType;
 import care.smith.top.model.NumberRestriction;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
@@ -229,7 +228,7 @@ public class SQLAdapter extends DataAdapter {
     //    SingleSearch search = new SingleSearch(null, new QueryCriterion().subject(phe), sql);
     //    System.out.println(sql.execute(search));
 
-    Phenotype bd = new Phenotype().dataType(DataType.DATE_TIME).itemType(ItemType.OBSERVATION);
+    Phenotype bd = new Phenotype().dataType(DataType.DATE_TIME);
     bd.setId("birthdate");
     bd.setEntityType(EntityType.SINGLE_PHENOTYPE);
     bd.addCodesItem(
@@ -247,7 +246,7 @@ public class SQLAdapter extends DataAdapter {
     young.setEntityType(EntityType.SINGLE_RESTRICTION);
     young.setSuperPhenotype(bd);
 
-    Phenotype age = new Phenotype().dataType(DataType.NUMBER).itemType(ItemType.OBSERVATION);
+    Phenotype age = new Phenotype().dataType(DataType.NUMBER);
     age.setId("age");
     age.setEntityType(EntityType.SINGLE_PHENOTYPE);
     age.addCodesItem(
@@ -264,7 +263,7 @@ public class SQLAdapter extends DataAdapter {
     youngAge.setEntityType(EntityType.SINGLE_RESTRICTION);
     youngAge.setSuperPhenotype(age);
 
-    Phenotype sex = new Phenotype().dataType(DataType.STRING).itemType(ItemType.OBSERVATION);
+    Phenotype sex = new Phenotype().dataType(DataType.STRING);
     sex.setId("sex");
     sex.setEntityType(EntityType.SINGLE_PHENOTYPE);
     sex.addCodesItem(
