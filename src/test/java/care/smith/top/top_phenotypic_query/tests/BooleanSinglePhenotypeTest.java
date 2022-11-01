@@ -1,27 +1,34 @@
 package care.smith.top.top_phenotypic_query.tests;
 
-import care.smith.top.model.*;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import care.smith.top.model.DataType;
+import care.smith.top.model.EntityType;
+import care.smith.top.model.Expression;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Query;
+import care.smith.top.model.QueryCriterion;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 
 public class BooleanSinglePhenotypeTest extends AbstractTest {
 
   private DataAdapter adapter;
-  private Phenotype h = height.dataType(DataType.BOOLEAN);
-  private Phenotype w = weight.dataType(DataType.BOOLEAN);
+  private Phenotype w =
+      getPhenotype("Weight", "http://loinc.org", "3141-9").dataType(DataType.BOOLEAN);
+  private Phenotype h =
+      getPhenotype("Height", "http://loinc.org", "3137-7", "m").dataType(DataType.BOOLEAN);
   private Map<String, Phenotype> phenotypes = getPhenotypeMap(w, h);
 
   @BeforeEach
