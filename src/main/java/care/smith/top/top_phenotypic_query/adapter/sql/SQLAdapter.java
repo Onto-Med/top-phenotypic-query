@@ -40,26 +40,22 @@ public class SQLAdapter extends DataAdapter {
   private Connection con;
   private static final Logger log = LoggerFactory.getLogger(SQLAdapter.class);
 
-  public SQLAdapter(DataAdapterConfig config) {
+  public SQLAdapter(DataAdapterConfig config) throws SQLException {
     super(config);
     initConnection();
   }
 
-  public SQLAdapter(String configFilePath) {
+  public SQLAdapter(String configFilePath) throws SQLException {
     super(configFilePath);
     initConnection();
   }
 
-  private void initConnection() {
-    try {
-      this.con =
-          DriverManager.getConnection(
-              config.getConnectionAttribute("url"),
-              config.getConnectionAttribute("user"),
-              config.getConnectionAttribute("password"));
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+  private void initConnection() throws SQLException {
+    this.con =
+        DriverManager.getConnection(
+            config.getConnectionAttribute("url"),
+            config.getConnectionAttribute("user"),
+            config.getConnectionAttribute("password"));
   }
 
   public java.sql.ResultSet executeQuery(String query) throws SQLException {
@@ -220,7 +216,7 @@ public class SQLAdapter extends DataAdapter {
     }
   }
 
-  public static void main(String[] args) throws URISyntaxException {
+  public static void main(String[] args) throws URISyntaxException, SQLException {
     DataAdapterConfig conf = DataAdapterConfig.getInstance("test_files/Simple_SQL_Config.yaml");
     SQLAdapter sql = new SQLAdapter(conf);
 

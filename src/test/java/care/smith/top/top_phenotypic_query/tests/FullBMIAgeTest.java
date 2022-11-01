@@ -2,6 +2,7 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
