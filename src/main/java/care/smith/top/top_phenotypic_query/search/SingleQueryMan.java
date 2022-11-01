@@ -7,8 +7,12 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SingleQueryMan {
+
+  private static final Logger log = LoggerFactory.getLogger(SingleQueryMan.class);
 
   private Set<SingleSearch> inclusions = new HashSet<>();
   private Set<SingleSearch> exclusions = new HashSet<>();
@@ -98,7 +102,7 @@ public class SingleQueryMan {
       rs = rs.insert(res);
     }
 
-    System.out.println(rs);
+    log.debug(rs.toString());
 
     return rs;
   }

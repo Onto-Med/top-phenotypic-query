@@ -1,7 +1,9 @@
 package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -38,8 +40,14 @@ public class ResultSetTest extends AbstractTest {
     ResultSet rs = new ResultSet();
     rs.setPhenotypes(phes1, phes2);
     assertEquals(2, rs.size());
-
-    System.out.println(rs);
+    assertTrue(
+        rs.get(phes1.getSubjectId())
+            .getPhenotypeNames()
+            .containsAll(List.of(weight.getId(), height.getId(), age.getId())));
+    assertTrue(
+            rs.get(phes2.getSubjectId())
+                    .getPhenotypeNames()
+                    .containsAll(List.of(weight.getId(), height.getId(), age.getId())));
   }
 
   @Test

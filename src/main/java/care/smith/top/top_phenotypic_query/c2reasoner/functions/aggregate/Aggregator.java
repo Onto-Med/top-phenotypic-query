@@ -40,7 +40,7 @@ public class Aggregator {
     else {
       Expression ag =
           function.calculate(Expressions.toExpressionList(arg.getValues()), function, c2r);
-      log.info(
+      log.debug(
           "aggregate: {} = {}",
           function.toStringValues(arg.getValues()),
           Values.toStringWithoutDateTime(ag.getValue()));

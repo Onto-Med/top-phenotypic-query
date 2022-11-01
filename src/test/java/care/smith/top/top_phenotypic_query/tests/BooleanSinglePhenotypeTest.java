@@ -46,7 +46,6 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
-    System.out.println(rs);
 
     assertEquals(Set.of("2", "4"), rs.getSubjectIds());
   }
@@ -59,7 +58,6 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
-    System.out.println(rs);
 
     assertEquals(Set.of("1"), rs.getSubjectIds());
   }
@@ -86,7 +84,6 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
     ResultSet rs = pf.execute();
-    System.out.println(rs);
 
     assertEquals(Set.of("2", "4"), rs.getSubjectIds());
   }
@@ -113,7 +110,6 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
     ResultSet rs = pf.execute();
-    System.out.println(rs);
 
     assertEquals(Set.of("1"), rs.getSubjectIds());
   }
@@ -140,7 +136,6 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
     ResultSet rs = pf.execute();
-    System.out.println(rs);
 
     assertEquals(Set.of("1", "3", "5"), rs.getSubjectIds());
   }
@@ -167,7 +162,6 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
     ResultSet rs = pf.execute();
-    System.out.println(rs);
 
     assertEquals(Set.of("2", "3", "4", "5"), rs.getSubjectIds());
   }

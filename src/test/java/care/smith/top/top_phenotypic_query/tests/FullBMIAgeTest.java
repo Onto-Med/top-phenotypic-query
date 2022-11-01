@@ -37,9 +37,11 @@ public class FullBMIAgeTest extends AbstractTest {
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
     adapter.close();
-    System.out.println(rs);
 
     assertEquals(Set.of("1"), rs.getSubjectIds());
+    assertEquals(15, rs.getPhenotypes("1").size());
+    assertTrue(rs.getPhenotypes("1").hasPhenotype(overWeight.getId()));
+    assertTrue(rs.getPhenotypes("1").hasPhenotype(female.getId()));
 
     SubjectPhenotypes phes = rs.getPhenotypes("1");
     Set<String> phesExpected = new HashSet<>(phenotypes.keySet());

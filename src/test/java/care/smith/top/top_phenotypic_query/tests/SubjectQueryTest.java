@@ -42,7 +42,6 @@ public class SubjectQueryTest extends AbstractTest {
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
     adapter.close();
-    System.out.println(rs);
     assertEquals(Set.of("3"), rs.getSubjectIds());
 
     SubjectPhenotypes phes = rs.getPhenotypes("3");
@@ -70,7 +69,6 @@ public class SubjectQueryTest extends AbstractTest {
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
     adapter.close();
-    System.out.println(rs);
     assertEquals(Set.of("1"), rs.getSubjectIds());
 
     SubjectPhenotypes phes = rs.getPhenotypes("1");
@@ -93,7 +91,6 @@ public class SubjectQueryTest extends AbstractTest {
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
     adapter.close();
-    System.out.println(rs);
     assertEquals(Set.of("4"), rs.getSubjectIds());
 
     SubjectPhenotypes phes = rs.getPhenotypes("4");
@@ -119,7 +116,6 @@ public class SubjectQueryTest extends AbstractTest {
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
     adapter.close();
-    System.out.println(rs);
     assertEquals(Set.of("2"), rs.getSubjectIds());
   }
 }

@@ -70,7 +70,7 @@ public class SQLAdapter extends DataAdapter {
   public ResultSet execute(SingleSearch search) {
     ResultSet rs = new ResultSet();
     try {
-      log.info("Execute SQL query: {}", search.getQueryString());
+      log.debug("Execute SQL query: {}", search.getQueryString());
       java.sql.ResultSet sqlRS = executeQuery(search.getQueryString());
       PhenotypeOutput out = search.getOutput();
       String sbjCol = out.getSubject();
@@ -112,7 +112,7 @@ public class SQLAdapter extends DataAdapter {
   public ResultSet execute(SubjectSearch search) {
     ResultSet rs = new ResultSet();
     try {
-      log.info("Execute SQL query: {}", search.getQueryString());
+      log.debug("Execute SQL query: {}", search.getQueryString());
       java.sql.ResultSet sqlRS = executeQuery(search.getQueryString());
       SubjectOutput out = search.getOutput();
       String sbjCol = out.getId();
@@ -163,7 +163,7 @@ public class SQLAdapter extends DataAdapter {
   public ResultSet executeAllSubjectsQuery() {
     ResultSet rs = new ResultSet();
     try {
-      log.info("Execute SQL query: {}", SubjectSearch.getBaseQuery(config));
+      log.debug("Execute SQL query: {}", SubjectSearch.getBaseQuery(config));
       java.sql.ResultSet sqlRS = executeQuery(SubjectSearch.getBaseQuery(config));
       String sbjCol = SubjectSearch.getIdColumn(config);
       while (sqlRS.next()) rs.addSubject(sqlRS.getString(sbjCol));

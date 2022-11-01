@@ -6,8 +6,12 @@ import org.fhir.ucum.Decimal;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UCUM {
+
+  private static final Logger log = LoggerFactory.getLogger(UCUM.class);
 
   private static UcumService SERVICE = getService();
 
@@ -16,7 +20,7 @@ public class UCUM {
       return new UcumEssenceService(
           UCUM.class.getClassLoader().getResourceAsStream("ucum-essence.xml"));
     } catch (UcumException e) {
-      System.out.println("'ucum-essence.xml' not found!");
+      log.error("'ucum-essence.xml' not found!");
       throw new IllegalArgumentException(e);
     }
   }

@@ -47,7 +47,7 @@ public class FHIRAdapter extends DataAdapter {
   @Override
   public ResultSet execute(SingleSearch search) {
     String query = search.getQueryString();
-    log.info("Execute FHIR query: {}", query);
+    log.debug("Execute FHIR query: {}", query);
     ResultSet rs = new ResultSet();
     List<Resource> resources = client.executeQuery(query);
     PhenotypeOutput out = search.getOutput();
@@ -89,7 +89,7 @@ public class FHIRAdapter extends DataAdapter {
   @Override
   public ResultSet execute(SubjectSearch search) {
     String query = search.getQueryString();
-    log.info("Execute FHIR query: {}", query);
+    log.debug("Execute FHIR query: {}", query);
     ResultSet rs = new ResultSet();
     List<Resource> resources = client.executeQuery(query);
     SubjectOutput out = search.getOutput();
@@ -123,7 +123,7 @@ public class FHIRAdapter extends DataAdapter {
   @Override
   public ResultSet executeAllSubjectsQuery() {
     String query = SubjectSearch.getBaseQuery(config);
-    log.info("Execute FHIR query: {}", query);
+    log.debug("Execute FHIR query: {}", query);
     ResultSet rs = new ResultSet();
     List<Resource> resources = client.executeQuery(query);
     for (Resource res : resources) rs.addSubject(FHIRUtil.getId(res));

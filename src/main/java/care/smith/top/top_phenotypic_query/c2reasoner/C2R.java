@@ -138,28 +138,28 @@ public class C2R {
   }
 
   private Expression calcConstant(Expression exp) {
-    log.info("start setting constant: {} ...", exp.getConstantId());
+    log.debug("start setting constant: {} ...", exp.getConstantId());
     Exceptions.checkConstantExists(exp, constants);
     Expression result = getConstant(exp.getConstantId()).getValueExpression();
-    log.info("end setting constant: {} = {}", exp.getConstantId(), toString(result));
+    log.debug("end setting constant: {} = {}", exp.getConstantId(), toString(result));
     return result;
   }
 
   private Expression calcVariable(Expression exp) {
-    log.info("start setting variable: {} ...", exp.getEntityId());
+    log.debug("start setting variable: {} ...", exp.getEntityId());
     Exceptions.checkVariableIsSet(exp, variables);
     Expression result = variables.get(exp.getEntityId());
-    log.info("end setting variable: {} = {}", exp.getEntityId(), toString(result));
+    log.debug("end setting variable: {} = {}", exp.getEntityId(), toString(result));
     return result;
   }
 
   public Expression calcFunction(Expression exp, FunctionEntity defaultAggregateFunction) {
     String expStr = toString(exp);
-    log.info("start calculating function '{}': {} ...", exp.getFunctionId(), expStr);
+    log.debug("start calculating function '{}': {} ...", exp.getFunctionId(), expStr);
     Exceptions.checkFunctionExists(exp, functions);
     FunctionEntity func = getFunction(exp.getFunctionId());
     Expression result = func.calculate(exp.getArguments(), defaultAggregateFunction, this);
-    log.info(
+    log.debug(
         "end calculating function '{}': {} = {}", exp.getFunctionId(), expStr, toString(result));
     return result;
   }
