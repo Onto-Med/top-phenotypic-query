@@ -81,7 +81,7 @@ public class SingleSearch extends PhenotypeSearch {
   }
 
   private CodeMapping getCodeMapping() {
-    return config.getCodeMapping(phenotype, phenotypes);
+    return config.getCodeMapping(phenotype);
   }
 
   public String getModelUnit() {

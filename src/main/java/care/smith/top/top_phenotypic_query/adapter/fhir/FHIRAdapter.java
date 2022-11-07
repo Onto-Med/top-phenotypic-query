@@ -159,11 +159,11 @@ public class FHIRAdapter extends DataAdapter {
   @Override
   public Map<String, String> getPhenotypeMappings(
       Phenotype phenotype, DataAdapterConfig config, Map<String, Phenotype> phenotypes) {
-    CodeMapping codeMap = config.getCodeMapping(phenotype, phenotypes);
+    CodeMapping codeMap = config.getCodeMapping(phenotype);
     if (codeMap == null) return null;
     Map<String, String> pheMap = codeMap.getPhenotypeMappings();
     if (pheMap != null) return pheMap;
-    String codes = getFormat().formatList(Phenotypes.getCodeUris(phenotype, phenotypes));
+    String codes = getFormat().formatList(Phenotypes.getCodeUris(phenotype));
     return Collections.singletonMap("codes", codes);
   }
 }

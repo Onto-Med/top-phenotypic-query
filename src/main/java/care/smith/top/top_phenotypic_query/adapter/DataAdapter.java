@@ -79,7 +79,7 @@ public abstract class DataAdapter {
 
   public Map<String, String> getPhenotypeMappings(
       Phenotype phenotype, DataAdapterConfig config, Map<String, Phenotype> phenotypes) {
-    CodeMapping codeMap = config.getCodeMapping(phenotype, phenotypes);
+    CodeMapping codeMap = config.getCodeMapping(phenotype);
     if (codeMap == null) return null;
     return codeMap.getPhenotypeMappings();
   }

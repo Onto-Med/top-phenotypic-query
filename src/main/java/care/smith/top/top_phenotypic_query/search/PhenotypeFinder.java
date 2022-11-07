@@ -26,6 +26,11 @@ public class PhenotypeFinder {
     for (Phenotype p : this.phenotypes.values()) {
       if (Phenotypes.isRestriction(p)) p.setExpression(Expressions.restrictionToExpression(p));
     }
+    for (String pId : phenotypes.keySet()) {
+      Phenotype p = phenotypes.get(pId);
+      Phenotype supP = p.getSuperPhenotype();
+      if (supP != null) p.setSuperPhenotype(phenotypes.get(supP.getId()));
+    }
   }
 
   public ResultSet execute() {
@@ -46,9 +51,9 @@ public class PhenotypeFinder {
     for (QueryCriterion cri : query.getCriteria()) {
       Phenotype phe = phenotypes.get(cri.getSubjectId());
       if (Phenotypes.isSingle(phe)) {
-        if (config.isAge(phe, phenotypes)) sbjMan.setAgeCriterion(cri, phe);
-        else if (config.isBirthdate(phe, phenotypes)) sbjMan.setBirthdateCriterion(cri, phe);
-        else if (config.isSex(phe, phenotypes)) sbjMan.setSexCriterion(cri, phe);
+        if (config.isAge(phe)) sbjMan.setAgeCriterion(cri, phe);
+        else if (config.isBirthdate(phe)) sbjMan.setBirthdateCriterion(cri, phe);
+        else if (config.isSex(phe)) sbjMan.setSexCriterion(cri, phe);
         else man.addCriterion(new SingleSearch(query, cri, phe, adapter, phenotypes, true));
       }
     }
@@ -59,9 +64,9 @@ public class PhenotypeFinder {
         for (String var : Expressions.getVariables(phe.getExpression(), phenotypes)) {
           Phenotype varPhe = phenotypes.get(var);
           if (Phenotypes.isSingle(varPhe)) {
-            if (config.isAge(varPhe, phenotypes)) sbjMan.addAgeVariable(varPhe);
-            else if (config.isBirthdate(varPhe, phenotypes)) sbjMan.addBirthdateVariable(varPhe);
-            else if (config.isSex(varPhe, phenotypes)) sbjMan.addSexVariable(varPhe);
+            if (config.isAge(varPhe)) sbjMan.addAgeVariable(varPhe);
+            else if (config.isBirthdate(varPhe)) sbjMan.addBirthdateVariable(varPhe);
+            else if (config.isSex(varPhe)) sbjMan.addSexVariable(varPhe);
             else man.addVariable(new SingleSearch(query, cri, varPhe, adapter, phenotypes, false));
           }
         }
