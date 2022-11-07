@@ -1,5 +1,8 @@
 package care.smith.top.top_phenotypic_query.adapter;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
@@ -8,9 +11,6 @@ import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 
 public abstract class DataAdapter {
 

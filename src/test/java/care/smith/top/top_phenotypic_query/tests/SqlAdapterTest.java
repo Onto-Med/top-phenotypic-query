@@ -86,7 +86,7 @@ public class SqlAdapterTest extends AbstractTest {
   @Test
   void testCorruptedPhenotype() throws SQLException {
     URL configFile =
-        Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test.yml");
+        Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test1.yml");
     assertNotNull(configFile);
     SQLAdapter adapter = new SQLAdapter(configFile.getPath());
 

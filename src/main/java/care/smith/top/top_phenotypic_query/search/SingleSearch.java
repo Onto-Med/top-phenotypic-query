@@ -17,6 +17,7 @@ import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQuery;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class SingleSearch extends PhenotypeSearch {
@@ -71,6 +72,10 @@ public class SingleSearch extends PhenotypeSearch {
     return phenotype;
   }
 
+  public boolean hasDateTimeRestriction() {
+    return criterion.getDateTimeRestriction() != null;
+  }
+
   public DateTimeRestriction getDateTimeRestriction() {
     return criterion.getDateTimeRestriction();
   }
@@ -101,6 +106,14 @@ public class SingleSearch extends PhenotypeSearch {
 
   public PhenotypeOutput getOutput() {
     return getPhenotypeQuery().getOutput().mapping(getPhenotypeMappings());
+  }
+
+  public boolean hasValueRestriction() {
+    return Phenotypes.isSingleRestriction(phenotype);
+  }
+
+  public Restriction getValueRestriction() {
+    return phenotype.getRestriction();
   }
 
   public String getQueryString() {

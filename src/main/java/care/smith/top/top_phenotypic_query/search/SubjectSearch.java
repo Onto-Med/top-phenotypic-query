@@ -122,6 +122,25 @@ public class SubjectSearch extends PhenotypeSearch {
     return config.getSubjectQuery().getOutput().getId();
   }
 
+  public boolean hasSexRestriction() {
+    return sex != null && Phenotypes.isSingleRestriction(sex);
+  }
+
+  public Restriction getSexRestriction() {
+    if (sex == null) return null;
+    return sex.getRestriction();
+  }
+
+  public boolean hasBirthdateRestriction() {
+    return (birthdate != null && Phenotypes.isSingleRestriction(birthdate))
+        || (age != null && Phenotypes.isSingleRestriction(age));
+  }
+
+  public Restriction getBirthdateRestriction() {
+    if (birthdate == null && age == null) return null;
+    return getBirthdateDerived().getRestriction();
+  }
+
   public String getQueryString() {
     SubjectQueryBuilder builder = getSubjectQuery().getQueryBuilder().baseQuery();
 
