@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import care.smith.top.model.DateTimeRestriction;
-import care.smith.top.model.EntityType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.Query;
@@ -69,6 +68,10 @@ public class SingleSearch extends PhenotypeSearch {
     return phenotype;
   }
 
+  public Phenotype getSuperPhenotype() {
+    return phenotype.getSuperPhenotype();
+  }
+
   public boolean hasDateTimeRestriction() {
     return criterion.getDateTimeRestriction() != null;
   }
@@ -77,7 +80,7 @@ public class SingleSearch extends PhenotypeSearch {
     return criterion.getDateTimeRestriction();
   }
 
-  private CodeMapping getCodeMapping() {
+  public CodeMapping getCodeMapping() {
     return config.getCodeMapping(phenotype);
   }
 
@@ -105,11 +108,11 @@ public class SingleSearch extends PhenotypeSearch {
     return getPhenotypeQuery().getOutput().mapping(getPhenotypeMappings());
   }
 
-  public boolean hasValueRestriction() {
+  public boolean hasRestriction() {
     return Phenotypes.isSingleRestriction(phenotype);
   }
 
-  public Restriction getValueRestriction() {
+  public Restriction getRestriction() {
     return phenotype.getRestriction();
   }
 
@@ -119,7 +122,7 @@ public class SingleSearch extends PhenotypeSearch {
     CodeMapping codeMap = getCodeMapping();
     DateTimeRestriction dtr = getDateTimeRestriction();
 
-    if (phenotype.getEntityType() == EntityType.SINGLE_RESTRICTION) {
+    if (Phenotypes.isSingleRestriction(phenotype)) {
       Phenotype superPhe = phenotype.getSuperPhenotype();
       Restriction r = phenotype.getRestriction();
       if (r.getQuantifier() != Quantifier.ALL) {

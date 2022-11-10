@@ -61,6 +61,10 @@ public class CodeMapping {
     return !restrictionMappings.isEmpty();
   }
 
+  public Restriction getSourceRestriction(Restriction modelRestriction) {
+    return getSourceRestriction(modelRestriction, null);
+  }
+
   public Restriction getSourceRestriction(Restriction modelRestriction, Phenotype phe) {
     Restriction sourceRestriction =
         restrictionMappings.get(Restrictions.copyWithoutBasicAttributes(modelRestriction));

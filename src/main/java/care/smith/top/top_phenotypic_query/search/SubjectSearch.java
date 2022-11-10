@@ -144,17 +144,16 @@ public class SubjectSearch extends PhenotypeSearch {
   public String getQueryString() {
     SubjectQueryBuilder builder = getSubjectQuery().getQueryBuilder().baseQuery();
 
-    if (sex != null && Phenotypes.isSingleRestriction(sex)) {
-      Restriction sexR = sex.getRestriction();
+    if (hasSexRestriction()) {
+      Restriction sexR = getSexRestriction();
       if (Restrictions.hasValues(sexR))
         builder.sexList(
             Restrictions.getValuesAsString(
                 getSexMapping().getSourceRestriction(sexR, null), adapter.getFormat()));
     }
 
-    Phenotype bd = getBirthdateDerived();
-    if (bd != null && Phenotypes.isSingleRestriction(bd)) {
-      Restriction birthdateR = bd.getRestriction();
+    if (hasBirthdateRestriction()) {
+      Restriction birthdateR = getBirthdateRestriction();
       if (Restrictions.hasInterval(birthdateR)) {
         Map<String, String> interval =
             Restrictions.getIntervalAsStringMap(
