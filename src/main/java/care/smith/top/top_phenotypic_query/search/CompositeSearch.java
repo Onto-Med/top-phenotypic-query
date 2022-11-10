@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
@@ -70,7 +69,7 @@ public class CompositeSearch extends PhenotypeSearch {
     List<Value> vals = rs.getPhenotypes(sbjId).getValues(var, dateRange);
     if (vals != null) return vals;
     Phenotype phe = phenotypes.get(var);
-    if (Phenotypes.isSingle(phe) && Phenotypes.getDataType(phe, phenotypes) == DataType.BOOLEAN)
+    if (Phenotypes.isSingle(phe) && Phenotypes.hasBooleanType(phe))
       return List.of(Values.newValueFalse());
     Expression newExp = phe.getExpression();
     if (newExp == null) return null;

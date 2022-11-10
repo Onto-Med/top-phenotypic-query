@@ -32,6 +32,7 @@ import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
 
 public class SQLAdapter extends DataAdapter {
@@ -72,20 +73,19 @@ public class SQLAdapter extends DataAdapter {
       String pheCol = out.getPhenotype();
       String dateCol = out.getDate();
       Phenotype phe = search.getPhenotype();
-      DataType datatype = phe.getDataType();
 
       while (sqlRS.next()) {
         String sbj = sqlRS.getString(sbjCol);
         LocalDateTime date = sqlRS.getTimestamp(dateCol).toLocalDateTime();
         Value val = null;
-        if (datatype == DataType.BOOLEAN) {
+        if (Phenotypes.hasBooleanType(phe)) {
           if (pheCol == null) {
             rs.addValue(sbj, phe, search.getDateTimeRestriction(), Values.newValueTrue());
             continue;
           } else val = Values.newValue(sqlRS.getBoolean(pheCol), date);
-        } else if (datatype == DataType.DATE_TIME)
+        } else if (Phenotypes.hasDateTimeType(phe))
           val = Values.newValue(sqlRS.getTimestamp(pheCol).toLocalDateTime(), date);
-        else if (datatype == DataType.NUMBER)
+        else if (Phenotypes.hasNumberType(phe))
           val = Values.newValue(sqlRS.getBigDecimal(pheCol), date);
         else val = Values.newValue(sqlRS.getString(pheCol), date);
         if (val != null)
@@ -133,11 +133,11 @@ public class SQLAdapter extends DataAdapter {
           }
         }
         if (sex != null) {
-          if (sex.getDataType() == DataType.BOOLEAN) {
+          if (Phenotypes.hasBooleanType(sex)) {
             Boolean sexSqlVal = sqlRS.getBoolean(sexCol);
             if (sexSqlVal != null)
               rs.addValueWithRestriction(sbj, sex, null, Values.newValue(sexSqlVal));
-          } else if (sex.getDataType() == DataType.NUMBER) {
+          } else if (Phenotypes.hasNumberType(sex)) {
             BigDecimal sexSqlVal = sqlRS.getBigDecimal(sexCol);
             if (sexSqlVal != null)
               rs.addValueWithRestriction(sbj, sex, null, Values.newValue(sexSqlVal));

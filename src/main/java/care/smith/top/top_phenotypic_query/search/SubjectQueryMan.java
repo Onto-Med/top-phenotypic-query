@@ -2,7 +2,6 @@ package care.smith.top.top_phenotypic_query.search;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import care.smith.top.model.Expression;
@@ -35,11 +34,8 @@ public class SubjectQueryMan {
   private Phenotype agePhenotypeVariable;
   private Set<Phenotype> ageRestrictionVariables = new HashSet<>();
 
-  private Map<String, Phenotype> phenotypes;
-
-  public SubjectQueryMan(DataAdapter adapter, Map<String, Phenotype> phenotypes) {
+  public SubjectQueryMan(DataAdapter adapter) {
     this.adapter = adapter;
-    this.phenotypes = phenotypes;
   }
 
   public void setSexCriterion(QueryCriterion criterion, Phenotype phenotype) {
@@ -62,7 +58,7 @@ public class SubjectQueryMan {
     if (Phenotypes.isPhenotype(sexVariable)) sexPhenotypeVariable = sexVariable;
     else if (Phenotypes.isRestriction(sexVariable)) {
       sexRestrictionVariables.add(sexVariable);
-      sexPhenotypeVariable = phenotypes.get(sexVariable.getSuperPhenotype().getId());
+      sexPhenotypeVariable = sexVariable.getSuperPhenotype();
     }
   }
 
@@ -71,7 +67,7 @@ public class SubjectQueryMan {
     if (Phenotypes.isPhenotype(birthdateVariable)) birthdatePhenotypeVariable = birthdateVariable;
     else if (Phenotypes.isRestriction(birthdateVariable)) {
       birthdateRestrictionVariables.add(birthdateVariable);
-      birthdatePhenotypeVariable = phenotypes.get(birthdateVariable.getSuperPhenotype().getId());
+      birthdatePhenotypeVariable = birthdateVariable.getSuperPhenotype();
     }
   }
 
@@ -80,7 +76,7 @@ public class SubjectQueryMan {
     if (Phenotypes.isPhenotype(ageVariable)) agePhenotypeVariable = ageVariable;
     else if (Phenotypes.isRestriction(ageVariable)) {
       ageRestrictionVariables.add(ageVariable);
-      agePhenotypeVariable = phenotypes.get(ageVariable.getSuperPhenotype().getId());
+      agePhenotypeVariable = ageVariable.getSuperPhenotype();
     }
   }
 
@@ -89,7 +85,7 @@ public class SubjectQueryMan {
     if (exc != null && var.getId().equals(exc.getId())) return true;
     if (inc != null
         && inc.getSuperPhenotype() != null
-        && (var.equals(phenotypes.get(inc.getSuperPhenotype().getId())))) return true;
+        && (var.getId().equals(inc.getSuperPhenotype().getId()))) return true;
     return false;
   }
 

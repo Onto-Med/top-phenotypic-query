@@ -9,7 +9,6 @@ import org.hl7.fhir.r4.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.NumberRestriction;
 import care.smith.top.model.Phenotype;
@@ -52,21 +51,20 @@ public class FHIRAdapter extends DataAdapter {
     List<Resource> resources = client.executeQuery(query);
     PhenotypeOutput out = search.getOutput();
     Phenotype phe = search.getPhenotype();
-    DataType datatype = phe.getDataType();
 
     for (Resource res : resources) {
       String sbj = FHIRUtil.getString(client.evaluateFHIRPath(res, out.getSubject()));
       LocalDateTime date = FHIRUtil.getDate(client.evaluateFHIRPath(res, out.getDate()));
       Value val = null;
-      if (datatype == DataType.DATE_TIME)
+      if (Phenotypes.hasDateTimeType(phe))
         val =
             Values.newValue(
                 FHIRUtil.getDate(client.evaluateFHIRPath(res, out.getDatePhenotype())), date);
-      else if (datatype == DataType.NUMBER)
+      else if (Phenotypes.hasNumberType(phe))
         val =
             Values.newValue(
                 FHIRUtil.getNumber(client.evaluateFHIRPath(res, out.getNumberPhenotype())), date);
-      else if (datatype == DataType.BOOLEAN) {
+      else if (Phenotypes.hasBooleanType(phe)) {
         rs.addValue(sbj, phe, search.getDateTimeRestriction(), Values.newValueTrue());
         continue;
       } else
@@ -157,8 +155,7 @@ public class FHIRAdapter extends DataAdapter {
   }
 
   @Override
-  public Map<String, String> getPhenotypeMappings(
-      Phenotype phenotype, DataAdapterConfig config, Map<String, Phenotype> phenotypes) {
+  public Map<String, String> getPhenotypeMappings(Phenotype phenotype, DataAdapterConfig config) {
     CodeMapping codeMap = config.getCodeMapping(phenotype);
     if (codeMap == null) return null;
     Map<String, String> pheMap = codeMap.getPhenotypeMappings();
