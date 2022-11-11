@@ -14,9 +14,10 @@ public abstract class PreparedSubjectQuery {
 
   public PreparedSubjectQuery(SubjectSearch search) {
     this.search = search;
+    prepareQuery();
   }
 
-  public String getPreparedQuery() {
+  private void prepareQuery() {
     SubjectQueryBuilder builder = search.getSubjectQuery().getQueryBuilder().baseQuery();
 
     if (search.hasSexRestriction()) {
@@ -34,11 +35,14 @@ public abstract class PreparedSubjectQuery {
       }
     }
 
-    preparedQuery = builder.build();
+    this.preparedQuery = builder.build();
+  }
+
+  public String getPreparedQuery() {
     return preparedQuery;
   }
 
-  protected abstract String getSexList(Restriction r);
+  public abstract String getSexList(Restriction r);
 
-  protected abstract Map<String, String> getBirthdateInterval(Restriction r);
+  public abstract Map<String, String> getBirthdateInterval(Restriction r);
 }

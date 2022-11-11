@@ -1,7 +1,5 @@
 package care.smith.top.top_phenotypic_query.adapter;
 
-import java.util.Map;
-
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
@@ -18,9 +16,10 @@ public abstract class PreparedSingleQuery {
 
   public PreparedSingleQuery(SingleSearch search) {
     this.search = search;
+    prepareQuery();
   }
 
-  public String getPreparedQuery() {
+  private void prepareQuery() {
     PhenotypeQueryBuilder builder =
         search.getPhenotypeQuery().getQueryBuilder(search.getPhenotypeMappings()).baseQuery();
     CodeMapping codeMap = search.getCodeMapping();
@@ -30,33 +29,26 @@ public abstract class PreparedSingleQuery {
       Phenotype superPhe = search.getSuperPhenotype();
       Restriction r = search.getRestriction();
       if (r.getQuantifier() != Quantifier.ALL) {
-        if (Restrictions.hasInterval(r)) {
-          Map<String, String> interval = getInterval(codeMap.getSourceRestriction(r, superPhe));
-          for (String key : interval.keySet())
-            adapter.addValueIntervalLimit(key, interval.get(key), builder, r);
-        } else if (Restrictions.hasValues(r)) {
-          String values =
-              Restrictions.getValuesAsString(
-                  codeMap.getSourceRestriction(r, superPhe), adapter.getFormat());
-          adapter.addValueList(values, builder, r);
-        }
+        Restriction sourceR = codeMap.getSourceRestriction(r, superPhe);
+        if (Restrictions.hasInterval(r)) addValueIntervalLimit(sourceR, builder);
+        else if (Restrictions.hasValues(r)) addValueList(sourceR, builder);
       }
     }
 
     if (dtr != null) {
-      if (Restrictions.hasInterval(dtr)) {
-        Map<String, String> interval =
-            Restrictions.getIntervalAsStringMap(dtr, adapter.getFormat());
-        for (String key : interval.keySet())
-          adapter.addDateIntervalLimit(key, interval.get(key), builder);
-      }
+      if (Restrictions.hasInterval(dtr)) addDateIntervalLimit(dtr, builder);
     }
 
-    preparedQuery = builder.build();
+    this.preparedQuery = builder.build();
+  }
+
+  public String getPreparedQuery() {
     return preparedQuery;
   }
 
-  protected abstract String getList(Restriction r);
+  public abstract void addValueIntervalLimit(Restriction r, PhenotypeQueryBuilder builder);
 
-  protected abstract Map<String, String> getInterval(Restriction r);
+  public abstract void addValueList(Restriction r, PhenotypeQueryBuilder builder);
+
+  public abstract void addDateIntervalLimit(Restriction r, PhenotypeQueryBuilder builder);
 }

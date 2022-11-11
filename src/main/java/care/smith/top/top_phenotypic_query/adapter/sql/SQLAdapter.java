@@ -9,6 +9,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ import care.smith.top.model.StringRestriction;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
+import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
@@ -213,6 +215,13 @@ public class SQLAdapter extends DataAdapter {
     } catch (SQLException e) {
       e.printStackTrace();
     }
+  }
+
+  @Override
+  public Map<String, String> getPhenotypeMappings(Phenotype phenotype, DataAdapterConfig config) {
+    CodeMapping codeMap = config.getCodeMapping(phenotype);
+    if (codeMap == null) return null;
+    return codeMap.getPhenotypeMappings();
   }
 
   public static void main(String[] args) throws URISyntaxException, SQLException {

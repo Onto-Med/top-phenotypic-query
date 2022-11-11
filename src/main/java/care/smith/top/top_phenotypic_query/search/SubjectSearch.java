@@ -16,6 +16,7 @@ import care.smith.top.model.Query;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
 import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
@@ -163,6 +164,14 @@ public class SubjectSearch extends PhenotypeSearch {
     }
 
     return builder.build();
+  }
+
+  public DataAdapter getAdapter() {
+    return adapter;
+  }
+
+  public DataAdapterFormat getAdapterFormat() {
+    return adapter.getFormat();
   }
 
   @Override

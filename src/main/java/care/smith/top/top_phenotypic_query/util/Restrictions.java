@@ -281,6 +281,13 @@ public class Restrictions {
         getStringValues(r).stream().map(v -> format(v, format)).map(String.class::cast), format);
   }
 
+  public static int getValuesCount(Restriction r) {
+    if (hasNumberType(r)) return getNumberValues(r).size();
+    if (hasDateTimeType(r)) return getDateTimeValues(r).size();
+    if (hasBooleanType(r)) return getBooleanValues(r).size();
+    return getStringValues(r).size();
+  }
+
   public static Map<RestrictionOperator, Value> getInterval(Restriction r) {
     Map<RestrictionOperator, Value> limits = new LinkedHashMap<>();
     if (hasNumberType(r)) {
