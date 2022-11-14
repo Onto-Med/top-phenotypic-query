@@ -282,10 +282,16 @@ public class Restrictions {
   }
 
   public static int getValuesCount(Restriction r) {
-    if (hasNumberType(r)) return getNumberValues(r).size();
-    if (hasDateTimeType(r)) return getDateTimeValues(r).size();
-    if (hasBooleanType(r)) return getBooleanValues(r).size();
-    return getStringValues(r).size();
+    if (hasNumberType(r)) return removeNullValues(getNumberValues(r)).size();
+    if (hasDateTimeType(r)) return removeNullValues(getDateTimeValues(r)).size();
+    if (hasBooleanType(r)) return removeNullValues(getBooleanValues(r)).size();
+    return removeNullValues(getStringValues(r)).size();
+  }
+
+  private static <T> List<T> removeNullValues(List<T> vals) {
+    while (vals.remove(null))
+      ;
+    return vals;
   }
 
   public static Map<RestrictionOperator, Value> getInterval(Restriction r) {

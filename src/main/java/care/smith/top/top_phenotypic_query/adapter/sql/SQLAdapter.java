@@ -64,6 +64,10 @@ public class SQLAdapter extends DataAdapter {
     return con.createStatement().executeQuery(query);
   }
 
+  public Connection getConnection() {
+    return con;
+  }
+
   @Override
   public ResultSet execute(SingleSearch search) {
     ResultSet rs = new ResultSet();

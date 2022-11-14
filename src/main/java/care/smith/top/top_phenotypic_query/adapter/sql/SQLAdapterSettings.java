@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -106,20 +105,19 @@ public class SQLAdapterSettings extends DataAdapterSettings {
       String query, Connection con, SubjectSearch search) throws SQLException {
     PreparedStatement ps = con.prepareStatement(query);
 
+    int paramNum = 1;
+
     if (search.hasSexRestriction()) {
       Restriction sexR = search.getSexRestriction();
-      if (Restrictions.hasValues(sexR)) {
-        Restriction sourceSexR = search.getSexMapping().getSourceRestriction(sexR);
-        if (Restrictions.hasNumberType(sourceSexR)) setNumberValues(ps, sourceSexR);
-        else if (Restrictions.hasBooleanType(sourceSexR)) setBooleanValues(ps, sourceSexR);
-        else if (Restrictions.hasStringType(sourceSexR)) setStringValues(ps, sourceSexR);
-      }
+      if (Restrictions.hasValues(sexR))
+        paramNum = setValues(ps, search.getSexMapping().getSourceRestriction(sexR), paramNum);
     }
 
     if (search.hasBirthdateRestriction()) {
       Restriction birthdateR = search.getBirthdateRestriction();
       if (Restrictions.hasInterval(birthdateR))
-        setDateTimeValues(ps, search.getBirthdateMapping().getSourceRestriction(birthdateR));
+        setDateTimeValues(
+            ps, search.getBirthdateMapping().getSourceRestriction(birthdateR), paramNum);
     }
 
     return ps;
@@ -129,23 +127,20 @@ public class SQLAdapterSettings extends DataAdapterSettings {
       String query, Connection con, SingleSearch search) throws SQLException {
     PreparedStatement ps = con.prepareStatement(query);
 
+    int paramNum = 1;
+
     if (search.hasRestriction()) {
       Phenotype superPhe = search.getSuperPhenotype();
       Restriction r = search.getRestriction();
-      if (r.getQuantifier() != Quantifier.ALL) {
-        Restriction sourceR = search.getCodeMapping().getSourceRestriction(r, superPhe);
-        if (Restrictions.hasInterval(r) || Restrictions.hasValues(r)) {
-          if (Restrictions.hasNumberType(sourceR)) setNumberValues(ps, sourceR);
-          else if (Restrictions.hasBooleanType(sourceR)) setBooleanValues(ps, sourceR);
-          else if (Restrictions.hasStringType(sourceR)) setStringValues(ps, sourceR);
-          else setDateTimeValues(ps, sourceR);
-        }
-      }
+      if (r.getQuantifier() != Quantifier.ALL
+          && (Restrictions.hasInterval(r) || Restrictions.hasValues(r)))
+        paramNum =
+            setValues(ps, search.getCodeMapping().getSourceRestriction(r, superPhe), paramNum);
     }
 
     if (search.hasDateTimeRestriction()) {
       DateTimeRestriction dtr = search.getDateTimeRestriction();
-      if (Restrictions.hasInterval(dtr)) setDateTimeValues(ps, dtr);
+      if (Restrictions.hasInterval(dtr)) setDateTimeValues(ps, dtr, paramNum);
     }
 
     return ps;
@@ -162,35 +157,42 @@ public class SQLAdapterSettings extends DataAdapterSettings {
     return interval;
   }
 
-  private void setStringValues(PreparedStatement ps, Restriction r) throws SQLException {
-    List<String> vals = Restrictions.getStringValues(r);
-    for (int i = 0; i < vals.size(); i++) {
-      String v = vals.get(i);
-      if (v != null) ps.setString(i + 1, v);
-    }
+  private int setValues(PreparedStatement ps, Restriction r, int paramNum) throws SQLException {
+    if (Restrictions.hasNumberType(r)) return setNumberValues(ps, r, paramNum);
+    if (Restrictions.hasDateTimeType(r)) return setDateTimeValues(ps, r, paramNum);
+    if (Restrictions.hasBooleanType(r)) return setBooleanValues(ps, r, paramNum);
+    return setStringValues(ps, r, paramNum);
   }
 
-  private void setNumberValues(PreparedStatement ps, Restriction r) throws SQLException {
-    List<BigDecimal> vals = Restrictions.getNumberValues(r);
-    for (int i = 0; i < vals.size(); i++) {
-      BigDecimal v = vals.get(i);
-      if (v != null) ps.setBigDecimal(i + 1, v);
+  private int setStringValues(PreparedStatement ps, Restriction r, int paramNum)
+      throws SQLException {
+    for (String v : Restrictions.getStringValues(r)) {
+      if (v != null) ps.setString(paramNum++, v);
     }
+    return paramNum;
   }
 
-  private void setBooleanValues(PreparedStatement ps, Restriction r) throws SQLException {
-    List<Boolean> vals = Restrictions.getBooleanValues(r);
-    for (int i = 0; i < vals.size(); i++) {
-      Boolean v = vals.get(i);
-      if (v != null) ps.setBoolean(i + 1, v);
+  private int setNumberValues(PreparedStatement ps, Restriction r, int paramNum)
+      throws SQLException {
+    for (BigDecimal v : Restrictions.getNumberValues(r)) {
+      if (v != null) ps.setBigDecimal(paramNum++, v);
     }
+    return paramNum;
   }
 
-  private void setDateTimeValues(PreparedStatement ps, Restriction r) throws SQLException {
-    List<LocalDateTime> vals = Restrictions.getDateTimeValues(r);
-    for (int i = 0; i < vals.size(); i++) {
-      LocalDateTime v = vals.get(i);
-      if (v != null) ps.setTimestamp(i + 1, Timestamp.valueOf(v));
+  private int setBooleanValues(PreparedStatement ps, Restriction r, int paramNum)
+      throws SQLException {
+    for (Boolean v : Restrictions.getBooleanValues(r)) {
+      if (v != null) ps.setBoolean(paramNum++, v);
     }
+    return paramNum;
+  }
+
+  private int setDateTimeValues(PreparedStatement ps, Restriction r, int paramNum)
+      throws SQLException {
+    for (LocalDateTime v : Restrictions.getDateTimeValues(r)) {
+      if (v != null) ps.setTimestamp(paramNum++, Timestamp.valueOf(v));
+    }
+    return paramNum;
   }
 }
