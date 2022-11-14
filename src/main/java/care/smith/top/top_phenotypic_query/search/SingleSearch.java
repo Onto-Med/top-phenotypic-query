@@ -5,20 +5,16 @@ import java.util.Objects;
 
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.Quantifier;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
 import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQuery;
-import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
-import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class SingleSearch extends PhenotypeSearch {
 
@@ -98,7 +94,7 @@ public class SingleSearch extends PhenotypeSearch {
   }
 
   public Map<String, String> getPhenotypeMappings() {
-    return adapter.getPhenotypeMappings(phenotype, config);
+    return adapter.getSettings().getPhenotypeMappings(this);
   }
 
   public PhenotypeQuery getPhenotypeQuery() {
@@ -117,49 +113,8 @@ public class SingleSearch extends PhenotypeSearch {
     return phenotype.getRestriction();
   }
 
-  public String getQueryString() {
-    PhenotypeQueryBuilder builder =
-        getPhenotypeQuery().getQueryBuilder(getPhenotypeMappings()).baseQuery();
-    CodeMapping codeMap = getCodeMapping();
-    DateTimeRestriction dtr = getDateTimeRestriction();
-
-    if (Phenotypes.isSingleRestriction(phenotype)) {
-      Phenotype superPhe = phenotype.getSuperPhenotype();
-      Restriction r = phenotype.getRestriction();
-      if (r.getQuantifier() != Quantifier.ALL) {
-        if (Restrictions.hasInterval(r)) {
-          Map<String, String> interval =
-              Restrictions.getIntervalAsStringMap(
-                  codeMap.getSourceRestriction(r, superPhe), adapter.getFormat());
-          for (String key : interval.keySet())
-            adapter.addValueIntervalLimit(key, interval.get(key), builder, r);
-        } else if (Restrictions.hasValues(r)) {
-          String values =
-              Restrictions.getValuesAsString(
-                  codeMap.getSourceRestriction(r, superPhe), adapter.getFormat());
-          adapter.addValueList(values, builder, r);
-        }
-      }
-    }
-
-    if (dtr != null) {
-      if (Restrictions.hasInterval(dtr)) {
-        Map<String, String> interval =
-            Restrictions.getIntervalAsStringMap(dtr, adapter.getFormat());
-        for (String key : interval.keySet())
-          adapter.addDateIntervalLimit(key, interval.get(key), builder);
-      }
-    }
-
-    return builder.build();
-  }
-
   public DataAdapter getAdapter() {
     return adapter;
-  }
-
-  public DataAdapterFormat getAdapterFormat() {
-    return adapter.getFormat();
   }
 
   public DataAdapterConfig getAdapterConfig() {

@@ -1,26 +1,18 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.hl7.fhir.r4.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import care.smith.top.model.DateTimeRestriction;
-import care.smith.top.model.NumberRestriction;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.Restriction;
-import care.smith.top.model.StringRestriction;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
-import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
-import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
@@ -45,7 +37,7 @@ public class FHIRAdapter extends DataAdapter {
 
   @Override
   public ResultSet execute(SingleSearch search) {
-    String query = search.getQueryString();
+    String query = getSettings().createSinglePreparedQuery(search);
     log.debug("Execute FHIR query: {}", query);
     ResultSet rs = new ResultSet();
     List<Resource> resources = client.executeQuery(query);
@@ -86,7 +78,7 @@ public class FHIRAdapter extends DataAdapter {
 
   @Override
   public ResultSet execute(SubjectSearch search) {
-    String query = search.getQueryString();
+    String query = getSettings().createSubjectPreparedQuery(search);
     log.debug("Execute FHIR query: {}", query);
     ResultSet rs = new ResultSet();
     List<Resource> resources = client.executeQuery(query);
@@ -129,38 +121,10 @@ public class FHIRAdapter extends DataAdapter {
   }
 
   @Override
-  public DataAdapterFormat getFormat() {
-    return FHIRAdapterFormat.get();
+  public DataAdapterSettings getSettings() {
+    return FHIRAdapterSettings.get();
   }
 
   @Override
   public void close() {}
-
-  @Override
-  public void addValueIntervalLimit(
-      String operator, String value, PhenotypeQueryBuilder builder, Restriction restriction) {
-    if (restriction instanceof NumberRestriction) builder.numberValueIntervalLimit(operator, value);
-    else if (restriction instanceof DateTimeRestriction)
-      builder.dateValueIntervalLimit(operator, value);
-  }
-
-  @Override
-  public void addValueList(
-      String valuesAsString, PhenotypeQueryBuilder builder, Restriction restriction) {
-    if (restriction instanceof NumberRestriction) builder.numberValueList(valuesAsString);
-    else if (restriction instanceof StringRestriction) {
-      if (valuesAsString.startsWith("http")) builder.conceptValueList(valuesAsString);
-      else builder.stringValueList(valuesAsString);
-    }
-  }
-
-  @Override
-  public Map<String, String> getPhenotypeMappings(Phenotype phenotype, DataAdapterConfig config) {
-    CodeMapping codeMap = config.getCodeMapping(phenotype);
-    if (codeMap == null) return null;
-    Map<String, String> pheMap = codeMap.getPhenotypeMappings();
-    if (pheMap != null) return pheMap;
-    String codes = getFormat().formatList(Phenotypes.getCodeUris(phenotype));
-    return Collections.singletonMap("codes", codes);
-  }
 }

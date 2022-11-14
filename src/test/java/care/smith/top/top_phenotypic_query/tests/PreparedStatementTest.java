@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.net.URL;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -45,13 +44,13 @@ public class PreparedStatementTest extends AbstractTest {
     assertEquals(pqExpected, pqActual);
 
     String psExpected =
-        "prep0: SELECT subject_id, birth_date, sex FROM subject\n"
+        "SELECT subject_id, birth_date, sex FROM subject\n"
             + "WHERE TRUE\n"
             + "AND sex IN (?,?)\n"
             + "AND birth_date >= ? {1: 'female', 2: 'male', 3: TIMESTAMP '2000-01-01 00:00:00'}";
-    PreparedStatement psActual =
-        settings.getSubjectPreparedStatement(pqActual, adapter.getConnection(), search);
-    assertEquals(psExpected, psActual.toString());
+    String psActual =
+        settings.getSubjectPreparedStatement(pqActual, adapter.getConnection(), search).toString();
+    assertEquals(psExpected, psActual.substring(psActual.indexOf("SELECT")));
   }
 
   @Test
@@ -71,14 +70,14 @@ public class PreparedStatementTest extends AbstractTest {
     assertEquals(pqExpected, pqActual);
 
     String psExpected =
-        "prep1: SELECT subject_id, created_at, weight FROM assessment1\n"
+        "SELECT subject_id, created_at, weight FROM assessment1\n"
             + "WHERE weight IS NOT NULL\n"
             + "AND weight >= ?\n"
             + "AND weight < ?\n"
             + "AND created_at >= ?\n"
             + "AND created_at < ? {1: CAST(100 AS NUMERIC(3)), 2: CAST(500 AS NUMERIC(3)), 3: TIMESTAMP '2000-01-01 00:00:00', 4: TIMESTAMP '2001-01-01 00:00:00'}";
-    PreparedStatement psActual =
-        settings.getSinglePreparedStatement(pqActual, adapter.getConnection(), search);
-    assertEquals(psExpected, psActual.toString());
+    String psActual =
+        settings.getSinglePreparedStatement(pqActual, adapter.getConnection(), search).toString();
+    assertEquals(psExpected, psActual.substring(psActual.indexOf("SELECT")));
   }
 }

@@ -64,19 +64,18 @@ public class FHIRAdapterSettings extends DataAdapterSettings {
 
   @Override
   protected String getSexList(Restriction r, SubjectSearch search) {
-    return Restrictions.getValuesAsString(r, search.getAdapterFormat());
+    return Restrictions.getValuesAsString(r, this);
   }
 
   @Override
   protected Map<String, String> getBirthdateInterval(Restriction r, SubjectSearch search) {
-    return Restrictions.getIntervalAsStringMap(r, search.getAdapterFormat());
+    return Restrictions.getIntervalAsStringMap(r, this);
   }
 
   @Override
   protected void addValueInterval(
       Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
-    Map<String, String> interval =
-        Restrictions.getIntervalAsStringMap(r, search.getAdapterFormat());
+    Map<String, String> interval = Restrictions.getIntervalAsStringMap(r, this);
     for (String key : interval.keySet()) {
       if (Restrictions.hasNumberType(r)) builder.numberValueIntervalLimit(key, interval.get(key));
       else if (Restrictions.hasDateTimeType(r))
@@ -86,7 +85,7 @@ public class FHIRAdapterSettings extends DataAdapterSettings {
 
   @Override
   protected void addValueList(Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
-    String valuesAsString = Restrictions.getValuesAsString(r, search.getAdapterFormat());
+    String valuesAsString = Restrictions.getValuesAsString(r, this);
     if (Restrictions.hasNumberType(r)) builder.numberValueList(valuesAsString);
     else if (Restrictions.hasStringType(r)) {
       if (valuesAsString.startsWith("http")) builder.conceptValueList(valuesAsString);
@@ -97,8 +96,7 @@ public class FHIRAdapterSettings extends DataAdapterSettings {
   @Override
   protected void addDateInterval(
       Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
-    Map<String, String> interval =
-        Restrictions.getIntervalAsStringMap(r, search.getAdapterFormat());
+    Map<String, String> interval = Restrictions.getIntervalAsStringMap(r, this);
     for (String key : interval.keySet()) builder.dateIntervalLimit(key, interval.get(key));
   }
 
@@ -108,8 +106,7 @@ public class FHIRAdapterSettings extends DataAdapterSettings {
     if (codeMap == null) return null;
     Map<String, String> pheMap = codeMap.getPhenotypeMappings();
     if (pheMap != null) return pheMap;
-    String codes =
-        search.getAdapterFormat().formatList(Phenotypes.getCodeUris(search.getPhenotype()));
+    String codes = formatList(Phenotypes.getCodeUris(search.getPhenotype()));
     return Collections.singletonMap("codes", codes);
   }
 }

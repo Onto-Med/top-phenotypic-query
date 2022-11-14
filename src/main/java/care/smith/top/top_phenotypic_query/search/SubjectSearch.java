@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Map;
 import java.util.Objects;
 
 import care.smith.top.model.DataType;
@@ -16,12 +15,10 @@ import care.smith.top.model.Query;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
 import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectQuery;
-import care.smith.top.top_phenotypic_query.adapter.config.SubjectQueryBuilder;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
@@ -142,36 +139,8 @@ public class SubjectSearch extends PhenotypeSearch {
     return getBirthdateDerived().getRestriction();
   }
 
-  public String getQueryString() {
-    SubjectQueryBuilder builder = getSubjectQuery().getQueryBuilder().baseQuery();
-
-    if (hasSexRestriction()) {
-      Restriction sexR = getSexRestriction();
-      if (Restrictions.hasValues(sexR))
-        builder.sexList(
-            Restrictions.getValuesAsString(
-                getSexMapping().getSourceRestriction(sexR, null), adapter.getFormat()));
-    }
-
-    if (hasBirthdateRestriction()) {
-      Restriction birthdateR = getBirthdateRestriction();
-      if (Restrictions.hasInterval(birthdateR)) {
-        Map<String, String> interval =
-            Restrictions.getIntervalAsStringMap(
-                getBirthdateMapping().getSourceRestriction(birthdateR, null), adapter.getFormat());
-        for (String key : interval.keySet()) builder.birthdateIntervalLimit(key, interval.get(key));
-      }
-    }
-
-    return builder.build();
-  }
-
   public DataAdapter getAdapter() {
     return adapter;
-  }
-
-  public DataAdapterFormat getAdapterFormat() {
-    return adapter.getFormat();
   }
 
   @Override
