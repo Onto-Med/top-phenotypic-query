@@ -4,9 +4,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import care.smith.top.model.DateTimeRestriction;
-import care.smith.top.model.EntityType;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.Quantifier;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.model.Restriction;
@@ -15,9 +13,8 @@ import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQuery;
-import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.util.Restrictions;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class SingleSearch extends PhenotypeSearch {
 
@@ -25,7 +22,6 @@ public class SingleSearch extends PhenotypeSearch {
   private Phenotype phenotype;
   private DataAdapter adapter;
   private DataAdapterConfig config;
-  private Map<String, Phenotype> phenotypes;
   private int type;
 
   public SingleSearch(
@@ -33,14 +29,12 @@ public class SingleSearch extends PhenotypeSearch {
       QueryCriterion criterion,
       Phenotype phenotype,
       DataAdapter adapter,
-      Map<String, Phenotype> phenotypes,
       boolean isCriterion) {
     super(query);
     this.criterion = criterion;
     this.phenotype = phenotype;
     this.adapter = adapter;
     this.config = adapter.getConfig();
-    this.phenotypes = phenotypes;
     if (isCriterion) {
       if (criterion.isInclusion()) this.type = 1;
       else this.type = 2;
@@ -71,12 +65,20 @@ public class SingleSearch extends PhenotypeSearch {
     return phenotype;
   }
 
+  public Phenotype getSuperPhenotype() {
+    return phenotype.getSuperPhenotype();
+  }
+
+  public boolean hasDateTimeRestriction() {
+    return criterion.getDateTimeRestriction() != null;
+  }
+
   public DateTimeRestriction getDateTimeRestriction() {
     return criterion.getDateTimeRestriction();
   }
 
-  private CodeMapping getCodeMapping() {
-    return config.getCodeMapping(phenotype, phenotypes);
+  public CodeMapping getCodeMapping() {
+    return config.getCodeMapping(phenotype);
   }
 
   public String getModelUnit() {
@@ -92,7 +94,7 @@ public class SingleSearch extends PhenotypeSearch {
   }
 
   public Map<String, String> getPhenotypeMappings() {
-    return adapter.getPhenotypeMappings(phenotype, config, phenotypes);
+    return adapter.getSettings().getPhenotypeMappings(this);
   }
 
   public PhenotypeQuery getPhenotypeQuery() {
@@ -103,41 +105,20 @@ public class SingleSearch extends PhenotypeSearch {
     return getPhenotypeQuery().getOutput().mapping(getPhenotypeMappings());
   }
 
-  public String getQueryString() {
-    PhenotypeQueryBuilder builder =
-        getPhenotypeQuery().getQueryBuilder(getPhenotypeMappings()).baseQuery();
-    CodeMapping codeMap = getCodeMapping();
-    DateTimeRestriction dtr = getDateTimeRestriction();
+  public boolean hasRestriction() {
+    return Phenotypes.isSingleRestriction(phenotype);
+  }
 
-    if (phenotype.getEntityType() == EntityType.SINGLE_RESTRICTION) {
-      Phenotype superPhe = phenotypes.get(phenotype.getSuperPhenotype().getId());
-      Restriction r = phenotype.getRestriction();
-      if (r.getQuantifier() != Quantifier.ALL) {
-        if (Restrictions.hasInterval(r)) {
-          Map<String, String> interval =
-              Restrictions.getIntervalAsStringMap(
-                  codeMap.getSourceRestriction(r, superPhe), adapter.getFormat());
-          for (String key : interval.keySet())
-            adapter.addValueIntervalLimit(key, interval.get(key), builder, r);
-        } else if (Restrictions.hasValues(r)) {
-          String values =
-              Restrictions.getValuesAsString(
-                  codeMap.getSourceRestriction(r, superPhe), adapter.getFormat());
-          adapter.addValueList(values, builder, r);
-        }
-      }
-    }
+  public Restriction getRestriction() {
+    return phenotype.getRestriction();
+  }
 
-    if (dtr != null) {
-      if (Restrictions.hasInterval(dtr)) {
-        Map<String, String> interval =
-            Restrictions.getIntervalAsStringMap(dtr, adapter.getFormat());
-        for (String key : interval.keySet())
-          adapter.addDateIntervalLimit(key, interval.get(key), builder);
-      }
-    }
+  public DataAdapter getAdapter() {
+    return adapter;
+  }
 
-    return builder.build();
+  public DataAdapterConfig getAdapterConfig() {
+    return config;
   }
 
   @Override

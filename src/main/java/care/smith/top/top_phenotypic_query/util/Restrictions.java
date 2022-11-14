@@ -22,7 +22,7 @@ import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
 import care.smith.top.model.Value;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
 import care.smith.top.top_phenotypic_query.ucum.UCUM;
 
 public class Restrictions {
@@ -225,7 +225,7 @@ public class Restrictions {
   }
 
   public static Map<String, String> getIntervalAsStringMap(
-      Restriction r, DataAdapterFormat format) {
+      Restriction r, DataAdapterSettings format) {
     Map<String, String> limits = new LinkedHashMap<>();
     if (hasNumberType(r)) {
       NumberRestriction nr = (NumberRestriction) r;
@@ -266,7 +266,7 @@ public class Restrictions {
     return getValuesAsString(r, null);
   }
 
-  public static String getValuesAsString(Restriction r, DataAdapterFormat format) {
+  public static String getValuesAsString(Restriction r, DataAdapterSettings format) {
     if (hasNumberType(r))
       return format(
           getNumberValues(r).stream().map(v -> format(v, format)).map(String.class::cast), format);
@@ -279,6 +279,19 @@ public class Restrictions {
           getBooleanValues(r).stream().map(v -> format(v, format)).map(String.class::cast), format);
     return format(
         getStringValues(r).stream().map(v -> format(v, format)).map(String.class::cast), format);
+  }
+
+  public static int getValuesCount(Restriction r) {
+    if (hasNumberType(r)) return removeNullValues(getNumberValues(r)).size();
+    if (hasDateTimeType(r)) return removeNullValues(getDateTimeValues(r)).size();
+    if (hasBooleanType(r)) return removeNullValues(getBooleanValues(r)).size();
+    return removeNullValues(getStringValues(r)).size();
+  }
+
+  private static <T> List<T> removeNullValues(List<T> vals) {
+    while (vals.remove(null))
+      ;
+    return vals;
   }
 
   public static Map<RestrictionOperator, Value> getInterval(Restriction r) {
@@ -335,29 +348,29 @@ public class Restrictions {
     return r.getValues().get(1);
   }
 
-  private static String format(String val, DataAdapterFormat format) {
+  private static String format(String val, DataAdapterSettings format) {
     return (format == null) ? val : format.formatString(val);
   }
 
-  private static String format(Boolean val, DataAdapterFormat format) {
+  private static String format(Boolean val, DataAdapterSettings format) {
     return (format == null) ? val.toString() : format.formatBoolean(val);
   }
 
-  private static String format(BigDecimal val, DataAdapterFormat format) {
+  private static String format(BigDecimal val, DataAdapterSettings format) {
     return (format == null) ? val.toPlainString() : format.formatNumber(val);
   }
 
-  private static String format(LocalDateTime val, DataAdapterFormat format) {
+  private static String format(LocalDateTime val, DataAdapterSettings format) {
     return (format == null) ? DateUtil.format(val) : format.formatDateTime(val);
   }
 
-  private static String format(Stream<String> vals, DataAdapterFormat format) {
+  private static String format(Stream<String> vals, DataAdapterSettings format) {
     return (format == null)
         ? vals.collect(Collectors.joining(", ", "[", "]"))
         : format.formatList(vals);
   }
 
-  private static String format(RestrictionOperator op, DataAdapterFormat format) {
+  private static String format(RestrictionOperator op, DataAdapterSettings format) {
     return (format == null) ? op.getValue() : format.formatOperator(op);
   }
 

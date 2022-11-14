@@ -37,6 +37,9 @@ public abstract class AbstractTest {
       RestrictionOperator.GREATER_THAN_OR_EQUAL_TO;
   protected static final RestrictionOperator DEFAULT_MAX_OPERATOR = RestrictionOperator.LESS_THAN;
 
+  protected static Phenotype birthDate = getPhenotype("BirthDate", "http://loinc.org", "21112-8");
+  protected static Phenotype birthDateYoung =
+      getRestriction("BirthDateYoung", birthDate, getDTRmin(2000));
   protected static Phenotype age = getPhenotype("Age", "http://loinc.org", "30525-0");
   protected static Phenotype young = getInterval("Young", age, 18, 34);
   protected static Phenotype old = getIntervalMin("Old", age, 34);
@@ -44,7 +47,14 @@ public abstract class AbstractTest {
       getPhenotype("Sex", "http://loinc.org", "46098-0", DataType.STRING);
   protected static Phenotype female =
       getRestriction("Female", sex, "http://hl7.org/fhir/administrative-gender|female");
+  protected static Phenotype femaleOrMale =
+      getRestriction(
+          "FemaleOrMale",
+          sex,
+          "http://hl7.org/fhir/administrative-gender|female",
+          "http://hl7.org/fhir/administrative-gender|male");
   protected static Phenotype weight = getPhenotype("Weight", "http://loinc.org", "3141-9");
+  protected static Phenotype heavy = getInterval("Heavy", weight, 100, 500);
   protected static Phenotype height = getPhenotype("Height", "http://loinc.org", "3137-7", "m");
   protected static Phenotype bmi = getPhenotype("BMI", getBMIExpression());
   protected static Phenotype bmi19_25 = getInterval("BMI19_25", bmi, 19, 25);
@@ -84,6 +94,12 @@ public abstract class AbstractTest {
                 LocalDateTime.of(year + 1, 1, 1, 0, 0, 0, 0)));
   }
 
+  protected static DateTimeRestriction getDTRmin(int year) {
+    return new DateTimeRestriction()
+        .minOperator(DEFAULT_MIN_OPERATOR)
+        .values(List.of(LocalDateTime.of(year, 1, 1, 0, 0, 0, 0)));
+  }
+
   static Phenotype getPhenotype(String name) {
     return getPhenotype(name, null, null, DEFAULT_DATA_TYPE);
   }
@@ -104,10 +120,7 @@ public abstract class AbstractTest {
       String name, String codeSystem, String code, DataType dataType, String unit) {
     Phenotype phenotype =
         (Phenotype)
-            new Phenotype()
-                .dataType(dataType)
-                .id(name)
-                .entityType(EntityType.SINGLE_PHENOTYPE);
+            new Phenotype().dataType(dataType).id(name).entityType(EntityType.SINGLE_PHENOTYPE);
     if (unit != null) phenotype.setUnit(unit);
     addCode(phenotype, codeSystem, code);
     return phenotype;
@@ -210,7 +223,7 @@ public abstract class AbstractTest {
     //    Expression exp = getInExpression(values, range, limits);
     addQuantifier(restriction, null, quantifier, cardinality);
 
-    return getRestriction(name, parent, restriction, null);
+    return getRestriction(name, parent, restriction);
   }
 
   static Phenotype getRestriction(String name, Phenotype parent, String... rangeValues) {
@@ -241,7 +254,7 @@ public abstract class AbstractTest {
     //    Expression exp = getInExpression(values, range, limits);
     addQuantifier(restriction, null, quantifier, cardinality);
 
-    return getRestriction(name, parent, restriction, null);
+    return getRestriction(name, parent, restriction);
   }
 
   static Phenotype getRestriction(
@@ -264,7 +277,7 @@ public abstract class AbstractTest {
     //    Expression exp = getInExpression(values, range, limits);
     addQuantifier(restriction, null, quantifier, cardinality);
 
-    return getRestriction(name, parent, restriction, null);
+    return getRestriction(name, parent, restriction);
   }
 
   private static void addCode(Phenotype phenotype, String codeSystem, String code) {
@@ -308,8 +321,7 @@ public abstract class AbstractTest {
   //        .addArgumentsItem(limits);
   //  }
 
-  private static Phenotype getRestriction(
-      String name, Phenotype parent, Restriction restr, Expression exp) {
+  private static Phenotype getRestriction(String name, Phenotype parent, Restriction restr) {
     return (Phenotype)
         new Phenotype()
             .superPhenotype(parent)

@@ -1,7 +1,6 @@
 package care.smith.top.top_phenotypic_query.util;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import care.smith.top.model.Code;
@@ -53,14 +52,12 @@ public class Phenotypes {
     return code.getCodeSystem().getUri().toString() + "|" + code.getCode();
   }
 
-  public static List<Code> getCodes(Phenotype p, Map<String, Phenotype> phenotypes) {
-    return (isRestriction(p))
-        ? phenotypes.get(p.getSuperPhenotype().getId()).getCodes()
-        : p.getCodes();
+  public static List<Code> getCodes(Phenotype p) {
+    return (isRestriction(p)) ? p.getSuperPhenotype().getCodes() : p.getCodes();
   }
 
-  public static Stream<String> getCodeUris(Phenotype p, Map<String, Phenotype> phenotypes) {
-    return getCodes(p, phenotypes).stream().map(c -> getCodeUri(c));
+  public static Stream<String> getCodeUris(Phenotype p) {
+    return getCodes(p).stream().map(c -> getCodeUri(c));
   }
 
   public static boolean hasExistentialQuantifier(Phenotype p) {
@@ -69,9 +66,23 @@ public class Phenotypes {
     return r.getQuantifier() == Quantifier.MIN && r.getCardinality().intValue() == 1;
   }
 
-  public static DataType getDataType(Phenotype p, Map<String, Phenotype> phenotypes) {
-    return (isRestriction(p))
-        ? phenotypes.get(p.getSuperPhenotype().getId()).getDataType()
-        : p.getDataType();
+  public static DataType getDataType(Phenotype p) {
+    return (isRestriction(p)) ? p.getSuperPhenotype().getDataType() : p.getDataType();
+  }
+
+  public static boolean hasStringType(Phenotype p) {
+    return getDataType(p) == DataType.STRING;
+  }
+
+  public static boolean hasNumberType(Phenotype p) {
+    return getDataType(p) == DataType.NUMBER;
+  }
+
+  public static boolean hasBooleanType(Phenotype p) {
+    return getDataType(p) == DataType.BOOLEAN;
+  }
+
+  public static boolean hasDateTimeType(Phenotype p) {
+    return getDataType(p) == DataType.DATE_TIME;
   }
 }

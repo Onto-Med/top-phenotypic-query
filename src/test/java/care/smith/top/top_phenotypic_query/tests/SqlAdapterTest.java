@@ -1,13 +1,8 @@
 package care.smith.top.top_phenotypic_query.tests;
 
-import care.smith.top.model.Phenotype;
-import care.smith.top.model.QueryCriterion;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.search.SingleSearch;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URL;
 import java.sql.Connection;
@@ -16,7 +11,19 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import care.smith.top.model.DataType;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Query;
+import care.smith.top.model.QueryCriterion;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import care.smith.top.top_phenotypic_query.search.SingleSearch;
 
 public class SqlAdapterTest extends AbstractTest {
   static final String DB_URL = "jdbc:h2:mem:test0-db;INIT=RUNSCRIPT FROM 'classpath:schema.sql'";
@@ -68,11 +75,49 @@ public class SqlAdapterTest extends AbstractTest {
             .defaultAggregationFunctionId("last")
             .subjectId(tall.getId());
 
-    SingleSearch search = new SingleSearch(null, cri, tall, adapter, phenotypes, true);
+    SingleSearch search = new SingleSearch(null, cri, tall, adapter, true);
     assertNotNull(search);
 
     ResultSet rs = search.execute();
     assertNotNull(rs);
     assertEquals(1, rs.getSubjectIds().size());
+  }
+
+  @Test
+  void testCorruptedPhenotype() throws SQLException {
+    URL configFile =
+        Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test1.yml");
+    assertNotNull(configFile);
+    SQLAdapter adapter = new SQLAdapter(configFile.getPath());
+
+    Phenotype stringPhenotype = getPhenotype("Sex", "http://loinc.org", "46098-0", DataType.STRING);
+
+    Phenotype corrupted =
+        getRestriction(
+            "corrupted",
+            stringPhenotype,
+            "'); TRUNCATE TABLE assessment1; SELECT NULL FROM assessment1 WHERE '' IN ('");
+
+    QueryCriterion cri =
+        new QueryCriterion()
+            .inclusion(true)
+            .defaultAggregationFunctionId("last")
+            .subjectId(corrupted.getId());
+
+    Query query = new Query().addCriteriaItem(cri);
+
+    try (java.sql.ResultSet rs = adapter.executeQuery("SELECT count(*) FROM assessment1")) {
+      rs.next();
+      assertEquals(4, rs.getInt(1));
+    }
+
+    PhenotypeFinder finder =
+        new PhenotypeFinder(query, getPhenotypeMap(stringPhenotype, corrupted), adapter);
+    finder.execute();
+
+    try (java.sql.ResultSet rs = adapter.executeQuery("SELECT count(*) FROM assessment1")) {
+      rs.next();
+      assertEquals(4, rs.getInt(1));
+    }
   }
 }

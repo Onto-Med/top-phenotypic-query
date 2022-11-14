@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -25,13 +26,14 @@ import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapterFormat;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
 
 public class SQLAdapter extends DataAdapter {
@@ -61,31 +63,37 @@ public class SQLAdapter extends DataAdapter {
     return con.createStatement().executeQuery(query);
   }
 
+  public Connection getConnection() {
+    return con;
+  }
+
   @Override
   public ResultSet execute(SingleSearch search) {
     ResultSet rs = new ResultSet();
     try {
-      log.debug("Execute SQL query: {}", search.getQueryString());
-      java.sql.ResultSet sqlRS = executeQuery(search.getQueryString());
+      String preparedQuery = SQLAdapterSettings.get().createSinglePreparedQuery(search);
+      PreparedStatement ps =
+          SQLAdapterSettings.get().getSinglePreparedStatement(preparedQuery, con, search);
+      log.debug("Execute SQL query: {}", ps);
+      java.sql.ResultSet sqlRS = ps.executeQuery();
       PhenotypeOutput out = search.getOutput();
       String sbjCol = out.getSubject();
       String pheCol = out.getPhenotype();
       String dateCol = out.getDate();
       Phenotype phe = search.getPhenotype();
-      DataType datatype = phe.getDataType();
 
       while (sqlRS.next()) {
         String sbj = sqlRS.getString(sbjCol);
         LocalDateTime date = sqlRS.getTimestamp(dateCol).toLocalDateTime();
         Value val = null;
-        if (datatype == DataType.BOOLEAN) {
+        if (Phenotypes.hasBooleanType(phe)) {
           if (pheCol == null) {
             rs.addValue(sbj, phe, search.getDateTimeRestriction(), Values.newValueTrue());
             continue;
           } else val = Values.newValue(sqlRS.getBoolean(pheCol), date);
-        } else if (datatype == DataType.DATE_TIME)
+        } else if (Phenotypes.hasDateTimeType(phe))
           val = Values.newValue(sqlRS.getTimestamp(pheCol).toLocalDateTime(), date);
-        else if (datatype == DataType.NUMBER)
+        else if (Phenotypes.hasNumberType(phe))
           val = Values.newValue(sqlRS.getBigDecimal(pheCol), date);
         else val = Values.newValue(sqlRS.getString(pheCol), date);
         if (val != null)
@@ -107,8 +115,11 @@ public class SQLAdapter extends DataAdapter {
   public ResultSet execute(SubjectSearch search) {
     ResultSet rs = new ResultSet();
     try {
-      log.debug("Execute SQL query: {}", search.getQueryString());
-      java.sql.ResultSet sqlRS = executeQuery(search.getQueryString());
+      String preparedQuery = SQLAdapterSettings.get().createSubjectPreparedQuery(search);
+      PreparedStatement ps =
+          SQLAdapterSettings.get().getSubjectPreparedStatement(preparedQuery, con, search);
+      log.debug("Execute SQL query: {}", ps);
+      java.sql.ResultSet sqlRS = ps.executeQuery();
       SubjectOutput out = search.getOutput();
       String sbjCol = out.getId();
       String bdCol = out.getBirthdate();
@@ -133,11 +144,11 @@ public class SQLAdapter extends DataAdapter {
           }
         }
         if (sex != null) {
-          if (sex.getDataType() == DataType.BOOLEAN) {
+          if (Phenotypes.hasBooleanType(sex)) {
             Boolean sexSqlVal = sqlRS.getBoolean(sexCol);
             if (sexSqlVal != null)
               rs.addValueWithRestriction(sbj, sex, null, Values.newValue(sexSqlVal));
-          } else if (sex.getDataType() == DataType.NUMBER) {
+          } else if (Phenotypes.hasNumberType(sex)) {
             BigDecimal sexSqlVal = sqlRS.getBigDecimal(sexCol);
             if (sexSqlVal != null)
               rs.addValueWithRestriction(sbj, sex, null, Values.newValue(sexSqlVal));
@@ -169,8 +180,8 @@ public class SQLAdapter extends DataAdapter {
   }
 
   @Override
-  public DataAdapterFormat getFormat() {
-    return SQLAdapterFormat.get();
+  public DataAdapterSettings getSettings() {
+    return SQLAdapterSettings.get();
   }
 
   @Override

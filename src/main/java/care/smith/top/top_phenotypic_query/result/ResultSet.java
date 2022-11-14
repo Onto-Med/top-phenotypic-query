@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
@@ -60,7 +59,7 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
       Value val,
       String sourceUnit,
       String modelUnit) {
-    if (sourceUnit != null && modelUnit != null && val.getDataType() == DataType.NUMBER)
+    if (sourceUnit != null && modelUnit != null && Values.hasNumberType(val))
       val =
           Values.newValue(
               UCUM.convert(Values.getNumberValue(val), sourceUnit, modelUnit), val.getDateTime());

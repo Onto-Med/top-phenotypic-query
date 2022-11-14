@@ -92,8 +92,8 @@ public class DataAdapterConfig {
     this.birthdateMapping = birthdateMapping;
   }
 
-  public boolean isBirthdate(Phenotype p, Map<String, Phenotype> phenotypes) {
-    for (Code code : Phenotypes.getCodes(p, phenotypes)) {
+  public boolean isBirthdate(Phenotype p) {
+    for (Code code : Phenotypes.getCodes(p)) {
       if (birthdateMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
     return false;
@@ -107,8 +107,8 @@ public class DataAdapterConfig {
     this.ageMapping = ageMapping;
   }
 
-  public boolean isAge(Phenotype p, Map<String, Phenotype> phenotypes) {
-    for (Code code : Phenotypes.getCodes(p, phenotypes)) {
+  public boolean isAge(Phenotype p) {
+    for (Code code : Phenotypes.getCodes(p)) {
       if (ageMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
     return false;
@@ -122,8 +122,8 @@ public class DataAdapterConfig {
     this.sexMapping = sexMapping;
   }
 
-  public boolean isSex(Phenotype p, Map<String, Phenotype> phenotypes) {
-    for (Code code : Phenotypes.getCodes(p, phenotypes)) {
+  public boolean isSex(Phenotype p) {
+    for (Code code : Phenotypes.getCodes(p)) {
       if (sexMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
     return false;
@@ -133,8 +133,8 @@ public class DataAdapterConfig {
     return codeMappings.get(code);
   }
 
-  public CodeMapping getCodeMapping(Phenotype p, Map<String, Phenotype> phenotypes) {
-    for (Code code : Phenotypes.getCodes(p, phenotypes)) {
+  public CodeMapping getCodeMapping(Phenotype p) {
+    for (Code code : Phenotypes.getCodes(p)) {
       CodeMapping map = getCodeMapping(Phenotypes.getCodeUri(code));
       if (map != null) return map;
     }

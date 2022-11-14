@@ -176,13 +176,13 @@ public class Values {
 
   public static boolean contains(List<Value> set, Value value) {
     for (Value member : set) {
-      if (value.getDataType() == DataType.STRING) {
+      if (hasStringType(value)) {
         if (getStringValue(value).equals(getStringValue(member))) return true;
-      } else if (value.getDataType() == DataType.NUMBER) {
+      } else if (hasNumberType(value)) {
         if (getNumberValue(value).compareTo(getNumberValue(member)) == 0) return true;
-      } else if (value.getDataType() == DataType.DATE_TIME) {
+      } else if (hasDateTimeType(value)) {
         if (getDateTimeValue(value).equals(getDateTimeValue(member))) return true;
-      } else if (value.getDataType() == DataType.BOOLEAN) {
+      } else if (hasBooleanType(value)) {
         if (getBooleanValue(value).equals(getBooleanValue(member))) return true;
       }
     }
@@ -205,14 +205,30 @@ public class Values {
   }
 
   public static int compare(Value v1, Value v2) {
-    if (v1.getDataType() == DataType.NUMBER && v2.getDataType() == DataType.NUMBER)
+    if (hasNumberType(v1) && hasNumberType(v2))
       return getNumberValue(v1).compareTo(getNumberValue(v2));
-    if (v1.getDataType() == DataType.DATE_TIME && v2.getDataType() == DataType.DATE_TIME)
+    if (hasDateTimeType(v1) && hasDateTimeType(v2))
       return getDateTimeValue(v1).compareTo(getDateTimeValue(v2));
-    if (v1.getDataType() == DataType.STRING && v2.getDataType() == DataType.STRING)
+    if (hasStringType(v1) && hasStringType(v2))
       return getStringValue(v1).compareTo(getStringValue(v2));
-    if (v1.getDataType() == DataType.BOOLEAN && v2.getDataType() == DataType.BOOLEAN)
+    if (hasBooleanType(v1) && hasBooleanType(v2))
       return getBooleanValue(v1).compareTo(getBooleanValue(v2));
     return 0;
+  }
+
+  public static boolean hasStringType(Value v) {
+    return v.getDataType() == DataType.STRING;
+  }
+
+  public static boolean hasNumberType(Value v) {
+    return v.getDataType() == DataType.NUMBER;
+  }
+
+  public static boolean hasBooleanType(Value v) {
+    return v.getDataType() == DataType.BOOLEAN;
+  }
+
+  public static boolean hasDateTimeType(Value v) {
+    return v.getDataType() == DataType.DATE_TIME;
   }
 }

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Map;
 import java.util.Objects;
 
 import care.smith.top.model.DataType;
@@ -20,7 +19,6 @@ import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectQuery;
-import care.smith.top.top_phenotypic_query.adapter.config.SubjectQueryBuilder;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
@@ -122,29 +120,27 @@ public class SubjectSearch extends PhenotypeSearch {
     return config.getSubjectQuery().getOutput().getId();
   }
 
-  public String getQueryString() {
-    SubjectQueryBuilder builder = getSubjectQuery().getQueryBuilder().baseQuery();
+  public boolean hasSexRestriction() {
+    return sex != null && Phenotypes.isSingleRestriction(sex);
+  }
 
-    if (sex != null && Phenotypes.isSingleRestriction(sex)) {
-      Restriction sexR = sex.getRestriction();
-      if (Restrictions.hasValues(sexR))
-        builder.sexList(
-            Restrictions.getValuesAsString(
-                getSexMapping().getSourceRestriction(sexR, null), adapter.getFormat()));
-    }
+  public Restriction getSexRestriction() {
+    if (sex == null) return null;
+    return sex.getRestriction();
+  }
 
-    Phenotype bd = getBirthdateDerived();
-    if (bd != null && Phenotypes.isSingleRestriction(bd)) {
-      Restriction birthdateR = bd.getRestriction();
-      if (Restrictions.hasInterval(birthdateR)) {
-        Map<String, String> interval =
-            Restrictions.getIntervalAsStringMap(
-                getBirthdateMapping().getSourceRestriction(birthdateR, null), adapter.getFormat());
-        for (String key : interval.keySet()) builder.birthdateIntervalLimit(key, interval.get(key));
-      }
-    }
+  public boolean hasBirthdateRestriction() {
+    return (birthdate != null && Phenotypes.isSingleRestriction(birthdate))
+        || (age != null && Phenotypes.isSingleRestriction(age));
+  }
 
-    return builder.build();
+  public Restriction getBirthdateRestriction() {
+    if (birthdate == null && age == null) return null;
+    return getBirthdateDerived().getRestriction();
+  }
+
+  public DataAdapter getAdapter() {
+    return adapter;
   }
 
   @Override
