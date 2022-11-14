@@ -281,9 +281,11 @@ public abstract class AbstractTest {
   }
 
   private static void addCode(Phenotype phenotype, String codeSystem, String code) {
-    if (codeSystem != null && code != null)
-      phenotype.addCodesItem(
-          new Code().code(code).codeSystem(new CodeSystem().uri(URI.create(codeSystem))));
+    if (codeSystem != null && code != null) phenotype.addCodesItem(getCode(codeSystem, code));
+  }
+
+  protected static Code getCode(String codeSystem, String code) {
+    return new Code().code(code).codeSystem(new CodeSystem().uri(URI.create(codeSystem)));
   }
 
   private static void addQuantifier(

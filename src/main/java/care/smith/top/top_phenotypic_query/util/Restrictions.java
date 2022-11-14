@@ -17,6 +17,7 @@ import care.smith.top.model.BooleanRestriction;
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.NumberRestriction;
+import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
@@ -26,6 +27,14 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
 import care.smith.top.top_phenotypic_query.ucum.UCUM;
 
 public class Restrictions {
+
+  public static Restriction newRestrictionFromCodes(Phenotype p) {
+    return new StringRestriction()
+        .values(Phenotypes.getOwnCodeUris(p))
+        .quantifier(Quantifier.MIN)
+        .cardinality(1)
+        .type(DataType.STRING);
+  }
 
   public static Restriction newRestriction(Integer card, Quantifier quan, Number... vals) {
     return new NumberRestriction()

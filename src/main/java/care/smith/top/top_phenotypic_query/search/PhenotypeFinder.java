@@ -10,6 +10,7 @@ import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class PhenotypeFinder {
 
@@ -25,9 +26,17 @@ public class PhenotypeFinder {
     this.config = adapter.getConfig();
     for (Phenotype p : this.phenotypes.values()) {
       Phenotype supP = p.getSuperPhenotype();
-      if (Phenotypes.isRestriction(p)) p.setExpression(Expressions.restrictionToExpression(p));
+      if (Phenotypes.isRestriction(p)) {
+        p.setExpression(Expressions.restrictionToExpression(p));
+        if (Phenotypes.isSingle(p) && p.getRestriction() == null)
+          p.setRestriction(Restrictions.newRestrictionFromCodes(p));
+      }
       if (supP != null) p.setSuperPhenotype(phenotypes.get(supP.getId()));
     }
+  }
+
+  public Map<String, Phenotype> getPhenotypes() {
+    return phenotypes;
   }
 
   public ResultSet execute() {
