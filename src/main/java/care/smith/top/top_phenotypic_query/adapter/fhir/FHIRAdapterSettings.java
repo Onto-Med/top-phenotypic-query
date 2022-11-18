@@ -15,7 +15,6 @@ import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
-import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class FHIRAdapterSettings extends DataAdapterSettings {
@@ -105,8 +104,10 @@ public class FHIRAdapterSettings extends DataAdapterSettings {
     CodeMapping codeMap = search.getAdapterConfig().getCodeMapping(search.getPhenotype());
     if (codeMap == null) return null;
     Map<String, String> pheMap = codeMap.getPhenotypeMappings();
-    if (pheMap != null) return pheMap;
-    String codes = formatList(Phenotypes.getCodeUris(search.getPhenotype()));
-    return Collections.singletonMap("codes", codes);
+    if (pheMap == null)
+      return Collections.singletonMap("codes", getCodeUrisAsString(search.getPhenotype()));
+    if (!pheMap.containsKey("codes"))
+      pheMap.put("codes", getCodeUrisAsString(search.getPhenotype()));
+    return pheMap;
   }
 }

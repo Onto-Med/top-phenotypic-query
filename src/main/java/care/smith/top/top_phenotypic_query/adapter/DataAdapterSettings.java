@@ -15,6 +15,7 @@ import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectQueryBuilder;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public abstract class DataAdapterSettings {
@@ -90,4 +91,8 @@ public abstract class DataAdapterSettings {
   public abstract String formatOperator(RestrictionOperator oper);
 
   public abstract Map<String, String> getPhenotypeMappings(SingleSearch search);
+
+  protected String getCodeUrisAsString(Phenotype p) {
+    return formatList(Phenotypes.getCodeUris(p).map(u -> formatString(u)));
+  }
 }

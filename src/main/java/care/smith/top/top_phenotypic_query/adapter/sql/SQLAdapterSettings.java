@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -98,7 +99,12 @@ public class SQLAdapterSettings extends DataAdapterSettings {
   public Map<String, String> getPhenotypeMappings(SingleSearch search) {
     CodeMapping codeMap = search.getAdapterConfig().getCodeMapping(search.getPhenotype());
     if (codeMap == null) return null;
-    return codeMap.getPhenotypeMappings();
+    Map<String, String> pheMap = codeMap.getPhenotypeMappings();
+    if (pheMap == null)
+      return Collections.singletonMap("codes", getCodeUrisAsString(search.getPhenotype()));
+    if (!pheMap.containsKey("codes"))
+      pheMap.put("codes", getCodeUrisAsString(search.getPhenotype()));
+    return pheMap;
   }
 
   public PreparedStatement getSubjectPreparedStatement(
