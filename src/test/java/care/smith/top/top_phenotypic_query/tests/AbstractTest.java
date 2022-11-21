@@ -177,7 +177,7 @@ public abstract class AbstractTest {
         DEFAULT_CARDINALITY);
   }
 
-  static Phenotype getIntervalMin(String name, Phenotype parent, Number min) {
+  protected static Phenotype getIntervalMin(String name, Phenotype parent, Number min) {
     return getRestriction(
         name,
         parent,

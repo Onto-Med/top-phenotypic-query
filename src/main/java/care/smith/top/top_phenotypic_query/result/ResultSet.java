@@ -2,12 +2,14 @@ package care.smith.top.top_phenotypic_query.result;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.ucum.UCUM;
+import care.smith.top.top_phenotypic_query.util.PhenotypeList;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
 
@@ -171,5 +173,12 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
             .append(System.lineSeparator());
     for (SubjectPhenotypes phes : values()) sb.append(phes);
     return sb.toString();
+  }
+
+  public String toString(PhenotypeList phenotypes) {
+    String str = toString();
+    Map<String, String> idsAndTitles = phenotypes.getIdsAndSingleTitles();
+    for (String p : idsAndTitles.keySet()) str = str.replaceAll(p, p + "::" + idsAndTitles.get(p));
+    return str;
   }
 }

@@ -6,6 +6,7 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -16,6 +17,8 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 import care.smith.top.model.Entity;
 import care.smith.top.model.LocalisableText;
@@ -66,7 +69,7 @@ public class PhenotypeList {
   }
 
   public Phenotype getPhenotypeWithTitle(String title) {
-    for (Phenotype p : phenotypes.values())
+    for (Phenotype p : getPhenotypes())
       for (LocalisableText t : p.getTitles()) if (title.equalsIgnoreCase(t.getText())) return p;
     return null;
   }
@@ -77,6 +80,19 @@ public class PhenotypeList {
 
   public Set<String> getIds() {
     return phenotypes.keySet();
+  }
+
+  public Multimap<String, String> getIdsAndTitles() {
+    Multimap<String, String> mm = HashMultimap.create();
+    for (Phenotype p : getPhenotypes())
+      for (LocalisableText t : p.getTitles()) mm.put(p.getId(), t.getText());
+    return mm;
+  }
+
+  public Map<String, String> getIdsAndSingleTitles() {
+    Map<String, String> mm = new HashMap<>();
+    for (Phenotype p : getPhenotypes()) mm.put(p.getId(), p.getTitles().get(0).getText());
+    return mm;
   }
 
   public int size() {
