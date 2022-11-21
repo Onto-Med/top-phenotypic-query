@@ -1,22 +1,24 @@
 package care.smith.top.top_phenotypic_query.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
-import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.util.Values;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class FullBMIAgeTest extends AbstractTest {
 
@@ -45,7 +47,7 @@ public class FullBMIAgeTest extends AbstractTest {
     assertTrue(rs.getPhenotypes("1").hasPhenotype(female.getId()));
 
     SubjectPhenotypes phes = rs.getPhenotypes("1");
-    Set<String> phesExpected = new HashSet<>(phenotypes.keySet());
+    Set<String> phesExpected = new HashSet<>(phenotypes.getIds());
     phesExpected.add("birthdate");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 

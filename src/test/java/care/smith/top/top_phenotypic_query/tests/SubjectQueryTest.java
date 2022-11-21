@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -20,6 +19,7 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import care.smith.top.top_phenotypic_query.util.PhenotypeList;
 import care.smith.top.top_phenotypic_query.util.Values;
 
 public class SubjectQueryTest extends AbstractTest {
@@ -29,7 +29,7 @@ public class SubjectQueryTest extends AbstractTest {
   static Phenotype sex = getPhenotype("Sex", "http://loinc.org", "46098-0", DataType.STRING);
   static Phenotype female =
       getRestriction("Female", sex, "http://hl7.org/fhir/administrative-gender|female");
-  static Map<String, Phenotype> phenotypes = getPhenotypeMap(age, young, sex, female);
+  static PhenotypeList phenotypes = PhenotypeList.of(age, young, sex, female);
 
   @Test
   public void test1() throws InstantiationException {

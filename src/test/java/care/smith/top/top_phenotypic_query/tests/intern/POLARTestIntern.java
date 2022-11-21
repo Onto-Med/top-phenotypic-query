@@ -5,11 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -17,11 +14,6 @@ import java.util.Set;
 
 import org.hl7.fhir.r4.model.Patient;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import care.smith.top.model.Entity;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
@@ -32,25 +24,19 @@ import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.tests.AbstractTest;
+import care.smith.top.top_phenotypic_query.util.PhenotypeList;
 
 public class POLARTestIntern extends AbstractTest {
 
-  public static Entity[] getEntities(String orga, String repo, String user, String pw)
-      throws IOException {
-    URL url = new URL("http://top-prod.imise.uni-leipzig.de/api/" + orga + "/" + repo + "/entity");
-    URLConnection uc = url.openConnection();
-    String userpass = user + ":" + pw;
-    String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
-    uc.setRequestProperty("Authorization", basicAuth);
-    String text = new String(uc.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-    ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
-    return mapper.readValue(text, Entity[].class);
-  }
-
   public static void main(String[] args) throws SQLException, MalformedURLException, IOException {
-    Entity[] entities = getEntities("polar", "delir", "", "");
-    System.out.println(List.of(entities));
-    System.out.println(entities.length);
+    PhenotypeList phens =
+        PhenotypeList.read(
+            "http://top-prod.imise.uni-leipzig.de/api/polar/delir/entity",
+            System.getenv("POLAR_USER"),
+            System.getenv("POLAR_PASSWORD"));
+
+    System.out.println(phens.getPhenotypeWithTitle("< 135 mg/dL"));
+    System.out.println(phens.size());
   }
 
   private static FHIRAdapter getFHIRAdapter() {

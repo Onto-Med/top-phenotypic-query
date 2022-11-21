@@ -3,7 +3,6 @@ package care.smith.top.top_phenotypic_query.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.URL;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +15,7 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRAdapter;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import care.smith.top.top_phenotypic_query.util.PhenotypeList;
 
 public class RestrictionTest extends AbstractTest {
 
@@ -27,11 +27,11 @@ public class RestrictionTest extends AbstractTest {
 
     Phenotype p = getPhenotype("P", "http://phe.org", "p").dataType(DataType.STRING);
     Phenotype p1 = newRestriction(p);
-    Map<String, Phenotype> phenotypes = getPhenotypeMap(p, p1);
+    PhenotypeList phenotypes = PhenotypeList.of(p, p1);
 
     PhenotypeFinder pf = new PhenotypeFinder(null, phenotypes, adapter);
 
-    Phenotype actual = pf.getPhenotypes().get("p1");
+    Phenotype actual = pf.getPhenotypes().getPhenotype("p1");
 
     Phenotype expected =
         newRestriction(p)

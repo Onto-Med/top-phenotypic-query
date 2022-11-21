@@ -2,7 +2,6 @@ package care.smith.top.top_phenotypic_query.search;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import care.smith.top.model.DateTimeRestriction;
@@ -14,6 +13,7 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.PhenotypeList;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
 
@@ -21,10 +21,10 @@ public class CompositeSearch extends PhenotypeSearch {
 
   private QueryCriterion criterion;
   private ResultSet rs;
-  private Map<String, Phenotype> phenotypes;
+  private PhenotypeList phenotypes;
 
   public CompositeSearch(
-      Query query, QueryCriterion criterion, ResultSet rs, Map<String, Phenotype> phenotypes) {
+      Query query, QueryCriterion criterion, ResultSet rs, PhenotypeList phenotypes) {
     super(query);
     this.criterion = criterion;
     this.rs = rs;
@@ -33,7 +33,7 @@ public class CompositeSearch extends PhenotypeSearch {
 
   @Override
   public ResultSet execute() {
-    Phenotype phe = phenotypes.get(criterion.getSubjectId());
+    Phenotype phe = phenotypes.getPhenotype(criterion.getSubjectId());
     Expression exp = phe.getExpression();
     if (exp != null) {
       Set<String> vars = Expressions.getVariables(exp, phenotypes);
@@ -68,7 +68,7 @@ public class CompositeSearch extends PhenotypeSearch {
   private List<Value> getValues(String sbjId, String var, DateTimeRestriction dateRange) {
     List<Value> vals = rs.getPhenotypes(sbjId).getValues(var, dateRange);
     if (vals != null) return vals;
-    Phenotype phe = phenotypes.get(var);
+    Phenotype phe = phenotypes.getPhenotype(var);
     if (Phenotypes.isSingle(phe) && Phenotypes.hasBooleanType(phe))
       return List.of(Values.newValueFalse());
     Expression newExp = phe.getExpression();

@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
-import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -17,6 +16,7 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.CompositeSearch;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.PhenotypeList;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
 
@@ -31,8 +31,8 @@ public class BMIAgeTest extends AbstractTest {
             .subjectId(overWeight.getId())
             .dateTimeRestriction(getDTR(2000));
 
-    Map<String, Phenotype> phenotypes =
-        getPhenotypeMap(
+    PhenotypeList phenotypes =
+        PhenotypeList.of(
             weight,
             height,
             age,
@@ -46,7 +46,7 @@ public class BMIAgeTest extends AbstractTest {
             finding,
             overWeight);
 
-    for (Phenotype p : phenotypes.values()) {
+    for (Phenotype p : phenotypes.getPhenotypes()) {
       if (Phenotypes.isRestriction(p)) p.setExpression(Expressions.restrictionToExpression(p));
     }
 
@@ -58,7 +58,7 @@ public class BMIAgeTest extends AbstractTest {
     assertEquals(Set.of("Subject1"), finalRS.getSubjectIds());
 
     SubjectPhenotypes phes = finalRS.getPhenotypes("Subject1");
-    assertEquals(phenotypes.keySet(), phes.getPhenotypeNames());
+    assertEquals(phenotypes.getIds(), phes.getPhenotypeNames());
 
     assertFalse(Values.getBooleanValue(getValue("Old", phes)));
     assertTrue(Values.getBooleanValue(getValue("Young", phes)));

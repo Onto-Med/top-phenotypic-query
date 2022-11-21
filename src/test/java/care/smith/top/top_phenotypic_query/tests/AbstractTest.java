@@ -4,10 +4,6 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import care.smith.top.model.Code;
 import care.smith.top.model.CodeSystem;
@@ -26,6 +22,7 @@ import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
+import care.smith.top.top_phenotypic_query.util.PhenotypeList;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public abstract class AbstractTest {
@@ -64,8 +61,8 @@ public abstract class AbstractTest {
   protected static Phenotype finding = getPhenotype("Finding", getFindingExpression());
   protected static Phenotype overWeight = getRestriction("Overweight", finding, 1);
 
-  protected static Map<String, Phenotype> phenotypes =
-      getPhenotypeMap(
+  protected static PhenotypeList phenotypes =
+      PhenotypeList.of(
           age,
           young,
           old,
@@ -339,10 +336,6 @@ public abstract class AbstractTest {
 
   private static StringRestriction getStringRestriction() {
     return (StringRestriction) new StringRestriction().type(DataType.STRING);
-  }
-
-  protected static Map<String, Phenotype> getPhenotypeMap(Phenotype... phenotypes) {
-    return Stream.of(phenotypes).collect(Collectors.toMap(Phenotype::getId, Function.identity()));
   }
 
   static Expression getBMIExpression() {

@@ -1,7 +1,5 @@
 package care.smith.top.top_phenotypic_query.search;
 
-import java.util.Map;
-
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
@@ -9,33 +7,24 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.PhenotypeList;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
-import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class PhenotypeFinder {
 
   private Query query;
-  private Map<String, Phenotype> phenotypes;
+  private PhenotypeList phenotypes;
   private DataAdapter adapter;
   private DataAdapterConfig config;
 
-  public PhenotypeFinder(Query query, Map<String, Phenotype> phenotypes, DataAdapter adapter) {
+  public PhenotypeFinder(Query query, PhenotypeList phenotypes, DataAdapter adapter) {
     this.query = query;
     this.phenotypes = phenotypes;
     this.adapter = adapter;
     this.config = adapter.getConfig();
-    for (Phenotype p : this.phenotypes.values()) {
-      Phenotype supP = p.getSuperPhenotype();
-      if (Phenotypes.isRestriction(p)) {
-        p.setExpression(Expressions.restrictionToExpression(p));
-        if (Phenotypes.isSingle(p) && p.getRestriction() == null)
-          p.setRestriction(Restrictions.newRestrictionFromCodes(p));
-      }
-      if (supP != null) p.setSuperPhenotype(phenotypes.get(supP.getId()));
-    }
   }
 
-  public Map<String, Phenotype> getPhenotypes() {
+  public PhenotypeList getPhenotypes() {
     return phenotypes;
   }
 
@@ -45,7 +34,7 @@ public class PhenotypeFinder {
 
   private ResultSet executeCompositeSearches(ResultSet rs) {
     for (QueryCriterion cri : query.getCriteria()) {
-      Phenotype phe = phenotypes.get(cri.getSubjectId());
+      Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
       if (Phenotypes.isComposite(phe)) new CompositeSearch(query, cri, rs, phenotypes).execute();
     }
     return rs;
@@ -55,7 +44,7 @@ public class PhenotypeFinder {
     SingleQueryMan man = new SingleQueryMan(adapter);
     SubjectQueryMan sbjMan = new SubjectQueryMan(adapter);
     for (QueryCriterion cri : query.getCriteria()) {
-      Phenotype phe = phenotypes.get(cri.getSubjectId());
+      Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
       if (Phenotypes.isSingle(phe)) {
         if (config.isAge(phe)) sbjMan.setAgeCriterion(cri, phe);
         else if (config.isBirthdate(phe)) sbjMan.setBirthdateCriterion(cri, phe);
@@ -65,10 +54,10 @@ public class PhenotypeFinder {
     }
 
     for (QueryCriterion cri : query.getCriteria()) {
-      Phenotype phe = phenotypes.get(cri.getSubjectId());
+      Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
       if (Phenotypes.isComposite(phe)) {
         for (String var : Expressions.getVariables(phe.getExpression(), phenotypes)) {
-          Phenotype varPhe = phenotypes.get(var);
+          Phenotype varPhe = phenotypes.getPhenotype(var);
           if (Phenotypes.isSingle(varPhe)) {
             if (config.isAge(varPhe)) sbjMan.addAgeVariable(varPhe);
             else if (config.isBirthdate(varPhe)) sbjMan.addBirthdateVariable(varPhe);

@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +23,7 @@ import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
+import care.smith.top.top_phenotypic_query.util.PhenotypeList;
 
 public class SqlAdapterTest extends AbstractTest {
   static final String DB_URL = "jdbc:h2:mem:test0-db;INIT=RUNSCRIPT FROM 'classpath:schema.sql'";
@@ -31,7 +31,7 @@ public class SqlAdapterTest extends AbstractTest {
   static final String DB_PASS = "password";
 
   Connection con;
-  Map<String, Phenotype> phenotypes;
+  PhenotypeList phenotypes;
 
   @BeforeEach
   void setup() throws SQLException {
@@ -48,7 +48,7 @@ public class SqlAdapterTest extends AbstractTest {
     Phenotype height = getPhenotype("height", "http://loinc.org", "3137-7");
     Phenotype tall = getIntervalMin("tall", height, 200);
 
-    phenotypes = getPhenotypeMap(height, tall);
+    phenotypes = PhenotypeList.of(height, tall);
   }
 
   @AfterEach
@@ -66,7 +66,7 @@ public class SqlAdapterTest extends AbstractTest {
     DataAdapter adapter = DataAdapter.getInstance(configFile.getPath());
     assertNotNull(adapter);
 
-    Phenotype tall = phenotypes.get("tall");
+    Phenotype tall = phenotypes.getPhenotype("tall");
     assertNotNull(tall);
 
     QueryCriterion cri =
@@ -112,7 +112,7 @@ public class SqlAdapterTest extends AbstractTest {
     }
 
     PhenotypeFinder finder =
-        new PhenotypeFinder(query, getPhenotypeMap(stringPhenotype, corrupted), adapter);
+        new PhenotypeFinder(query, PhenotypeList.of(stringPhenotype, corrupted), adapter);
     finder.execute();
 
     try (java.sql.ResultSet rs = adapter.executeQuery("SELECT count(*) FROM assessment1")) {

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -199,18 +198,17 @@ public class Expressions {
     return null;
   }
 
-  public static Set<String> getVariables(Expression exp, Map<String, Phenotype> phenotypes) {
+  public static Set<String> getVariables(Expression exp, PhenotypeList phenotypes) {
     Set<String> vars = new HashSet<>();
     addVariables(exp, vars, phenotypes);
     return vars;
   }
 
-  private static void addVariables(
-      Expression exp, Set<String> vars, Map<String, Phenotype> phenotypes) {
+  private static void addVariables(Expression exp, Set<String> vars, PhenotypeList phenotypes) {
     if (exp == null) return;
     if (exp.getEntityId() != null) {
       vars.add(exp.getEntityId());
-      Phenotype varPhe = phenotypes.get(exp.getEntityId());
+      Phenotype varPhe = phenotypes.getPhenotype(exp.getEntityId());
       if (varPhe != null) {
         Expression varPheExp = varPhe.getExpression();
         if (varPheExp != null) addVariables(varPheExp, vars, phenotypes);

@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import care.smith.top.model.Code;
 import care.smith.top.model.DataType;
+import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
@@ -43,6 +44,10 @@ public class Phenotypes {
 
   public static boolean isRestriction(Phenotype p) {
     return isSingleRestriction(p) || isCompositeRestriction(p);
+  }
+
+  public static boolean isCategory(Entity e) {
+    return e.getEntityType() == EntityType.CATEGORY;
   }
 
   public static String getPhenotypeId(Phenotype p) {
