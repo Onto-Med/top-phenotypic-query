@@ -228,7 +228,7 @@ public class C2R {
     setVariable(name, Expressions.newExpression(values));
   }
 
-  private String toString(Expression exp) {
+  public String toString(Expression exp) {
     if (exp.getEntityId() != null) return exp.getEntityId();
     if (exp.getConstantId() != null)
       return getConstant(exp.getConstantId()).getConstant().getTitle();
