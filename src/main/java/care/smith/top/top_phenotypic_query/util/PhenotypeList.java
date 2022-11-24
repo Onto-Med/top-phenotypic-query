@@ -21,6 +21,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import care.smith.top.model.Entity;
+import care.smith.top.model.EntityType;
 import care.smith.top.model.LocalisableText;
 import care.smith.top.model.Phenotype;
 
@@ -76,6 +77,12 @@ public class PhenotypeList {
 
   public Collection<Phenotype> getPhenotypes() {
     return phenotypes.values();
+  }
+
+  public Collection<Phenotype> getPhenotypes(EntityType type) {
+    return getPhenotypes().stream()
+        .filter(p -> p.getEntityType() == type)
+        .collect(Collectors.toSet());
   }
 
   public Set<String> getIds() {
