@@ -198,23 +198,32 @@ public class Expressions {
     return null;
   }
 
+  public static Set<String> getDirectVariables(Expression exp, PhenotypeList phenotypes) {
+    return getVariables(exp, phenotypes, true);
+  }
+
   public static Set<String> getVariables(Expression exp, PhenotypeList phenotypes) {
+    return getVariables(exp, phenotypes, false);
+  }
+
+  public static Set<String> getVariables(Expression exp, PhenotypeList phenotypes, boolean direct) {
     Set<String> vars = new HashSet<>();
-    addVariables(exp, vars, phenotypes);
+    addVariables(exp, vars, phenotypes, direct);
     return vars;
   }
 
-  private static void addVariables(Expression exp, Set<String> vars, PhenotypeList phenotypes) {
+  private static void addVariables(
+      Expression exp, Set<String> vars, PhenotypeList phenotypes, boolean direct) {
     if (exp == null) return;
     if (exp.getEntityId() != null) {
       vars.add(exp.getEntityId());
       Phenotype varPhe = phenotypes.getPhenotype(exp.getEntityId());
-      if (varPhe != null) {
+      if (varPhe != null && !direct) {
         Expression varPheExp = varPhe.getExpression();
-        if (varPheExp != null) addVariables(varPheExp, vars, phenotypes);
+        if (varPheExp != null) addVariables(varPheExp, vars, phenotypes, direct);
       }
     } else if (exp.getArguments() != null)
-      for (Expression arg : exp.getArguments()) addVariables(arg, vars, phenotypes);
+      for (Expression arg : exp.getArguments()) addVariables(arg, vars, phenotypes, direct);
   }
 
   public static Expression restrictionToExpression(Phenotype p) {
