@@ -126,6 +126,6 @@ public class PhenotypeList {
 
   @Override
   public String toString() {
-    return "PhenotypeList [phenotypes=" + entities.values() + "]";
+    return "PhenotypeList [entities=" + entities.values() + "]";
   }
 }
