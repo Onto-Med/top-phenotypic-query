@@ -51,7 +51,7 @@ public class PhenotypeList {
   public static PhenotypeList of(PhenotypeList phenotypeList, Entity... entities) {
     Set<Entity> newEntities = new HashSet<>(phenotypeList.getPhenotypes());
     for (Entity p : entities) newEntities.add(p);
-    return new PhenotypeList(newEntities.stream().toArray(Entity[]::new));
+    return new PhenotypeList(newEntities.toArray(Entity[]::new));
   }
 
   public static PhenotypeList read(String url, String user, String password) throws IOException {
