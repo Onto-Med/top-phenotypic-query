@@ -20,6 +20,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+import care.smith.top.model.Category;
 import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.LocalisableText;
@@ -27,29 +28,30 @@ import care.smith.top.model.Phenotype;
 
 public class PhenotypeList {
 
-  private Map<String, Phenotype> phenotypes;
+  private Map<String, Entity> entities;
 
-  private PhenotypeList(Phenotype... phens) {
-    phenotypes = Stream.of(phens).collect(Collectors.toMap(Phenotype::getId, Function.identity()));
-    for (Phenotype p : phenotypes.values()) {
+  private PhenotypeList(Entity... entities) {
+    this.entities =
+        Stream.of(entities).collect(Collectors.toMap(Entity::getId, Function.identity()));
+    for (Phenotype p : getPhenotypes()) {
       Phenotype supP = p.getSuperPhenotype();
       if (Phenotypes.isRestriction(p)) {
         p.setExpression(Expressions.restrictionToExpression(p));
         if (Phenotypes.isSingle(p) && p.getRestriction() == null)
           p.setRestriction(Restrictions.newRestrictionFromCodes(p));
       }
-      if (supP != null) p.setSuperPhenotype(phenotypes.get(supP.getId()));
+      if (supP != null) p.setSuperPhenotype(getPhenotype(supP.getId()));
     }
   }
 
-  public static PhenotypeList of(Phenotype... phenotypes) {
-    return new PhenotypeList(phenotypes);
+  public static PhenotypeList of(Entity... entities) {
+    return new PhenotypeList(entities);
   }
 
-  public static PhenotypeList of(PhenotypeList phenotypeList, Phenotype... phenotypes) {
-    Set<Phenotype> phens = new HashSet<>(phenotypeList.getPhenotypes());
-    for (Phenotype p : phenotypes) phens.add(p);
-    return new PhenotypeList(phens.stream().toArray(Phenotype[]::new));
+  public static PhenotypeList of(PhenotypeList phenotypeList, Entity... entities) {
+    Set<Entity> newEntities = new HashSet<>(phenotypeList.getPhenotypes());
+    for (Entity p : entities) newEntities.add(p);
+    return new PhenotypeList(newEntities.stream().toArray(Entity[]::new));
   }
 
   public static PhenotypeList read(String url, String user, String password) throws IOException {
@@ -59,14 +61,15 @@ public class PhenotypeList {
     uc.setRequestProperty("Authorization", basicAuth);
     String text = new String(uc.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
     ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
-    Entity[] entities = mapper.readValue(text, Entity[].class);
-    Phenotype[] phens =
-        Stream.of(entities).filter(e -> !Phenotypes.isCategory(e)).toArray(Phenotype[]::new);
-    return of(phens);
+    return of(mapper.readValue(text, Entity[].class));
+  }
+
+  public Entity getEntity(String id) {
+    return entities.get(id);
   }
 
   public Phenotype getPhenotype(String id) {
-    return phenotypes.get(id);
+    return (Phenotype) getEntity(id);
   }
 
   public Phenotype getPhenotypeWithTitle(String title) {
@@ -75,18 +78,33 @@ public class PhenotypeList {
     return null;
   }
 
+  public Collection<Entity> getEntities() {
+    return entities.values();
+  }
+
+  public Collection<Category> getCategories() {
+    return getEntities().stream()
+        .filter(e -> e.getEntityType() == EntityType.CATEGORY)
+        .map(Category.class::cast)
+        .collect(Collectors.toSet());
+  }
+
   public Collection<Phenotype> getPhenotypes() {
-    return phenotypes.values();
+    return getEntities().stream()
+        .filter(e -> e.getEntityType() != EntityType.CATEGORY)
+        .map(Phenotype.class::cast)
+        .collect(Collectors.toSet());
   }
 
   public Collection<Phenotype> getPhenotypes(EntityType type) {
-    return getPhenotypes().stream()
-        .filter(p -> p.getEntityType() == type)
+    return getEntities().stream()
+        .filter(e -> e.getEntityType() == type)
+        .map(Phenotype.class::cast)
         .collect(Collectors.toSet());
   }
 
   public Set<String> getIds() {
-    return phenotypes.keySet();
+    return entities.keySet();
   }
 
   public Multimap<String, String> getIdsAndTitles() {
@@ -103,11 +121,11 @@ public class PhenotypeList {
   }
 
   public int size() {
-    return phenotypes.size();
+    return entities.size();
   }
 
   @Override
   public String toString() {
-    return "PhenotypeList [phenotypes=" + phenotypes.values() + "]";
+    return "PhenotypeList [phenotypes=" + entities.values() + "]";
   }
 }
