@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import care.smith.top.model.BooleanRestriction;
@@ -265,10 +264,10 @@ public class Restrictions {
   }
 
   public static boolean hasValues(Restriction r) {
-    if (hasNumberType(r)) return !ObjectUtils.isEmpty(getNumberValues(r));
-    if (hasDateTimeType(r)) return !ObjectUtils.isEmpty(getDateTimeValues(r));
-    if (hasBooleanType(r)) return !ObjectUtils.isEmpty(getBooleanValues(r));
-    return !ObjectUtils.isEmpty(getStringValues(r));
+    if (hasNumberType(r)) return !getNumberValues(r).isEmpty();
+    if (hasDateTimeType(r)) return !getDateTimeValues(r).isEmpty();
+    if (hasBooleanType(r)) return !getBooleanValues(r).isEmpty();
+    return !getStringValues(r).isEmpty();
   }
 
   public static String getValuesAsString(Restriction r) {
@@ -320,6 +319,22 @@ public class Restrictions {
     return limits;
   }
 
+  public static Map<RestrictionOperator, LocalDateTime> getDateTimeInterval(Restriction r) {
+    Map<RestrictionOperator, LocalDateTime> limits = new LinkedHashMap<>();
+    DateTimeRestriction dr = (DateTimeRestriction) r;
+    if (dr.getMinOperator() != null) limits.put(dr.getMinOperator(), dr.getValues().get(0));
+    if (dr.getMaxOperator() != null) limits.put(dr.getMaxOperator(), dr.getValues().get(1));
+    return limits;
+  }
+
+  public static Map<RestrictionOperator, BigDecimal> getNumberInterval(Restriction r) {
+    Map<RestrictionOperator, BigDecimal> limits = new LinkedHashMap<>();
+    NumberRestriction nr = (NumberRestriction) r;
+    if (nr.getMinOperator() != null) limits.put(nr.getMinOperator(), nr.getValues().get(0));
+    if (nr.getMaxOperator() != null) limits.put(nr.getMaxOperator(), nr.getValues().get(1));
+    return limits;
+  }
+
   public static List<Value> getValues(Restriction r) {
     if (hasNumberType(r)) return Values.newNumberValues(getNumberValues(r));
     if (hasDateTimeType(r)) return Values.newDateTimeValues(getDateTimeValues(r));
@@ -328,19 +343,23 @@ public class Restrictions {
   }
 
   public static List<String> getStringValues(Restriction r) {
-    return ((StringRestriction) r).getValues();
+    List<String> vals = ((StringRestriction) r).getValues();
+    return (vals == null) ? new ArrayList<>() : vals;
   }
 
   public static List<BigDecimal> getNumberValues(Restriction r) {
-    return ((NumberRestriction) r).getValues();
+    List<BigDecimal> vals = ((NumberRestriction) r).getValues();
+    return (vals == null) ? new ArrayList<>() : vals;
   }
 
   public static List<Boolean> getBooleanValues(Restriction r) {
-    return ((BooleanRestriction) r).getValues();
+    List<Boolean> vals = ((BooleanRestriction) r).getValues();
+    return (vals == null) ? new ArrayList<>() : vals;
   }
 
   public static List<LocalDateTime> getDateTimeValues(Restriction r) {
-    return ((DateTimeRestriction) r).getValues();
+    List<LocalDateTime> vals = ((DateTimeRestriction) r).getValues();
+    return (vals == null) ? new ArrayList<>() : vals;
   }
 
   public static boolean isEntirePeriod(DateTimeRestriction r) {
