@@ -9,7 +9,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -30,18 +32,18 @@ public class Entities {
   private Repository repo;
 
   private Entities(Entity... entities) {
-    add(entities);
+    Stream.of(entities).collect(Collectors.toMap(Entity::getId, Function.identity()));
     init();
   }
 
   private Entities(Collection<Entity> entities) {
-    add(entities);
+    entities.stream().collect(Collectors.toMap(Entity::getId, Function.identity()));
     init();
   }
 
   private Entities(Entities entities) {
-    add(entities);
-    init();
+    this(entities.getEntities());
+    this.repo = entities.getRepository();
   }
 
   public static Entities of(Entity... entities) {
@@ -53,6 +55,7 @@ public class Entities {
   }
 
   public static Entities of(Entities entities1, Entity... entities2) {
+
     Entities res = new Entities(entities1);
     res.add(entities2);
     return res;
@@ -68,22 +71,6 @@ public class Entities {
       }
       if (supP != null) p.setSuperPhenotype(getPhenotype(supP.getId()));
     }
-  }
-
-  public void add(Entity e) {
-    entities.put(e.getId(), e);
-  }
-
-  public void add(Entity... entities) {
-    for (Entity e : entities) add(e);
-  }
-
-  public void add(Collection<Entity> entities) {
-    for (Entity e : entities) add(e);
-  }
-
-  public void add(Entities entities) {
-    add(entities.getEntities());
   }
 
   public Entities repository(Repository repo) {
