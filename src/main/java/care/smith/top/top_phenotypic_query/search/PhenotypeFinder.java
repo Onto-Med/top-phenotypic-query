@@ -7,24 +7,24 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.PhenotypeList;
+import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class PhenotypeFinder {
 
   private Query query;
-  private PhenotypeList phenotypes;
+  private Entities phenotypes;
   private DataAdapter adapter;
   private DataAdapterConfig config;
 
-  public PhenotypeFinder(Query query, PhenotypeList phenotypes, DataAdapter adapter) {
+  public PhenotypeFinder(Query query, Entities phenotypes, DataAdapter adapter) {
     this.query = query;
     this.phenotypes = phenotypes;
     this.adapter = adapter;
     this.config = adapter.getConfig();
   }
 
-  public PhenotypeList getPhenotypes() {
+  public Entities getPhenotypes() {
     return phenotypes;
   }
 

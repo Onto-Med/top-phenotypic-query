@@ -15,7 +15,7 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRAdapter;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
-import care.smith.top.top_phenotypic_query.util.PhenotypeList;
+import care.smith.top.top_phenotypic_query.util.Entities;
 
 public class RestrictionTest extends AbstractTest {
 
@@ -27,7 +27,7 @@ public class RestrictionTest extends AbstractTest {
 
     Phenotype p = getPhenotype("P", "http://phe.org", "p").dataType(DataType.STRING);
     Phenotype p1 = newRestriction(p);
-    PhenotypeList phenotypes = PhenotypeList.of(p, p1);
+    Entities phenotypes = Entities.of(p, p1);
 
     PhenotypeFinder pf = new PhenotypeFinder(null, phenotypes, adapter);
 

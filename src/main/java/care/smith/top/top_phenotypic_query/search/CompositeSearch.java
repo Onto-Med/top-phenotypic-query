@@ -13,7 +13,7 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.PhenotypeList;
+import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
 
@@ -21,10 +21,10 @@ public class CompositeSearch extends PhenotypeSearch {
 
   private QueryCriterion criterion;
   private ResultSet rs;
-  private PhenotypeList phenotypes;
+  private Entities phenotypes;
 
   public CompositeSearch(
-      Query query, QueryCriterion criterion, ResultSet rs, PhenotypeList phenotypes) {
+      Query query, QueryCriterion criterion, ResultSet rs, Entities phenotypes) {
     super(query);
     this.criterion = criterion;
     this.rs = rs;

@@ -198,22 +198,22 @@ public class Expressions {
     return null;
   }
 
-  public static Set<String> getDirectVariables(Expression exp, PhenotypeList phenotypes) {
+  public static Set<String> getDirectVariables(Expression exp, Entities phenotypes) {
     return getVariables(exp, phenotypes, true);
   }
 
-  public static Set<String> getVariables(Expression exp, PhenotypeList phenotypes) {
+  public static Set<String> getVariables(Expression exp, Entities phenotypes) {
     return getVariables(exp, phenotypes, false);
   }
 
-  public static Set<String> getVariables(Expression exp, PhenotypeList phenotypes, boolean direct) {
+  public static Set<String> getVariables(Expression exp, Entities phenotypes, boolean direct) {
     Set<String> vars = new HashSet<>();
     addVariables(exp, vars, phenotypes, direct);
     return vars;
   }
 
   private static void addVariables(
-      Expression exp, Set<String> vars, PhenotypeList phenotypes, boolean direct) {
+      Expression exp, Set<String> vars, Entities phenotypes, boolean direct) {
     if (exp == null) return;
     if (exp.getEntityId() != null) {
       vars.add(exp.getEntityId());

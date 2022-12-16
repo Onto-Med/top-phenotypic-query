@@ -10,14 +10,14 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.tests.AbstractTest;
-import care.smith.top.top_phenotypic_query.util.PhenotypeList;
+import care.smith.top.top_phenotypic_query.util.Entities;
 
 public class POLARTestIntern extends AbstractTest {
 
   public static void main(String[] args)
       throws SQLException, MalformedURLException, IOException, InstantiationException {
-    PhenotypeList phens =
-        PhenotypeList.read(
+    Entities phens =
+        Entities.read(
             "http://top-prod.imise.uni-leipzig.de/api/polar/delir/entity",
             System.getenv("POLAR_USER"),
             System.getenv("POLAR_PASSWORD"));

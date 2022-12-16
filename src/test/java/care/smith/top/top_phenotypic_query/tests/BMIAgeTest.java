@@ -16,7 +16,7 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.CompositeSearch;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.PhenotypeList;
+import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
 
@@ -31,8 +31,8 @@ public class BMIAgeTest extends AbstractTest {
             .subjectId(overWeight.getId())
             .dateTimeRestriction(getDTR(2000));
 
-    PhenotypeList phenotypes =
-        PhenotypeList.of(
+    Entities phenotypes =
+        Entities.of(
             weight,
             height,
             age,

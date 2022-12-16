@@ -22,7 +22,7 @@ import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
-import care.smith.top.top_phenotypic_query.util.PhenotypeList;
+import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public abstract class AbstractTest {
@@ -61,8 +61,8 @@ public abstract class AbstractTest {
   protected static Phenotype finding = getPhenotype("Finding", getFindingExpression());
   protected static Phenotype overWeight = getRestriction("Overweight", finding, 1);
 
-  protected static PhenotypeList phenotypes =
-      PhenotypeList.of(
+  protected static Entities phenotypes =
+      Entities.of(
           age,
           young,
           old,

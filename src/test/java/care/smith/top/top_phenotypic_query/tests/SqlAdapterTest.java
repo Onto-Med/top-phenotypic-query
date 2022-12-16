@@ -23,7 +23,7 @@ import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
-import care.smith.top.top_phenotypic_query.util.PhenotypeList;
+import care.smith.top.top_phenotypic_query.util.Entities;
 
 public class SqlAdapterTest extends AbstractTest {
   static final String DB_URL = "jdbc:h2:mem:test0-db;INIT=RUNSCRIPT FROM 'classpath:schema.sql'";
@@ -31,7 +31,7 @@ public class SqlAdapterTest extends AbstractTest {
   static final String DB_PASS = "password";
 
   Connection con;
-  PhenotypeList phenotypes;
+  Entities phenotypes;
 
   @BeforeEach
   void setup() throws SQLException {
@@ -48,7 +48,7 @@ public class SqlAdapterTest extends AbstractTest {
     Phenotype height = getPhenotype("height", "http://loinc.org", "3137-7");
     Phenotype tall = getIntervalMin("tall", height, 200);
 
-    phenotypes = PhenotypeList.of(height, tall);
+    phenotypes = Entities.of(height, tall);
   }
 
   @AfterEach
@@ -112,7 +112,7 @@ public class SqlAdapterTest extends AbstractTest {
     }
 
     PhenotypeFinder finder =
-        new PhenotypeFinder(query, PhenotypeList.of(stringPhenotype, corrupted), adapter);
+        new PhenotypeFinder(query, Entities.of(stringPhenotype, corrupted), adapter);
     finder.execute();
 
     try (java.sql.ResultSet rs = adapter.executeQuery("SELECT count(*) FROM assessment1")) {

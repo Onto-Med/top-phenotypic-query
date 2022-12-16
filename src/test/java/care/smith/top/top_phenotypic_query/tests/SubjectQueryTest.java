@@ -19,7 +19,7 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
-import care.smith.top.top_phenotypic_query.util.PhenotypeList;
+import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Values;
 
 public class SubjectQueryTest extends AbstractTest {
@@ -29,7 +29,7 @@ public class SubjectQueryTest extends AbstractTest {
   static Phenotype sex = getPhenotype("Sex", "http://loinc.org", "46098-0", DataType.STRING);
   static Phenotype female =
       getRestriction("Female", sex, "http://hl7.org/fhir/administrative-gender|female");
-  static PhenotypeList phenotypes = PhenotypeList.of(age, young, sex, female);
+  static Entities phenotypes = Entities.of(age, young, sex, female);
 
   @Test
   public void test1() throws InstantiationException {
