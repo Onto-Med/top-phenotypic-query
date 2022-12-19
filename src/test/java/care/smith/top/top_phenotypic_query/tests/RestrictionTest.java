@@ -7,6 +7,7 @@ import java.net.URL;
 import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.DataType;
+import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
@@ -15,7 +16,6 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRAdapter;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
-import care.smith.top.top_phenotypic_query.util.Entities;
 
 public class RestrictionTest extends AbstractTest {
 
@@ -27,7 +27,7 @@ public class RestrictionTest extends AbstractTest {
 
     Phenotype p = getPhenotype("P", "http://phe.org", "p").dataType(DataType.STRING);
     Phenotype p1 = newRestriction(p);
-    Entities phenotypes = Entities.of(p, p1);
+    Entity[] phenotypes = {p, p1};
 
     PhenotypeFinder pf = new PhenotypeFinder(null, phenotypes, adapter);
 

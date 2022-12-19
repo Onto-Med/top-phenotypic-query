@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
 
+import care.smith.top.model.Entity;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
@@ -16,11 +17,13 @@ public class POLARTestIntern extends AbstractTest {
 
   public static void main(String[] args)
       throws SQLException, MalformedURLException, IOException, InstantiationException {
-    Entities phens =
-        Entities.read(
+    Entity[] phens =
+        Entities.readEntities(
             "http://top-prod.imise.uni-leipzig.de/api/polar/delir/entity",
             System.getenv("POLAR_USER"),
             System.getenv("POLAR_PASSWORD"));
+
+    Entities entities = Entities.of(phens);
 
     DataAdapter adapter = DataAdapter.getInstance("test_files/POLAR_SQL_Adapter_Test_intern.yml");
 
@@ -28,12 +31,12 @@ public class POLARTestIntern extends AbstractTest {
         new QueryCriterion()
             .inclusion(true)
             .defaultAggregationFunctionId(defAgrFunc.getId())
-            .subjectId(phens.getPhenotypeWithTitle("Extended algorithm").getId());
+            .subjectId(entities.getPhenotypeWithTitle("Extended algorithm").getId());
     Query query = new Query().addCriteriaItem(cri1);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phens, adapter);
     ResultSet rs = pf.execute();
-    System.out.println(rs.toString(phens));
+    System.out.println(rs.toString(entities));
     System.out.println(rs.size());
     adapter.close();
 

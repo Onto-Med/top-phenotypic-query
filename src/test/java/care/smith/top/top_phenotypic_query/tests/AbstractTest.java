@@ -9,6 +9,7 @@ import care.smith.top.model.Code;
 import care.smith.top.model.CodeSystem;
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
+import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
@@ -22,7 +23,6 @@ import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
-import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public abstract class AbstractTest {
@@ -61,22 +61,22 @@ public abstract class AbstractTest {
   protected static Phenotype finding = getPhenotype("Finding", getFindingExpression());
   protected static Phenotype overWeight = getRestriction("Overweight", finding, 1);
 
-  protected static Entities phenotypes =
-      Entities.of(
-          age,
-          young,
-          old,
-          sex,
-          female,
-          weight,
-          height,
-          bmi,
-          bmi19_25,
-          bmi19_27,
-          bmi25_30,
-          bmi27_30,
-          finding,
-          overWeight);
+  protected static Entity[] phenotypes = {
+    age,
+    young,
+    old,
+    sex,
+    female,
+    weight,
+    height,
+    bmi,
+    bmi19_25,
+    bmi19_27,
+    bmi25_30,
+    bmi27_30,
+    finding,
+    overWeight
+  };
 
   protected static ExpressionFunction defAgrFunc =
       new ExpressionFunction().id("last").minArgumentNumber(1).notation(NotationEnum.PREFIX);

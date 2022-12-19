@@ -2,7 +2,6 @@ package care.smith.top.top_phenotypic_query.result;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import care.smith.top.model.DateTimeRestriction;
@@ -177,8 +176,8 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
 
   public String toString(Entities phenotypes) {
     String str = toString();
-    Map<String, String> idsAndTitles = phenotypes.getIdsAndSingleTitles();
-    for (String p : idsAndTitles.keySet()) str = str.replaceAll(p, p + "::" + idsAndTitles.get(p));
+    for (Phenotype p : phenotypes.getPhenotypes())
+      str = str.replaceAll(p.getId(), p.getId() + "::" + Entities.getFirstTitle(p));
     return str;
   }
 }

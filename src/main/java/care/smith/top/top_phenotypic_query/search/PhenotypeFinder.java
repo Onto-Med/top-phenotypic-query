@@ -1,13 +1,14 @@
 package care.smith.top.top_phenotypic_query.search;
 
+import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Entities;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class PhenotypeFinder {
@@ -17,9 +18,9 @@ public class PhenotypeFinder {
   private DataAdapter adapter;
   private DataAdapterConfig config;
 
-  public PhenotypeFinder(Query query, Entities phenotypes, DataAdapter adapter) {
+  public PhenotypeFinder(Query query, Entity[] entities, DataAdapter adapter) {
     this.query = query;
-    this.phenotypes = phenotypes;
+    this.phenotypes = Entities.of(entities).deriveAdditionalProperties();
     this.adapter = adapter;
     this.config = adapter.getConfig();
   }

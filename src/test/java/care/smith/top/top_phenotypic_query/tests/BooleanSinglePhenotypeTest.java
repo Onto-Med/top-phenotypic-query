@@ -10,7 +10,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.collect.ObjectArrays;
+
 import care.smith.top.model.DataType;
+import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
@@ -19,7 +22,6 @@ import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
-import care.smith.top.top_phenotypic_query.util.Entities;
 
 public class BooleanSinglePhenotypeTest extends AbstractTest {
 
@@ -28,7 +30,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
       getPhenotype("Weight", "http://loinc.org", "3141-9").dataType(DataType.BOOLEAN);
   private Phenotype h =
       getPhenotype("Height", "http://loinc.org", "3137-7", "m").dataType(DataType.BOOLEAN);
-  private Entities phenotypes = Entities.of(w, h);
+  private Entity[] phenotypes = {w, h};
 
   @BeforeEach
   void start() throws InstantiationException {
@@ -83,7 +85,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
         (Phenotype)
             new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
 
-    Entities phes = Entities.of(phenotypes, composite);
+    Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
     QueryCriterion cri = new QueryCriterion().inclusion(true).subjectId(composite.getId());
     Query query = new Query().addCriteriaItem(cri);
@@ -108,7 +110,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
         (Phenotype)
             new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
 
-    Entities phes = Entities.of(phenotypes, composite);
+    Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
     QueryCriterion cri = new QueryCriterion().inclusion(true).subjectId(composite.getId());
     Query query = new Query().addCriteriaItem(cri);
@@ -133,7 +135,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
         (Phenotype)
             new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
 
-    Entities phes = Entities.of(phenotypes, composite);
+    Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
     QueryCriterion cri = new QueryCriterion().inclusion(false).subjectId(composite.getId());
     Query query = new Query().addCriteriaItem(cri);
@@ -158,7 +160,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
         (Phenotype)
             new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
 
-    Entities phes = Entities.of(phenotypes, composite);
+    Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
     QueryCriterion cri = new QueryCriterion().inclusion(false).subjectId(composite.getId());
     Query query = new Query().addCriteriaItem(cri);

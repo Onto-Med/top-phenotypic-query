@@ -6,7 +6,7 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -16,8 +16,6 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 
 import care.smith.top.model.Category;
 import care.smith.top.model.Entity;
@@ -28,22 +26,25 @@ import care.smith.top.model.Repository;
 
 public class Entities {
 
-  private Map<String, Entity> entities = new HashMap<>();
+  private Map<String, Entity> entities = new LinkedHashMap<>();
   private Repository repo;
 
   private Entities(Entity... entities) {
-    Stream.of(entities).collect(Collectors.toMap(Entity::getId, Function.identity()));
-    init();
+    this.entities =
+        Stream.of(entities).collect(Collectors.toMap(Entity::getId, Function.identity()));
   }
 
-  private Entities(Collection<Entity> entities) {
-    entities.stream().collect(Collectors.toMap(Entity::getId, Function.identity()));
-    init();
-  }
-
-  private Entities(Entities entities) {
-    this(entities.getEntities());
-    this.repo = entities.getRepository();
+  public Entities deriveAdditionalProperties() {
+    for (Phenotype p : getPhenotypes()) {
+      Phenotype supP = p.getSuperPhenotype();
+      if (Phenotypes.isRestriction(p)) {
+        p.setExpression(Expressions.restrictionToExpression(p));
+        if (Phenotypes.isSingle(p) && p.getRestriction() == null)
+          p.setRestriction(Restrictions.newRestrictionFromCodes(p));
+      }
+      if (supP != null) p.setSuperPhenotype(getPhenotype(supP.getId()));
+    }
+    return this;
   }
 
   public static Entities of(Entity... entities) {
@@ -54,23 +55,31 @@ public class Entities {
     return new Entities(entities).repository(repo);
   }
 
-  public static Entities of(Entities entities1, Entity... entities2) {
-
-    Entities res = new Entities(entities1);
-    res.add(entities2);
-    return res;
+  public static Entities read(String url, String user, String password) throws IOException {
+    if (url.endsWith("entity")) return of(readEntities(url, user, password));
+    Repository repo = readRepository(url, user, password);
+    Entity[] entities = readEntities(url + "/entity", user, password);
+    return of(repo, entities);
   }
 
-  private void init() {
-    for (Phenotype p : getPhenotypes()) {
-      Phenotype supP = p.getSuperPhenotype();
-      if (Phenotypes.isRestriction(p)) {
-        p.setExpression(Expressions.restrictionToExpression(p));
-        if (Phenotypes.isSingle(p) && p.getRestriction() == null)
-          p.setRestriction(Restrictions.newRestrictionFromCodes(p));
-      }
-      if (supP != null) p.setSuperPhenotype(getPhenotype(supP.getId()));
-    }
+  public static Entity[] readEntities(String url, String user, String password) throws IOException {
+    return read(url, user, password, Entity[].class);
+  }
+
+  public static Repository readRepository(String url, String user, String password)
+      throws IOException {
+    return read(url, user, password, Repository.class);
+  }
+
+  private static <T> T read(String url, String user, String password, Class<T> cls)
+      throws IOException {
+    URLConnection uc = new URL(url).openConnection();
+    String userpass = user + ":" + password;
+    String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
+    uc.setRequestProperty("Authorization", basicAuth);
+    String text = new String(uc.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+    ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
+    return mapper.readValue(text, cls);
   }
 
   public Entities repository(Repository repo) {
@@ -88,24 +97,6 @@ public class Entities {
 
   public String getRepoDescription() {
     return repo.getDescription();
-  }
-
-  public static Entities read(String url, String user, String password) throws IOException {
-    if (url.endsWith("entity")) return of(read(url, user, password, Entity[].class));
-    Repository repo = read(url, user, password, Repository.class);
-    Entity[] entities = read(url + "/entity", user, password, Entity[].class);
-    return of(repo, entities);
-  }
-
-  private static <T> T read(String url, String user, String password, Class<T> cls)
-      throws IOException {
-    URLConnection uc = new URL(url).openConnection();
-    String userpass = user + ":" + password;
-    String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
-    uc.setRequestProperty("Authorization", basicAuth);
-    String text = new String(uc.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-    ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
-    return mapper.readValue(text, cls);
   }
 
   public Entity getEntity(String id) {
@@ -151,17 +142,8 @@ public class Entities {
     return entities.keySet();
   }
 
-  public Multimap<String, String> getIdsAndTitles() {
-    Multimap<String, String> mm = HashMultimap.create();
-    for (Phenotype p : getPhenotypes())
-      for (LocalisableText t : p.getTitles()) mm.put(p.getId(), t.getText());
-    return mm;
-  }
-
-  public Map<String, String> getIdsAndSingleTitles() {
-    Map<String, String> mm = new HashMap<>();
-    for (Phenotype p : getPhenotypes()) mm.put(p.getId(), p.getTitles().get(0).getText());
-    return mm;
+  public static String getFirstTitle(Entity e) {
+    return e.getTitles().get(0).getText();
   }
 
   public int size() {
@@ -170,6 +152,6 @@ public class Entities {
 
   @Override
   public String toString() {
-    return "PhenotypeList [entities=" + entities.values() + "]";
+    return "Entities [entities=" + entities.values() + "]";
   }
 }

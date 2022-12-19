@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.DataType;
+import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
@@ -112,7 +113,7 @@ public class SqlAdapterTest extends AbstractTest {
     }
 
     PhenotypeFinder finder =
-        new PhenotypeFinder(query, Entities.of(stringPhenotype, corrupted), adapter);
+        new PhenotypeFinder(query, new Entity[] {stringPhenotype, corrupted}, adapter);
     finder.execute();
 
     try (java.sql.ResultSet rs = adapter.executeQuery("SELECT count(*) FROM assessment1")) {

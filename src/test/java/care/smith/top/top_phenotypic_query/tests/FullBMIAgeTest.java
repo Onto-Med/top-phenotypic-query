@@ -47,7 +47,7 @@ public class FullBMIAgeTest extends AbstractTest {
     assertTrue(rs.getPhenotypes("1").hasPhenotype(female.getId()));
 
     SubjectPhenotypes phes = rs.getPhenotypes("1");
-    Set<String> phesExpected = new HashSet<>(phenotypes.getIds());
+    Set<String> phesExpected = new HashSet<>(pf.getPhenotypes().getIds());
     phesExpected.add("birthdate");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
