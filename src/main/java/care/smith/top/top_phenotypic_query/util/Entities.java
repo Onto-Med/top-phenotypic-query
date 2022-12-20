@@ -56,20 +56,18 @@ public class Entities {
     return new Entities(entities).repository(repo);
   }
 
-  public static Entities read(String url, String user, String password) throws IOException {
-    if (url.endsWith("entity")) return of(readEntities(url, user, password));
-    Repository repo = readRepository(url, user, password);
-    Entity[] entities = readEntities(url + "/entity", user, password);
-    return of(repo, entities);
+  public static Entities read(String repoUrl, String user, String password) throws IOException {
+    return of(readRepository(repoUrl, user, password), readEntities(repoUrl, user, password));
   }
 
-  public static Entity[] readEntities(String url, String user, String password) throws IOException {
-    return read(url, user, password, Entity[].class);
-  }
-
-  public static Repository readRepository(String url, String user, String password)
+  public static Entity[] readEntities(String repoUrl, String user, String password)
       throws IOException {
-    return read(url, user, password, Repository.class);
+    return read(repoUrl + "/entity", user, password, Entity[].class);
+  }
+
+  public static Repository readRepository(String repoUrl, String user, String password)
+      throws IOException {
+    return read(repoUrl, user, password, Repository.class);
   }
 
   private static <T> T read(String url, String user, String password, Class<T> cls)
