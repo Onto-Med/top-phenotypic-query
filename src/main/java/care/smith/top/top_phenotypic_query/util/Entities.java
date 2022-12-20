@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -144,6 +145,25 @@ public class Entities {
 
   public static String getFirstTitle(Entity e) {
     return e.getTitles().get(0).getText();
+  }
+
+  public static String getAllTextProperties(Entity e) {
+    String txt = toString("title", e.getTitles());
+    if (e.getSynonyms() != null && !e.getSynonyms().isEmpty())
+      txt += "|" + toString("synonym", e.getSynonyms());
+    if (e.getDescriptions() != null && !e.getDescriptions().isEmpty())
+      txt += "|" + toString("description", e.getDescriptions());
+    return txt;
+  }
+
+  private static String toString(String prop, List<LocalisableText> txts) {
+    return txts.stream().map(t -> getText(prop, t)).collect(Collectors.joining("|"));
+  }
+
+  private static String getText(String prop, LocalisableText txt) {
+    return (txt.getLang() == null)
+        ? prop + "::" + txt.getText()
+        : prop + "::" + txt.getText() + "::" + txt.getLang();
   }
 
   public int size() {
