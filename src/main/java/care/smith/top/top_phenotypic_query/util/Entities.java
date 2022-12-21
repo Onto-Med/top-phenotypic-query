@@ -147,23 +147,48 @@ public class Entities {
     return e.getTitles().get(0).getText();
   }
 
+  private static final String ANN_SEP = "|";
+  private static final String PROP_VAL_SEP = "::";
+
   public static String getAllTextProperties(Entity e) {
     String txt = toString("title", e.getTitles());
     if (e.getSynonyms() != null && !e.getSynonyms().isEmpty())
-      txt += "|" + toString("synonym", e.getSynonyms());
+      txt += ANN_SEP + toString("synonym", e.getSynonyms());
     if (e.getDescriptions() != null && !e.getDescriptions().isEmpty())
-      txt += "|" + toString("description", e.getDescriptions());
+      txt += ANN_SEP + toString("description", e.getDescriptions());
     return txt;
   }
 
-  private static String toString(String prop, List<LocalisableText> txts) {
-    return txts.stream().map(t -> getText(prop, t)).collect(Collectors.joining("|"));
+  public static void addAllTextProperties(Entity e, String props) {
+    if (props == null || props.isBlank()) return;
+    String[] anns = props.split("\\s*\\" + ANN_SEP + "\\s*");
+    for (String ann : anns) add(e, ann.split("\\s*" + PROP_VAL_SEP + "\\s*"));
   }
 
-  private static String getText(String prop, LocalisableText txt) {
+  private static String toString(String prop, List<LocalisableText> txts) {
+    return txts.stream().map(t -> toString(prop, t)).collect(Collectors.joining("|"));
+  }
+
+  private static String toString(String prop, LocalisableText txt) {
     return (txt.getLang() == null)
-        ? prop + "::" + txt.getText()
-        : prop + "::" + txt.getText() + "::" + txt.getLang();
+        ? prop + PROP_VAL_SEP + txt.getText()
+        : prop + PROP_VAL_SEP + txt.getText() + PROP_VAL_SEP + txt.getLang();
+  }
+
+  private static void add(Entity e, String[] vals) {
+    LocalisableText txt = new LocalisableText();
+
+    if (vals.length == 1) {
+      e.addTitlesItem(txt.text(vals[0]));
+      return;
+    }
+
+    txt.text(vals[1]);
+    if (vals.length > 2) txt.lang(vals[2]);
+
+    if ("title".equalsIgnoreCase(vals[0])) e.addTitlesItem(txt);
+    else if ("synonym".equalsIgnoreCase(vals[0])) e.addSynonymsItem(txt);
+    else if ("description".equalsIgnoreCase(vals[0])) e.addDescriptionsItem(txt);
   }
 
   public int size() {
