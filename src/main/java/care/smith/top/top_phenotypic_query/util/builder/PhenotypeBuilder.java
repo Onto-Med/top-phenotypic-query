@@ -108,4 +108,8 @@ public class PhenotypeBuilder {
     p.expression(e).entityType(EntityType.COMPOSITE_PHENOTYPE);
     return this;
   }
+
+  public Phenotype get() {
+    return p;
+  }
 }
