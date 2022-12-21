@@ -20,6 +20,10 @@ public class PhenotypeBuilder {
 
   private Phenotype p;
 
+  public PhenotypeBuilder(String id) {
+    p = (Phenotype) new Phenotype().id(id);
+  }
+
   public PhenotypeBuilder(String id, String codeSystem, String... codes) {
     CodeSystem sys = new CodeSystem().uri(URI.create(codeSystem));
     List<Code> codeList =
