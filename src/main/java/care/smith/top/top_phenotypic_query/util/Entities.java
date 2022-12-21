@@ -150,7 +150,7 @@ public class Entities {
   private static final String ANN_SEP = "|";
   private static final String PROP_VAL_SEP = "::";
 
-  public static String getAllTextProperties(Entity e) {
+  public static String getAnnotations(Entity e) {
     String txt = toString("title", e.getTitles());
     if (e.getSynonyms() != null && !e.getSynonyms().isEmpty())
       txt += ANN_SEP + toString("synonym", e.getSynonyms());
@@ -159,7 +159,7 @@ public class Entities {
     return txt;
   }
 
-  public static void addAllTextProperties(Entity e, String props) {
+  public static void addAnnotations(Entity e, String props) {
     if (props == null || props.isBlank()) return;
     String[] anns = props.split("\\s*\\" + ANN_SEP + "\\s*");
     for (String ann : anns) add(e, ann.split("\\s*" + PROP_VAL_SEP + "\\s*"));
