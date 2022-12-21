@@ -12,10 +12,10 @@ import care.smith.top.model.QueryCriterion;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Entities;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
-import care.smith.top.top_phenotypic_query.util.Values;
+import care.smith.top.top_phenotypic_query.util.builder.ValueBuilder;
 
 public class CompositeSearch extends PhenotypeSearch {
 
@@ -23,8 +23,7 @@ public class CompositeSearch extends PhenotypeSearch {
   private ResultSet rs;
   private Entities phenotypes;
 
-  public CompositeSearch(
-      Query query, QueryCriterion criterion, ResultSet rs, Entities phenotypes) {
+  public CompositeSearch(Query query, QueryCriterion criterion, ResultSet rs, Entities phenotypes) {
     super(query);
     this.criterion = criterion;
     this.rs = rs;
@@ -70,7 +69,7 @@ public class CompositeSearch extends PhenotypeSearch {
     if (vals != null) return vals;
     Phenotype phe = phenotypes.getPhenotype(var);
     if (Phenotypes.isSingle(phe) && Phenotypes.hasBooleanType(phe))
-      return List.of(Values.newValueFalse());
+      return List.of(ValueBuilder.ofFalse());
     Expression newExp = phe.getExpression();
     if (newExp == null) return null;
     Set<String> newVars = Expressions.getVariables(newExp, phenotypes);

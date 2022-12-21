@@ -12,6 +12,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.builder.ExpressionBuilder;
 
 public class Sum extends FunctionEntity {
 
@@ -39,6 +40,6 @@ public class Sum extends FunctionEntity {
     args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
     BigDecimal result = BigDecimal.ZERO;
     for (Expression arg : args) result = result.add(Expressions.getNumberValue(arg), mc);
-    return Expressions.newExpression(result);
+    return ExpressionBuilder.of(result);
   }
 }

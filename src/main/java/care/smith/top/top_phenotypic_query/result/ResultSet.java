@@ -11,6 +11,7 @@ import care.smith.top.top_phenotypic_query.ucum.UCUM;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
+import care.smith.top.top_phenotypic_query.util.builder.ValueBuilder;
 
 public class ResultSet extends HashMap<String, SubjectPhenotypes> {
 
@@ -62,7 +63,7 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
       String modelUnit) {
     if (sourceUnit != null && modelUnit != null && Values.hasNumberType(val))
       val =
-          Values.newValue(
+          ValueBuilder.of(
               UCUM.convert(Values.getNumberValue(val), sourceUnit, modelUnit), val.getDateTime());
     addValue(subjectId, phenotype, dateRange, val);
   }
@@ -72,7 +73,7 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
     if (val != null && Phenotypes.hasExistentialQuantifier(phenotype)) {
       List<Value> vals = getValues(subjectId, phenotype.getId(), dateRange);
       if (vals == null || vals.isEmpty())
-        addValue(subjectId, phenotype.getId(), dateRange, Values.newValueTrue());
+        addValue(subjectId, phenotype.getId(), dateRange, ValueBuilder.ofTrue());
     }
   }
 

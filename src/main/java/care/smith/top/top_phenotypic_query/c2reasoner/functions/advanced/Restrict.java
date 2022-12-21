@@ -14,9 +14,10 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
-import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
+import care.smith.top.top_phenotypic_query.util.builder.ExpressionBuilder;
+import care.smith.top.top_phenotypic_query.util.builder.ValueBuilder;
 
 public class Restrict extends FunctionEntity {
 
@@ -56,7 +57,7 @@ public class Restrict extends FunctionEntity {
       else calculateInDateSet(vals, Restrictions.getValues(r), res);
     }
 
-    return Expressions.newExpression(res);
+    return ExpressionBuilder.of(res);
   }
 
   private void calculateInNumberInterval(
@@ -70,10 +71,10 @@ public class Restrict extends FunctionEntity {
 
   private void calculateInDateInterval(
       List<Value> vals, Map<RestrictionOperator, Value> inter, List<Value> res) {
-    for (Value v : vals) if (Values.contains(inter, Values.newValue(v.getDateTime()))) res.add(v);
+    for (Value v : vals) if (Values.contains(inter, ValueBuilder.of(v.getDateTime()))) res.add(v);
   }
 
   private void calculateInDateSet(List<Value> vals, List<Value> set, List<Value> res) {
-    for (Value v : vals) if (Values.contains(set, Values.newValue(v.getDateTime()))) res.add(v);
+    for (Value v : vals) if (Values.contains(set, ValueBuilder.of(v.getDateTime()))) res.add(v);
   }
 }

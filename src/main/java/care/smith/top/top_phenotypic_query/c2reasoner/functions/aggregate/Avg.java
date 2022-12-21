@@ -11,6 +11,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.builder.ExpressionBuilder;
 
 public class Avg extends FunctionEntity {
 
@@ -38,6 +39,6 @@ public class Avg extends FunctionEntity {
     args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
     BigDecimal avg = BigDecimal.ZERO;
     for (Expression arg : args) avg = avg.add(Expressions.getNumberValue(arg), mc);
-    return Expressions.newExpression(avg.divide(new BigDecimal(args.size()), mc));
+    return ExpressionBuilder.of(avg.divide(new BigDecimal(args.size()), mc));
   }
 }

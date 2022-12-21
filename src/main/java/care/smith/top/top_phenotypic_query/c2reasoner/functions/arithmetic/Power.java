@@ -13,6 +13,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.builder.ExpressionBuilder;
 
 public class Power extends FunctionEntity {
 
@@ -56,6 +57,6 @@ public class Power extends FunctionEntity {
     if (signOf2 == -1)
       result = BigDecimal.ONE.divide(result, mc.getPrecision(), RoundingMode.HALF_UP);
 
-    return Expressions.newExpression(result);
+    return ExpressionBuilder.of(result);
   }
 }

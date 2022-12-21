@@ -11,6 +11,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.builder.ExpressionBuilder;
 
 public class Not extends FunctionEntity {
 
@@ -37,7 +38,7 @@ public class Not extends FunctionEntity {
     Expression arg = c2r.calculate(args.get(0), defaultAggregateFunction);
     arg = Aggregator.aggregate(arg, defaultAggregateFunction, c2r);
     Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
-    if (Expressions.hasValueTrue(arg)) return Expressions.newExpressionFalse();
-    return Expressions.newExpressionTrue();
+    if (Expressions.hasValueTrue(arg)) return ExpressionBuilder.ofFalse();
+    return ExpressionBuilder.ofTrue();
   }
 }

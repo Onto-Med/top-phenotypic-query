@@ -56,9 +56,9 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.DiffYe
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusDays;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusMonths;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYears;
-import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
+import care.smith.top.top_phenotypic_query.util.builder.ExpressionBuilder;
 
 public class C2R {
 
@@ -205,27 +205,27 @@ public class C2R {
   }
 
   public void setVariable(String name, Value value) {
-    variables.put(name, Expressions.newExpression(value));
+    variables.put(name, ExpressionBuilder.of(value));
   }
 
   public void setVariable(String name, Value... values) {
-    variables.put(name, Expressions.newExpression(values));
+    variables.put(name, ExpressionBuilder.of(values));
   }
 
   public void setVariable(String name, List<Value> values) {
-    variables.put(name, Expressions.newExpression(values));
+    variables.put(name, ExpressionBuilder.of(values));
   }
 
   public void setVariable(String name, Number value) {
-    setVariable(name, Expressions.newExpression(value));
+    setVariable(name, ExpressionBuilder.of(value));
   }
 
   public void setVariable(String name, NumberValue... values) {
-    setVariable(name, Expressions.newExpression(values));
+    setVariable(name, ExpressionBuilder.of(values));
   }
 
   public void setVariable(String name, Number... values) {
-    setVariable(name, Expressions.newExpression(values));
+    setVariable(name, ExpressionBuilder.of(values));
   }
 
   public String toString(Expression exp) {

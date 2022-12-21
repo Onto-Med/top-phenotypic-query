@@ -31,80 +31,12 @@ public class Values {
         }
       };
 
-  public static BigDecimal newDecimal(Number num) {
+  public static BigDecimal toDecimal(Number num) {
     return new BigDecimal(num.toString());
   }
 
-  public static List<BigDecimal> newDecimals(Number... nums) {
-    return Stream.of(nums).map(n -> newDecimal(n)).collect(Collectors.toList());
-  }
-
-  public static Value newValue(Boolean val) {
-    return new BooleanValue().value(val).dataType(DataType.BOOLEAN);
-  }
-
-  public static Value newValue(Number val) {
-    return new NumberValue().value(newDecimal(val)).dataType(DataType.NUMBER);
-  }
-
-  public static Value newValue(BigDecimal val) {
-    return new NumberValue().value(val).dataType(DataType.NUMBER);
-  }
-
-  public static Value newValue(String val) {
-    return new StringValue().value(val).dataType(DataType.STRING);
-  }
-
-  public static Value newValue(LocalDateTime val) {
-    return new DateTimeValue().value(val).dataType(DataType.DATE_TIME);
-  }
-
-  public static Value newValue(Boolean val, LocalDateTime dateTime) {
-    return newValue(val).dateTime(dateTime);
-  }
-
-  public static Value newValue(Number val, LocalDateTime dateTime) {
-    return newValue(val).dateTime(dateTime);
-  }
-
-  public static Value newValue(BigDecimal val, LocalDateTime dateTime) {
-    return newValue(val).dateTime(dateTime);
-  }
-
-  public static Value newValue(String val, LocalDateTime dateTime) {
-    return newValue(val).dateTime(dateTime);
-  }
-
-  public static Value newValue(LocalDateTime val, LocalDateTime dateTime) {
-    return newValue(val).dateTime(dateTime);
-  }
-
-  public static Value newValueTrue() {
-    return newValue(true);
-  }
-
-  public static Value newValueFalse() {
-    return newValue(false);
-  }
-
-  public static List<Value> newBooleanValues(List<Boolean> vals) {
-    return vals.stream().map(v -> newValue(v)).collect(Collectors.toList());
-  }
-
-  public static List<Value> newNumberValues(List<BigDecimal> vals) {
-    return vals.stream().map(v -> newValue(v)).collect(Collectors.toList());
-  }
-
-  public static List<Value> newStringValues(List<String> vals) {
-    return vals.stream().map(v -> newValue(v)).collect(Collectors.toList());
-  }
-
-  public static List<Value> newDateTimeValues(List<LocalDateTime> vals) {
-    return vals.stream().map(v -> newValue(v)).collect(Collectors.toList());
-  }
-
-  public static List<Value> newValues(Number... nums) {
-    return Stream.of(nums).map(n -> newValue(n)).collect(Collectors.toList());
+  public static List<BigDecimal> toDecimals(Number... nums) {
+    return Stream.of(nums).map(n -> toDecimal(n)).collect(Collectors.toList());
   }
 
   public static String toString(Value val) {
