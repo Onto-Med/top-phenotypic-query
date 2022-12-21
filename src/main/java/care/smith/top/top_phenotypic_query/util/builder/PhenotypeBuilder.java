@@ -76,14 +76,21 @@ public class PhenotypeBuilder {
     return this;
   }
 
-  public PhenotypeBuilder string() {
-    p.dataType(DataType.STRING).entityType(EntityType.SINGLE_PHENOTYPE);
+  public PhenotypeBuilder dataType(String dt) {
+    return dataType(DataType.valueOf(dt));
+  }
+
+  public PhenotypeBuilder dataType(DataType dt) {
+    p.dataType(dt).entityType(EntityType.SINGLE_PHENOTYPE);
     return this;
   }
 
+  public PhenotypeBuilder string() {
+    return dataType(DataType.STRING);
+  }
+
   public PhenotypeBuilder number() {
-    p.dataType(DataType.NUMBER).entityType(EntityType.SINGLE_PHENOTYPE);
-    return this;
+    return dataType(DataType.NUMBER);
   }
 
   public PhenotypeBuilder number(String unit) {
@@ -92,13 +99,11 @@ public class PhenotypeBuilder {
   }
 
   public PhenotypeBuilder dateTime() {
-    p.dataType(DataType.DATE_TIME).entityType(EntityType.SINGLE_PHENOTYPE);
-    return this;
+    return dataType(DataType.DATE_TIME);
   }
 
   public PhenotypeBuilder bool() {
-    p.dataType(DataType.BOOLEAN).entityType(EntityType.SINGLE_PHENOTYPE);
-    return this;
+    return dataType(DataType.BOOLEAN);
   }
 
   public PhenotypeBuilder restriction(Phenotype superPhenotype, Restriction r) {
