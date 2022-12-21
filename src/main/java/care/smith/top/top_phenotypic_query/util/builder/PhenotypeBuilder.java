@@ -77,7 +77,7 @@ public class PhenotypeBuilder {
   }
 
   public PhenotypeBuilder dataType(String dt) {
-    return dataType(DataType.valueOf(dt));
+    return dataType(DataType.fromValue(dt));
   }
 
   public PhenotypeBuilder dataType(DataType dt) {
