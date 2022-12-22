@@ -22,11 +22,6 @@ public class PhenotypeBuilder {
     codes(codeSystemUri, codes);
   }
 
-  public PhenotypeBuilder(String id, String... codeUris) {
-    p = (Phenotype) new Phenotype().id(id);
-    codes(codeUris);
-  }
-
   public PhenotypeBuilder(String id) {
     p = (Phenotype) new Phenotype().id(id);
   }
