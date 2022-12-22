@@ -48,20 +48,24 @@ public class RestrictionBuilder {
     return r.quantifier(quan).cardinality(card).type(DataType.NUMBER);
   }
 
+  public static Restriction of(RestrictionOperator oper, Number val) {
+    return of(1, Quantifier.MIN, oper, val);
+  }
+
   public static Restriction ge(Number val) {
-    return of(1, Quantifier.MIN, RestrictionOperator.GREATER_THAN_OR_EQUAL_TO, val);
+    return of(RestrictionOperator.GREATER_THAN_OR_EQUAL_TO, val);
   }
 
   public static Restriction gt(Number val) {
-    return of(1, Quantifier.MIN, RestrictionOperator.GREATER_THAN, val);
+    return of(RestrictionOperator.GREATER_THAN, val);
   }
 
   public static Restriction le(Number val) {
-    return of(1, Quantifier.MIN, RestrictionOperator.LESS_THAN_OR_EQUAL_TO, val);
+    return of(RestrictionOperator.LESS_THAN_OR_EQUAL_TO, val);
   }
 
   public static Restriction lt(Number val) {
-    return of(1, Quantifier.MIN, RestrictionOperator.LESS_THAN, val);
+    return of(RestrictionOperator.LESS_THAN, val);
   }
 
   public static Restriction of(
@@ -81,20 +85,17 @@ public class RestrictionBuilder {
         .type(DataType.NUMBER);
   }
 
+  public static Restriction of(
+      RestrictionOperator minOper, Number minVal, RestrictionOperator maxOper, Number maxVal) {
+    return of(1, Quantifier.MIN, minOper, minVal, maxOper, maxVal);
+  }
+
   public static Restriction gtLt(Number min, Number max) {
-    return of(
-        1,
-        Quantifier.MIN,
-        RestrictionOperator.GREATER_THAN,
-        min,
-        RestrictionOperator.LESS_THAN,
-        max);
+    return of(RestrictionOperator.GREATER_THAN, min, RestrictionOperator.LESS_THAN, max);
   }
 
   public static Restriction geLe(Number min, Number max) {
     return of(
-        1,
-        Quantifier.MIN,
         RestrictionOperator.GREATER_THAN_OR_EQUAL_TO,
         min,
         RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
@@ -103,22 +104,12 @@ public class RestrictionBuilder {
 
   public static Restriction gtLe(Number min, Number max) {
     return of(
-        1,
-        Quantifier.MIN,
-        RestrictionOperator.GREATER_THAN,
-        min,
-        RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
-        max);
+        RestrictionOperator.GREATER_THAN, min, RestrictionOperator.LESS_THAN_OR_EQUAL_TO, max);
   }
 
   public static Restriction geLt(Number min, Number max) {
     return of(
-        1,
-        Quantifier.MIN,
-        RestrictionOperator.GREATER_THAN_OR_EQUAL_TO,
-        min,
-        RestrictionOperator.LESS_THAN,
-        max);
+        RestrictionOperator.GREATER_THAN_OR_EQUAL_TO, min, RestrictionOperator.LESS_THAN, max);
   }
 
   public static Restriction of(Quantifier quan, Number... vals) {
