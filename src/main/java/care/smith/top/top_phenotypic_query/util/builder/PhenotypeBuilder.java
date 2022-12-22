@@ -1,9 +1,6 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import care.smith.top.model.Code;
 import care.smith.top.model.CodeSystem;
@@ -20,25 +17,40 @@ public class PhenotypeBuilder {
 
   private Phenotype p;
 
-  public PhenotypeBuilder(String id) {
+  public PhenotypeBuilder(String id, String codeSystemUri, String... codes) {
     p = (Phenotype) new Phenotype().id(id);
-  }
-
-  public PhenotypeBuilder(String id, String codeSystem, String... codes) {
-    CodeSystem sys = new CodeSystem().uri(URI.create(codeSystem));
-    List<Code> codeList =
-        Stream.of(codes).map(c -> new Code().code(c).codeSystem(sys)).collect(Collectors.toList());
-    p = (Phenotype) new Phenotype().id(id).codes(codeList);
+    codes(codeSystemUri, codes);
   }
 
   public PhenotypeBuilder(String id, String... codeUris) {
     p = (Phenotype) new Phenotype().id(id);
-    for (String cu : codeUris) {
-      String[] sysCode = cu.split("\\s*\\|\\s*");
-      CodeSystem sys = new CodeSystem().uri(URI.create(sysCode[0]));
-      Code code = new Code().code(sysCode[1]).codeSystem(sys);
-      p.addCodesItem(code);
-    }
+    codes(codeUris);
+  }
+
+  public PhenotypeBuilder(String id) {
+    p = (Phenotype) new Phenotype().id(id);
+  }
+
+  public PhenotypeBuilder code(String codeSystemUri, String code) {
+    CodeSystem s = new CodeSystem().uri(URI.create(codeSystemUri));
+    Code c = new Code().code(code).codeSystem(s);
+    p.addCodesItem(c);
+    return this;
+  }
+
+  public PhenotypeBuilder code(String codeUri) {
+    String[] sysCode = codeUri.split("\\s*\\|\\s*");
+    return code(sysCode[0], sysCode[1]);
+  }
+
+  public PhenotypeBuilder codes(String codeSystemUri, String... codes) {
+    for (String code : codes) code(codeSystemUri, code);
+    return this;
+  }
+
+  public PhenotypeBuilder codes(String... codeUris) {
+    for (String codeUri : codeUris) code(codeUri);
+    return this;
   }
 
   public PhenotypeBuilder title(String txt) {
