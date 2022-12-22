@@ -18,8 +18,8 @@ import care.smith.top.top_phenotypic_query.search.CompositeSearch;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
-import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
-import care.smith.top.top_phenotypic_query.util.builder.ValBuild;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import care.smith.top.top_phenotypic_query.util.builder.Val;
 
 public class BMIAgeTest extends AbstractTest {
 
@@ -48,7 +48,7 @@ public class BMIAgeTest extends AbstractTest {
             overWeight);
 
     for (Phenotype p : phenotypes.getPhenotypes()) {
-      if (Phenotypes.isRestriction(p)) p.setExpression(ExpBuild.ofRestriction(p));
+      if (Phenotypes.isRestriction(p)) p.setExpression(Exp.ofRestriction(p));
     }
 
     ResultSet initialRS = getResultSet();
@@ -76,18 +76,18 @@ public class BMIAgeTest extends AbstractTest {
 
   private static ResultSet getResultSet() {
     PhenotypeValues weightVals1 = new PhenotypeValues("Weight");
-    weightVals1.setValues(getDTR(2000), ValBuild.of(75));
+    weightVals1.setValues(getDTR(2000), Val.of(75));
     PhenotypeValues heightVals1 = new PhenotypeValues("Height");
-    heightVals1.setValues(getDTR(2000), ValBuild.of(1.70));
+    heightVals1.setValues(getDTR(2000), Val.of(1.70));
     PhenotypeValues ageVals1 = new PhenotypeValues("Age");
-    ageVals1.setValues(getDTR(2000), ValBuild.of(20));
+    ageVals1.setValues(getDTR(2000), Val.of(20));
 
     PhenotypeValues weightVals2 = new PhenotypeValues("Weight");
-    weightVals2.setValues(getDTR(2000), ValBuild.of(85));
+    weightVals2.setValues(getDTR(2000), Val.of(85));
     PhenotypeValues heightVals2 = new PhenotypeValues("Height");
-    heightVals2.setValues(getDTR(2000), ValBuild.of(1.80));
+    heightVals2.setValues(getDTR(2000), Val.of(1.80));
     PhenotypeValues ageVals2 = new PhenotypeValues("Age");
-    ageVals2.setValues(getDTR(2000), ValBuild.of(40));
+    ageVals2.setValues(getDTR(2000), Val.of(40));
 
     SubjectPhenotypes phes1 = new SubjectPhenotypes("Subject1");
     phes1.setValues(weightVals1, heightVals1, ageVals1);

@@ -11,7 +11,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class And extends FunctionEntity {
 
@@ -40,6 +40,6 @@ public class And extends FunctionEntity {
       Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
       if (Expressions.hasValueFalse(arg)) return arg;
     }
-    return ExpBuild.ofTrue();
+    return Exp.ofTrue();
   }
 }

@@ -9,7 +9,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
-import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class Date extends FunctionEntity {
 
@@ -35,6 +35,6 @@ public class Date extends FunctionEntity {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     Expression arg = c2r.calculate(args.get(0), defaultAggregateFunction);
     arg = Aggregator.aggregate(arg, defaultAggregateFunction, c2r);
-    return ExpBuild.of(arg.getValue().getDateTime());
+    return Exp.of(arg.getValue().getDateTime());
   }
 }

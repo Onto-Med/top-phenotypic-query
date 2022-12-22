@@ -8,7 +8,7 @@ import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
-import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class Count extends FunctionEntity {
 
@@ -34,6 +34,6 @@ public class Count extends FunctionEntity {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     Expression arg = c2r.calculate(args.get(0), defaultAggregateFunction);
     Exceptions.checkArgumentHasValues(getFunction(), arg);
-    return ExpBuild.of(arg.getValues().size());
+    return Exp.of(arg.getValues().size());
   }
 }

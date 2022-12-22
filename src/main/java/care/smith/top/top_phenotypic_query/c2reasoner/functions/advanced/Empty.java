@@ -9,7 +9,7 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
-import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class Empty extends FunctionEntity {
 
@@ -36,6 +36,6 @@ public class Empty extends FunctionEntity {
     Expression arg = args.get(0);
     Value val = arg.getValue();
     List<Value> vals = arg.getValues();
-    return ExpBuild.of(val == null && (vals == null || vals.isEmpty()));
+    return Exp.of(val == null && (vals == null || vals.isEmpty()));
   }
 }

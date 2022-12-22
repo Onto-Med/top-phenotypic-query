@@ -10,7 +10,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Values;
-import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class Lt extends FunctionEntity {
 
@@ -37,6 +37,6 @@ public class Lt extends FunctionEntity {
     args = c2r.calculate(args, defaultAggregateFunction);
     Exceptions.checkArgumentsHaveSameType(getFunction(), args);
     args = Aggregator.aggregate(args, defaultAggregateFunction, c2r);
-    return ExpBuild.of(Values.compare(args.get(0).getValue(), args.get(1).getValue()) < 0);
+    return Exp.of(Values.compare(args.get(0).getValue(), args.get(1).getValue()) < 0);
   }
 }

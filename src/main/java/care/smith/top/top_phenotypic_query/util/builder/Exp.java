@@ -11,7 +11,7 @@ import care.smith.top.model.Restriction;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
-public class ExpBuild {
+public class Exp {
 
   public static Expression of(Phenotype p) {
     return ofEntity(p.getId());
@@ -42,23 +42,23 @@ public class ExpBuild {
   }
 
   public static Expression of(Number val, LocalDateTime dateTime) {
-    return of(ValBuild.of(val, dateTime));
+    return of(Val.of(val, dateTime));
   }
 
   public static Expression of(Number val) {
-    return of(ValBuild.of(val));
+    return of(Val.of(val));
   }
 
   public static Expression of(Number... numbers) {
-    return of(ValBuild.of(numbers));
+    return of(Val.of(numbers));
   }
 
   public static Expression of(Boolean val) {
-    return of(ValBuild.of(val));
+    return of(Val.of(val));
   }
 
   public static Expression of(LocalDateTime val) {
-    return of(ValBuild.of(val));
+    return of(Val.of(val));
   }
 
   public static List<Expression> toList(List<Value> vals) {
@@ -70,11 +70,11 @@ public class ExpBuild {
   }
 
   public static Expression ofTrue() {
-    return of(ValBuild.ofTrue());
+    return of(Val.ofTrue());
   }
 
   public static Expression ofFalse() {
-    return of(ValBuild.ofFalse());
+    return of(Val.ofFalse());
   }
 
   public static Expression ofRestriction(Phenotype p) {

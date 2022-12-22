@@ -11,7 +11,7 @@ import care.smith.top.model.Expression;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.util.Values;
-import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class Aggregator {
 
@@ -31,14 +31,14 @@ public class Aggregator {
   }
 
   private static List<Expression> argToList(Expression arg) {
-    if (arg.getValues() != null) return ExpBuild.toList(arg.getValues());
+    if (arg.getValues() != null) return Exp.toList(arg.getValues());
     return List.of(arg);
   }
 
   public static Expression aggregate(Expression arg, FunctionEntity function, C2R c2r) {
     if (arg.getValues() == null || arg.getValues().isEmpty()) return arg;
     else {
-      Expression ag = function.calculate(ExpBuild.toList(arg.getValues()), function, c2r);
+      Expression ag = function.calculate(Exp.toList(arg.getValues()), function, c2r);
       log.debug(
           "aggregate: {} = {}",
           function.toStringValues(arg.getValues()),
@@ -50,7 +50,7 @@ public class Aggregator {
   public static List<Expression> flatten(List<Expression> args) {
     List<Expression> vals = new ArrayList<>();
     for (Expression arg : args) {
-      if (arg.getValues() != null) vals.addAll(ExpBuild.toList(arg.getValues()));
+      if (arg.getValues() != null) vals.addAll(Exp.toList(arg.getValues()));
       else vals.add(arg);
     }
     return vals;

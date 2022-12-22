@@ -26,23 +26,23 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Min;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
-import care.smith.top.top_phenotypic_query.util.builder.ResBuild;
-import care.smith.top.top_phenotypic_query.util.builder.ValBuild;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import care.smith.top.top_phenotypic_query.util.builder.Res;
+import care.smith.top.top_phenotypic_query.util.builder.Val;
 
 public class C2RTest {
 
   @Test
   public void testRestrict1() {
-    Value v1 = ValBuild.of(5, DateUtil.parse("2000-01-01"));
-    Value v2 = ValBuild.of(10, DateUtil.parse("2001-01-01"));
-    Value v3 = ValBuild.of(15, DateUtil.parse("2002-01-01"));
-    Value v4 = ValBuild.of(8, DateUtil.parse("2003-01-01"));
-    Expression vals = ExpBuild.of(v1, v2, v3, v4);
+    Value v1 = Val.of(5, DateUtil.parse("2000-01-01"));
+    Value v2 = Val.of(10, DateUtil.parse("2001-01-01"));
+    Value v3 = Val.of(15, DateUtil.parse("2002-01-01"));
+    Value v4 = Val.of(8, DateUtil.parse("2003-01-01"));
+    Expression vals = Exp.of(v1, v2, v3, v4);
 
     Expression rest =
-        ExpBuild.of(
-            ResBuild.of(
+        Exp.of(
+            Res.of(
                 null,
                 RestrictionOperator.GREATER_THAN_OR_EQUAL_TO,
                 5,
@@ -60,15 +60,15 @@ public class C2RTest {
 
   @Test
   public void testRestrict2() {
-    Value v1 = ValBuild.of(5, DateUtil.parse("2000-01-01"));
-    Value v2 = ValBuild.of(10, DateUtil.parse("2001-01-01"));
-    Value v3 = ValBuild.of(15, DateUtil.parse("2002-01-01"));
-    Value v4 = ValBuild.of(8, DateUtil.parse("2003-01-01"));
-    Expression vals = ExpBuild.of(v1, v2, v3, v4);
+    Value v1 = Val.of(5, DateUtil.parse("2000-01-01"));
+    Value v2 = Val.of(10, DateUtil.parse("2001-01-01"));
+    Value v3 = Val.of(15, DateUtil.parse("2002-01-01"));
+    Value v4 = Val.of(8, DateUtil.parse("2003-01-01"));
+    Expression vals = Exp.of(v1, v2, v3, v4);
 
     Expression rest =
-        ExpBuild.of(
-            ResBuild.of(
+        Exp.of(
+            Res.of(
                 null,
                 RestrictionOperator.GREATER_THAN_OR_EQUAL_TO,
                 DateUtil.parse("2001-01-01"),
@@ -86,8 +86,8 @@ public class C2RTest {
 
   @Test
   public void testNot() {
-    Expression v1 = ExpBuild.ofFalse();
-    Expression v2 = ExpBuild.ofTrue();
+    Expression v1 = Exp.ofFalse();
+    Expression v2 = Exp.ofTrue();
 
     C2R c = new C2R();
     Expression e = new Expression().functionId("not").addArgumentsItem(v1);
@@ -99,9 +99,9 @@ public class C2RTest {
 
   @Test
   public void testOr() {
-    Expression v1 = ExpBuild.ofFalse();
-    Expression v2 = ExpBuild.ofTrue();
-    Expression v3 = ExpBuild.ofFalse();
+    Expression v1 = Exp.ofFalse();
+    Expression v2 = Exp.ofTrue();
+    Expression v3 = Exp.ofFalse();
 
     C2R c = new C2R();
     Expression e =
@@ -118,9 +118,9 @@ public class C2RTest {
 
   @Test
   public void testAnd() {
-    Expression v1 = ExpBuild.ofTrue();
-    Expression v2 = ExpBuild.ofFalse();
-    Expression v3 = ExpBuild.ofTrue();
+    Expression v1 = Exp.ofTrue();
+    Expression v2 = Exp.ofFalse();
+    Expression v3 = Exp.ofTrue();
 
     C2R c = new C2R();
     Expression e =
@@ -137,10 +137,10 @@ public class C2RTest {
 
   @Test
   public void testMinTrue() {
-    Expression minTrue = ExpBuild.of(2);
-    Expression v1 = ExpBuild.ofTrue();
-    Expression v2 = ExpBuild.ofFalse();
-    Expression v3 = ExpBuild.ofTrue();
+    Expression minTrue = Exp.of(2);
+    Expression v1 = Exp.ofTrue();
+    Expression v2 = Exp.ofFalse();
+    Expression v3 = Exp.ofTrue();
 
     C2R c = new C2R();
     Expression e =
@@ -163,13 +163,13 @@ public class C2RTest {
 
   @Test
   public void testSwitch() {
-    Expression s1 = ExpBuild.of(1);
-    Expression s2 = ExpBuild.of(2);
-    Expression s3 = ExpBuild.of(3);
-    Expression d = ExpBuild.of(-1);
+    Expression s1 = Exp.of(1);
+    Expression s2 = Exp.of(2);
+    Expression s3 = Exp.of(3);
+    Expression d = Exp.of(-1);
 
-    Expression v1 = ExpBuild.of(5);
-    Expression v2 = ExpBuild.of(10);
+    Expression v1 = Exp.of(5);
+    Expression v2 = Exp.of(10);
 
     C2R c = new C2R();
 
@@ -223,98 +223,98 @@ public class C2RTest {
     Expression e =
         new Expression()
             .functionId("eq")
-            .addArgumentsItem(ExpBuild.of(3))
-            .addArgumentsItem(ExpBuild.of(5));
+            .addArgumentsItem(Exp.of(3))
+            .addArgumentsItem(Exp.of(5));
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
 
     e =
         new Expression()
             .functionId("eq")
-            .addArgumentsItem(ExpBuild.of(3))
-            .addArgumentsItem(ExpBuild.of(3));
+            .addArgumentsItem(Exp.of(3))
+            .addArgumentsItem(Exp.of(3));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
     e =
         new Expression()
             .functionId("ne")
-            .addArgumentsItem(ExpBuild.of(5))
-            .addArgumentsItem(ExpBuild.of(3));
+            .addArgumentsItem(Exp.of(5))
+            .addArgumentsItem(Exp.of(3));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
     e =
         new Expression()
             .functionId("ne")
-            .addArgumentsItem(ExpBuild.of(3))
-            .addArgumentsItem(ExpBuild.of(3));
+            .addArgumentsItem(Exp.of(3))
+            .addArgumentsItem(Exp.of(3));
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
 
     e =
         new Expression()
             .functionId("lt")
-            .addArgumentsItem(ExpBuild.of(3))
-            .addArgumentsItem(ExpBuild.of(5));
+            .addArgumentsItem(Exp.of(3))
+            .addArgumentsItem(Exp.of(5));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
     e =
         new Expression()
             .functionId("lt")
-            .addArgumentsItem(ExpBuild.of(3))
-            .addArgumentsItem(ExpBuild.of(3));
+            .addArgumentsItem(Exp.of(3))
+            .addArgumentsItem(Exp.of(3));
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
 
     e =
         new Expression()
             .functionId("le")
-            .addArgumentsItem(ExpBuild.of(3))
-            .addArgumentsItem(ExpBuild.of(5));
+            .addArgumentsItem(Exp.of(3))
+            .addArgumentsItem(Exp.of(5));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
     e =
         new Expression()
             .functionId("le")
-            .addArgumentsItem(ExpBuild.of(3))
-            .addArgumentsItem(ExpBuild.of(3));
+            .addArgumentsItem(Exp.of(3))
+            .addArgumentsItem(Exp.of(3));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
     e =
         new Expression()
             .functionId("le")
-            .addArgumentsItem(ExpBuild.of(3))
-            .addArgumentsItem(ExpBuild.of(2));
+            .addArgumentsItem(Exp.of(3))
+            .addArgumentsItem(Exp.of(2));
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
     e =
         new Expression()
             .functionId("gt")
-            .addArgumentsItem(ExpBuild.of(5))
-            .addArgumentsItem(ExpBuild.of(3));
+            .addArgumentsItem(Exp.of(5))
+            .addArgumentsItem(Exp.of(3));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
     e =
         new Expression()
             .functionId("gt")
-            .addArgumentsItem(ExpBuild.of(3))
-            .addArgumentsItem(ExpBuild.of(3));
+            .addArgumentsItem(Exp.of(3))
+            .addArgumentsItem(Exp.of(3));
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
 
     e =
         new Expression()
             .functionId("ge")
-            .addArgumentsItem(ExpBuild.of(5))
-            .addArgumentsItem(ExpBuild.of(3));
+            .addArgumentsItem(Exp.of(5))
+            .addArgumentsItem(Exp.of(3));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
     e =
         new Expression()
             .functionId("ge")
-            .addArgumentsItem(ExpBuild.of(3))
-            .addArgumentsItem(ExpBuild.of(3));
+            .addArgumentsItem(Exp.of(3))
+            .addArgumentsItem(Exp.of(3));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
     e =
         new Expression()
             .functionId("ge")
-            .addArgumentsItem(ExpBuild.of(2))
-            .addArgumentsItem(ExpBuild.of(3));
+            .addArgumentsItem(Exp.of(2))
+            .addArgumentsItem(Exp.of(3));
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
   }
 
@@ -324,9 +324,9 @@ public class C2RTest {
     Expression e =
         new Expression()
             .functionId("avg")
-            .addArgumentsItem(ExpBuild.of(3))
-            .addArgumentsItem(ExpBuild.of(5))
-            .addArgumentsItem(ExpBuild.of(10));
+            .addArgumentsItem(Exp.of(3))
+            .addArgumentsItem(Exp.of(5))
+            .addArgumentsItem(Exp.of(10));
 
     assertEquals(
         new BigDecimal("6.00"),
@@ -336,9 +336,9 @@ public class C2RTest {
     e =
         new Expression()
             .functionId("avg")
-            .addArgumentsItem(ExpBuild.of(2, 3, 4))
-            .addArgumentsItem(ExpBuild.of(5))
-            .addArgumentsItem(ExpBuild.of(10));
+            .addArgumentsItem(Exp.of(2, 3, 4))
+            .addArgumentsItem(Exp.of(5))
+            .addArgumentsItem(Exp.of(10));
 
     assertEquals(
         new BigDecimal("6.00"),
@@ -352,12 +352,12 @@ public class C2RTest {
         new Expression()
             .functionId("avg")
             .addArgumentsItem(new Expression().entityId("a"))
-            .addArgumentsItem(ExpBuild.of(5));
+            .addArgumentsItem(Exp.of(5));
 
-    Value a1 = ValBuild.of(12, LocalDateTime.parse("2020-01-02T00:00"));
-    Value a2 = ValBuild.of(3, LocalDateTime.parse("2021-01-02T00:00"));
-    Value a3 = ValBuild.of(10, LocalDateTime.parse("2022-01-02T00:00"));
-    Value a4 = ValBuild.of(7, LocalDateTime.parse("2019-01-02T00:00"));
+    Value a1 = Val.of(12, LocalDateTime.parse("2020-01-02T00:00"));
+    Value a2 = Val.of(3, LocalDateTime.parse("2021-01-02T00:00"));
+    Value a3 = Val.of(10, LocalDateTime.parse("2022-01-02T00:00"));
+    Value a4 = Val.of(7, LocalDateTime.parse("2019-01-02T00:00"));
 
     c.setVariable("a", a1, a2, a3, a4);
 
@@ -381,10 +381,10 @@ public class C2RTest {
     Expression e =
         new Expression().functionId("avg").addArgumentsItem(new Expression().entityId("a"));
 
-    Value a1 = ValBuild.of(12, LocalDateTime.parse("2020-01-02T00:00"));
-    Value a2 = ValBuild.of(3, LocalDateTime.parse("2021-01-02T00:00"));
-    Value a3 = ValBuild.of(10, LocalDateTime.parse("2022-01-02T00:00"));
-    Value a4 = ValBuild.of(7, LocalDateTime.parse("2019-01-02T00:00"));
+    Value a1 = Val.of(12, LocalDateTime.parse("2020-01-02T00:00"));
+    Value a2 = Val.of(3, LocalDateTime.parse("2021-01-02T00:00"));
+    Value a3 = Val.of(10, LocalDateTime.parse("2022-01-02T00:00"));
+    Value a4 = Val.of(7, LocalDateTime.parse("2019-01-02T00:00"));
 
     c.setVariable("a", a1, a2, a3, a4);
 
@@ -408,9 +408,9 @@ public class C2RTest {
     Expression e =
         new Expression()
             .functionId("min")
-            .addArgumentsItem(ExpBuild.of(5))
-            .addArgumentsItem(ExpBuild.of(3))
-            .addArgumentsItem(ExpBuild.of(10));
+            .addArgumentsItem(Exp.of(5))
+            .addArgumentsItem(Exp.of(3))
+            .addArgumentsItem(Exp.of(10));
     assertEquals(
         new BigDecimal("3.00"),
         Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
@@ -422,9 +422,9 @@ public class C2RTest {
     Expression e =
         new Expression()
             .functionId("max")
-            .addArgumentsItem(ExpBuild.of(5))
-            .addArgumentsItem(ExpBuild.of(13))
-            .addArgumentsItem(ExpBuild.of(10));
+            .addArgumentsItem(Exp.of(5))
+            .addArgumentsItem(Exp.of(13))
+            .addArgumentsItem(Exp.of(10));
     assertEquals(
         new BigDecimal("13.00"),
         Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
@@ -510,14 +510,14 @@ public class C2RTest {
     Expression e =
         new Expression()
             .functionId("diffYears")
-            .addArgumentsItem(ExpBuild.of(DateUtil.parse("1990-08-10")))
-            .addArgumentsItem(ExpBuild.of(DateUtil.parse("2030-06-16")));
+            .addArgumentsItem(Exp.of(DateUtil.parse("1990-08-10")))
+            .addArgumentsItem(Exp.of(DateUtil.parse("2030-06-16")));
     assertEquals(39, Expressions.getNumberValue(c.calculate(e)).intValue());
 
     e =
         new Expression()
             .functionId("diffYears")
-            .addArgumentsItem(ExpBuild.of(DateUtil.parse("1990-08-10")))
+            .addArgumentsItem(Exp.of(DateUtil.parse("1990-08-10")))
             .addArgumentsItem(new Expression().constantId("now"));
     assertEquals(
         DateUtil.getPeriodInYears(DateUtil.parse("1990-08-10")).intValue(),
@@ -530,8 +530,8 @@ public class C2RTest {
     Expression e =
         new Expression()
             .functionId("plusYears")
-            .addArgumentsItem(ExpBuild.of(DateUtil.parse("1990-08-10")))
-            .addArgumentsItem(ExpBuild.of(2));
+            .addArgumentsItem(Exp.of(DateUtil.parse("1990-08-10")))
+            .addArgumentsItem(Exp.of(2));
     assertEquals(DateUtil.parse("1992-08-10"), Expressions.getDateTimeValue(c.calculate(e)));
   }
 
@@ -541,68 +541,68 @@ public class C2RTest {
     Expression e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(2, 10))
-            .addArgumentsItem(ExpBuild.of(5, 6, 7));
+            .addArgumentsItem(Exp.of(2, 10))
+            .addArgumentsItem(Exp.of(5, 6, 7));
     assertTrue(Expressions.getBooleanValue(c.calculate(e, Avg.get())));
 
     c = new C2R();
     e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(2, 10))
-            .addArgumentsItem(ExpBuild.of(5, 7));
+            .addArgumentsItem(Exp.of(2, 10))
+            .addArgumentsItem(Exp.of(5, 7));
     assertFalse(Expressions.getBooleanValue(c.calculate(e, Avg.get())));
 
     c = new C2R();
     e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(1, 2))
-            .addArgumentsItem(ExpBuild.of(ResBuild.of(Quantifier.ALL, 1, 2, 3)));
+            .addArgumentsItem(Exp.of(1, 2))
+            .addArgumentsItem(Exp.of(Res.of(Quantifier.ALL, 1, 2, 3)));
     assertTrue(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
     e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(1, 2, 4))
-            .addArgumentsItem(ExpBuild.of(ResBuild.of(Quantifier.ALL, 1, 2, 3)));
+            .addArgumentsItem(Exp.of(1, 2, 4))
+            .addArgumentsItem(Exp.of(Res.of(Quantifier.ALL, 1, 2, 3)));
     assertFalse(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
     e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(5, 6, 2))
+            .addArgumentsItem(Exp.of(5, 6, 2))
             .addArgumentsItem(
-                ExpBuild.of(ResBuild.of(1, Quantifier.MIN, 1, 2, 3)));
+                Exp.of(Res.of(1, Quantifier.MIN, 1, 2, 3)));
     assertTrue(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
     e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(5, 6, 7))
+            .addArgumentsItem(Exp.of(5, 6, 7))
             .addArgumentsItem(
-                ExpBuild.of(ResBuild.of(1, Quantifier.MIN, 1, 2, 3)));
+                Exp.of(Res.of(1, Quantifier.MIN, 1, 2, 3)));
     assertFalse(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
     e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(5, 6, 2))
+            .addArgumentsItem(Exp.of(5, 6, 2))
             .addArgumentsItem(
-                ExpBuild.of(ResBuild.of(2, Quantifier.MIN, 1, 2, 3)));
+                Exp.of(Res.of(2, Quantifier.MIN, 1, 2, 3)));
     assertFalse(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
     e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(5, 1, 2))
+            .addArgumentsItem(Exp.of(5, 1, 2))
             .addArgumentsItem(
-                ExpBuild.of(ResBuild.of(2, Quantifier.MIN, 1, 2, 3)));
+                Exp.of(Res.of(2, Quantifier.MIN, 1, 2, 3)));
     assertTrue(Expressions.getBooleanValue(c.calculate(e)));
   }
 
@@ -612,10 +612,10 @@ public class C2RTest {
     Expression e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(11, 20))
+            .addArgumentsItem(Exp.of(11, 20))
             .addArgumentsItem(
-                ExpBuild.of(
-                    ResBuild.of(
+                Exp.of(
+                    Res.of(
                         Quantifier.ALL,
                         RestrictionOperator.GREATER_THAN,
                         10,
@@ -627,10 +627,10 @@ public class C2RTest {
     e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(11, 21))
+            .addArgumentsItem(Exp.of(11, 21))
             .addArgumentsItem(
-                ExpBuild.of(
-                    ResBuild.of(
+                Exp.of(
+                    Res.of(
                         Quantifier.ALL,
                         RestrictionOperator.GREATER_THAN,
                         10,
@@ -642,10 +642,10 @@ public class C2RTest {
     e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(11, 21))
+            .addArgumentsItem(Exp.of(11, 21))
             .addArgumentsItem(
-                ExpBuild.of(
-                    ResBuild.of(
+                Exp.of(
+                    Res.of(
                         1,
                         Quantifier.MIN,
                         RestrictionOperator.GREATER_THAN,
@@ -658,10 +658,10 @@ public class C2RTest {
     e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(10, 21))
+            .addArgumentsItem(Exp.of(10, 21))
             .addArgumentsItem(
-                ExpBuild.of(
-                    ResBuild.of(
+                Exp.of(
+                    Res.of(
                         1,
                         Quantifier.MIN,
                         RestrictionOperator.GREATER_THAN,
@@ -674,10 +674,10 @@ public class C2RTest {
     e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(15, 6, 21))
+            .addArgumentsItem(Exp.of(15, 6, 21))
             .addArgumentsItem(
-                ExpBuild.of(
-                    ResBuild.of(
+                Exp.of(
+                    Res.of(
                         2,
                         Quantifier.MIN,
                         RestrictionOperator.GREATER_THAN,
@@ -690,10 +690,10 @@ public class C2RTest {
     e =
         new Expression()
             .functionId("in")
-            .addArgumentsItem(ExpBuild.of(15, 6, 20))
+            .addArgumentsItem(Exp.of(15, 6, 20))
             .addArgumentsItem(
-                ExpBuild.of(
-                    ResBuild.of(
+                Exp.of(
+                    Res.of(
                         2,
                         Quantifier.MIN,
                         RestrictionOperator.GREATER_THAN,

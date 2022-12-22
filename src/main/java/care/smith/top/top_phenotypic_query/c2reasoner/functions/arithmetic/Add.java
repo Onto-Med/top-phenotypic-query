@@ -12,7 +12,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class Add extends FunctionEntity {
 
@@ -42,6 +42,6 @@ public class Add extends FunctionEntity {
     BigDecimal arg1 = Expressions.getNumberValue(args.get(0));
     BigDecimal arg2 = Expressions.getNumberValue(args.get(1));
     BigDecimal sum = arg1.add(arg2, mc);
-    return ExpBuild.of(sum);
+    return Exp.of(sum);
   }
 }

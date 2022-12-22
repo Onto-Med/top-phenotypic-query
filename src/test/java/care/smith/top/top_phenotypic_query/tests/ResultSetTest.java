@@ -11,25 +11,25 @@ import org.junit.jupiter.api.Test;
 import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
-import care.smith.top.top_phenotypic_query.util.builder.ValBuild;
+import care.smith.top.top_phenotypic_query.util.builder.Val;
 
 public class ResultSetTest extends AbstractTest {
 
   @Test
   public void testValues() {
     PhenotypeValues weightVals1 = new PhenotypeValues("Weight");
-    weightVals1.setValues(getDTR(2001), ValBuild.of(75));
+    weightVals1.setValues(getDTR(2001), Val.of(75));
     PhenotypeValues heightVals1 = new PhenotypeValues("Height");
-    heightVals1.setValues(getDTR(2001), ValBuild.of(1.7));
+    heightVals1.setValues(getDTR(2001), Val.of(1.7));
     PhenotypeValues ageVals1 = new PhenotypeValues("Age");
-    ageVals1.setValues(getDTR(2001), ValBuild.of(20));
+    ageVals1.setValues(getDTR(2001), Val.of(20));
 
     PhenotypeValues weightVals2 = new PhenotypeValues("Weight");
-    weightVals2.setValues(getDTR(2001), ValBuild.of(80));
+    weightVals2.setValues(getDTR(2001), Val.of(80));
     PhenotypeValues heightVals2 = new PhenotypeValues("Height");
-    heightVals2.setValues(getDTR(2001), ValBuild.of(1.6));
+    heightVals2.setValues(getDTR(2001), Val.of(1.6));
     PhenotypeValues ageVals2 = new PhenotypeValues("Age");
-    ageVals2.setValues(getDTR(2001), ValBuild.of(40));
+    ageVals2.setValues(getDTR(2001), Val.of(40));
 
     SubjectPhenotypes phes1 = new SubjectPhenotypes("Subject1");
     phes1.setValues(weightVals1, heightVals1, ageVals1);
@@ -145,37 +145,37 @@ public class ResultSetTest extends AbstractTest {
 
   private static PhenotypeValues getPhenotype1() {
     PhenotypeValues pv = new PhenotypeValues("P1");
-    pv.setValues(getDTR(2000), ValBuild.of(1), ValBuild.of(2), ValBuild.of(3));
-    pv.setValues(getDTR(2001), ValBuild.of(4), ValBuild.of(5), ValBuild.of(6));
+    pv.setValues(getDTR(2000), Val.of(1), Val.of(2), Val.of(3));
+    pv.setValues(getDTR(2001), Val.of(4), Val.of(5), Val.of(6));
     return pv;
   }
 
   private static PhenotypeValues getPhenotype2() {
     PhenotypeValues pv = new PhenotypeValues("P2");
-    pv.setValues(getDTR(2002), ValBuild.of(7), ValBuild.of(8), ValBuild.of(9));
-    pv.setValues(getDTR(2003), ValBuild.of(10), ValBuild.of(11), ValBuild.of(12));
+    pv.setValues(getDTR(2002), Val.of(7), Val.of(8), Val.of(9));
+    pv.setValues(getDTR(2003), Val.of(10), Val.of(11), Val.of(12));
     return pv;
   }
 
   private static PhenotypeValues getPhenotype3() {
     PhenotypeValues pv = new PhenotypeValues("P3");
-    pv.setValues(getDTR(2004), ValBuild.of(13), ValBuild.of(14), ValBuild.of(15));
-    pv.setValues(getDTR(2005), ValBuild.of(16), ValBuild.of(17), ValBuild.of(18));
+    pv.setValues(getDTR(2004), Val.of(13), Val.of(14), Val.of(15));
+    pv.setValues(getDTR(2005), Val.of(16), Val.of(17), Val.of(18));
     return pv;
   }
 
   private static PhenotypeValues getPhenotype3b() {
     PhenotypeValues pv = new PhenotypeValues("P3");
-    pv.setValues(getDTR(2004), ValBuild.of(13), ValBuild.of(14), ValBuild.of(15));
-    pv.setValues(getDTR(2008), ValBuild.of(25), ValBuild.of(26), ValBuild.of(27));
-    pv.setValues(getDTR(2009), ValBuild.of(28), ValBuild.of(29), ValBuild.of(30));
+    pv.setValues(getDTR(2004), Val.of(13), Val.of(14), Val.of(15));
+    pv.setValues(getDTR(2008), Val.of(25), Val.of(26), Val.of(27));
+    pv.setValues(getDTR(2009), Val.of(28), Val.of(29), Val.of(30));
     return pv;
   }
 
   private static PhenotypeValues getPhenotype4() {
     PhenotypeValues pv = new PhenotypeValues("P4");
-    pv.setValues(getDTR(2006), ValBuild.of(19), ValBuild.of(20), ValBuild.of(21));
-    pv.setValues(getDTR(2007), ValBuild.of(22), ValBuild.of(23), ValBuild.of(24));
+    pv.setValues(getDTR(2006), Val.of(19), Val.of(20), Val.of(21));
+    pv.setValues(getDTR(2007), Val.of(22), Val.of(23), Val.of(24));
     return pv;
   }
 }

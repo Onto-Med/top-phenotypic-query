@@ -18,7 +18,7 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
-import care.smith.top.top_phenotypic_query.util.builder.ValBuild;
+import care.smith.top.top_phenotypic_query.util.builder.Val;
 
 public class FHIRAdapter extends DataAdapter {
 
@@ -50,18 +50,18 @@ public class FHIRAdapter extends DataAdapter {
       Value val = null;
       if (Phenotypes.hasDateTimeType(phe))
         val =
-            ValBuild.of(
+            Val.of(
                 FHIRUtil.getDate(client.evaluateFHIRPath(res, out.getDatePhenotype())), date);
       else if (Phenotypes.hasNumberType(phe))
         val =
-            ValBuild.of(
+            Val.of(
                 FHIRUtil.getNumber(client.evaluateFHIRPath(res, out.getNumberPhenotype())), date);
       else if (Phenotypes.hasBooleanType(phe)) {
-        rs.addValue(sbj, phe, search.getDateTimeRestriction(), ValBuild.ofTrue());
+        rs.addValue(sbj, phe, search.getDateTimeRestriction(), Val.ofTrue());
         continue;
       } else
         val =
-            ValBuild.of(
+            Val.of(
                 FHIRUtil.getString(client.evaluateFHIRPath(res, out.getStringPhenotype())), date);
       if (val != null)
         rs.addValueWithRestriction(
@@ -92,18 +92,18 @@ public class FHIRAdapter extends DataAdapter {
       if (bd != null) {
         LocalDateTime bdVal = FHIRUtil.getDate(client.evaluateFHIRPath(res, out.getBirthdate()));
         if (bdVal != null) {
-          Value val = ValBuild.of(bdVal);
+          Value val = Val.of(bdVal);
           if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, null, val);
           else rs.addValue(sbj, bd, null, val);
           if (age != null) {
-            Value ageVal = ValBuild.of(SubjectSearch.birthdateToAge(bdVal));
+            Value ageVal = Val.of(SubjectSearch.birthdateToAge(bdVal));
             rs.addValueWithRestriction(sbj, age, null, ageVal);
           }
         }
       }
       if (sex != null) {
         String sexVal = FHIRUtil.getString(client.evaluateFHIRPath(res, out.getSex()));
-        if (sexVal != null) rs.addValueWithRestriction(sbj, sex, null, ValBuild.of(sexVal));
+        if (sexVal != null) rs.addValueWithRestriction(sbj, sex, null, Val.of(sexVal));
       }
     }
 

@@ -14,7 +14,7 @@ import care.smith.top.model.StringRestriction;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
 
-public class ResBuild {
+public class Res {
 
   public static Restriction ofCodes(Phenotype p) {
     return new StringRestriction()
