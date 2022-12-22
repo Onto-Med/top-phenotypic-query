@@ -14,7 +14,11 @@ import care.smith.top.top_phenotypic_query.util.Phenotypes;
 public class ExpressionBuilder {
 
   public static Expression of(Phenotype p) {
-    return new Expression().entityId(p.getId());
+    return ofEntity(p.getId());
+  }
+
+  public static Expression ofEntity(String entityId) {
+    return new Expression().entityId(entityId);
   }
 
   public static Expression ofConstant(String constantId) {
