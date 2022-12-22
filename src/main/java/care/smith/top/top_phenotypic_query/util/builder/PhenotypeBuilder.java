@@ -58,6 +58,14 @@ public class PhenotypeBuilder {
     return this;
   }
 
+  public PhenotypeBuilder titleDe(String txt) {
+    return title(txt, "de");
+  }
+
+  public PhenotypeBuilder titleEn(String txt) {
+    return title(txt, "en");
+  }
+
   public PhenotypeBuilder synonym(String txt) {
     p.addSynonymsItem(new LocalisableText().text(txt));
     return this;
@@ -68,6 +76,14 @@ public class PhenotypeBuilder {
     return this;
   }
 
+  public PhenotypeBuilder synonymDe(String txt) {
+    return synonym(txt, "de");
+  }
+
+  public PhenotypeBuilder synonymEn(String txt) {
+    return synonym(txt, "en");
+  }
+
   public PhenotypeBuilder description(String txt) {
     p.addDescriptionsItem(new LocalisableText().text(txt));
     return this;
@@ -76,6 +92,14 @@ public class PhenotypeBuilder {
   public PhenotypeBuilder description(String txt, String lang) {
     p.addDescriptionsItem(new LocalisableText().text(txt).lang(lang));
     return this;
+  }
+
+  public PhenotypeBuilder descriptionDe(String txt) {
+    return description(txt, "de");
+  }
+
+  public PhenotypeBuilder descriptionEn(String txt) {
+    return description(txt, "en");
   }
 
   public PhenotypeBuilder annotations(String txt) {
