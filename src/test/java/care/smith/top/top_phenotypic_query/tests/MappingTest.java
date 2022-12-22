@@ -19,7 +19,7 @@ import care.smith.top.model.StringRestriction;
 import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
-import care.smith.top.top_phenotypic_query.util.builder.RestrictionBuilder;
+import care.smith.top.top_phenotypic_query.util.builder.ResBuild;
 
 public class MappingTest extends AbstractTest {
   DataAdapterConfig config;
@@ -82,7 +82,7 @@ public class MappingTest extends AbstractTest {
   @Test
   public void test2() {
     Restriction model =
-        RestrictionBuilder.of(
+        ResBuild.of(
             Quantifier.ALL,
             RestrictionOperator.GREATER_THAN_OR_EQUAL_TO,
             1.5,

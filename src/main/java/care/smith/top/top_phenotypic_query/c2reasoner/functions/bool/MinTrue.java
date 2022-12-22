@@ -11,7 +11,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.builder.ExpressionBuilder;
+import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
 
 public class MinTrue extends FunctionEntity {
 
@@ -43,9 +43,9 @@ public class MinTrue extends FunctionEntity {
       Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
       if (Expressions.hasValueTrue(arg)) {
         count++;
-        if (count >= min) return ExpressionBuilder.ofTrue();
+        if (count >= min) return ExpBuild.ofTrue();
       }
     }
-    return ExpressionBuilder.ofFalse();
+    return ExpBuild.ofFalse();
   }
 }

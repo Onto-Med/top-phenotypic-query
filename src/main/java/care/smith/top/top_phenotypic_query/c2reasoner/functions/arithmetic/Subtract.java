@@ -12,7 +12,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.builder.ExpressionBuilder;
+import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
 
 public class Subtract extends FunctionEntity {
 
@@ -42,6 +42,6 @@ public class Subtract extends FunctionEntity {
     BigDecimal arg1 = Expressions.getNumberValue(args.get(0));
     BigDecimal arg2 = Expressions.getNumberValue(args.get(1));
     BigDecimal sub = arg1.subtract(arg2, mc);
-    return ExpressionBuilder.of(sub);
+    return ExpBuild.of(sub);
   }
 }

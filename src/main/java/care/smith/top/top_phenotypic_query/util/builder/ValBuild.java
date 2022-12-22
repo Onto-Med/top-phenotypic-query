@@ -14,7 +14,7 @@ import care.smith.top.model.StringValue;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.util.Values;
 
-public class ValueBuilder {
+public class ValBuild {
 
   public static Value of(Boolean val) {
     return new BooleanValue().value(val).dataType(DataType.BOOLEAN);

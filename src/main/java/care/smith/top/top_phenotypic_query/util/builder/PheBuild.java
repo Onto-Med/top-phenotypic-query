@@ -13,138 +13,138 @@ import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
-public class PhenotypeBuilder {
+public class PheBuild {
 
   private Phenotype p;
 
-  public PhenotypeBuilder(String id, String codeSystemUri, String... codes) {
+  public PheBuild(String id, String codeSystemUri, String... codes) {
     p = (Phenotype) new Phenotype().id(id);
     codes(codeSystemUri, codes);
   }
 
-  public PhenotypeBuilder(String id) {
+  public PheBuild(String id) {
     p = (Phenotype) new Phenotype().id(id);
   }
 
-  public PhenotypeBuilder code(String codeSystemUri, String code) {
+  public PheBuild code(String codeSystemUri, String code) {
     CodeSystem s = new CodeSystem().uri(URI.create(codeSystemUri));
     Code c = new Code().code(code).codeSystem(s);
     p.addCodesItem(c);
     return this;
   }
 
-  public PhenotypeBuilder code(String codeUri) {
+  public PheBuild code(String codeUri) {
     String[] sysCode = codeUri.split("\\s*\\|\\s*");
     return code(sysCode[0], sysCode[1]);
   }
 
-  public PhenotypeBuilder codes(String codeSystemUri, String... codes) {
+  public PheBuild codes(String codeSystemUri, String... codes) {
     for (String code : codes) code(codeSystemUri, code);
     return this;
   }
 
-  public PhenotypeBuilder codes(String... codeUris) {
+  public PheBuild codes(String... codeUris) {
     for (String codeUri : codeUris) code(codeUri);
     return this;
   }
 
-  public PhenotypeBuilder title(String txt) {
+  public PheBuild title(String txt) {
     p.addTitlesItem(new LocalisableText().text(txt));
     return this;
   }
 
-  public PhenotypeBuilder title(String txt, String lang) {
+  public PheBuild title(String txt, String lang) {
     p.addTitlesItem(new LocalisableText().text(txt).lang(lang));
     return this;
   }
 
-  public PhenotypeBuilder titleDe(String txt) {
+  public PheBuild titleDe(String txt) {
     return title(txt, "de");
   }
 
-  public PhenotypeBuilder titleEn(String txt) {
+  public PheBuild titleEn(String txt) {
     return title(txt, "en");
   }
 
-  public PhenotypeBuilder synonym(String txt) {
+  public PheBuild synonym(String txt) {
     p.addSynonymsItem(new LocalisableText().text(txt));
     return this;
   }
 
-  public PhenotypeBuilder synonym(String txt, String lang) {
+  public PheBuild synonym(String txt, String lang) {
     p.addSynonymsItem(new LocalisableText().text(txt).lang(lang));
     return this;
   }
 
-  public PhenotypeBuilder synonymDe(String txt) {
+  public PheBuild synonymDe(String txt) {
     return synonym(txt, "de");
   }
 
-  public PhenotypeBuilder synonymEn(String txt) {
+  public PheBuild synonymEn(String txt) {
     return synonym(txt, "en");
   }
 
-  public PhenotypeBuilder description(String txt) {
+  public PheBuild description(String txt) {
     p.addDescriptionsItem(new LocalisableText().text(txt));
     return this;
   }
 
-  public PhenotypeBuilder description(String txt, String lang) {
+  public PheBuild description(String txt, String lang) {
     p.addDescriptionsItem(new LocalisableText().text(txt).lang(lang));
     return this;
   }
 
-  public PhenotypeBuilder descriptionDe(String txt) {
+  public PheBuild descriptionDe(String txt) {
     return description(txt, "de");
   }
 
-  public PhenotypeBuilder descriptionEn(String txt) {
+  public PheBuild descriptionEn(String txt) {
     return description(txt, "en");
   }
 
-  public PhenotypeBuilder annotations(String txt) {
+  public PheBuild annotations(String txt) {
     Entities.addAnnotations(p, txt);
     return this;
   }
 
-  public PhenotypeBuilder dataType(String dt) {
+  public PheBuild dataType(String dt) {
     return dataType(DataType.fromValue(dt));
   }
 
-  public PhenotypeBuilder dataType(DataType dt) {
+  public PheBuild dataType(DataType dt) {
     p.dataType(dt).entityType(EntityType.SINGLE_PHENOTYPE);
     return this;
   }
 
-  public PhenotypeBuilder string() {
+  public PheBuild string() {
     return dataType(DataType.STRING);
   }
 
-  public PhenotypeBuilder number() {
+  public PheBuild number() {
     return dataType(DataType.NUMBER);
   }
 
-  public PhenotypeBuilder number(String unit) {
+  public PheBuild number(String unit) {
     p.unit(unit);
     return number();
   }
 
-  public PhenotypeBuilder dateTime() {
+  public PheBuild dateTime() {
     return dataType(DataType.DATE_TIME);
   }
 
-  public PhenotypeBuilder bool() {
+  public PheBuild bool() {
     return dataType(DataType.BOOLEAN);
   }
 
-  public PhenotypeBuilder restriction(Phenotype superPhenotype, Restriction r) {
+  public PheBuild restriction(Phenotype superPhenotype, Restriction r) {
     p.superPhenotype(superPhenotype).restriction(r).dataType(DataType.BOOLEAN);
     if (Phenotypes.isSinglePhenotype(superPhenotype)) p.entityType(EntityType.SINGLE_RESTRICTION);
     else p.entityType(EntityType.COMPOSITE_RESTRICTION);
     return this;
   }
 
-  public PhenotypeBuilder expression(Expression e) {
+  public PheBuild expression(Expression e) {
     p.expression(e).entityType(EntityType.COMPOSITE_PHENOTYPE);
     return this;
   }

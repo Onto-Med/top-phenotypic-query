@@ -11,7 +11,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.builder.ExpressionBuilder;
+import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
 
 public class PlusMonths extends FunctionEntity {
 
@@ -40,6 +40,6 @@ public class PlusMonths extends FunctionEntity {
     Exceptions.checkArgumentType(getFunction(), DataType.NUMBER, args.get(1));
     LocalDateTime start = Expressions.getDateTimeValue(args.get(0));
     long months = Expressions.getNumberValue(args.get(1)).longValue();
-    return ExpressionBuilder.of(start.plusMonths(months));
+    return ExpBuild.of(start.plusMonths(months));
   }
 }

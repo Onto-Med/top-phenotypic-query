@@ -22,7 +22,7 @@ import care.smith.top.model.StringRestriction;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
 import care.smith.top.top_phenotypic_query.ucum.UCUM;
-import care.smith.top.top_phenotypic_query.util.builder.ValueBuilder;
+import care.smith.top.top_phenotypic_query.util.builder.ValBuild;
 
 public class Restrictions {
 
@@ -188,13 +188,13 @@ public class Restrictions {
     Map<RestrictionOperator, Value> limits = new LinkedHashMap<>();
     if (hasNumberType(r)) {
       NumberRestriction nr = (NumberRestriction) r;
-      List<Value> nVals = ValueBuilder.ofNumber(nr.getValues());
+      List<Value> nVals = ValBuild.ofNumber(nr.getValues());
       if (nr.getMinOperator() != null) limits.put(nr.getMinOperator(), nVals.get(0));
       if (nr.getMaxOperator() != null) limits.put(nr.getMaxOperator(), nVals.get(1));
     }
     if (hasDateTimeType(r)) {
       DateTimeRestriction dr = (DateTimeRestriction) r;
-      List<Value> dVals = ValueBuilder.ofDateTime(dr.getValues());
+      List<Value> dVals = ValBuild.ofDateTime(dr.getValues());
       if (dr.getMinOperator() != null) limits.put(dr.getMinOperator(), dVals.get(0));
       if (dr.getMaxOperator() != null) limits.put(dr.getMaxOperator(), dVals.get(1));
     }
@@ -218,10 +218,10 @@ public class Restrictions {
   }
 
   public static List<Value> getValues(Restriction r) {
-    if (hasNumberType(r)) return ValueBuilder.ofNumber(getNumberValues(r));
-    if (hasDateTimeType(r)) return ValueBuilder.ofDateTime(getDateTimeValues(r));
-    if (hasBooleanType(r)) return ValueBuilder.ofBoolean(getBooleanValues(r));
-    return ValueBuilder.ofString(getStringValues(r));
+    if (hasNumberType(r)) return ValBuild.ofNumber(getNumberValues(r));
+    if (hasDateTimeType(r)) return ValBuild.ofDateTime(getDateTimeValues(r));
+    if (hasBooleanType(r)) return ValBuild.ofBoolean(getBooleanValues(r));
+    return ValBuild.ofString(getStringValues(r));
   }
 
   public static List<String> getStringValues(Restriction r) {

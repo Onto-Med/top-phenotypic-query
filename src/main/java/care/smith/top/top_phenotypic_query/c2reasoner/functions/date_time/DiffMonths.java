@@ -12,7 +12,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.builder.ExpressionBuilder;
+import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
 
 public class DiffMonths extends FunctionEntity {
 
@@ -40,6 +40,6 @@ public class DiffMonths extends FunctionEntity {
     Exceptions.checkArgumentsType(getFunction(), DataType.DATE_TIME, args);
     LocalDateTime start = Expressions.getDateTimeValue(args.get(0));
     LocalDateTime end = Expressions.getDateTimeValue(args.get(1));
-    return ExpressionBuilder.of(DateUtil.getPeriodInMonths(start, end));
+    return ExpBuild.of(DateUtil.getPeriodInMonths(start, end));
   }
 }

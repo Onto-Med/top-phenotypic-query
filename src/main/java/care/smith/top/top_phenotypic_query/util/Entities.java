@@ -24,8 +24,8 @@ import care.smith.top.model.EntityType;
 import care.smith.top.model.LocalisableText;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Repository;
-import care.smith.top.top_phenotypic_query.util.builder.ExpressionBuilder;
-import care.smith.top.top_phenotypic_query.util.builder.RestrictionBuilder;
+import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
+import care.smith.top.top_phenotypic_query.util.builder.ResBuild;
 
 public class Entities {
 
@@ -41,9 +41,9 @@ public class Entities {
     for (Phenotype p : getPhenotypes()) {
       Phenotype supP = p.getSuperPhenotype();
       if (Phenotypes.isRestriction(p)) {
-        p.setExpression(ExpressionBuilder.ofRestriction(p));
+        p.setExpression(ExpBuild.ofRestriction(p));
         if (Phenotypes.isSingle(p) && p.getRestriction() == null)
-          p.setRestriction(RestrictionBuilder.ofCodes(p));
+          p.setRestriction(ResBuild.ofCodes(p));
       }
       if (supP != null) p.setSuperPhenotype(getPhenotype(supP.getId()));
     }

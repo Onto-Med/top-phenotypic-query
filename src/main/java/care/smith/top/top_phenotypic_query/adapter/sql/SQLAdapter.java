@@ -34,7 +34,7 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
-import care.smith.top.top_phenotypic_query.util.builder.ValueBuilder;
+import care.smith.top.top_phenotypic_query.util.builder.ValBuild;
 
 public class SQLAdapter extends DataAdapter {
 
@@ -88,14 +88,14 @@ public class SQLAdapter extends DataAdapter {
         Value val = null;
         if (Phenotypes.hasBooleanType(phe)) {
           if (pheCol == null) {
-            rs.addValue(sbj, phe, search.getDateTimeRestriction(), ValueBuilder.ofTrue());
+            rs.addValue(sbj, phe, search.getDateTimeRestriction(), ValBuild.ofTrue());
             continue;
-          } else val = ValueBuilder.of(sqlRS.getBoolean(pheCol), date);
+          } else val = ValBuild.of(sqlRS.getBoolean(pheCol), date);
         } else if (Phenotypes.hasDateTimeType(phe))
-          val = ValueBuilder.of(sqlRS.getTimestamp(pheCol).toLocalDateTime(), date);
+          val = ValBuild.of(sqlRS.getTimestamp(pheCol).toLocalDateTime(), date);
         else if (Phenotypes.hasNumberType(phe))
-          val = ValueBuilder.of(sqlRS.getBigDecimal(pheCol), date);
-        else val = ValueBuilder.of(sqlRS.getString(pheCol), date);
+          val = ValBuild.of(sqlRS.getBigDecimal(pheCol), date);
+        else val = ValBuild.of(sqlRS.getString(pheCol), date);
         if (val != null)
           rs.addValueWithRestriction(
               sbj,
@@ -133,12 +133,12 @@ public class SQLAdapter extends DataAdapter {
         if (bd != null) {
           Timestamp bdSqlVal = sqlRS.getTimestamp(bdCol);
           if (bdSqlVal != null) {
-            Value val = ValueBuilder.of(bdSqlVal.toLocalDateTime());
+            Value val = ValBuild.of(bdSqlVal.toLocalDateTime());
             if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, null, val);
             else rs.addValue(sbj, bd, null, val);
             if (age != null) {
               Value ageVal =
-                  ValueBuilder.of(SubjectSearch.birthdateToAge(bdSqlVal.toLocalDateTime()));
+                  ValBuild.of(SubjectSearch.birthdateToAge(bdSqlVal.toLocalDateTime()));
               rs.addValueWithRestriction(sbj, age, null, ageVal);
             }
           }
@@ -147,15 +147,15 @@ public class SQLAdapter extends DataAdapter {
           if (Phenotypes.hasBooleanType(sex)) {
             Boolean sexSqlVal = sqlRS.getBoolean(sexCol);
             if (sexSqlVal != null)
-              rs.addValueWithRestriction(sbj, sex, null, ValueBuilder.of(sexSqlVal));
+              rs.addValueWithRestriction(sbj, sex, null, ValBuild.of(sexSqlVal));
           } else if (Phenotypes.hasNumberType(sex)) {
             BigDecimal sexSqlVal = sqlRS.getBigDecimal(sexCol);
             if (sexSqlVal != null)
-              rs.addValueWithRestriction(sbj, sex, null, ValueBuilder.of(sexSqlVal));
+              rs.addValueWithRestriction(sbj, sex, null, ValBuild.of(sexSqlVal));
           } else {
             String sexSqlVal = sqlRS.getString(sexCol);
             if (sexSqlVal != null)
-              rs.addValueWithRestriction(sbj, sex, null, ValueBuilder.of(sexSqlVal));
+              rs.addValueWithRestriction(sbj, sex, null, ValBuild.of(sexSqlVal));
           }
         }
       }

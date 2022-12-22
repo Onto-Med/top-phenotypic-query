@@ -16,7 +16,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
-import care.smith.top.top_phenotypic_query.util.builder.ExpressionBuilder;
+import care.smith.top.top_phenotypic_query.util.builder.ExpBuild;
 
 public class In extends FunctionEntity {
 
@@ -45,7 +45,7 @@ public class In extends FunctionEntity {
 
     if (args.get(1).getValues() != null) {
       Expression val = Aggregator.aggregate(args.get(0), defaultAggregateFunction, c2r);
-      return ExpressionBuilder.of(Values.contains(args.get(1).getValues(), val.getValue()));
+      return ExpBuild.of(Values.contains(args.get(1).getValues(), val.getValue()));
     }
 
     Restriction r = args.get(1).getRestriction();
@@ -60,14 +60,14 @@ public class In extends FunctionEntity {
       List<Value> vals, Map<RestrictionOperator, Value> inter, Quantifier quan, Integer card) {
     int hits = 0;
     for (Value v : vals) if (Values.contains(inter, v)) hits++;
-    return ExpressionBuilder.of(checkQuantifier(vals.size(), hits, quan, card));
+    return ExpBuild.of(checkQuantifier(vals.size(), hits, quan, card));
   }
 
   private Expression calculateInSet(
       List<Value> vals, List<Value> set, Quantifier quan, Integer card) {
     int hits = 0;
     for (Value v : vals) if (Values.contains(set, v)) hits++;
-    return ExpressionBuilder.of(checkQuantifier(vals.size(), hits, quan, card));
+    return ExpBuild.of(checkQuantifier(vals.size(), hits, quan, card));
   }
 
   private boolean checkQuantifier(int size, int hits, Quantifier quan, Integer card) {

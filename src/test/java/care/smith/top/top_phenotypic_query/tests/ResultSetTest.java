@@ -11,25 +11,25 @@ import org.junit.jupiter.api.Test;
 import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
-import care.smith.top.top_phenotypic_query.util.builder.ValueBuilder;
+import care.smith.top.top_phenotypic_query.util.builder.ValBuild;
 
 public class ResultSetTest extends AbstractTest {
 
   @Test
   public void testValues() {
     PhenotypeValues weightVals1 = new PhenotypeValues("Weight");
-    weightVals1.setValues(getDTR(2001), ValueBuilder.of(75));
+    weightVals1.setValues(getDTR(2001), ValBuild.of(75));
     PhenotypeValues heightVals1 = new PhenotypeValues("Height");
-    heightVals1.setValues(getDTR(2001), ValueBuilder.of(1.7));
+    heightVals1.setValues(getDTR(2001), ValBuild.of(1.7));
     PhenotypeValues ageVals1 = new PhenotypeValues("Age");
-    ageVals1.setValues(getDTR(2001), ValueBuilder.of(20));
+    ageVals1.setValues(getDTR(2001), ValBuild.of(20));
 
     PhenotypeValues weightVals2 = new PhenotypeValues("Weight");
-    weightVals2.setValues(getDTR(2001), ValueBuilder.of(80));
+    weightVals2.setValues(getDTR(2001), ValBuild.of(80));
     PhenotypeValues heightVals2 = new PhenotypeValues("Height");
-    heightVals2.setValues(getDTR(2001), ValueBuilder.of(1.6));
+    heightVals2.setValues(getDTR(2001), ValBuild.of(1.6));
     PhenotypeValues ageVals2 = new PhenotypeValues("Age");
-    ageVals2.setValues(getDTR(2001), ValueBuilder.of(40));
+    ageVals2.setValues(getDTR(2001), ValBuild.of(40));
 
     SubjectPhenotypes phes1 = new SubjectPhenotypes("Subject1");
     phes1.setValues(weightVals1, heightVals1, ageVals1);
@@ -145,37 +145,37 @@ public class ResultSetTest extends AbstractTest {
 
   private static PhenotypeValues getPhenotype1() {
     PhenotypeValues pv = new PhenotypeValues("P1");
-    pv.setValues(getDTR(2000), ValueBuilder.of(1), ValueBuilder.of(2), ValueBuilder.of(3));
-    pv.setValues(getDTR(2001), ValueBuilder.of(4), ValueBuilder.of(5), ValueBuilder.of(6));
+    pv.setValues(getDTR(2000), ValBuild.of(1), ValBuild.of(2), ValBuild.of(3));
+    pv.setValues(getDTR(2001), ValBuild.of(4), ValBuild.of(5), ValBuild.of(6));
     return pv;
   }
 
   private static PhenotypeValues getPhenotype2() {
     PhenotypeValues pv = new PhenotypeValues("P2");
-    pv.setValues(getDTR(2002), ValueBuilder.of(7), ValueBuilder.of(8), ValueBuilder.of(9));
-    pv.setValues(getDTR(2003), ValueBuilder.of(10), ValueBuilder.of(11), ValueBuilder.of(12));
+    pv.setValues(getDTR(2002), ValBuild.of(7), ValBuild.of(8), ValBuild.of(9));
+    pv.setValues(getDTR(2003), ValBuild.of(10), ValBuild.of(11), ValBuild.of(12));
     return pv;
   }
 
   private static PhenotypeValues getPhenotype3() {
     PhenotypeValues pv = new PhenotypeValues("P3");
-    pv.setValues(getDTR(2004), ValueBuilder.of(13), ValueBuilder.of(14), ValueBuilder.of(15));
-    pv.setValues(getDTR(2005), ValueBuilder.of(16), ValueBuilder.of(17), ValueBuilder.of(18));
+    pv.setValues(getDTR(2004), ValBuild.of(13), ValBuild.of(14), ValBuild.of(15));
+    pv.setValues(getDTR(2005), ValBuild.of(16), ValBuild.of(17), ValBuild.of(18));
     return pv;
   }
 
   private static PhenotypeValues getPhenotype3b() {
     PhenotypeValues pv = new PhenotypeValues("P3");
-    pv.setValues(getDTR(2004), ValueBuilder.of(13), ValueBuilder.of(14), ValueBuilder.of(15));
-    pv.setValues(getDTR(2008), ValueBuilder.of(25), ValueBuilder.of(26), ValueBuilder.of(27));
-    pv.setValues(getDTR(2009), ValueBuilder.of(28), ValueBuilder.of(29), ValueBuilder.of(30));
+    pv.setValues(getDTR(2004), ValBuild.of(13), ValBuild.of(14), ValBuild.of(15));
+    pv.setValues(getDTR(2008), ValBuild.of(25), ValBuild.of(26), ValBuild.of(27));
+    pv.setValues(getDTR(2009), ValBuild.of(28), ValBuild.of(29), ValBuild.of(30));
     return pv;
   }
 
   private static PhenotypeValues getPhenotype4() {
     PhenotypeValues pv = new PhenotypeValues("P4");
-    pv.setValues(getDTR(2006), ValueBuilder.of(19), ValueBuilder.of(20), ValueBuilder.of(21));
-    pv.setValues(getDTR(2007), ValueBuilder.of(22), ValueBuilder.of(23), ValueBuilder.of(24));
+    pv.setValues(getDTR(2006), ValBuild.of(19), ValBuild.of(20), ValBuild.of(21));
+    pv.setValues(getDTR(2007), ValBuild.of(22), ValBuild.of(23), ValBuild.of(24));
     return pv;
   }
 }

@@ -15,7 +15,7 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
-import care.smith.top.top_phenotypic_query.util.builder.ValueBuilder;
+import care.smith.top.top_phenotypic_query.util.builder.ValBuild;
 
 public class CompositeSearch extends PhenotypeSearch {
 
@@ -69,7 +69,7 @@ public class CompositeSearch extends PhenotypeSearch {
     if (vals != null) return vals;
     Phenotype phe = phenotypes.getPhenotype(var);
     if (Phenotypes.isSingle(phe) && Phenotypes.hasBooleanType(phe))
-      return List.of(ValueBuilder.ofFalse());
+      return List.of(ValBuild.ofFalse());
     Expression newExp = phe.getExpression();
     if (newExp == null) return null;
     Set<String> newVars = Expressions.getVariables(newExp, phenotypes);
