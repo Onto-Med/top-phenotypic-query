@@ -87,16 +87,28 @@ public class ExpressionBuilder {
         .addArgumentsItem(new Expression().restriction(r));
   }
 
-  public static Expression function(String functionId, Expression... args) {
-    return new Expression().functionId(functionId).arguments(List.of(args));
+  public static Expression function(String functionId, List<Expression> args) {
+    return new Expression().functionId(functionId).arguments(args);
   }
 
-  public static Expression and(Expression... args) {
+  public static Expression function(String functionId, Expression... args) {
+    return function(functionId, List.of(args));
+  }
+
+  public static Expression and(List<Expression> args) {
     return function("and", args);
   }
 
-  public static Expression or(Expression... args) {
+  public static Expression and(Expression... args) {
+    return and(List.of(args));
+  }
+
+  public static Expression or(List<Expression> args) {
     return function("or", args);
+  }
+
+  public static Expression or(Expression... args) {
+    return or(List.of(args));
   }
 
   public static Expression not(Expression arg) {
