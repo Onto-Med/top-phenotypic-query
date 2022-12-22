@@ -139,6 +139,18 @@ public class Entities {
         .collect(Collectors.toSet());
   }
 
+  public Collection<Phenotype> getSinglePhenotypes() {
+    return getPhenotypes(EntityType.SINGLE_PHENOTYPE);
+  }
+
+  public Collection<Phenotype> getSingleRestrictions() {
+    return getPhenotypes(EntityType.SINGLE_RESTRICTION);
+  }
+
+  public Collection<Phenotype> getCompositePhenotypes() {
+    return getPhenotypes(EntityType.COMPOSITE_PHENOTYPE);
+  }
+
   public Set<String> getIds() {
     return entities.keySet();
   }
