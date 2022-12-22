@@ -126,4 +126,8 @@ public class ExpressionBuilder {
   public static Expression not(Phenotype arg) {
     return not(of(arg));
   }
+
+  public static Expression notEntity(String entityId) {
+    return not(ofEntity(entityId));
+  }
 }
