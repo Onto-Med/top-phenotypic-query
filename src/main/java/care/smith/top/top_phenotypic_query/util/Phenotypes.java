@@ -1,6 +1,7 @@
 package care.smith.top.top_phenotypic_query.util;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -60,6 +61,13 @@ public class Phenotypes {
 
   public static List<Code> getCodes(Phenotype p) {
     return (isRestriction(p)) ? p.getSuperPhenotype().getCodes() : p.getCodes();
+  }
+
+  public static List<String> getCodes(Phenotype p, String codeSystem) {
+    return getCodes(p).stream()
+        .filter(c -> Objects.equals(c.getCodeSystem().getUri().toString(), codeSystem))
+        .map(c -> c.getCode())
+        .collect(Collectors.toList());
   }
 
   public static Stream<String> getCodeUris(Phenotype p) {

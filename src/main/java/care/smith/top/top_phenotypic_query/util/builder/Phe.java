@@ -26,10 +26,13 @@ public class Phe {
     p = (Phenotype) new Phenotype().id(id);
   }
 
-  public Phe code(String codeSystemUri, String code) {
+  public static Code getCode(String codeSystemUri, String code) {
     CodeSystem s = new CodeSystem().uri(URI.create(codeSystemUri));
-    Code c = new Code().code(code).codeSystem(s);
-    p.addCodesItem(c);
+    return new Code().code(code).codeSystem(s);
+  }
+
+  public Phe code(String codeSystemUri, String code) {
+    p.addCodesItem(getCode(codeSystemUri, code));
     return this;
   }
 
