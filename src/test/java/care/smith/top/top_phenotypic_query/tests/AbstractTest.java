@@ -13,7 +13,6 @@ import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
-import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.NumberRestriction;
 import care.smith.top.model.NumberValue;
 import care.smith.top.model.Phenotype;
@@ -22,8 +21,15 @@ import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
 import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Last;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Or;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public abstract class AbstractTest {
 
@@ -78,8 +84,7 @@ public abstract class AbstractTest {
     overWeight
   };
 
-  protected static ExpressionFunction defAgrFunc =
-      new ExpressionFunction().id("last").minArgumentNumber(1).notation(NotationEnum.PREFIX);
+  protected static ExpressionFunction defAgrFunc = Last.get().getFunction();
 
   protected static DateTimeRestriction getDTR(int year) {
     return new DateTimeRestriction()
@@ -339,56 +344,19 @@ public abstract class AbstractTest {
   }
 
   static Expression getBMIExpression() {
-    return new Expression()
-        .functionId("divide")
-        .addArgumentsItem(new Expression().entityId("Weight"))
-        .addArgumentsItem(
-            new Expression()
-                .functionId("power")
-                .addArgumentsItem(new Expression().entityId("Height"))
-                .addArgumentsItem(getValue(2)));
+    return Divide.of(Exp.ofEntity("Weight"), Power.of(Exp.ofEntity("Height"), Exp.of(2)));
   }
 
   static Expression getFindingExpression() {
-    Expression youngAndBmi19_25 =
-        new Expression()
-            .functionId("and")
-            .addArgumentsItem(new Expression().entityId("Young"))
-            .addArgumentsItem(new Expression().entityId("BMI19_25"));
-    Expression oldAndBmi19_27 =
-        new Expression()
-            .functionId("and")
-            .addArgumentsItem(new Expression().entityId("Old"))
-            .addArgumentsItem(new Expression().entityId("BMI19_27"));
-    Expression normalWeight =
-        new Expression()
-            .functionId("or")
-            .addArgumentsItem(youngAndBmi19_25)
-            .addArgumentsItem(oldAndBmi19_27);
+    Expression youngAndBmi19_25 = And.of(Exp.ofEntity("Young"), Exp.ofEntity("BMI19_25"));
+    Expression oldAndBmi19_27 = And.of(Exp.ofEntity("Old"), Exp.ofEntity("BMI19_27"));
+    Expression normalWeight = Or.of(youngAndBmi19_25, oldAndBmi19_27);
 
-    Expression youngAndBmi25_30 =
-        new Expression()
-            .functionId("and")
-            .addArgumentsItem(new Expression().entityId("Young"))
-            .addArgumentsItem(new Expression().entityId("BMI25_30"));
-    Expression oldAndBmi27_30 =
-        new Expression()
-            .functionId("and")
-            .addArgumentsItem(new Expression().entityId("Old"))
-            .addArgumentsItem(new Expression().entityId("BMI27_30"));
-    Expression overweight =
-        new Expression()
-            .functionId("or")
-            .addArgumentsItem(youngAndBmi25_30)
-            .addArgumentsItem(oldAndBmi27_30);
+    Expression youngAndBmi25_30 = And.of(Exp.ofEntity("Young"), Exp.ofEntity("BMI25_30"));
+    Expression oldAndBmi27_30 = And.of(Exp.ofEntity("Old"), Exp.ofEntity("BMI27_30"));
+    Expression overweight = Or.of(youngAndBmi25_30, oldAndBmi27_30);
 
-    return new Expression()
-        .functionId("switch")
-        .addArgumentsItem(normalWeight)
-        .addArgumentsItem(getValue(0))
-        .addArgumentsItem(overweight)
-        .addArgumentsItem(getValue(1))
-        .addArgumentsItem(getValue(-1));
+    return Switch.of(normalWeight, getValue(0), overweight, getValue(1), getValue(-1));
   }
 
   protected static Value getValue(String pheName, SubjectPhenotypes phes) {

@@ -3,7 +3,6 @@ package care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time;
 import java.util.List;
 
 import care.smith.top.model.Expression;
-import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
@@ -16,17 +15,19 @@ public class Date extends FunctionEntity {
   private static Date INSTANCE = new Date();
 
   private Date() {
-    super(
-        new ExpressionFunction()
-            .id("date")
-            .title("date")
-            .minArgumentNumber(1)
-            .maxArgumentNumber(1)
-            .notation(NotationEnum.PREFIX));
+    super("date", NotationEnum.PREFIX, 1, 1);
   }
 
   public static Date get() {
     return INSTANCE;
+  }
+
+  public static Expression of(List<Expression> args) {
+    return Exp.function(get().getClass().getSimpleName(), args);
+  }
+
+  public static Expression of(Expression... args) {
+    return of(List.of(args));
   }
 
   @Override

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import care.smith.top.model.Expression;
-import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
@@ -23,17 +22,19 @@ public class In extends FunctionEntity {
   private static final In INSTANCE = new In();
 
   private In() {
-    super(
-        new ExpressionFunction()
-            .id("in")
-            .title("in")
-            .minArgumentNumber(2)
-            .maxArgumentNumber(2)
-            .notation(NotationEnum.PREFIX));
+    super("in", NotationEnum.PREFIX, 2, 2);
   }
 
   public static In get() {
     return INSTANCE;
+  }
+
+  public static Expression of(List<Expression> args) {
+    return Exp.function(get().getClass().getSimpleName(), args);
+  }
+
+  public static Expression of(Expression... args) {
+    return of(List.of(args));
   }
 
   @Override

@@ -3,7 +3,6 @@ package care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison;
 import java.util.List;
 
 import care.smith.top.model.Expression;
-import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
@@ -17,17 +16,19 @@ public class Gt extends FunctionEntity {
   private static Gt INSTANCE = new Gt();
 
   private Gt() {
-    super(
-        new ExpressionFunction()
-            .id("gt")
-            .title(">")
-            .minArgumentNumber(2)
-            .maxArgumentNumber(2)
-            .notation(NotationEnum.INFIX));
+    super(">", NotationEnum.INFIX, 2, 2);
   }
 
   public static Gt get() {
     return INSTANCE;
+  }
+
+  public static Expression of(List<Expression> args) {
+    return Exp.function(get().getClass().getSimpleName(), args);
+  }
+
+  public static Expression of(Expression... args) {
+    return of(List.of(args));
   }
 
   @Override

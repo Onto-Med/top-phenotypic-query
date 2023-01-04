@@ -3,7 +3,6 @@ package care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison;
 import java.util.List;
 
 import care.smith.top.model.Expression;
-import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
@@ -17,17 +16,19 @@ public class Ge extends FunctionEntity {
   private static Ge INSTANCE = new Ge();
 
   private Ge() {
-    super(
-        new ExpressionFunction()
-            .id("ge")
-            .title(">=")
-            .minArgumentNumber(2)
-            .maxArgumentNumber(2)
-            .notation(NotationEnum.INFIX));
+    super(">=", NotationEnum.INFIX, 2, 2);
   }
 
   public static Ge get() {
     return INSTANCE;
+  }
+
+  public static Expression of(List<Expression> args) {
+    return Exp.function(get().getClass().getSimpleName(), args);
+  }
+
+  public static Expression of(Expression... args) {
+    return of(List.of(args));
   }
 
   @Override
@@ -37,7 +38,6 @@ public class Ge extends FunctionEntity {
     args = c2r.calculate(args, defaultAggregateFunction);
     Exceptions.checkArgumentsHaveSameType(getFunction(), args);
     args = Aggregator.aggregate(args, defaultAggregateFunction, c2r);
-    return Exp.of(
-        Values.compare(args.get(0).getValue(), args.get(1).getValue()) >= 0);
+    return Exp.of(Values.compare(args.get(0).getValue(), args.get(1).getValue()) >= 0);
   }
 }

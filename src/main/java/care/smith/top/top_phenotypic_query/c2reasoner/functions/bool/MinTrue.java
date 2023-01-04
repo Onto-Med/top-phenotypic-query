@@ -4,7 +4,6 @@ import java.util.List;
 
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
-import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
@@ -18,16 +17,20 @@ public class MinTrue extends FunctionEntity {
   private static MinTrue INSTANCE = new MinTrue();
 
   private MinTrue() {
-    super(
-        new ExpressionFunction()
-            .id("minTrue")
-            .title("minTrue")
-            .minArgumentNumber(2)
-            .notation(NotationEnum.PREFIX));
+    super("minTrue", NotationEnum.PREFIX);
+    minArgumentNumber(2);
   }
 
   public static MinTrue get() {
     return INSTANCE;
+  }
+
+  public static Expression of(List<Expression> args) {
+    return Exp.function(get().getClass().getSimpleName(), args);
+  }
+
+  public static Expression of(Expression... args) {
+    return of(List.of(args));
   }
 
   @Override

@@ -16,8 +16,24 @@ public abstract class FunctionEntity {
   private ExpressionFunction function;
   protected MathContext mc = MathContext.DECIMAL64;
 
-  protected FunctionEntity(ExpressionFunction function) {
-    this.function = function;
+  protected FunctionEntity(String title, NotationEnum notation) {
+    this.function =
+        new ExpressionFunction().id(getClass().getSimpleName()).title(title).notation(notation);
+  }
+
+  protected FunctionEntity(
+      String title, NotationEnum notation, int minArgumentNumber, int maxArgumentNumber) {
+    this(title, notation);
+    minArgumentNumber(minArgumentNumber);
+    maxArgumentNumber(maxArgumentNumber);
+  }
+
+  protected void minArgumentNumber(int num) {
+    function.minArgumentNumber(num);
+  }
+
+  protected void maxArgumentNumber(int num) {
+    function.maxArgumentNumber(num);
   }
 
   public ExpressionFunction getFunction() {

@@ -9,6 +9,7 @@ import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class Exp {
@@ -69,6 +70,10 @@ public class Exp {
     return Stream.of(entities).map(e -> of(e)).toArray(Expression[]::new);
   }
 
+  public static List<Expression> toList(Phenotype... entities) {
+    return Stream.of(entities).map(e -> of(e)).collect(Collectors.toList());
+  }
+
   public static Expression ofTrue() {
     return of(Val.ofTrue());
   }
@@ -81,10 +86,7 @@ public class Exp {
     if (!Phenotypes.isRestriction(p)) return null;
     Restriction r = p.getRestriction();
     if (r == null) return null;
-    return new Expression()
-        .functionId("in")
-        .addArgumentsItem(new Expression().entityId(p.getSuperPhenotype().getId()))
-        .addArgumentsItem(new Expression().restriction(r));
+    return In.of(of(p.getSuperPhenotype()), of(r));
   }
 
   public static Expression function(String functionId, List<Expression> args) {
@@ -93,41 +95,5 @@ public class Exp {
 
   public static Expression function(String functionId, Expression... args) {
     return function(functionId, List.of(args));
-  }
-
-  public static Expression and(List<Expression> args) {
-    return function("and", args);
-  }
-
-  public static Expression and(Expression... args) {
-    return and(List.of(args));
-  }
-
-  public static Expression or(List<Expression> args) {
-    return function("or", args);
-  }
-
-  public static Expression or(Expression... args) {
-    return or(List.of(args));
-  }
-
-  public static Expression not(Expression arg) {
-    return function("not", arg);
-  }
-
-  public static Expression and(Phenotype... args) {
-    return and(toArray(args));
-  }
-
-  public static Expression or(Phenotype... args) {
-    return or(toArray(args));
-  }
-
-  public static Expression not(Phenotype arg) {
-    return not(of(arg));
-  }
-
-  public static Expression notEntity(String entityId) {
-    return not(ofEntity(entityId));
   }
 }

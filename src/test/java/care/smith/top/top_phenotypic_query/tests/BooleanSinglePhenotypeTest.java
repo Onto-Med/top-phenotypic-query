@@ -20,8 +20,11 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class BooleanSinglePhenotypeTest extends AbstractTest {
 
@@ -73,14 +76,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
   @Test
   public void test3() {
-    Expression exp =
-        new Expression()
-            .functionId("and")
-            .addArgumentsItem(new Expression().entityId("Weight"))
-            .addArgumentsItem(
-                new Expression()
-                    .functionId("not")
-                    .addArgumentsItem(new Expression().entityId("Height")));
+    Expression exp = And.of(Exp.ofEntity("Weight"), Not.of(Exp.ofEntity("Height")));
     Phenotype composite =
         (Phenotype)
             new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
@@ -98,14 +94,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
   @Test
   public void test4() {
-    Expression exp =
-        new Expression()
-            .functionId("and")
-            .addArgumentsItem(new Expression().entityId("Height"))
-            .addArgumentsItem(
-                new Expression()
-                    .functionId("not")
-                    .addArgumentsItem(new Expression().entityId("Weight")));
+    Expression exp = And.of(Exp.ofEntity("Height"), Not.of(Exp.ofEntity("Weight")));
     Phenotype composite =
         (Phenotype)
             new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
@@ -123,14 +112,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
   @Test
   public void test5() {
-    Expression exp =
-        new Expression()
-            .functionId("and")
-            .addArgumentsItem(new Expression().entityId("Weight"))
-            .addArgumentsItem(
-                new Expression()
-                    .functionId("not")
-                    .addArgumentsItem(new Expression().entityId("Height")));
+    Expression exp = And.of(Exp.ofEntity("Weight"), Not.of(Exp.ofEntity("Height")));
     Phenotype composite =
         (Phenotype)
             new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
@@ -148,14 +130,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
   @Test
   public void test6() {
-    Expression exp =
-        new Expression()
-            .functionId("and")
-            .addArgumentsItem(new Expression().entityId("Height"))
-            .addArgumentsItem(
-                new Expression()
-                    .functionId("not")
-                    .addArgumentsItem(new Expression().entityId("Weight")));
+    Expression exp = And.of(Exp.ofEntity("Height"), Not.of(Exp.ofEntity("Weight")));
     Phenotype composite =
         (Phenotype)
             new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);

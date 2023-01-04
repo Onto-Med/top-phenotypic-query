@@ -3,7 +3,6 @@ package care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced;
 import java.util.List;
 
 import care.smith.top.model.Expression;
-import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
@@ -16,17 +15,19 @@ public class Empty extends FunctionEntity {
   private static Empty INSTANCE = new Empty();
 
   private Empty() {
-    super(
-        new ExpressionFunction()
-            .id("empty")
-            .title("empty")
-            .minArgumentNumber(1)
-            .maxArgumentNumber(1)
-            .notation(NotationEnum.PREFIX));
+    super("empty", NotationEnum.PREFIX, 1, 1);
   }
 
   public static Empty get() {
     return INSTANCE;
+  }
+
+  public static Expression of(List<Expression> args) {
+    return Exp.function(get().getClass().getSimpleName(), args);
+  }
+
+  public static Expression of(Expression... args) {
+    return of(List.of(args));
   }
 
   @Override

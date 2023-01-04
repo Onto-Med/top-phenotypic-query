@@ -6,7 +6,6 @@ import java.util.Map;
 
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
-import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
@@ -24,17 +23,19 @@ public class Restrict extends FunctionEntity {
   private static Restrict INSTANCE = new Restrict();
 
   private Restrict() {
-    super(
-        new ExpressionFunction()
-            .id("restrict")
-            .title("restrict")
-            .minArgumentNumber(2)
-            .maxArgumentNumber(2)
-            .notation(NotationEnum.PREFIX));
+    super("restrict", NotationEnum.PREFIX, 2, 2);
   }
 
   public static Restrict get() {
     return INSTANCE;
+  }
+
+  public static Expression of(List<Expression> args) {
+    return Exp.function(get().getClass().getSimpleName(), args);
+  }
+
+  public static Expression of(Expression... args) {
+    return of(List.of(args));
   }
 
   @Override

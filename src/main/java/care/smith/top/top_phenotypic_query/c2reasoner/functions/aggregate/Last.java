@@ -4,28 +4,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import care.smith.top.model.Expression;
-import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.util.Values;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class Last extends FunctionEntity {
 
   private static final Last INSTANCE = new Last();
 
   private Last() {
-    super(
-        new ExpressionFunction()
-            .id("last")
-            .title("last")
-            .minArgumentNumber(1)
-            .notation(NotationEnum.PREFIX));
+    super("last", NotationEnum.PREFIX);
+    minArgumentNumber(1);
   }
 
   public static Last get() {
     return INSTANCE;
+  }
+
+  public static Expression of(List<Expression> args) {
+    return Exp.function(get().getClass().getSimpleName(), args);
+  }
+
+  public static Expression of(Expression... args) {
+    return of(List.of(args));
   }
 
   @Override

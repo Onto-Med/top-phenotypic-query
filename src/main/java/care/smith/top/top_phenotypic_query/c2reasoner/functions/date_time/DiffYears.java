@@ -5,7 +5,6 @@ import java.util.List;
 
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
-import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
@@ -19,17 +18,19 @@ public class DiffYears extends FunctionEntity {
   private static DiffYears INSTANCE = new DiffYears();
 
   private DiffYears() {
-    super(
-        new ExpressionFunction()
-            .id("diffYears")
-            .title("diffYears")
-            .minArgumentNumber(2)
-            .maxArgumentNumber(2)
-            .notation(NotationEnum.PREFIX));
+    super("diffYears", NotationEnum.PREFIX, 2, 2);
   }
 
   public static DiffYears get() {
     return INSTANCE;
+  }
+
+  public static Expression of(List<Expression> args) {
+    return Exp.function(get().getClass().getSimpleName(), args);
+  }
+
+  public static Expression of(Expression... args) {
+    return of(List.of(args));
   }
 
   @Override

@@ -4,8 +4,8 @@ import java.util.List;
 
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
-import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
@@ -18,16 +18,24 @@ public class Or extends FunctionEntity {
   private static Or INSTANCE = new Or();
 
   private Or() {
-    super(
-        new ExpressionFunction()
-            .id("or")
-            .title("or")
-            .minArgumentNumber(2)
-            .notation(NotationEnum.PREFIX));
+    super("or", NotationEnum.PREFIX);
+    minArgumentNumber(2);
   }
 
   public static Or get() {
     return INSTANCE;
+  }
+
+  public static Expression of(List<Expression> args) {
+    return Exp.function(get().getClass().getSimpleName(), args);
+  }
+
+  public static Expression of(Expression... args) {
+    return of(List.of(args));
+  }
+
+  public static Expression of(Phenotype... args) {
+    return of(Exp.toList(args));
   }
 
   @Override

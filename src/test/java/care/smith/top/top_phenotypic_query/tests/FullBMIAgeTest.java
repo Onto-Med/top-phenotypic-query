@@ -51,7 +51,7 @@ public class FullBMIAgeTest extends AbstractTest {
     phesExpected.add("birthdate");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
-    assertEquals(new BigDecimal(20), Values.getNumberValue(getValue("Age", phes)));
+    assertEquals(new BigDecimal(21), Values.getNumberValue(getValue("Age", phes)));
     assertFalse(Values.getBooleanValue(getValue("Old", phes)));
     assertTrue(Values.getBooleanValue(getValue("Young", phes)));
 

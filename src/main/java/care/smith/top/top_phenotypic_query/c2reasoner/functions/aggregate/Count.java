@@ -3,7 +3,6 @@ package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
 import java.util.List;
 
 import care.smith.top.model.Expression;
-import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
@@ -15,17 +14,19 @@ public class Count extends FunctionEntity {
   private static final Count INSTANCE = new Count();
 
   private Count() {
-    super(
-        new ExpressionFunction()
-            .id("count")
-            .title("count")
-            .minArgumentNumber(1)
-            .maxArgumentNumber(1)
-            .notation(NotationEnum.PREFIX));
+    super("count", NotationEnum.PREFIX, 1, 1);
   }
 
   public static Count get() {
     return INSTANCE;
+  }
+
+  public static Expression of(List<Expression> args) {
+    return Exp.function(get().getClass().getSimpleName(), args);
+  }
+
+  public static Expression of(Expression... args) {
+    return of(List.of(args));
   }
 
   @Override

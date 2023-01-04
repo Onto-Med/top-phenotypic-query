@@ -5,7 +5,6 @@ import java.util.List;
 
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
-import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
@@ -18,16 +17,20 @@ public class Avg extends FunctionEntity {
   private static final Avg INSTANCE = new Avg();
 
   private Avg() {
-    super(
-        new ExpressionFunction()
-            .id("avg")
-            .title("avg")
-            .minArgumentNumber(1)
-            .notation(NotationEnum.PREFIX));
+    super("avg", NotationEnum.PREFIX);
+    minArgumentNumber(1);
   }
 
   public static Avg get() {
     return INSTANCE;
+  }
+
+  public static Expression of(List<Expression> args) {
+    return Exp.function(get().getClass().getSimpleName(), args);
+  }
+
+  public static Expression of(Expression... args) {
+    return of(List.of(args));
   }
 
   @Override

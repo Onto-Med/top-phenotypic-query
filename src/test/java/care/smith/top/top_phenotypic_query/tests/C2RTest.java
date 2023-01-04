@@ -19,11 +19,30 @@ import care.smith.top.model.Quantifier;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Restrict;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Last;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Min;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Add;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Multiply;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.MinTrue;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Or;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Eq;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Ge;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Gt;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Le;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Lt;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Ne;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.DiffYears;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYears;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
@@ -50,8 +69,7 @@ public class C2RTest {
                 15));
 
     C2R c = new C2R();
-    Expression e =
-        new Expression().functionId("restrict").addArgumentsItem(vals).addArgumentsItem(rest);
+    Expression e = Restrict.of(vals, rest);
 
     assertEquals(
         List.of(BigDecimal.valueOf(5), BigDecimal.valueOf(10), BigDecimal.valueOf(8)),
@@ -76,8 +94,7 @@ public class C2RTest {
                 DateUtil.parse("2002-01-02")));
 
     C2R c = new C2R();
-    Expression e =
-        new Expression().functionId("restrict").addArgumentsItem(vals).addArgumentsItem(rest);
+    Expression e = Restrict.of(vals, rest);
 
     assertEquals(
         List.of(BigDecimal.valueOf(10), BigDecimal.valueOf(15)),
@@ -90,10 +107,10 @@ public class C2RTest {
     Expression v2 = Exp.ofTrue();
 
     C2R c = new C2R();
-    Expression e = new Expression().functionId("not").addArgumentsItem(v1);
+    Expression e = Not.of(v1);
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
-    e = new Expression().functionId("not").addArgumentsItem(v2);
+    e = Not.of(v2);
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
   }
 
@@ -104,15 +121,10 @@ public class C2RTest {
     Expression v3 = Exp.ofFalse();
 
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("or")
-            .addArgumentsItem(v1)
-            .addArgumentsItem(v2)
-            .addArgumentsItem(v3);
+    Expression e = Or.of(v1, v2, v3);
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
-    e = new Expression().functionId("or").addArgumentsItem(v1).addArgumentsItem(v3);
+    e = Or.of(v1, v3);
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
   }
 
@@ -123,15 +135,10 @@ public class C2RTest {
     Expression v3 = Exp.ofTrue();
 
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("and")
-            .addArgumentsItem(v1)
-            .addArgumentsItem(v2)
-            .addArgumentsItem(v3);
+    Expression e = And.of(v1, v2, v3);
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
 
-    e = new Expression().functionId("and").addArgumentsItem(v1).addArgumentsItem(v3);
+    e = And.of(v1, v3);
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
   }
 
@@ -143,21 +150,10 @@ public class C2RTest {
     Expression v3 = Exp.ofTrue();
 
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("minTrue")
-            .addArgumentsItem(minTrue)
-            .addArgumentsItem(v1)
-            .addArgumentsItem(v2);
+    Expression e = MinTrue.of(minTrue, v1, v2);
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
 
-    e =
-        new Expression()
-            .functionId("minTrue")
-            .addArgumentsItem(minTrue)
-            .addArgumentsItem(v1)
-            .addArgumentsItem(v2)
-            .addArgumentsItem(v3);
+    e = MinTrue.of(minTrue, v1, v2, v3);
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
   }
 
@@ -173,40 +169,19 @@ public class C2RTest {
 
     C2R c = new C2R();
 
-    Expression e1 = new Expression().functionId("eq").addArgumentsItem(v1).addArgumentsItem(v2);
-    Expression e2 = new Expression().functionId("lt").addArgumentsItem(v1).addArgumentsItem(v2);
-    Expression e3 = new Expression().functionId("gt").addArgumentsItem(v1).addArgumentsItem(v2);
+    Expression e1 = Eq.of(v1, v2);
+    Expression e2 = Lt.of(v1, v2);
+    Expression e3 = Gt.of(v1, v2);
 
-    Expression res =
-        new Expression()
-            .functionId("switch")
-            .addArgumentsItem(e1)
-            .addArgumentsItem(s1)
-            .addArgumentsItem(e2)
-            .addArgumentsItem(s2)
-            .addArgumentsItem(e3)
-            .addArgumentsItem(s3);
+    Expression res = Switch.of(e1, s1, e2, s2, e3, s3);
 
     assertEquals(new BigDecimal("2"), Expressions.getNumberValue(c.calculate(res)));
 
-    res =
-        new Expression()
-            .functionId("switch")
-            .addArgumentsItem(e1)
-            .addArgumentsItem(s1)
-            .addArgumentsItem(e3)
-            .addArgumentsItem(s3)
-            .addArgumentsItem(d);
+    res = Switch.of(e1, s1, e3, s3, d);
 
     assertEquals(new BigDecimal("-1"), Expressions.getNumberValue(c.calculate(res)));
 
-    Expression res1 =
-        new Expression()
-            .functionId("switch")
-            .addArgumentsItem(e1)
-            .addArgumentsItem(s1)
-            .addArgumentsItem(e3)
-            .addArgumentsItem(s3);
+    Expression res1 = Switch.of(e1, s1, e3, s3);
 
     Exception exception =
         assertThrows(
@@ -220,125 +195,60 @@ public class C2RTest {
   @Test
   public void testComparison() {
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("eq")
-            .addArgumentsItem(Exp.of(3))
-            .addArgumentsItem(Exp.of(5));
+    Expression e = Eq.of(Exp.of(3), Exp.of(5));
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
 
-    e =
-        new Expression()
-            .functionId("eq")
-            .addArgumentsItem(Exp.of(3))
-            .addArgumentsItem(Exp.of(3));
+    e = Eq.of(Exp.of(3), Exp.of(3));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
-    e =
-        new Expression()
-            .functionId("ne")
-            .addArgumentsItem(Exp.of(5))
-            .addArgumentsItem(Exp.of(3));
+    e = Ne.of(Exp.of(5), Exp.of(3));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
-    e =
-        new Expression()
-            .functionId("ne")
-            .addArgumentsItem(Exp.of(3))
-            .addArgumentsItem(Exp.of(3));
+    e = Ne.of(Exp.of(3), Exp.of(3));
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
 
-    e =
-        new Expression()
-            .functionId("lt")
-            .addArgumentsItem(Exp.of(3))
-            .addArgumentsItem(Exp.of(5));
+    e = Lt.of(Exp.of(3), Exp.of(5));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
-    e =
-        new Expression()
-            .functionId("lt")
-            .addArgumentsItem(Exp.of(3))
-            .addArgumentsItem(Exp.of(3));
+    e = Lt.of(Exp.of(3), Exp.of(3));
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
 
-    e =
-        new Expression()
-            .functionId("le")
-            .addArgumentsItem(Exp.of(3))
-            .addArgumentsItem(Exp.of(5));
+    e = Le.of(Exp.of(3), Exp.of(5));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
-    e =
-        new Expression()
-            .functionId("le")
-            .addArgumentsItem(Exp.of(3))
-            .addArgumentsItem(Exp.of(3));
+    e = Le.of(Exp.of(3), Exp.of(3));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
-    e =
-        new Expression()
-            .functionId("le")
-            .addArgumentsItem(Exp.of(3))
-            .addArgumentsItem(Exp.of(2));
-    assertFalse(Expressions.hasValueTrue(c.calculate(e)));
-    e =
-        new Expression()
-            .functionId("gt")
-            .addArgumentsItem(Exp.of(5))
-            .addArgumentsItem(Exp.of(3));
-    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
-
-    e =
-        new Expression()
-            .functionId("gt")
-            .addArgumentsItem(Exp.of(3))
-            .addArgumentsItem(Exp.of(3));
+    e = Le.of(Exp.of(3), Exp.of(2));
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
 
-    e =
-        new Expression()
-            .functionId("ge")
-            .addArgumentsItem(Exp.of(5))
-            .addArgumentsItem(Exp.of(3));
+    e = Gt.of(Exp.of(5), Exp.of(3));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
-    e =
-        new Expression()
-            .functionId("ge")
-            .addArgumentsItem(Exp.of(3))
-            .addArgumentsItem(Exp.of(3));
+    e = Gt.of(Exp.of(3), Exp.of(3));
+    assertFalse(Expressions.hasValueTrue(c.calculate(e)));
+
+    e = Ge.of(Exp.of(5), Exp.of(3));
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
 
-    e =
-        new Expression()
-            .functionId("ge")
-            .addArgumentsItem(Exp.of(2))
-            .addArgumentsItem(Exp.of(3));
+    e = Ge.of(Exp.of(3), Exp.of(3));
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e = Ge.of(Exp.of(2), Exp.of(3));
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
   }
 
   @Test
   public void testAvg() {
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("avg")
-            .addArgumentsItem(Exp.of(3))
-            .addArgumentsItem(Exp.of(5))
-            .addArgumentsItem(Exp.of(10));
+    Expression e = Avg.of(Exp.of(3), Exp.of(5), Exp.of(10));
 
     assertEquals(
         new BigDecimal("6.00"),
         Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
 
     c = new C2R();
-    e =
-        new Expression()
-            .functionId("avg")
-            .addArgumentsItem(Exp.of(2, 3, 4))
-            .addArgumentsItem(Exp.of(5))
-            .addArgumentsItem(Exp.of(10));
+    e = Avg.of(Exp.of(2, 3, 4), Exp.of(5), Exp.of(10));
 
     assertEquals(
         new BigDecimal("6.00"),
@@ -348,11 +258,7 @@ public class C2RTest {
   @Test
   public void testAvg2() {
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("avg")
-            .addArgumentsItem(new Expression().entityId("a"))
-            .addArgumentsItem(Exp.of(5));
+    Expression e = Avg.of(Exp.ofEntity("a"), Exp.of(5));
 
     Value a1 = Val.of(12, LocalDateTime.parse("2020-01-02T00:00"));
     Value a2 = Val.of(3, LocalDateTime.parse("2021-01-02T00:00"));
@@ -378,8 +284,7 @@ public class C2RTest {
   @Test
   public void testAvg3() {
     C2R c = new C2R();
-    Expression e =
-        new Expression().functionId("avg").addArgumentsItem(new Expression().entityId("a"));
+    Expression e = Avg.of(Exp.ofEntity("a"));
 
     Value a1 = Val.of(12, LocalDateTime.parse("2020-01-02T00:00"));
     Value a2 = Val.of(3, LocalDateTime.parse("2021-01-02T00:00"));
@@ -405,12 +310,7 @@ public class C2RTest {
   @Test
   public void testMin() {
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("min")
-            .addArgumentsItem(Exp.of(5))
-            .addArgumentsItem(Exp.of(3))
-            .addArgumentsItem(Exp.of(10));
+    Expression e = Min.of(Exp.of(5), Exp.of(3), Exp.of(10));
     assertEquals(
         new BigDecimal("3.00"),
         Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
@@ -419,12 +319,7 @@ public class C2RTest {
   @Test
   public void testMax() {
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("max")
-            .addArgumentsItem(Exp.of(5))
-            .addArgumentsItem(Exp.of(13))
-            .addArgumentsItem(Exp.of(10));
+    Expression e = Max.of(Exp.of(5), Exp.of(13), Exp.of(10));
     assertEquals(
         new BigDecimal("13.00"),
         Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
@@ -433,19 +328,7 @@ public class C2RTest {
   @Test
   public void testBMI() {
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("divide")
-            .addArgumentsItem(new Expression().entityId("m"))
-            .addArgumentsItem(
-                new Expression()
-                    .functionId("power")
-                    .addArgumentsItem(new Expression().entityId("l"))
-                    .addArgumentsItem(
-                        new Expression()
-                            .value(
-                                ((NumberValue) new NumberValue().dataType(DataType.NUMBER))
-                                    .value(new BigDecimal(2)))));
+    Expression e = Divide.of(Exp.ofEntity("m"), Power.of(Exp.ofEntity("l"), Exp.of(2)));
 
     c.setVariable("m", 65);
     c.setVariable("l", 1.78);
@@ -458,15 +341,7 @@ public class C2RTest {
   @Test
   public void test1() {
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("multiply")
-            .addArgumentsItem(new Expression().entityId("a"))
-            .addArgumentsItem(
-                new Expression()
-                    .functionId("add")
-                    .addArgumentsItem(new Expression().entityId("b"))
-                    .addArgumentsItem(new Expression().entityId("c")));
+    Expression e = Multiply.of(Exp.ofEntity("a"), Add.of(Exp.ofEntity("b"), Exp.ofEntity("c")));
 
     c.setVariable("a", 2);
     c.setVariable("b", 3);
@@ -478,11 +353,7 @@ public class C2RTest {
   @Test
   public void test2() {
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("power")
-            .addArgumentsItem(new Expression().entityId("a"))
-            .addArgumentsItem(new Expression().entityId("b"));
+    Expression e = Power.of(Exp.ofEntity("a"), Exp.ofEntity("b"));
 
     c.setVariable("a", new NumberValue().value(new BigDecimal(-5)).dataType(DataType.NUMBER));
     c.setVariable("b", 3);
@@ -493,11 +364,7 @@ public class C2RTest {
   @Test
   public void test3() {
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("power")
-            .addArgumentsItem(new Expression().constantId("pi"))
-            .addArgumentsItem(new Expression().constantId("e"));
+    Expression e = Power.of(Exp.ofConstant("pi"), Exp.ofConstant("e"));
 
     assertEquals(
         new BigDecimal("22.46"),
@@ -508,17 +375,10 @@ public class C2RTest {
   public void testAge() {
     C2R c = new C2R();
     Expression e =
-        new Expression()
-            .functionId("diffYears")
-            .addArgumentsItem(Exp.of(DateUtil.parse("1990-08-10")))
-            .addArgumentsItem(Exp.of(DateUtil.parse("2030-06-16")));
+        DiffYears.of(Exp.of(DateUtil.parse("1990-08-10")), Exp.of(DateUtil.parse("2030-06-16")));
     assertEquals(39, Expressions.getNumberValue(c.calculate(e)).intValue());
 
-    e =
-        new Expression()
-            .functionId("diffYears")
-            .addArgumentsItem(Exp.of(DateUtil.parse("1990-08-10")))
-            .addArgumentsItem(new Expression().constantId("now"));
+    e = DiffYears.of(Exp.of(DateUtil.parse("1990-08-10")), Exp.ofConstant("now"));
     assertEquals(
         DateUtil.getPeriodInYears(DateUtil.parse("1990-08-10")).intValue(),
         Expressions.getNumberValue(c.calculate(e)).intValue());
@@ -527,82 +387,42 @@ public class C2RTest {
   @Test
   public void testPlusYears() {
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("plusYears")
-            .addArgumentsItem(Exp.of(DateUtil.parse("1990-08-10")))
-            .addArgumentsItem(Exp.of(2));
+    Expression e = PlusYears.of(Exp.of(DateUtil.parse("1990-08-10")), Exp.of(2));
     assertEquals(DateUtil.parse("1992-08-10"), Expressions.getDateTimeValue(c.calculate(e)));
   }
 
   @Test
   public void testInSet() {
     C2R c = new C2R();
-    Expression e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(2, 10))
-            .addArgumentsItem(Exp.of(5, 6, 7));
+    Expression e = In.of(Exp.of(2, 10), Exp.of(5, 6, 7));
     assertTrue(Expressions.getBooleanValue(c.calculate(e, Avg.get())));
 
     c = new C2R();
-    e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(2, 10))
-            .addArgumentsItem(Exp.of(5, 7));
+    e = In.of(Exp.of(2, 10), Exp.of(5, 7));
     assertFalse(Expressions.getBooleanValue(c.calculate(e, Avg.get())));
 
     c = new C2R();
-    e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(1, 2))
-            .addArgumentsItem(Exp.of(Res.of(Quantifier.ALL, 1, 2, 3)));
+    e = In.of(Exp.of(1, 2), Exp.of(Res.of(Quantifier.ALL, 1, 2, 3)));
     assertTrue(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
-    e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(1, 2, 4))
-            .addArgumentsItem(Exp.of(Res.of(Quantifier.ALL, 1, 2, 3)));
+    e = In.of(Exp.of(1, 2, 4), Exp.of(Res.of(Quantifier.ALL, 1, 2, 3)));
     assertFalse(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
-    e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(5, 6, 2))
-            .addArgumentsItem(
-                Exp.of(Res.of(1, Quantifier.MIN, 1, 2, 3)));
+    e = In.of(Exp.of(5, 6, 2), Exp.of(Res.of(1, Quantifier.MIN, 1, 2, 3)));
     assertTrue(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
-    e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(5, 6, 7))
-            .addArgumentsItem(
-                Exp.of(Res.of(1, Quantifier.MIN, 1, 2, 3)));
+    e = In.of(Exp.of(5, 6, 7), Exp.of(Res.of(1, Quantifier.MIN, 1, 2, 3)));
     assertFalse(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
-    e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(5, 6, 2))
-            .addArgumentsItem(
-                Exp.of(Res.of(2, Quantifier.MIN, 1, 2, 3)));
+    e = In.of(Exp.of(5, 6, 2), Exp.of(Res.of(2, Quantifier.MIN, 1, 2, 3)));
     assertFalse(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
-    e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(5, 1, 2))
-            .addArgumentsItem(
-                Exp.of(Res.of(2, Quantifier.MIN, 1, 2, 3)));
+    e = In.of(Exp.of(5, 1, 2), Exp.of(Res.of(2, Quantifier.MIN, 1, 2, 3)));
     assertTrue(Expressions.getBooleanValue(c.calculate(e)));
   }
 
@@ -610,96 +430,84 @@ public class C2RTest {
   public void testInInterval() {
     C2R c = new C2R();
     Expression e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(11, 20))
-            .addArgumentsItem(
-                Exp.of(
-                    Res.of(
-                        Quantifier.ALL,
-                        RestrictionOperator.GREATER_THAN,
-                        10,
-                        RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
-                        20)));
+        In.of(
+            Exp.of(11, 20),
+            Exp.of(
+                Res.of(
+                    Quantifier.ALL,
+                    RestrictionOperator.GREATER_THAN,
+                    10,
+                    RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
+                    20)));
     assertTrue(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
     e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(11, 21))
-            .addArgumentsItem(
-                Exp.of(
-                    Res.of(
-                        Quantifier.ALL,
-                        RestrictionOperator.GREATER_THAN,
-                        10,
-                        RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
-                        20)));
+        In.of(
+            Exp.of(11, 21),
+            Exp.of(
+                Res.of(
+                    Quantifier.ALL,
+                    RestrictionOperator.GREATER_THAN,
+                    10,
+                    RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
+                    20)));
     assertFalse(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
     e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(11, 21))
-            .addArgumentsItem(
-                Exp.of(
-                    Res.of(
-                        1,
-                        Quantifier.MIN,
-                        RestrictionOperator.GREATER_THAN,
-                        10,
-                        RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
-                        20)));
+        In.of(
+            Exp.of(11, 21),
+            Exp.of(
+                Res.of(
+                    1,
+                    Quantifier.MIN,
+                    RestrictionOperator.GREATER_THAN,
+                    10,
+                    RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
+                    20)));
     assertTrue(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
     e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(10, 21))
-            .addArgumentsItem(
-                Exp.of(
-                    Res.of(
-                        1,
-                        Quantifier.MIN,
-                        RestrictionOperator.GREATER_THAN,
-                        10,
-                        RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
-                        20)));
+        In.of(
+            Exp.of(10, 21),
+            Exp.of(
+                Res.of(
+                    1,
+                    Quantifier.MIN,
+                    RestrictionOperator.GREATER_THAN,
+                    10,
+                    RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
+                    20)));
     assertFalse(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
     e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(15, 6, 21))
-            .addArgumentsItem(
-                Exp.of(
-                    Res.of(
-                        2,
-                        Quantifier.MIN,
-                        RestrictionOperator.GREATER_THAN,
-                        10,
-                        RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
-                        20)));
+        In.of(
+            Exp.of(15, 6, 21),
+            Exp.of(
+                Res.of(
+                    2,
+                    Quantifier.MIN,
+                    RestrictionOperator.GREATER_THAN,
+                    10,
+                    RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
+                    20)));
     assertFalse(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
     e =
-        new Expression()
-            .functionId("in")
-            .addArgumentsItem(Exp.of(15, 6, 20))
-            .addArgumentsItem(
-                Exp.of(
-                    Res.of(
-                        2,
-                        Quantifier.MIN,
-                        RestrictionOperator.GREATER_THAN,
-                        10,
-                        RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
-                        20)));
+        In.of(
+            Exp.of(15, 6, 20),
+            Exp.of(
+                Res.of(
+                    2,
+                    Quantifier.MIN,
+                    RestrictionOperator.GREATER_THAN,
+                    10,
+                    RestrictionOperator.LESS_THAN_OR_EQUAL_TO,
+                    20)));
     assertTrue(Expressions.getBooleanValue(c.calculate(e)));
   }
 }
