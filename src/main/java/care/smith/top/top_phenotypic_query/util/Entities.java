@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -42,8 +43,7 @@ public class Entities {
       Phenotype supP = p.getSuperPhenotype();
       if (Phenotypes.isRestriction(p)) {
         p.setExpression(Exp.ofRestriction(p));
-        if (Phenotypes.isSingle(p) && p.getRestriction() == null)
-          p.setRestriction(Res.ofCodes(p));
+        if (Phenotypes.isSingle(p) && p.getRestriction() == null) p.setRestriction(Res.ofCodes(p));
       }
       if (supP != null) p.setSuperPhenotype(getPhenotype(supP.getId()));
     }
@@ -157,6 +157,26 @@ public class Entities {
 
   public static String getFirstTitle(Entity e) {
     return e.getTitles().get(0).getText();
+  }
+
+  public static String getTitle(Entity e, String lang) {
+    return getText(e.getTitles(), lang);
+  }
+
+  public static String getSynonym(Entity e, String lang) {
+    return getText(e.getSynonyms(), lang);
+  }
+
+  public static String getDescription(Entity e, String lang) {
+    return getText(e.getDescriptions(), lang);
+  }
+
+  private static String getText(List<LocalisableText> texts, String lang) {
+    return texts.stream()
+        .filter(t -> Objects.equals(t.getLang(), lang))
+        .map(t -> t.getText())
+        .findFirst()
+        .orElse(null);
   }
 
   private static final String ANN_SEP = "|";
