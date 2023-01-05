@@ -25,12 +25,8 @@ public class Not extends FunctionEntity {
     return INSTANCE;
   }
 
-  public static Expression of(List<Expression> args) {
-    return Exp.function(get().getClass().getSimpleName(), args);
-  }
-
   public static Expression of(Expression arg) {
-    return of(List.of(arg));
+    return Exp.function(get().getClass().getSimpleName(), arg);
   }
 
   public static Expression of(Phenotype arg) {

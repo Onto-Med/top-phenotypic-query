@@ -96,4 +96,8 @@ public class Exp {
   public static Expression function(String functionId, Expression... args) {
     return function(functionId, List.of(args));
   }
+
+  public static Expression function(String functionId, Expression arg) {
+    return new Expression().functionId(functionId).addArgumentsItem(arg);
+  }
 }

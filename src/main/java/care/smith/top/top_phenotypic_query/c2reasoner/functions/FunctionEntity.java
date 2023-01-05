@@ -36,6 +36,10 @@ public abstract class FunctionEntity {
     function.maxArgumentNumber(num);
   }
 
+  public String getFunctionId() {
+    return function.getId();
+  }
+
   public ExpressionFunction getFunction() {
     return function;
   }
