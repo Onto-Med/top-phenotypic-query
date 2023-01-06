@@ -78,8 +78,8 @@ public class SQLAdapter extends DataAdapter {
       java.sql.ResultSet sqlRS = ps.executeQuery();
       PhenotypeOutput out = search.getOutput();
       String sbjCol = out.getSubject();
-      String pheCol = out.getPhenotype();
-      String dateCol = out.getDate();
+      String pheCol = out.getValue();
+      String dateCol = out.getDateTime();
       Phenotype phe = search.getPhenotype();
 
       while (sqlRS.next()) {

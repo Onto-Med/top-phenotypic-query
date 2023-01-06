@@ -5,15 +5,18 @@ import java.util.Map;
 public class PhenotypeQuery {
 
   private String baseQuery;
-  private String valueIntervalPart;
-  private String numberValueIntervalPart;
-  private String dateValueIntervalPart;
-  private String valueListPart;
-  private String stringValueListPart;
-  private String numberValueListPart;
-  private String conceptValueListPart;
-  private String dateIntervalPart;
+  private String dateTimeIntervalPart;
   private String subjectsPart;
+  private String valueIntervalPart;
+  private String valueListPart;
+  private String numberValueIntervalPart;
+  private String numberValueListPart;
+  private String dateTimeValueIntervalPart;
+  private String dateTimeValueListPart;
+  private String textValueListPart;
+  private String booleanValueListPart;
+  private String conceptValueListPart;
+
   private PhenotypeOutput output;
 
   public String getBaseQuery() {
@@ -24,28 +27,30 @@ public class PhenotypeQuery {
     this.baseQuery = baseQuery;
   }
 
+  public String getDateTimeIntervalPart() {
+    return dateTimeIntervalPart;
+  }
+
+  public void setDateTimeIntervalPart(String dateTimeIntervalPart) {
+    this.dateTimeIntervalPart = dateTimeIntervalPart;
+  }
+
+  public String getSubjectsPart() {
+    return subjectsPart;
+  }
+
+  public void setSubjectsPart(String subjectsPart) {
+    this.subjectsPart = subjectsPart;
+  }
+
+  // Value
+
   public String getValueIntervalPart() {
     return valueIntervalPart;
   }
 
   public void setValueIntervalPart(String valueIntervalPart) {
     this.valueIntervalPart = valueIntervalPart;
-  }
-
-  public String getNumberValueIntervalPart() {
-    return numberValueIntervalPart;
-  }
-
-  public void setNumberValueIntervalPart(String numberValueIntervalPart) {
-    this.numberValueIntervalPart = numberValueIntervalPart;
-  }
-
-  public String getDateValueIntervalPart() {
-    return dateValueIntervalPart;
-  }
-
-  public void setDateValueIntervalPart(String dateValueIntervalPart) {
-    this.dateValueIntervalPart = dateValueIntervalPart;
   }
 
   public String getValueListPart() {
@@ -56,12 +61,14 @@ public class PhenotypeQuery {
     this.valueListPart = valueListPart;
   }
 
-  public String getStringValueListPart() {
-    return stringValueListPart;
+  // Number Value
+
+  public String getNumberValueIntervalPart() {
+    return numberValueIntervalPart;
   }
 
-  public void setStringValueListPart(String stringValueListPart) {
-    this.stringValueListPart = stringValueListPart;
+  public void setNumberValueIntervalPart(String numberValueIntervalPart) {
+    this.numberValueIntervalPart = numberValueIntervalPart;
   }
 
   public String getNumberValueListPart() {
@@ -72,28 +79,52 @@ public class PhenotypeQuery {
     this.numberValueListPart = numberValueListPart;
   }
 
+  // Date Time Value
+
+  public String getDateTimeValueIntervalPart() {
+    return dateTimeValueIntervalPart;
+  }
+
+  public void setDateTimeValueIntervalPart(String dateTimeValueIntervalPart) {
+    this.dateTimeValueIntervalPart = dateTimeValueIntervalPart;
+  }
+
+  public String getDateTimeValueListPart() {
+    return dateTimeValueListPart;
+  }
+
+  public void setDateTimeValueListPart(String dateTimeValueListPart) {
+    this.dateTimeValueListPart = dateTimeValueListPart;
+  }
+
+  // Text Value
+
+  public void setTextValueListPart(String textValueListPart) {
+    this.textValueListPart = textValueListPart;
+  }
+
+  public String getTextValueListPart() {
+    return textValueListPart;
+  }
+
+  // Boolean Value
+
+  public void setBooleanValueListPart(String booleanValueListPart) {
+    this.booleanValueListPart = booleanValueListPart;
+  }
+
+  public String getBooleanValueListPart() {
+    return booleanValueListPart;
+  }
+
+  // Concept Value
+
   public String getConceptValueListPart() {
     return conceptValueListPart;
   }
 
   public void setConceptValueListPart(String conceptValueListPart) {
     this.conceptValueListPart = conceptValueListPart;
-  }
-
-  public String getDateIntervalPart() {
-    return dateIntervalPart;
-  }
-
-  public void setDateIntervalPart(String dateIntervalPart) {
-    this.dateIntervalPart = dateIntervalPart;
-  }
-
-  public String getSubjectsPart() {
-    return subjectsPart;
-  }
-
-  public void setSubjectsPart(String subjectsPart) {
-    this.subjectsPart = subjectsPart;
   }
 
   public PhenotypeOutput getOutput() {
@@ -112,24 +143,28 @@ public class PhenotypeQuery {
   public String toString() {
     return "PhenotypeQuery [baseQuery="
         + baseQuery
-        + ", valueIntervalPart="
-        + valueIntervalPart
-        + ", numberValueIntervalPart="
-        + numberValueIntervalPart
-        + ", dateValueIntervalPart="
-        + dateValueIntervalPart
-        + ", valueListPart="
-        + valueListPart
-        + ", stringValueListPart="
-        + stringValueListPart
-        + ", numberValueListPart="
-        + numberValueListPart
-        + ", conceptValueListPart="
-        + conceptValueListPart
-        + ", dateIntervalPart="
-        + dateIntervalPart
+        + ", dateTimeIntervalPart="
+        + dateTimeIntervalPart
         + ", subjectsPart="
         + subjectsPart
+        + ", valueIntervalPart="
+        + valueIntervalPart
+        + ", valueListPart="
+        + valueListPart
+        + ", numberValueIntervalPart="
+        + numberValueIntervalPart
+        + ", numberValueListPart="
+        + numberValueListPart
+        + ", dateTimeValueIntervalPart="
+        + dateTimeValueIntervalPart
+        + ", dateTimeValueListPart="
+        + dateTimeValueListPart
+        + ", textValueListPart="
+        + textValueListPart
+        + ", booleanValueListPart="
+        + booleanValueListPart
+        + ", conceptValueListPart="
+        + conceptValueListPart
         + ", output="
         + output
         + "]";

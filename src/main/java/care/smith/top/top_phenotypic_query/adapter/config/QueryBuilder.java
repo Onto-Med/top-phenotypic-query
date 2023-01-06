@@ -13,7 +13,23 @@ public class QueryBuilder {
   }
 
   protected void add(String queryPart, Map<String, String> map) {
-    queryString.append(replace(queryPart, map));
+    add(replace(queryPart, map));
+  }
+
+  protected void add(String queryPart, String values) {
+    add(queryPart.replace("{values}", values));
+  }
+
+  protected void add(String queryPart, String operator, String value) {
+    add(queryPart.replace("{operator}", operator).replace("{value}", value));
+  }
+
+  protected void add(String queryPart, String values, Map<String, String> map) {
+    add(queryPart.replace("{values}", values), map);
+  }
+
+  protected void add(String queryPart, String operator, String value, Map<String, String> map) {
+    add(queryPart.replace("{operator}", operator).replace("{value}", value), map);
   }
 
   public static String replace(String s, Map<String, String> map) {

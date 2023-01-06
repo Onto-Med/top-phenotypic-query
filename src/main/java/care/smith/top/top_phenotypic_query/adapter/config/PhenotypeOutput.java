@@ -5,12 +5,13 @@ import java.util.Map;
 public class PhenotypeOutput {
 
   private String subject;
-  private String phenotype;
-  private String stringPhenotype;
-  private String numberPhenotype;
-  private String conceptPhenotype;
-  private String datePhenotype;
-  private String date;
+  private String dateTime;
+  private String value;
+  private String textValue;
+  private String numberValue;
+  private String dateTimeValue;
+  private String booleanValue;
+  private String conceptValue;
 
   private Map<String, String> mapping;
 
@@ -27,69 +28,90 @@ public class PhenotypeOutput {
     this.subject = subject;
   }
 
-  public String getPhenotype() {
-    if (phenotype == null) return null;
-    if (mapping == null) return phenotype;
-    return QueryBuilder.replace(phenotype, mapping);
+  public String getDateTime() {
+    if (mapping == null) return dateTime;
+    return QueryBuilder.replace(dateTime, mapping);
   }
 
-  public void setPhenotype(String phenotype) {
-    this.phenotype = phenotype;
+  public void setDateTime(String dateTime) {
+    this.dateTime = dateTime;
   }
 
-  public String getStringPhenotype() {
-    if (mapping == null) return stringPhenotype;
-    return QueryBuilder.replace(stringPhenotype, mapping);
+  public String getValue() {
+    if (value == null) return null;
+    if (mapping == null) return value;
+    return QueryBuilder.replace(value, mapping);
   }
 
-  public void setStringPhenotype(String stringPhenotype) {
-    this.stringPhenotype = stringPhenotype;
+  public void setValue(String value) {
+    this.value = value;
   }
 
-  public String getNumberPhenotype() {
-    if (mapping == null) return numberPhenotype;
-    return QueryBuilder.replace(numberPhenotype, mapping);
+  public String getTextValue() {
+    if (mapping == null) return textValue;
+    return QueryBuilder.replace(textValue, mapping);
   }
 
-  public void setNumberPhenotype(String numberPhenotype) {
-    this.numberPhenotype = numberPhenotype;
+  public void setTextValue(String textValue) {
+    this.textValue = textValue;
   }
 
-  public String getConceptPhenotype() {
-    if (mapping == null) return conceptPhenotype;
-    return QueryBuilder.replace(conceptPhenotype, mapping);
+  public String getNumberValue() {
+    if (mapping == null) return numberValue;
+    return QueryBuilder.replace(numberValue, mapping);
   }
 
-  public void setConceptPhenotype(String conceptPhenotype) {
-    this.conceptPhenotype = conceptPhenotype;
+  public void setNumberValue(String numberValue) {
+    this.numberValue = numberValue;
   }
 
-  public String getDatePhenotype() {
-    if (mapping == null) return datePhenotype;
-    return QueryBuilder.replace(datePhenotype, mapping);
+  public String getDateTimeValue() {
+    if (mapping == null) return dateTimeValue;
+    return QueryBuilder.replace(dateTimeValue, mapping);
   }
 
-  public void setDatePhenotype(String datePhenotype) {
-    this.datePhenotype = datePhenotype;
+  public void setDateTimeValue(String dateTimeValue) {
+    this.dateTimeValue = dateTimeValue;
   }
 
-  public String getDate() {
-    if (mapping == null) return date;
-    return QueryBuilder.replace(date, mapping);
+  public String getBooleanValue() {
+    if (mapping == null) return booleanValue;
+    return QueryBuilder.replace(booleanValue, mapping);
   }
 
-  public void setDate(String date) {
-    this.date = date;
+  public void setBooleanValue(String booleanValue) {
+    this.booleanValue = booleanValue;
+  }
+
+  public String getConceptValue() {
+    if (mapping == null) return conceptValue;
+    return QueryBuilder.replace(conceptValue, mapping);
+  }
+
+  public void setConceptValue(String conceptValue) {
+    this.conceptValue = conceptValue;
   }
 
   @Override
   public String toString() {
     return "PhenotypeOutput [subject="
         + subject
-        + ", phenotype="
-        + phenotype
-        + ", date="
-        + date
+        + ", dateTime="
+        + dateTime
+        + ", value="
+        + value
+        + ", textValue="
+        + textValue
+        + ", numberValue="
+        + numberValue
+        + ", dateTimeValue="
+        + dateTimeValue
+        + ", booleanValue="
+        + booleanValue
+        + ", conceptValue="
+        + conceptValue
+        + ", mapping="
+        + mapping
         + "]";
   }
 }

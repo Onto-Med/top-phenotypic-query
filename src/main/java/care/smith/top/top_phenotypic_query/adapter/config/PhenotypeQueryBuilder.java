@@ -18,58 +18,47 @@ public class PhenotypeQueryBuilder extends QueryBuilder {
   }
 
   public PhenotypeQueryBuilder valueIntervalLimit(String operator, String value) {
-    add(
-        query.getValueIntervalPart().replace("{operator}", operator).replace("{value}", value),
-        mappings);
+    add(query.getValueIntervalPart(), operator, value, mappings);
     return this;
   }
 
   public PhenotypeQueryBuilder numberValueIntervalLimit(String operator, String value) {
-    add(
-        query
-            .getNumberValueIntervalPart()
-            .replace("{operator}", operator)
-            .replace("{value}", value),
-        mappings);
+    add(query.getNumberValueIntervalPart(), operator, value, mappings);
     return this;
   }
 
   public PhenotypeQueryBuilder dateValueIntervalLimit(String operator, String value) {
-    add(
-        query.getDateValueIntervalPart().replace("{operator}", operator).replace("{value}", value),
-        mappings);
+    add(query.getDateTimeValueIntervalPart(), operator, value, mappings);
     return this;
   }
 
   public PhenotypeQueryBuilder valueList(String values) {
-    add(query.getValueListPart().replace("{values}", values), mappings);
+    add(query.getValueListPart(), values, mappings);
     return this;
   }
 
   public PhenotypeQueryBuilder stringValueList(String values) {
-    add(query.getStringValueListPart().replace("{values}", values), mappings);
+    add(query.getTextValueListPart(), values, mappings);
     return this;
   }
 
   public PhenotypeQueryBuilder numberValueList(String values) {
-    add(query.getNumberValueListPart().replace("{values}", values), mappings);
+    add(query.getNumberValueListPart(), values, mappings);
     return this;
   }
 
   public PhenotypeQueryBuilder conceptValueList(String values) {
-    add(query.getConceptValueListPart().replace("{values}", values), mappings);
+    add(query.getConceptValueListPart(), values, mappings);
     return this;
   }
 
   public PhenotypeQueryBuilder dateIntervalLimit(String operator, String value) {
-    add(
-        query.getDateIntervalPart().replace("{operator}", operator).replace("{value}", value),
-        mappings);
+    add(query.getDateTimeIntervalPart(), operator, value, mappings);
     return this;
   }
 
   public PhenotypeQueryBuilder subjects(String subjectIds) {
-    add(query.getSubjectsPart().replace("{subject_ids}", subjectIds));
+    add(query.getSubjectsPart(), subjectIds);
     return this;
   }
 }
