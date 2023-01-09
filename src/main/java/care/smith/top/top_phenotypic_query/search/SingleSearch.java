@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.search;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQuery;
+import care.smith.top.top_phenotypic_query.adapter.config.Props;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
@@ -86,15 +88,26 @@ public class SingleSearch extends PhenotypeSearch {
   }
 
   public String getSourceUnit() {
-    return getCodeMapping().getUnit();
+    return (getCodeMapping() == null) ? null : getCodeMapping().getUnit();
   }
 
   public String getType() {
-    return getCodeMapping().getType();
+    if (getCodeMapping() != null && getCodeMapping().getType() != null)
+      return getCodeMapping().getType();
+    if (config.getPhenotypeQuery(phenotype.getItemType().getValue()) != null)
+      return phenotype.getItemType().getValue();
+    return Props.DEFAULT_ITEM_TYPE;
   }
 
   public Map<String, String> getPhenotypeMappings() {
-    return adapter.getSettings().getPhenotypeMappings(this);
+    if (getCodeMapping() != null && getCodeMapping().getPhenotypeMappings() != null) {
+      Map<String, String> pheMap = getCodeMapping().getPhenotypeMappings();
+      if (!pheMap.containsKey(Props.CODES))
+        pheMap.put(Props.CODES, adapter.getSettings().getCodeUrisAsString(phenotype));
+      return pheMap;
+    }
+    return Collections.singletonMap(
+        Props.CODES, adapter.getSettings().getCodeUrisAsString(phenotype));
   }
 
   public PhenotypeQuery getPhenotypeQuery() {

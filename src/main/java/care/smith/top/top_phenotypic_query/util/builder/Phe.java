@@ -7,6 +7,7 @@ import care.smith.top.model.CodeSystem;
 import care.smith.top.model.DataType;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.Expression;
+import care.smith.top.model.ItemType;
 import care.smith.top.model.LocalisableText;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
@@ -18,12 +19,17 @@ public class Phe {
   private Phenotype p;
 
   public Phe(String id, String codeSystemUri, String... codes) {
-    p = (Phenotype) new Phenotype().id(id);
+    this(id);
     codes(codeSystemUri, codes);
   }
 
   public Phe(String id) {
-    p = (Phenotype) new Phenotype().id(id);
+    p = (Phenotype) new Phenotype().itemType(ItemType.OBSERVATION).id(id);
+  }
+
+  public Phe itemType(ItemType itemType) {
+    p.itemType(itemType);
+    return this;
   }
 
   public static Code getCode(String codeSystemUri, String code) {

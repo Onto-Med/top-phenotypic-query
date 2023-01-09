@@ -14,7 +14,7 @@ subjectQuery:
     birthdate: birth_date
 phenotypeQueries:
   default:
-    baseQuery: "SELECT subject_id, created_at, unit, number_value, text_value, date_time_value, boolean_value FROM phenotype\nWHERE concat_ws('|', code_system, code) IN ({codes})"
+    baseQuery: "SELECT subject_id, created_at, unit, number_value, text_value, date_time_value, boolean_value FROM weight\nWHERE code_system || '|' || code IN ({codes})"
     numberValueIntervalPart: "\nAND number_value {operator} {value}" 
     numberValueListPart: "\nAND number_value IN ({values})"
     dateTimeValueIntervalPart: "\nAND date_time_value {operator} {value}" 
@@ -31,14 +31,21 @@ phenotypeQueries:
       booleanValue: boolean_value
       dateTime: created_at
   observation:
-    baseQuery: "SELECT subject_id, created_at, {phenotype} FROM assessment1\nWHERE {phenotype} IS NOT NULL"
-    numberValueIntervalPart: "\nAND {phenotype} {operator} {value}"
-    numberValueListPart: "\nAND {phenotype} IN ({values})"
+    baseQuery: "SELECT subject_id, created_at, unit, number_value, text_value, date_time_value, boolean_value FROM height\nWHERE code_system || '|' || code IN ({codes})"
+    numberValueIntervalPart: "\nAND number_value {operator} {value}" 
+    numberValueListPart: "\nAND number_value IN ({values})"
+    dateTimeValueIntervalPart: "\nAND date_time_value {operator} {value}" 
+    dateTimeValueListPart: "\nAND date_time_value IN ({values})" 
+    textValueListPart: "\nAND text_value IN ({values})" 
+    booleanValueListPart: "\nAND boolean_value IN ({values})" 
     dateTimeIntervalPart: "\nAND created_at {operator} {value}"
     subjectsPart: "\nAND subject_id IN ({values})"
     output:
       subject: subject_id
-      numberValue: "{phenotype}"
+      numberValue: number_value
+      textValue: text_value
+      dateTimeValue: date_time_value
+      booleanValue: boolean_value
       dateTime: created_at
 birthdateMapping:
   code: http://loinc.org|21112-8
@@ -59,6 +66,4 @@ sexMapping:
       source: [ unknown ]
 codeMappings:
   - code: http://loinc.org|3137-7
-    unit: cm
-    phenotypeMappings:
-      phenotype: height 
+    unit: cm 

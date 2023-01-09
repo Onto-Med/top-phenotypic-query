@@ -13,6 +13,7 @@ import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ItemType;
 import care.smith.top.model.NumberRestriction;
 import care.smith.top.model.NumberValue;
 import care.smith.top.model.Phenotype;
@@ -122,7 +123,11 @@ public abstract class AbstractTest {
       String name, String codeSystem, String code, DataType dataType, String unit) {
     Phenotype phenotype =
         (Phenotype)
-            new Phenotype().dataType(dataType).id(name).entityType(EntityType.SINGLE_PHENOTYPE);
+            new Phenotype()
+                .dataType(dataType)
+                .itemType(ItemType.OBSERVATION)
+                .id(name)
+                .entityType(EntityType.SINGLE_PHENOTYPE);
     if (unit != null) phenotype.setUnit(unit);
     addCode(phenotype, codeSystem, code);
     return phenotype;

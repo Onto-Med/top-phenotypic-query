@@ -90,9 +90,7 @@ public abstract class DataAdapterSettings {
 
   public abstract String formatOperator(RestrictionOperator oper);
 
-  public abstract Map<String, String> getPhenotypeMappings(SingleSearch search);
-
-  protected String getCodeUrisAsString(Phenotype p) {
+  public String getCodeUrisAsString(Phenotype p) {
     return formatList(Phenotypes.getCodeUris(p).map(u -> formatString(u)));
   }
 }

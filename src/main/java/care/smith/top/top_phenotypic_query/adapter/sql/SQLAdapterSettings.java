@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,7 +16,6 @@ import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
-import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
@@ -93,18 +91,6 @@ public class SQLAdapterSettings extends DataAdapterSettings {
       Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
     Map<String, String> interval = generateQuestionMarks(Restrictions.getIntervalAsStringMap(r));
     for (String key : interval.keySet()) builder.dateTimeIntervalLimit(key, interval.get(key));
-  }
-
-  @Override
-  public Map<String, String> getPhenotypeMappings(SingleSearch search) {
-    CodeMapping codeMap = search.getAdapterConfig().getCodeMapping(search.getPhenotype());
-    if (codeMap == null) return null;
-    Map<String, String> pheMap = codeMap.getPhenotypeMappings();
-    if (pheMap == null)
-      return Collections.singletonMap("codes", getCodeUrisAsString(search.getPhenotype()));
-    if (!pheMap.containsKey("codes"))
-      pheMap.put("codes", getCodeUrisAsString(search.getPhenotype()));
-    return pheMap;
   }
 
   public PreparedStatement getSubjectPreparedStatement(
