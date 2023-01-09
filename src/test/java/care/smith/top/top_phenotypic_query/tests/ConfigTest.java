@@ -66,8 +66,8 @@ public class ConfigTest {
             .baseQuery()
             .valueIntervalLimit(">=", "100")
             .valueIntervalLimit("<", "200")
-            .dateIntervalLimit(">=", "'1990-01-01'::date")
-            .dateIntervalLimit("<", "'2000-01-01'::date")
+            .dateTimeIntervalLimit(">=", "'1990-01-01'::date")
+            .dateTimeIntervalLimit("<", "'2000-01-01'::date")
             .subjects("'1', '2', '3'")
             .build();
 
@@ -91,8 +91,8 @@ public class ConfigTest {
             .getQueryBuilder(mapping)
             .baseQuery()
             .valueList("'overweight'")
-            .dateIntervalLimit(">=", "'1990-01-01'::date")
-            .dateIntervalLimit("<", "'2000-01-01'::date")
+            .dateTimeIntervalLimit(">=", "'1990-01-01'::date")
+            .dateTimeIntervalLimit("<", "'2000-01-01'::date")
             .subjects("'1', '2', '3'")
             .build();
 

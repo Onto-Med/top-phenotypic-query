@@ -22,23 +22,13 @@ public class PhenotypeQueryBuilder extends QueryBuilder {
     return this;
   }
 
-  public PhenotypeQueryBuilder numberValueIntervalLimit(String operator, String value) {
-    add(query.getNumberValueIntervalPart(), operator, value, mappings);
-    return this;
-  }
-
-  public PhenotypeQueryBuilder dateValueIntervalLimit(String operator, String value) {
-    add(query.getDateTimeValueIntervalPart(), operator, value, mappings);
-    return this;
-  }
-
   public PhenotypeQueryBuilder valueList(String values) {
     add(query.getValueListPart(), values, mappings);
     return this;
   }
 
-  public PhenotypeQueryBuilder stringValueList(String values) {
-    add(query.getTextValueListPart(), values, mappings);
+  public PhenotypeQueryBuilder numberValueIntervalLimit(String operator, String value) {
+    add(query.getNumberValueIntervalPart(), operator, value, mappings);
     return this;
   }
 
@@ -47,12 +37,32 @@ public class PhenotypeQueryBuilder extends QueryBuilder {
     return this;
   }
 
+  public PhenotypeQueryBuilder dateTimeValueIntervalLimit(String operator, String value) {
+    add(query.getDateTimeValueIntervalPart(), operator, value, mappings);
+    return this;
+  }
+
+  public PhenotypeQueryBuilder dateTimeValueList(String values) {
+    add(query.getDateTimeValueListPart(), values, mappings);
+    return this;
+  }
+
+  public PhenotypeQueryBuilder textValueList(String values) {
+    add(query.getTextValueListPart(), values, mappings);
+    return this;
+  }
+
+  public PhenotypeQueryBuilder booleanValueList(String values) {
+    add(query.getBooleanValueListPart(), values, mappings);
+    return this;
+  }
+
   public PhenotypeQueryBuilder conceptValueList(String values) {
     add(query.getConceptValueListPart(), values, mappings);
     return this;
   }
 
-  public PhenotypeQueryBuilder dateIntervalLimit(String operator, String value) {
+  public PhenotypeQueryBuilder dateTimeIntervalLimit(String operator, String value) {
     add(query.getDateTimeIntervalPart(), operator, value, mappings);
     return this;
   }

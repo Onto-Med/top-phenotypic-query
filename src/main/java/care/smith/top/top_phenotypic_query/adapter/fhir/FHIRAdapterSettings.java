@@ -78,7 +78,7 @@ public class FHIRAdapterSettings extends DataAdapterSettings {
     for (String key : interval.keySet()) {
       if (Restrictions.hasNumberType(r)) builder.numberValueIntervalLimit(key, interval.get(key));
       else if (Restrictions.hasDateTimeType(r))
-        builder.dateValueIntervalLimit(key, interval.get(key));
+        builder.dateTimeValueIntervalLimit(key, interval.get(key));
     }
   }
 
@@ -88,7 +88,7 @@ public class FHIRAdapterSettings extends DataAdapterSettings {
     if (Restrictions.hasNumberType(r)) builder.numberValueList(valuesAsString);
     else if (Restrictions.hasStringType(r)) {
       if (valuesAsString.startsWith("http")) builder.conceptValueList(valuesAsString);
-      else builder.stringValueList(valuesAsString);
+      else builder.textValueList(valuesAsString);
     }
   }
 
@@ -96,7 +96,7 @@ public class FHIRAdapterSettings extends DataAdapterSettings {
   protected void addDateInterval(
       Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
     Map<String, String> interval = Restrictions.getIntervalAsStringMap(r, this);
-    for (String key : interval.keySet()) builder.dateIntervalLimit(key, interval.get(key));
+    for (String key : interval.keySet()) builder.dateTimeIntervalLimit(key, interval.get(key));
   }
 
   @Override

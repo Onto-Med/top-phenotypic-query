@@ -92,7 +92,7 @@ public class SQLAdapterSettings extends DataAdapterSettings {
   protected void addDateInterval(
       Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
     Map<String, String> interval = generateQuestionMarks(Restrictions.getIntervalAsStringMap(r));
-    for (String key : interval.keySet()) builder.dateIntervalLimit(key, interval.get(key));
+    for (String key : interval.keySet()) builder.dateTimeIntervalLimit(key, interval.get(key));
   }
 
   @Override
