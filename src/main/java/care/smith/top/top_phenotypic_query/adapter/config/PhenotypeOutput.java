@@ -2,6 +2,8 @@ package care.smith.top.top_phenotypic_query.adapter.config;
 
 import java.util.Map;
 
+import care.smith.top.model.DataType;
+
 public class PhenotypeOutput {
 
   private String subject;
@@ -37,6 +39,16 @@ public class PhenotypeOutput {
     this.dateTime = dateTime;
   }
 
+  public String getValue(DataType dt) {
+    String val = getValue();
+    if (val != null) return val;
+    if (dt == DataType.NUMBER) return getNumberValue();
+    if (dt == DataType.STRING) return getTextValue();
+    if (dt == DataType.DATE_TIME) return getDateTimeValue();
+    if (dt == DataType.BOOLEAN) return getBooleanValue();
+    return null;
+  }
+
   public String getValue() {
     if (value == null) return null;
     if (mapping == null) return value;
@@ -48,6 +60,7 @@ public class PhenotypeOutput {
   }
 
   public String getTextValue() {
+    if (textValue == null) return null;
     if (mapping == null) return textValue;
     return QueryBuilder.replace(textValue, mapping);
   }
@@ -57,6 +70,7 @@ public class PhenotypeOutput {
   }
 
   public String getNumberValue() {
+    if (numberValue == null) return null;
     if (mapping == null) return numberValue;
     return QueryBuilder.replace(numberValue, mapping);
   }
@@ -66,6 +80,7 @@ public class PhenotypeOutput {
   }
 
   public String getDateTimeValue() {
+    if (dateTimeValue == null) return null;
     if (mapping == null) return dateTimeValue;
     return QueryBuilder.replace(dateTimeValue, mapping);
   }
@@ -75,6 +90,7 @@ public class PhenotypeOutput {
   }
 
   public String getBooleanValue() {
+    if (booleanValue == null) return null;
     if (mapping == null) return booleanValue;
     return QueryBuilder.replace(booleanValue, mapping);
   }
@@ -84,6 +100,7 @@ public class PhenotypeOutput {
   }
 
   public String getConceptValue() {
+    if (conceptValue == null) return null;
     if (mapping == null) return conceptValue;
     return QueryBuilder.replace(conceptValue, mapping);
   }

@@ -2,6 +2,8 @@ package care.smith.top.top_phenotypic_query.adapter.config;
 
 import java.util.Map;
 
+import care.smith.top.model.DataType;
+
 public class PhenotypeQueryBuilder extends QueryBuilder {
 
   private PhenotypeQuery query;
@@ -14,6 +16,22 @@ public class PhenotypeQueryBuilder extends QueryBuilder {
 
   public PhenotypeQueryBuilder baseQuery() {
     add(query.getBaseQuery(), mappings);
+    return this;
+  }
+
+  public PhenotypeQueryBuilder valueIntervalLimit(DataType dt, String operator, String value) {
+    if (query.getValueIntervalPart() != null) return valueIntervalLimit(operator, value);
+    if (dt == DataType.NUMBER) return numberValueIntervalLimit(operator, value);
+    if (dt == DataType.DATE_TIME) return dateTimeValueIntervalLimit(operator, value);
+    return this;
+  }
+
+  public PhenotypeQueryBuilder valueList(DataType dt, String values) {
+    if (query.getValueListPart() != null) return valueList(values);
+    if (dt == DataType.NUMBER) return numberValueList(values);
+    if (dt == DataType.DATE_TIME) return dateTimeValueList(values);
+    if (dt == DataType.STRING) return textValueList(values);
+    if (dt == DataType.BOOLEAN) return booleanValueList(values);
     return this;
   }
 

@@ -14,7 +14,7 @@ subjectQuery:
     birthdate: birth_date
 phenotypeQueries:
   default:
-    baseQuery: "SELECT subject_id, created_at, unit, number_value, text_value, date_time_value, boolean_value FROM weight\nWHERE code_system || '|' || code IN ({codes})"
+    baseQuery: "SELECT subject_id, created_at, unit, number_value, text_value, date_time_value, boolean_value FROM weight\nWHERE code_system || '|' || code IN ({codes}) AND (number_value IS NOT NULL OR text_value IS NOT NULL OR date_time_value IS NOT NULL OR boolean_value IS NOT NULL)"
     numberValueIntervalPart: "\nAND number_value {operator} {value}" 
     numberValueListPart: "\nAND number_value IN ({values})"
     dateTimeValueIntervalPart: "\nAND date_time_value {operator} {value}" 
@@ -31,7 +31,7 @@ phenotypeQueries:
       booleanValue: boolean_value
       dateTime: created_at
   observation:
-    baseQuery: "SELECT subject_id, created_at, unit, number_value, text_value, date_time_value, boolean_value FROM height\nWHERE code_system || '|' || code IN ({codes})"
+    baseQuery: "SELECT subject_id, created_at, unit, number_value, text_value, date_time_value, boolean_value FROM height\nWHERE code_system || '|' || code IN ({codes}) AND (number_value IS NOT NULL OR text_value IS NOT NULL OR date_time_value IS NOT NULL OR boolean_value IS NOT NULL)"
     numberValueIntervalPart: "\nAND number_value {operator} {value}" 
     numberValueListPart: "\nAND number_value IN ({values})"
     dateTimeValueIntervalPart: "\nAND date_time_value {operator} {value}" 

@@ -65,6 +65,7 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
       val =
           Val.of(
               UCUM.convert(Values.getNumberValue(val), sourceUnit, modelUnit), val.getDateTime());
+
     addValue(subjectId, phenotype, dateRange, val);
   }
 

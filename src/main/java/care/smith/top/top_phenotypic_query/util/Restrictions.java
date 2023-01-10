@@ -46,6 +46,12 @@ public class Restrictions {
     return r instanceof DateTimeRestriction;
   }
 
+  public static boolean hasConceptType(Restriction r) {
+    if (!hasStringType(r)) return false;
+    List<String> vals = ((StringRestriction) r).getValues();
+    return vals != null && !vals.isEmpty() && vals.get(0).startsWith("http");
+  }
+
   public static String toString(Restriction r) {
     if (r == null) return "|generally valid|";
     if (hasDateTimeType(r) && isEntirePeriod((DateTimeRestriction) r)) return "|entire period|";

@@ -76,11 +76,11 @@ public class SQLAdapter extends DataAdapter {
           SQLAdapterSettings.get().getSinglePreparedStatement(preparedQuery, con, search);
       log.debug("Execute SQL query: {}", ps);
       java.sql.ResultSet sqlRS = ps.executeQuery();
+      Phenotype phe = search.getPhenotype();
       PhenotypeOutput out = search.getOutput();
       String sbjCol = out.getSubject();
-      String pheCol = out.getValue();
+      String pheCol = out.getValue(phe.getDataType());
       String dateCol = out.getDateTime();
-      Phenotype phe = search.getPhenotype();
 
       while (sqlRS.next()) {
         String sbj = sqlRS.getString(sbjCol);
@@ -93,8 +93,7 @@ public class SQLAdapter extends DataAdapter {
           } else val = Val.of(sqlRS.getBoolean(pheCol), date);
         } else if (Phenotypes.hasDateTimeType(phe))
           val = Val.of(sqlRS.getTimestamp(pheCol).toLocalDateTime(), date);
-        else if (Phenotypes.hasNumberType(phe))
-          val = Val.of(sqlRS.getBigDecimal(pheCol), date);
+        else if (Phenotypes.hasNumberType(phe)) val = Val.of(sqlRS.getBigDecimal(pheCol), date);
         else val = Val.of(sqlRS.getString(pheCol), date);
         if (val != null)
           rs.addValueWithRestriction(
@@ -137,8 +136,7 @@ public class SQLAdapter extends DataAdapter {
             if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, null, val);
             else rs.addValue(sbj, bd, null, val);
             if (age != null) {
-              Value ageVal =
-                  Val.of(SubjectSearch.birthdateToAge(bdSqlVal.toLocalDateTime()));
+              Value ageVal = Val.of(SubjectSearch.birthdateToAge(bdSqlVal.toLocalDateTime()));
               rs.addValueWithRestriction(sbj, age, null, ageVal);
             }
           }
@@ -146,16 +144,13 @@ public class SQLAdapter extends DataAdapter {
         if (sex != null) {
           if (Phenotypes.hasBooleanType(sex)) {
             Boolean sexSqlVal = sqlRS.getBoolean(sexCol);
-            if (sexSqlVal != null)
-              rs.addValueWithRestriction(sbj, sex, null, Val.of(sexSqlVal));
+            if (sexSqlVal != null) rs.addValueWithRestriction(sbj, sex, null, Val.of(sexSqlVal));
           } else if (Phenotypes.hasNumberType(sex)) {
             BigDecimal sexSqlVal = sqlRS.getBigDecimal(sexCol);
-            if (sexSqlVal != null)
-              rs.addValueWithRestriction(sbj, sex, null, Val.of(sexSqlVal));
+            if (sexSqlVal != null) rs.addValueWithRestriction(sbj, sex, null, Val.of(sexSqlVal));
           } else {
             String sexSqlVal = sqlRS.getString(sexCol);
-            if (sexSqlVal != null)
-              rs.addValueWithRestriction(sbj, sex, null, Val.of(sexSqlVal));
+            if (sexSqlVal != null) rs.addValueWithRestriction(sbj, sex, null, Val.of(sexSqlVal));
           }
         }
       }

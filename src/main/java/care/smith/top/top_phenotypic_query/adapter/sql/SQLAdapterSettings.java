@@ -77,13 +77,14 @@ public class SQLAdapterSettings extends DataAdapterSettings {
   protected void addValueInterval(
       Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
     Map<String, String> interval = generateQuestionMarks(Restrictions.getIntervalAsStringMap(r));
-    for (String key : interval.keySet()) builder.valueIntervalLimit(key, interval.get(key));
+    for (String key : interval.keySet())
+      builder.valueIntervalLimit(r.getType(), key, interval.get(key));
   }
 
   @Override
   protected void addValueList(Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
     String valuesAsString = generateQuestionMarks(Restrictions.getValuesCount(r));
-    builder.valueList(valuesAsString);
+    builder.valueList(r.getType(), valuesAsString);
   }
 
   @Override

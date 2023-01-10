@@ -43,26 +43,20 @@ public class FHIRAdapter extends DataAdapter {
     List<Resource> resources = client.executeQuery(query);
     PhenotypeOutput out = search.getOutput();
     Phenotype phe = search.getPhenotype();
+    String pheCol = out.getValue(phe.getDataType());
 
     for (Resource res : resources) {
       String sbj = FHIRUtil.getString(client.evaluateFHIRPath(res, out.getSubject()));
       LocalDateTime date = FHIRUtil.getDate(client.evaluateFHIRPath(res, out.getDateTime()));
       Value val = null;
       if (Phenotypes.hasDateTimeType(phe))
-        val =
-            Val.of(
-                FHIRUtil.getDate(client.evaluateFHIRPath(res, out.getDateTimeValue())), date);
+        val = Val.of(FHIRUtil.getDate(client.evaluateFHIRPath(res, pheCol)), date);
       else if (Phenotypes.hasNumberType(phe))
-        val =
-            Val.of(
-                FHIRUtil.getNumber(client.evaluateFHIRPath(res, out.getNumberValue())), date);
+        val = Val.of(FHIRUtil.getNumber(client.evaluateFHIRPath(res, pheCol)), date);
       else if (Phenotypes.hasBooleanType(phe)) {
         rs.addValue(sbj, phe, search.getDateTimeRestriction(), Val.ofTrue());
         continue;
-      } else
-        val =
-            Val.of(
-                FHIRUtil.getString(client.evaluateFHIRPath(res, out.getTextValue())), date);
+      } else val = Val.of(FHIRUtil.getString(client.evaluateFHIRPath(res, pheCol)), date);
       if (val != null)
         rs.addValueWithRestriction(
             sbj,

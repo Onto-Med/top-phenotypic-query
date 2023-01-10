@@ -41,15 +41,15 @@ INSERT INTO subject VALUES
     (5, '2002-01-01', 'female');
 
 INSERT INTO weight (subject_id, created_at, code_system, code, unit, number_value) VALUES
-    (1, '2000-05-20T12:43:00', 'http://loinc.org', '3141-9', 'kg', null),
-    (2, '2000-12-01T06:35:00', 'http://loinc.org', '3141-9', 'kg', 95),
-    (3, '2000-05-20T12:43:00', 'http://loinc.org', '3141-9', 'kg', null),
+    (1, '2000-05-20T12:43:00', 'http://loinc.org', '3141-9', 'kg', 75),
+    (2, '2000-12-01T06:35:00', 'http://loinc.org', '3141-9', 'kg', 85),
+    (3, '2000-05-20T12:43:00', 'http://loinc.org', '3141-9', 'kg', 75),
     (4, '2000-12-01T06:35:00', 'http://loinc.org', '3141-9', 'kg', 85),
     (5, '2000-05-20T12:43:00', 'http://loinc.org', '3141-9', 'kg', 75);
 
 INSERT INTO height (subject_id, created_at, code_system, code, unit, number_value) VALUES
     (1, '2000-05-20T12:43:00', 'http://loinc.org', '3137-7', 'cm', 170),
-    (2, '2000-12-01T06:35:00', 'http://loinc.org', '3137-7', 'cm', null),
-    (3, '2000-05-20T12:43:00', 'http://loinc.org', '3137-7', 'cm', null),
-    (4, '2000-12-01T06:35:00', 'http://loinc.org', '3137-7', 'cm', null),
-    (5, '2000-05-20T12:43:00', 'http://loinc.org', '3137-7', 'cm', 150);
+    (2, '2000-12-01T06:35:00', 'http://loinc.org', '3137-7', 'cm', 180),
+    (3, '2000-05-20T12:43:00', 'http://loinc.org', '3137-7', 'cm', 170),
+    (4, '2000-12-01T06:35:00', 'http://loinc.org', '3137-7', 'cm', 180),
+    (5, '2000-05-20T12:43:00', 'http://loinc.org', '3137-7', 'cm', null);
