@@ -26,7 +26,7 @@ import care.smith.top.top_phenotypic_query.tests.AbstractTest;
 public class FullBMIAgeTestIntern extends AbstractTest {
 
   public static void main(String[] args) throws SQLException {
-    test(getFHIRAdapter());
+    test(getSQLAdapter());
   }
 
   private static FHIRAdapter getFHIRAdapter() {

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
@@ -67,6 +68,11 @@ public class FHIRAdapterSettings extends DataAdapterSettings {
   @Override
   protected Map<String, String> getBirthdateInterval(Restriction r, SubjectSearch search) {
     return Restrictions.getIntervalAsStringMap(r, this);
+  }
+
+  @Override
+  protected void addCodeList(Phenotype p, PhenotypeQueryBuilder builder, SingleSearch search) {
+    builder.baseQuery(getCodeUrisAsString(p));
   }
 
   @Override

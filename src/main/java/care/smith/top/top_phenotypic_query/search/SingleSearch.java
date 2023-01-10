@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.search;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -100,14 +99,8 @@ public class SingleSearch extends PhenotypeSearch {
   }
 
   public Map<String, String> getPhenotypeMappings() {
-    if (getCodeMapping() != null && getCodeMapping().getPhenotypeMappings() != null) {
-      Map<String, String> pheMap = getCodeMapping().getPhenotypeMappings();
-      if (!pheMap.containsKey(Props.CODES))
-        pheMap.put(Props.CODES, adapter.getSettings().getCodeUrisAsString(phenotype));
-      return pheMap;
-    }
-    return Collections.singletonMap(
-        Props.CODES, adapter.getSettings().getCodeUrisAsString(phenotype));
+    if (getCodeMapping() == null) return null;
+    return getCodeMapping().getPhenotypeMappings();
   }
 
   public PhenotypeQuery getPhenotypeQuery() {

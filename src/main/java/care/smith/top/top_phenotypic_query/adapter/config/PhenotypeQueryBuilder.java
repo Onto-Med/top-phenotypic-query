@@ -19,6 +19,11 @@ public class PhenotypeQueryBuilder extends QueryBuilder {
     return this;
   }
 
+  public PhenotypeQueryBuilder baseQuery(String codes) {
+    addCodes(query.getBaseQuery(), codes, mappings);
+    return this;
+  }
+
   public PhenotypeQueryBuilder valueIntervalLimit(DataType dt, String operator, String value) {
     if (query.getValueIntervalPart() != null) return valueIntervalLimit(operator, value);
     if (dt == DataType.NUMBER) return numberValueIntervalLimit(operator, value);

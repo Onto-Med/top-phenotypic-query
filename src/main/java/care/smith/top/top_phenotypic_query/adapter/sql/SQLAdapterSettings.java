@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import care.smith.top.model.Code;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
@@ -17,9 +18,11 @@ import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
+import care.smith.top.top_phenotypic_query.adapter.config.Props;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class SQLAdapterSettings extends DataAdapterSettings {
@@ -74,6 +77,12 @@ public class SQLAdapterSettings extends DataAdapterSettings {
   }
 
   @Override
+  protected void addCodeList(Phenotype p, PhenotypeQueryBuilder builder, SingleSearch search) {
+    String valuesAsString = generateQuestionMarks(p.getCodes().size());
+    builder.baseQuery(valuesAsString);
+  }
+
+  @Override
   protected void addValueInterval(
       Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
     Map<String, String> interval = generateQuestionMarks(Restrictions.getIntervalAsStringMap(r));
@@ -121,6 +130,11 @@ public class SQLAdapterSettings extends DataAdapterSettings {
     PreparedStatement ps = con.prepareStatement(query);
 
     int paramNum = 1;
+
+    if (search.getPhenotypeQuery().getBaseQuery().contains(Props.VAR_CODES)) {
+      for (Code code : search.getPhenotype().getCodes())
+        ps.setString(paramNum++, Phenotypes.getCodeUri(code));
+    }
 
     if (search.hasRestriction()) {
       Phenotype superPhe = search.getSuperPhenotype();
