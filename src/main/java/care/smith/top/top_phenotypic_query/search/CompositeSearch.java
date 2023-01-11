@@ -45,8 +45,19 @@ public class CompositeSearch extends PhenotypeSearch {
 
   private void executeForSubject(
       String sbjId, String pheId, Expression exp, Set<String> vars, DateTimeRestriction dateRange) {
+
+    ////////////////////////////////////
+    System.out.println("SBJ-ID:" + sbjId);
+    ////////////////////////////////////
+
     if (exp == null) return;
     Expression resExp = calculate(sbjId, pheId, exp, vars, dateRange);
+
+    ////////////////////////////////////
+    System.out.println("RES EXP:");
+    System.out.println(new C2R().toString(resExp));
+    ////////////////////////////////////
+
     boolean res = (resExp == null) ? false : Expressions.getBooleanValue(resExp);
     if ((!criterion.isInclusion() && res) || (criterion.isInclusion() && !res)) rs.remove(sbjId);
   }
@@ -56,6 +67,12 @@ public class CompositeSearch extends PhenotypeSearch {
     C2R calc = new C2R();
     for (String var : vars) {
       List<Value> vals = getValues(sbjId, var, dateRange);
+
+      ////////////////////////////////////
+      System.out.println("VALUES:");
+      System.out.println(vals);
+      ////////////////////////////////////
+
       if (vals == null) return null;
       calc.setVariable(var, vals);
     }
@@ -68,9 +85,14 @@ public class CompositeSearch extends PhenotypeSearch {
     List<Value> vals = rs.getPhenotypes(sbjId).getValues(var, dateRange);
     if (vals != null) return vals;
     Phenotype phe = phenotypes.getPhenotype(var);
-    if (Phenotypes.isSingle(phe) && Phenotypes.hasBooleanType(phe))
-      return List.of(Val.ofFalse());
+    if (Phenotypes.isSingle(phe) && Phenotypes.hasBooleanType(phe)) return List.of(Val.ofFalse());
     Expression newExp = phe.getExpression();
+
+    ////////////////////////////////////
+    System.out.println("NEW EXP:");
+    System.out.println(new C2R().toString(newExp));
+    ////////////////////////////////////
+
     if (newExp == null) return null;
     Set<String> newVars = Expressions.getVariables(newExp, phenotypes);
     Expression newRes = calculate(sbjId, var, newExp, newVars, dateRange);

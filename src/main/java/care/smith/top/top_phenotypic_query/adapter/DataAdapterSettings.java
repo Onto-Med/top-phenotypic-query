@@ -10,7 +10,6 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
-import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.adapter.config.Props;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectQueryBuilder;
@@ -46,7 +45,6 @@ public abstract class DataAdapterSettings {
   public String createSinglePreparedQuery(SingleSearch search) {
     PhenotypeQueryBuilder builder =
         search.getPhenotypeQuery().getQueryBuilder(search.getPhenotypeMappings());
-    CodeMapping codeMap = search.getCodeMapping();
     DateTimeRestriction dtr = search.getDateTimeRestriction();
 
     if (search.getPhenotypeQuery().getBaseQuery().contains(Props.VAR_CODES))
@@ -54,10 +52,9 @@ public abstract class DataAdapterSettings {
     else builder.baseQuery();
 
     if (search.hasRestriction()) {
-      Phenotype superPhe = search.getSuperPhenotype();
       Restriction r = search.getRestriction();
       if (r.getQuantifier() != Quantifier.ALL) {
-        Restriction sourceR = codeMap.getSourceRestriction(r, superPhe);
+        Restriction sourceR = search.getSourceRestriction();
         if (Restrictions.hasInterval(r)) addValueInterval(sourceR, builder, search);
         else if (Restrictions.hasValues(r)) addValueList(sourceR, builder, search);
       }

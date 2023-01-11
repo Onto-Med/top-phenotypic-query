@@ -82,6 +82,12 @@ public class SingleSearch extends PhenotypeSearch {
     return config.getCodeMapping(phenotype);
   }
 
+  public Restriction getSourceRestriction() {
+    return (getCodeMapping() == null)
+        ? getRestriction()
+        : getCodeMapping().getSourceRestriction(getRestriction(), getSuperPhenotype());
+  }
+
   public String getModelUnit() {
     return phenotype.getUnit();
   }
@@ -93,7 +99,7 @@ public class SingleSearch extends PhenotypeSearch {
   public String getType() {
     if (getCodeMapping() != null && getCodeMapping().getType() != null)
       return getCodeMapping().getType();
-    if (config.getPhenotypeQuery(phenotype.getItemType().getValue()) != null)
+    if (config.getPhenotypeQuery(Phenotypes.getItemType(phenotype).getValue()) != null)
       return phenotype.getItemType().getValue();
     return Props.DEFAULT_ITEM_TYPE;
   }

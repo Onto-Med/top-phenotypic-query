@@ -43,7 +43,7 @@ public class FHIRAdapter extends DataAdapter {
     List<Resource> resources = client.executeQuery(query);
     PhenotypeOutput out = search.getOutput();
     Phenotype phe = search.getPhenotype();
-    String pheCol = out.getValue(phe.getDataType());
+    String pheCol = out.getValue(Phenotypes.getDataType(phe));
 
     for (Resource res : resources) {
       String sbj = FHIRUtil.getString(client.evaluateFHIRPath(res, out.getSubject()));

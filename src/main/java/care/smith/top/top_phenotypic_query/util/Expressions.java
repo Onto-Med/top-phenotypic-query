@@ -13,20 +13,26 @@ import care.smith.top.model.Value;
 
 public class Expressions {
 
+  private static Value getValue(Expression exp) {
+    if (exp.getValue() != null) return exp.getValue();
+    if (exp.getValues() != null && !exp.getValues().isEmpty()) return exp.getValues().get(0);
+    return null;
+  }
+
   public static BigDecimal getNumberValue(Expression exp) {
-    return Values.getNumberValue(exp.getValue());
+    return Values.getNumberValue(getValue(exp));
   }
 
   public static String getStringValue(Expression exp) {
-    return Values.getStringValue(exp.getValue());
+    return Values.getStringValue(getValue(exp));
   }
 
   public static Boolean getBooleanValue(Expression exp) {
-    return Values.getBooleanValue(exp.getValue());
+    return Values.getBooleanValue(getValue(exp));
   }
 
   public static LocalDateTime getDateTimeValue(Expression exp) {
-    return Values.getDateTimeValue(exp.getValue());
+    return Values.getDateTimeValue(getValue(exp));
   }
 
   public static List<BigDecimal> getNumberValues(Expression exp) {
