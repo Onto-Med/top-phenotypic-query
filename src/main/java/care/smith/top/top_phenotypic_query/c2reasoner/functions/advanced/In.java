@@ -23,6 +23,7 @@ public class In extends FunctionEntity {
 
   private In() {
     super("in", NotationEnum.PREFIX, 2, 2);
+    defaultValue(Exp.ofFalse());
   }
 
   public static In get() {

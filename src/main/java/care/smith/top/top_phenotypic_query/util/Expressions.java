@@ -2,7 +2,7 @@ package care.smith.top.top_phenotypic_query.util;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,6 +10,7 @@ import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 
 public class Expressions {
 
@@ -88,7 +89,7 @@ public class Expressions {
   }
 
   public static Set<String> getVariables(Expression exp, Entities phenotypes, boolean direct) {
-    Set<String> vars = new HashSet<>();
+    Set<String> vars = new LinkedHashSet<>();
     addVariables(exp, vars, phenotypes, direct);
     return vars;
   }
@@ -105,5 +106,10 @@ public class Expressions {
       }
     } else if (exp.getArguments() != null)
       for (Expression arg : exp.getArguments()) addVariables(arg, vars, phenotypes, direct);
+  }
+
+  public static Expression getDefaultValue(Expression exp) {
+    if (exp.getFunctionId() == null) return null;
+    return new C2R().getFunction(exp.getFunctionId()).getDefaultValue();
   }
 }

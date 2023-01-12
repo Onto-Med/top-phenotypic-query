@@ -35,7 +35,7 @@ public class CompositeSearch extends PhenotypeSearch {
     Phenotype phe = phenotypes.getPhenotype(criterion.getSubjectId());
     Expression exp = phe.getExpression();
     if (exp != null) {
-      Set<String> vars = Expressions.getVariables(exp, phenotypes);
+      Set<String> vars = Expressions.getDirectVariables(exp, phenotypes);
       Set<String> sbjIds = new HashSet<>(rs.getSubjectIds());
       for (String sbjId : sbjIds)
         executeForSubject(sbjId, phe.getId(), exp, vars, criterion.getDateTimeRestriction());
@@ -47,36 +47,70 @@ public class CompositeSearch extends PhenotypeSearch {
       String sbjId, String pheId, Expression exp, Set<String> vars, DateTimeRestriction dateRange) {
 
     ////////////////////////////////////
-    System.out.println("SBJ-ID:" + sbjId);
+    System.out.println("SBJ-ID: " + sbjId);
+    System.out.println("EXP: " + new C2R().toString(exp));
+    System.out.println("VARS: " + vars);
     ////////////////////////////////////
 
     if (exp == null) return;
     Expression resExp = calculate(sbjId, pheId, exp, vars, dateRange);
-
-    ////////////////////////////////////
-    System.out.println("RES EXP:");
-    System.out.println(new C2R().toString(resExp));
-    ////////////////////////////////////
-
     boolean res = (resExp == null) ? false : Expressions.getBooleanValue(resExp);
+
+    ////////////////////////////////////
+    System.out.println(pheId + " :: " + res);
+    ////////////////////////////////////
+
     if ((!criterion.isInclusion() && res) || (criterion.isInclusion() && !res)) rs.remove(sbjId);
   }
 
   private Expression calculate(
       String sbjId, String pheId, Expression exp, Set<String> vars, DateTimeRestriction dateRange) {
+    ////////////////////////////////////
+    System.out.println("CALCULATE EXP: " + new C2R().toString(exp));
+    ////////////////////////////////////
+
     C2R calc = new C2R();
     for (String var : vars) {
+      ////////////////////////////////////
+      System.out.println("VAR: " + var);
+      ////////////////////////////////////
+
       List<Value> vals = getValues(sbjId, var, dateRange);
 
       ////////////////////////////////////
-      System.out.println("VALUES:");
+      System.out.println("VALUES: ");
       System.out.println(vals);
       ////////////////////////////////////
 
-      if (vals == null) return null;
+      if (vals == null) {
+        Expression defaultValue = Expressions.getDefaultValue(exp);
+        if (defaultValue == null) {
+          ////////////////////////////////////
+          System.out.println("RES OF: " + new C2R().toString(exp) + " :: null");
+          ////////////////////////////////////
+          return null;
+        } else {
+          ////////////////////////////////////
+          System.out.println("DEFAULT RES OF: " + new C2R().toString(exp) + " :: " + defaultValue);
+          ////////////////////////////////////
+          return defaultValue;
+        }
+      }
+
       calc.setVariable(var, vals);
     }
     Expression res = calc.calculate(exp);
+
+    if (res == null) {
+      ////////////////////////////////////
+      System.out.println("RES OF: " + new C2R().toString(exp) + " :: null");
+      ////////////////////////////////////
+    } else {
+      ////////////////////////////////////
+      System.out.println("RES OF: " + new C2R().toString(exp) + " :: " + res);
+      ////////////////////////////////////
+    }
+
     rs.getPhenotypes(sbjId).setValues(pheId, dateRange, Expressions.getValueOrValues(res));
     return res;
   }
@@ -88,15 +122,22 @@ public class CompositeSearch extends PhenotypeSearch {
     if (Phenotypes.isSingle(phe) && Phenotypes.hasBooleanType(phe)) return List.of(Val.ofFalse());
     Expression newExp = phe.getExpression();
 
-    ////////////////////////////////////
-    System.out.println("NEW EXP:");
-    System.out.println(new C2R().toString(newExp));
-    ////////////////////////////////////
+    if (newExp == null) {
+      ////////////////////////////////////
+      System.out.println("NEW EXP: " + var + " :: null");
+      ////////////////////////////////////
+      return null;
+    } else {
+      ////////////////////////////////////
+      System.out.println("NEW EXP: " + var + " :: " + new C2R().toString(newExp));
+      ////////////////////////////////////
+    }
 
-    if (newExp == null) return null;
-    Set<String> newVars = Expressions.getVariables(newExp, phenotypes);
+    Set<String> newVars = Expressions.getDirectVariables(newExp, phenotypes);
     Expression newRes = calculate(sbjId, var, newExp, newVars, dateRange);
+
     if (newRes == null) return null;
+
     return Expressions.getValueOrValues(newRes);
   }
 }
