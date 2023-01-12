@@ -22,7 +22,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 
-public class DelirTest {
+public class SQLDelirTest {
 
   Phenotype expIcd =
       new Phe("expIcd", "http://fhir.de/CodeSystem/bfarm/icd-10-gm", "F05.-", "F05.0", "F05.1")
