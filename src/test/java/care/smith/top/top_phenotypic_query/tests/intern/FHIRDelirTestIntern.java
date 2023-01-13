@@ -34,6 +34,31 @@ public class FHIRDelirTestIntern extends DelirTest {
   }
 
   @Test
+  public void testFHIRExtAlgWithDate() throws InstantiationException {
+    testExtAlgWithDate(CONFIG, true);
+  }
+
+  @Test
+  public void testFHIRNotExtAlg() throws InstantiationException {
+    testNotExtAlg(CONFIG, true);
+  }
+
+  @Test
+  public void testFHIRExtAlgExcAlgB() throws InstantiationException {
+    testExtAlgExcAlgB(CONFIG, true);
+  }
+
+  @Test
+  public void testFHIRExtAlgAndFemale() throws InstantiationException {
+    testExtAlgAndFemale(CONFIG, true);
+  }
+
+  @Test
+  public void testFHIRExtAlgExcFemale() throws InstantiationException {
+    testExtAlgExcFemale(CONFIG, true);
+  }
+
+  @Test
   public void testFHIRAntiPsyAndOp() throws InstantiationException {
     testAntiPsyAndOp(CONFIG, true);
   }

@@ -48,6 +48,7 @@ public class Values {
   }
 
   public static String toString(List<Value> vals) {
+    if (vals == null) return null;
     return vals.stream().map(v -> toString(v)).collect(Collectors.toList()).toString();
   }
 

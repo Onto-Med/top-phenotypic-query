@@ -13,8 +13,10 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRClient;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.MinTrue;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Or;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
@@ -158,6 +160,18 @@ public class DelirTest {
           .get();
   private static Phenotype cognitAnd2of3 =
       new Phe("cognitAnd2of3").expression(And.of(Exp.of(cognit), Exp.of(fact2of3))).get();
+  private static Phenotype notExtAlg =
+      new Phe("notExtAlg")
+          .expression(
+              Not.of(
+                  Or.of(
+                      Exp.of(expIcd),
+                      And.of(Exp.of(antiPsy), Exp.of(op)),
+                      And.of(Exp.of(impIcd), Or.of(Exp.of(op), Exp.of(antiPsy))),
+                      And.of(Exp.of(cognit), Exp.of(fact2of3)))))
+          .get();
+  private static Phenotype sex = new Phe("sex", "http://loinc.org", "46098-0").string().get();
+  private static Phenotype female = new Phe("female").restriction(sex, Res.of("female")).get();
 
   private static Entity[] entities = {
     expIcd,
@@ -177,7 +191,10 @@ public class DelirTest {
     extAlg,
     antiPsyAndOp,
     impIcdAndAntiPsyOrOp,
-    cognitAnd2of3
+    cognitAnd2of3,
+    notExtAlg,
+    sex,
+    female
   };
 
   private static void test(Que que, boolean fhir, String... expectedIds) {
@@ -204,6 +221,35 @@ public class DelirTest {
 
   public static void testExtAlg(String configFilePath, boolean fhir) throws InstantiationException {
     test(new Que(configFilePath, entities).inc(extAlg), fhir, "1", "2", "3", "4", "5", "8", "11");
+  }
+
+  public static void testExtAlgWithDate(String configFilePath, boolean fhir)
+      throws InstantiationException {
+    test(
+        new Que(configFilePath, entities).inc(extAlg, Res.ge(DateUtil.parse("2000-06-01"))),
+        fhir,
+        "2",
+        "4");
+  }
+
+  public static void testNotExtAlg(String configFilePath, boolean fhir)
+      throws InstantiationException {
+    test(new Que(configFilePath, entities).inc(notExtAlg), fhir, "6", "7", "9", "10");
+  }
+
+  public static void testExtAlgExcAlgB(String configFilePath, boolean fhir)
+      throws InstantiationException {
+    test(new Que(configFilePath, entities).inc(extAlg).exc(algB), fhir, "3", "4");
+  }
+
+  public static void testExtAlgAndFemale(String configFilePath, boolean fhir)
+      throws InstantiationException {
+    test(new Que(configFilePath, entities).inc(extAlg).inc(female), fhir, "1", "2", "5", "11");
+  }
+
+  public static void testExtAlgExcFemale(String configFilePath, boolean fhir)
+      throws InstantiationException {
+    test(new Que(configFilePath, entities).inc(extAlg).exc(female), fhir, "3", "4", "8");
   }
 
   public static void testAntiPsyAndOp(String configFilePath, boolean fhir)

@@ -32,6 +32,31 @@ public class SQLDelirTest extends DelirTest {
   }
 
   @Test
+  public void testSQLExtAlgWithDate() throws InstantiationException {
+    testExtAlgWithDate(CONFIG, false);
+  }
+
+  @Test
+  public void testSQLNotExtAlg() throws InstantiationException {
+    testNotExtAlg(CONFIG, false);
+  }
+
+  @Test
+  public void testSQLExtAlgExcAlgB() throws InstantiationException {
+    testExtAlgExcAlgB(CONFIG, false);
+  }
+
+  @Test
+  public void testSQLExtAlgAndFemale() throws InstantiationException {
+    testExtAlgAndFemale(CONFIG, false);
+  }
+
+  @Test
+  public void testSQLExtAlgExcFemale() throws InstantiationException {
+    testExtAlgExcFemale(CONFIG, false);
+  }
+
+  @Test
   public void testSQLAntiPsyAndOp() throws InstantiationException {
     testAntiPsyAndOp(CONFIG, false);
   }
