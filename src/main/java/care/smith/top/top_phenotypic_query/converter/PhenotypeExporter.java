@@ -11,4 +11,6 @@ public interface PhenotypeExporter {
   public void write(Entity[] entities, Repository repo, String uri, OutputStream stream);
 
   public void write(Entity[] entities, Repository repo, String uri, File file);
+
+  public String getFileExtension();
 }
