@@ -9,6 +9,7 @@ import care.smith.top.model.Code;
 import care.smith.top.model.DataType;
 import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
+import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
@@ -76,6 +77,10 @@ public class Phenotypes {
 
   public static List<String> getOwnCodeUris(Phenotype p) {
     return p.getCodes().stream().map(c -> getCodeUri(c)).collect(Collectors.toList());
+  }
+
+  public static ItemType getItemType(Phenotype p) {
+    return (isRestriction(p)) ? p.getSuperPhenotype().getItemType() : p.getItemType();
   }
 
   public static boolean hasExistentialQuantifier(Phenotype p) {

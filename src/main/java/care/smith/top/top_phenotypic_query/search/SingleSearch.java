@@ -13,6 +13,7 @@ import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQuery;
+import care.smith.top.top_phenotypic_query.adapter.config.Props;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
@@ -81,20 +82,31 @@ public class SingleSearch extends PhenotypeSearch {
     return config.getCodeMapping(phenotype);
   }
 
+  public Restriction getSourceRestriction() {
+    return (getCodeMapping() == null)
+        ? getRestriction()
+        : getCodeMapping().getSourceRestriction(getRestriction(), getSuperPhenotype());
+  }
+
   public String getModelUnit() {
     return phenotype.getUnit();
   }
 
   public String getSourceUnit() {
-    return getCodeMapping().getUnit();
+    return (getCodeMapping() == null) ? null : getCodeMapping().getUnit();
   }
 
   public String getType() {
-    return getCodeMapping().getType();
+    if (getCodeMapping() != null && getCodeMapping().getType() != null)
+      return getCodeMapping().getType();
+    if (config.getPhenotypeQuery(Phenotypes.getItemType(phenotype).getValue()) != null)
+      return phenotype.getItemType().getValue();
+    return Props.DEFAULT_ITEM_TYPE;
   }
 
   public Map<String, String> getPhenotypeMappings() {
-    return adapter.getSettings().getPhenotypeMappings(this);
+    if (getCodeMapping() == null) return null;
+    return getCodeMapping().getPhenotypeMappings();
   }
 
   public PhenotypeQuery getPhenotypeQuery() {

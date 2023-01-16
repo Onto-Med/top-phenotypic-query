@@ -10,8 +10,8 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
-import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
+import care.smith.top.top_phenotypic_query.adapter.config.Props;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectQueryBuilder;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
@@ -44,15 +44,17 @@ public abstract class DataAdapterSettings {
 
   public String createSinglePreparedQuery(SingleSearch search) {
     PhenotypeQueryBuilder builder =
-        search.getPhenotypeQuery().getQueryBuilder(search.getPhenotypeMappings()).baseQuery();
-    CodeMapping codeMap = search.getCodeMapping();
+        search.getPhenotypeQuery().getQueryBuilder(search.getPhenotypeMappings());
     DateTimeRestriction dtr = search.getDateTimeRestriction();
 
+    if (search.getPhenotypeQuery().getBaseQuery().contains(Props.VAR_CODES))
+      addCodeList(search.getPhenotype(), builder, search);
+    else builder.baseQuery();
+
     if (search.hasRestriction()) {
-      Phenotype superPhe = search.getSuperPhenotype();
       Restriction r = search.getRestriction();
       if (r.getQuantifier() != Quantifier.ALL) {
-        Restriction sourceR = codeMap.getSourceRestriction(r, superPhe);
+        Restriction sourceR = search.getSourceRestriction();
         if (Restrictions.hasInterval(r)) addValueInterval(sourceR, builder, search);
         else if (Restrictions.hasValues(r)) addValueList(sourceR, builder, search);
       }
@@ -68,6 +70,9 @@ public abstract class DataAdapterSettings {
   protected abstract String getSexList(Restriction r, SubjectSearch search);
 
   protected abstract Map<String, String> getBirthdateInterval(Restriction r, SubjectSearch search);
+
+  protected abstract void addCodeList(
+      Phenotype p, PhenotypeQueryBuilder builder, SingleSearch search);
 
   protected abstract void addValueInterval(
       Restriction r, PhenotypeQueryBuilder builder, SingleSearch search);
@@ -90,9 +95,7 @@ public abstract class DataAdapterSettings {
 
   public abstract String formatOperator(RestrictionOperator oper);
 
-  public abstract Map<String, String> getPhenotypeMappings(SingleSearch search);
-
-  protected String getCodeUrisAsString(Phenotype p) {
+  public String getCodeUrisAsString(Phenotype p) {
     return formatList(Phenotypes.getCodeUris(p).map(u -> formatString(u)));
   }
 }

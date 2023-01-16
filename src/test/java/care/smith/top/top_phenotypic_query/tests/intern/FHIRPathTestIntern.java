@@ -13,8 +13,10 @@ import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Condition;
 import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.Enumerations;
+import org.hl7.fhir.r4.model.MedicationAdministration;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Procedure;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
@@ -29,8 +31,20 @@ public class FHIRPathTestIntern {
         new HapiWorkerContext(FhirContext.forR4(), FhirContext.forR4().getValidationSupport());
     FHIRPathEngine engine = new FHIRPathEngine(worker);
 
+    MedicationAdministration med =
+        new MedicationAdministration().setSubject(new Reference("Patient/1"));
+    med.setEffective(new DateTimeType(new Date()));
+    List<Base> res = engine.evaluate(med, "effective");
+    System.out.println(res);
+
+    Procedure procedure = new Procedure().setSubject(new Reference("Patient/1"));
+    procedure.setPerformed(new DateTimeType(new Date()));
+    res = engine.evaluate(med, "effective");
+    System.out.println(res);
+    System.exit(0);
+
     Condition condition = new Condition().setRecordedDate(new Date(99999999));
-    List<Base> res = engine.evaluate(condition, "recordedDate");
+    res = engine.evaluate(condition, "recordedDate");
     System.out.println(res);
 
     Observation observation =

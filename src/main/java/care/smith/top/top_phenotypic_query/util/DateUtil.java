@@ -3,6 +3,7 @@ package care.smith.top.top_phenotypic_query.util;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -37,6 +39,14 @@ public class DateUtil {
 
   public static LocalDateTime parse(String dateTime) {
     return LocalDateTime.parse(dateTime, parseFormatter);
+  }
+
+  public static Date toDate(LocalDateTime dateTime) {
+    return Timestamp.valueOf(dateTime);
+  }
+
+  public static Date toDate(Timestamp timestamp) {
+    return new Date(timestamp.getTime());
   }
 
   public static String format(LocalDateTime dateTime) {

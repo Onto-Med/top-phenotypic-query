@@ -138,7 +138,7 @@ public class DataAdapterConfig {
       CodeMapping map = getCodeMapping(Phenotypes.getCodeUri(code));
       if (map != null) return map;
     }
-    throw new IllegalStateException("The phenotype " + p + " is not mapped!");
+    return null;
   }
 
   public void setCodeMappings(List<CodeMapping> codeMappings) {

@@ -14,16 +14,12 @@ public class SubjectQueryBuilder extends QueryBuilder {
   }
 
   public SubjectQueryBuilder sexList(String sexes) {
-    add(query.getSexListPart().replace("{sexes}", sexes));
+    add(query.getSexListPart(), sexes);
     return this;
   }
 
   public SubjectQueryBuilder birthdateIntervalLimit(String operator, String birthdate) {
-    add(
-        query
-            .getBirthdateIntervalPart()
-            .replace("{operator}", operator)
-            .replace("{value}", birthdate));
+    add(query.getBirthdateIntervalPart(), operator, birthdate);
     return this;
   }
 }

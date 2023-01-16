@@ -7,7 +7,7 @@ connection:
   token:
 subjectQuery: 
   baseQuery: "Patient?_format=json"
-  sexListPart: "&gender={sexes}"
+  sexListPart: "&gender={values}"
   birthdateIntervalPart: "&birthdate{operator}{value}"
   output:
     sex: gender.value
@@ -15,39 +15,39 @@ subjectQuery:
 phenotypeQueries:
   Condition:
     baseQuery: "Condition?code={codes}"
-    dateIntervalPart: "&recorded-date{operator}{value}"
-    subjectsPart: "&subject={subject_ids}"
+    dateTimeIntervalPart: "&recorded-date{operator}{value}"
+    subjectsPart: "&subject={values}"
     output:
       subject: subject.reference.value
-      date: recordedDate
+      dateTime: recordedDate
   Observation:
     baseQuery: "Observation?code={codes}"
     numberValueIntervalPart: "&value-quantity{operator}{value}"
     numberValueListPart: "&value-quantity={values}"
-    stringValueListPart: "&value-string={values}"
+    textValueListPart: "&value-string={values}"
     conceptValueListPart: "&value-concept={values}"
-    dateValueIntervalPart: "&value-date{operator}{value}"
-    dateIntervalPart: "&date{operator}{value}"
-    subjectsPart: "&subject={subject_ids}"
+    dateTimeValueIntervalPart: "&value-date{operator}{value}"
+    dateTimeIntervalPart: "&date{operator}{value}"
+    subjectsPart: "&subject={values}"
     output:
       subject: subject.reference.value
-      numberPhenotype: value.value
-      stringPhenotype: value
-      conceptPhenotype: value.coding.select(system.value + '|' + code)
-      datePhenotype: value
-      date: effective
+      numberValue: value.value
+      textValue: value
+      conceptValue: value.coding.select(system.value + '|' + code)
+      dateTimeValue: value
+      dateTime: effective
   ObservationComponent:
     baseQuery: "Observation?component-code={codes}"
     numberValueIntervalPart: "&component-value-quantity{operator}{value}"
     numberValueListPart: "&component-value-quantity={values}"
     conceptValueListPart: "&component-value-concept={values}"
-    dateIntervalPart: "&date{operator}{value}"
-    subjectsPart: "&subject={subject_ids}"
+    dateTimeIntervalPart: "&date{operator}{value}"
+    subjectsPart: "&subject={values}"
     output:
       subject: subject.reference.value
-      numberPhenotype: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.value
-      conceptPhenotype: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.coding.select(system.value + '|' + code)
-      date: effective
+      numberValue: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.value
+      conceptValue: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.coding.select(system.value + '|' + code)
+      dateTime: effective
 birthdateMapping:
   code: http://loinc.org|21112-8
 ageMapping:

@@ -2,15 +2,14 @@ package care.smith.top.top_phenotypic_query.adapter.fhir;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
-import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
@@ -72,42 +71,29 @@ public class FHIRAdapterSettings extends DataAdapterSettings {
   }
 
   @Override
+  protected void addCodeList(Phenotype p, PhenotypeQueryBuilder builder, SingleSearch search) {
+    builder.baseQuery(getCodeUrisAsString(p));
+  }
+
+  @Override
   protected void addValueInterval(
       Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
     Map<String, String> interval = Restrictions.getIntervalAsStringMap(r, this);
-    for (String key : interval.keySet()) {
-      if (Restrictions.hasNumberType(r)) builder.numberValueIntervalLimit(key, interval.get(key));
-      else if (Restrictions.hasDateTimeType(r))
-        builder.dateValueIntervalLimit(key, interval.get(key));
-    }
+    for (String key : interval.keySet())
+      builder.valueIntervalLimit(r.getType(), key, interval.get(key));
   }
 
   @Override
   protected void addValueList(Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
     String valuesAsString = Restrictions.getValuesAsString(r, this);
-    if (Restrictions.hasNumberType(r)) builder.numberValueList(valuesAsString);
-    else if (Restrictions.hasStringType(r)) {
-      if (valuesAsString.startsWith("http")) builder.conceptValueList(valuesAsString);
-      else builder.stringValueList(valuesAsString);
-    }
+    if (Restrictions.hasConceptType(r)) builder.conceptValueList(valuesAsString);
+    else builder.valueList(r.getType(), valuesAsString);
   }
 
   @Override
   protected void addDateInterval(
       Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
     Map<String, String> interval = Restrictions.getIntervalAsStringMap(r, this);
-    for (String key : interval.keySet()) builder.dateIntervalLimit(key, interval.get(key));
-  }
-
-  @Override
-  public Map<String, String> getPhenotypeMappings(SingleSearch search) {
-    CodeMapping codeMap = search.getAdapterConfig().getCodeMapping(search.getPhenotype());
-    if (codeMap == null) return null;
-    Map<String, String> pheMap = codeMap.getPhenotypeMappings();
-    if (pheMap == null)
-      return Collections.singletonMap("codes", getCodeUrisAsString(search.getPhenotype()));
-    if (!pheMap.containsKey("codes"))
-      pheMap.put("codes", getCodeUrisAsString(search.getPhenotype()));
-    return pheMap;
+    for (String key : interval.keySet()) builder.dateTimeIntervalLimit(key, interval.get(key));
   }
 }

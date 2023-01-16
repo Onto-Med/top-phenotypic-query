@@ -6,7 +6,7 @@ connection:
   password: password
 subjectQuery:
   baseQuery: "SELECT subject_id, birth_date, sex FROM subject\nWHERE TRUE"
-  sexListPart: "\nAND sex IN ({sexes})"
+  sexListPart: "\nAND sex IN ({values})"
   birthdateIntervalPart: "\nAND birth_date {operator} {value}"
   output:
     id: subject_id
@@ -17,12 +17,12 @@ phenotypeQueries:
     baseQuery: "SELECT subject_id, created_at, {phenotype} FROM assessment1\nWHERE {phenotype} IS NOT NULL"
     valueIntervalPart: "\nAND {phenotype} {operator} {value}"
     valueListPart: "\nAND {phenotype} IN ({values})"
-    dateIntervalPart: "\nAND created_at {operator} {value}"
-    subjectsPart: "\nAND subject_id IN ({subject_ids})"
+    dateTimeIntervalPart: "\nAND created_at {operator} {value}"
+    subjectsPart: "\nAND subject_id IN ({values})"
     output:
       subject: subject_id
-      phenotype: "{phenotype}"
-      date: created_at
+      value: "{phenotype}"
+      dateTime: created_at
 birthdateMapping:
   code: http://loinc.org|21112-8
 ageMapping:

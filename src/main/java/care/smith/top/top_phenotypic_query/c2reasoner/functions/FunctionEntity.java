@@ -14,6 +14,7 @@ import care.smith.top.top_phenotypic_query.util.Values;
 public abstract class FunctionEntity {
 
   private ExpressionFunction function;
+  private Expression defaultValue;
   protected MathContext mc = MathContext.DECIMAL64;
 
   protected FunctionEntity(String title, NotationEnum notation) {
@@ -34,6 +35,14 @@ public abstract class FunctionEntity {
 
   protected void maxArgumentNumber(int num) {
     function.maxArgumentNumber(num);
+  }
+
+  protected void defaultValue(Expression defaultValue) {
+    this.defaultValue = defaultValue;
+  }
+
+  public Expression getDefaultValue() {
+    return defaultValue;
   }
 
   public String getFunctionId() {

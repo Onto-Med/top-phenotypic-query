@@ -6,22 +6,23 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import care.smith.top.model.Code;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
-import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
+import care.smith.top.top_phenotypic_query.adapter.config.Props;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class SQLAdapterSettings extends DataAdapterSettings {
@@ -76,35 +77,30 @@ public class SQLAdapterSettings extends DataAdapterSettings {
   }
 
   @Override
+  protected void addCodeList(Phenotype p, PhenotypeQueryBuilder builder, SingleSearch search) {
+    String valuesAsString = generateQuestionMarks(Phenotypes.getCodes(p).size());
+    builder.baseQuery(valuesAsString);
+  }
+
+  @Override
   protected void addValueInterval(
       Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
     Map<String, String> interval = generateQuestionMarks(Restrictions.getIntervalAsStringMap(r));
-    for (String key : interval.keySet()) builder.valueIntervalLimit(key, interval.get(key));
+    for (String key : interval.keySet())
+      builder.valueIntervalLimit(r.getType(), key, interval.get(key));
   }
 
   @Override
   protected void addValueList(Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
     String valuesAsString = generateQuestionMarks(Restrictions.getValuesCount(r));
-    builder.valueList(valuesAsString);
+    builder.valueList(r.getType(), valuesAsString);
   }
 
   @Override
   protected void addDateInterval(
       Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
     Map<String, String> interval = generateQuestionMarks(Restrictions.getIntervalAsStringMap(r));
-    for (String key : interval.keySet()) builder.dateIntervalLimit(key, interval.get(key));
-  }
-
-  @Override
-  public Map<String, String> getPhenotypeMappings(SingleSearch search) {
-    CodeMapping codeMap = search.getAdapterConfig().getCodeMapping(search.getPhenotype());
-    if (codeMap == null) return null;
-    Map<String, String> pheMap = codeMap.getPhenotypeMappings();
-    if (pheMap == null)
-      return Collections.singletonMap("codes", getCodeUrisAsString(search.getPhenotype()));
-    if (!pheMap.containsKey("codes"))
-      pheMap.put("codes", getCodeUrisAsString(search.getPhenotype()));
-    return pheMap;
+    for (String key : interval.keySet()) builder.dateTimeIntervalLimit(key, interval.get(key));
   }
 
   public PreparedStatement getSubjectPreparedStatement(
@@ -135,13 +131,16 @@ public class SQLAdapterSettings extends DataAdapterSettings {
 
     int paramNum = 1;
 
+    if (search.getPhenotypeQuery().getBaseQuery().contains(Props.VAR_CODES)) {
+      for (Code code : Phenotypes.getCodes(search.getPhenotype()))
+        ps.setString(paramNum++, Phenotypes.getCodeUri(code));
+    }
+
     if (search.hasRestriction()) {
-      Phenotype superPhe = search.getSuperPhenotype();
       Restriction r = search.getRestriction();
       if (r.getQuantifier() != Quantifier.ALL
           && (Restrictions.hasInterval(r) || Restrictions.hasValues(r)))
-        paramNum =
-            setValues(ps, search.getCodeMapping().getSourceRestriction(r, superPhe), paramNum);
+        paramNum = setValues(ps, search.getSourceRestriction(), paramNum);
     }
 
     if (search.hasDateTimeRestriction()) {
