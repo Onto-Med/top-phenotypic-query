@@ -39,10 +39,10 @@ public class Restrict extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args, defaultAggregateFunction);
+    args = c2r.calculate(args);
+    Exceptions.checkArgumentsAreNotNull(getFunction(), args);
     Exceptions.checkArgumentTypes(getFunction(), args.get(1), DataType.NUMBER, DataType.DATE_TIME);
 
     List<Value> vals = args.get(0).getValues();

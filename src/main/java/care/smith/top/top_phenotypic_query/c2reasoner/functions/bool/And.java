@@ -39,12 +39,12 @@ public class And extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     for (Expression arg : args) {
-      arg = c2r.calculate(arg, defaultAggregateFunction);
-      arg = Aggregator.aggregate(arg, defaultAggregateFunction, c2r);
+      arg = c2r.calculate(arg);
+      if (arg == null) return Exp.ofFalse();
+      arg = Aggregator.aggregate(arg, c2r);
       Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
       if (Expressions.hasValueFalse(arg)) return arg;
     }

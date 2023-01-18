@@ -34,10 +34,10 @@ public class DiffMonths extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args, defaultAggregateFunction);
+    args = c2r.calculate(args);
+    Exceptions.checkArgumentsAreNotNull(getFunction(), args);
     Exceptions.checkArgumentsType(getFunction(), DataType.DATE_TIME, args);
     LocalDateTime start = Expressions.getDateTimeValue(args.get(0));
     LocalDateTime end = Expressions.getDateTimeValue(args.get(1));

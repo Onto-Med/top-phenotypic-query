@@ -35,15 +35,13 @@ public class Power extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args, defaultAggregateFunction);
+    args = c2r.calculate(args);
+    Exceptions.checkArgumentsAreNotNull(getFunction(), args);
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
 
-    BigDecimal arg1 =
-        Expressions.getNumberValue(
-            Aggregator.aggregate(args.get(0), defaultAggregateFunction, c2r));
+    BigDecimal arg1 = Expressions.getNumberValue(Aggregator.aggregate(args.get(0), c2r));
     BigDecimal arg2 = Expressions.getNumberValue(args.get(1));
 
     int signOf2 = arg2.signum();
@@ -51,12 +49,13 @@ public class Power extends FunctionEntity {
     arg2 = arg2.multiply(new BigDecimal(signOf2)); // n2 is now positive
     BigDecimal remainderOf2 = arg2.remainder(BigDecimal.ONE);
     BigDecimal n2IntPart = arg2.subtract(remainderOf2);
-    BigDecimal intPow = arg1.pow(n2IntPart.intValueExact(), mc);
+    BigDecimal intPow = arg1.pow(n2IntPart.intValueExact(), c2r.getMathContext());
     BigDecimal doublePow = BigDecimal.valueOf(Math.pow(dn1, remainderOf2.doubleValue()));
 
-    BigDecimal result = intPow.multiply(doublePow, mc);
+    BigDecimal result = intPow.multiply(doublePow, c2r.getMathContext());
     if (signOf2 == -1)
-      result = BigDecimal.ONE.divide(result, mc.getPrecision(), RoundingMode.HALF_UP);
+      result =
+          BigDecimal.ONE.divide(result, c2r.getMathContext().getPrecision(), RoundingMode.HALF_UP);
 
     return Exp.of(result);
   }

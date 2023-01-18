@@ -34,14 +34,15 @@ public class Avg extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args, defaultAggregateFunction);
+    args = c2r.calculate(args);
+    Exceptions.checkArgumentsAreNotNull(getFunction(), args);
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
-    args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
+    args = Aggregator.aggregateIfMultiple(args, c2r);
     BigDecimal avg = BigDecimal.ZERO;
-    for (Expression arg : args) avg = avg.add(Expressions.getNumberValue(arg), mc);
-    return Exp.of(avg.divide(new BigDecimal(args.size()), mc));
+    for (Expression arg : args)
+      avg = avg.add(Expressions.getNumberValue(arg), c2r.getMathContext());
+    return Exp.of(avg.divide(new BigDecimal(args.size()), c2r.getMathContext()));
   }
 }

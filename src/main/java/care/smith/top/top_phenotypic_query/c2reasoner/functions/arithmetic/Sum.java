@@ -35,14 +35,15 @@ public class Sum extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args, defaultAggregateFunction);
+    args = c2r.calculate(args);
+    Exceptions.checkArgumentsAreNotNull(getFunction(), args);
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
-    args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
+    args = Aggregator.aggregateIfMultiple(args, c2r);
     BigDecimal result = BigDecimal.ZERO;
-    for (Expression arg : args) result = result.add(Expressions.getNumberValue(arg), mc);
+    for (Expression arg : args)
+      result = result.add(Expressions.getNumberValue(arg), c2r.getMathContext());
     return Exp.of(result);
   }
 }

@@ -12,9 +12,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
-import care.smith.top.model.NumberValue;
+import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.Value;
@@ -43,9 +42,12 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Lt;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Ne;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.DiffYears;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYears;
+import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
+import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 
@@ -247,64 +249,86 @@ public class C2RTest {
         new BigDecimal("6.00"),
         Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
 
-    c = new C2R();
+    c = new C2R().defaultAggregateFunction(Avg.get());
     e = Avg.of(Exp.of(2, 3, 4), Exp.of(5), Exp.of(10));
 
     assertEquals(
         new BigDecimal("6.00"),
-        Expressions.getNumberValue(c.calculate(e, Avg.get())).setScale(2, RoundingMode.HALF_UP));
+        Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
   }
 
   @Test
   public void testAvg2() {
-    C2R c = new C2R();
-    Expression e = Avg.of(Exp.ofEntity("a"), Exp.of(5));
+    Phenotype p = new Phe("p").expression(Avg.of(Exp.ofEntity("a"), Exp.of(5))).get();
+    Phenotype a = new Phe("a").get();
 
-    Value a1 = Val.of(12, LocalDateTime.parse("2020-01-02T00:00"));
-    Value a2 = Val.of(3, LocalDateTime.parse("2021-01-02T00:00"));
-    Value a3 = Val.of(10, LocalDateTime.parse("2022-01-02T00:00"));
-    Value a4 = Val.of(7, LocalDateTime.parse("2019-01-02T00:00"));
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, Val.of(12, LocalDateTime.parse("2020-01-02T00:00")));
+    vals.addValue("a", null, Val.of(3, LocalDateTime.parse("2021-01-02T00:00")));
+    vals.addValue("a", null, Val.of(10, LocalDateTime.parse("2022-01-02T00:00")));
+    vals.addValue("a", null, Val.of(7, LocalDateTime.parse("2019-01-02T00:00")));
 
-    c.setVariable("a", a1, a2, a3, a4);
+    Entities phens = Entities.of(p, a);
 
+    C2R c = new C2R().phenotypes(phens).values(vals).defaultAggregateFunction(Min.get());
     assertEquals(
         new BigDecimal("4.00"),
-        Expressions.getNumberValue(c.calculate(e, Min.get())).setScale(2, RoundingMode.HALF_UP));
+        Expressions.getNumberValue(c.calculate(p)).setScale(2, RoundingMode.HALF_UP));
+
+    vals.remove("p");
+    c = new C2R().phenotypes(phens).values(vals).defaultAggregateFunction(Max.get());
     assertEquals(
         new BigDecimal("8.50"),
-        Expressions.getNumberValue(c.calculate(e, Max.get())).setScale(2, RoundingMode.HALF_UP));
+        Expressions.getNumberValue(c.calculate(p)).setScale(2, RoundingMode.HALF_UP));
+
+    vals.remove("p");
+    c = new C2R().phenotypes(phens).values(vals).defaultAggregateFunction(First.get());
     assertEquals(
         new BigDecimal("6.00"),
-        Expressions.getNumberValue(c.calculate(e, First.get())).setScale(2, RoundingMode.HALF_UP));
+        Expressions.getNumberValue(c.calculate(p)).setScale(2, RoundingMode.HALF_UP));
+
+    vals.remove("p");
+    c = new C2R().phenotypes(phens).values(vals).defaultAggregateFunction(Last.get());
     assertEquals(
         new BigDecimal("7.50"),
-        Expressions.getNumberValue(c.calculate(e, Last.get())).setScale(2, RoundingMode.HALF_UP));
+        Expressions.getNumberValue(c.calculate(p)).setScale(2, RoundingMode.HALF_UP));
   }
 
   @Test
   public void testAvg3() {
-    C2R c = new C2R();
-    Expression e = Avg.of(Exp.ofEntity("a"));
+    Phenotype p = new Phe("p").expression(Avg.of(Exp.ofEntity("a"))).get();
+    Phenotype a = new Phe("a").get();
 
-    Value a1 = Val.of(12, LocalDateTime.parse("2020-01-02T00:00"));
-    Value a2 = Val.of(3, LocalDateTime.parse("2021-01-02T00:00"));
-    Value a3 = Val.of(10, LocalDateTime.parse("2022-01-02T00:00"));
-    Value a4 = Val.of(7, LocalDateTime.parse("2019-01-02T00:00"));
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, Val.of(12, LocalDateTime.parse("2020-01-02T00:00")));
+    vals.addValue("a", null, Val.of(3, LocalDateTime.parse("2021-01-02T00:00")));
+    vals.addValue("a", null, Val.of(10, LocalDateTime.parse("2022-01-02T00:00")));
+    vals.addValue("a", null, Val.of(7, LocalDateTime.parse("2019-01-02T00:00")));
 
-    c.setVariable("a", a1, a2, a3, a4);
+    Entities phens = Entities.of(p, a);
 
+    C2R c = new C2R().phenotypes(phens).values(vals).defaultAggregateFunction(Min.get());
     assertEquals(
         new BigDecimal("8.00"),
-        Expressions.getNumberValue(c.calculate(e, Min.get())).setScale(2, RoundingMode.HALF_UP));
+        Expressions.getNumberValue(c.calculate(p)).setScale(2, RoundingMode.HALF_UP));
+
+    vals.remove("p");
+    c = new C2R().phenotypes(phens).values(vals).defaultAggregateFunction(Max.get());
     assertEquals(
         new BigDecimal("8.00"),
-        Expressions.getNumberValue(c.calculate(e, Max.get())).setScale(2, RoundingMode.HALF_UP));
+        Expressions.getNumberValue(c.calculate(p)).setScale(2, RoundingMode.HALF_UP));
+
+    vals.remove("p");
+    c = new C2R().phenotypes(phens).values(vals).defaultAggregateFunction(First.get());
     assertEquals(
         new BigDecimal("8.00"),
-        Expressions.getNumberValue(c.calculate(e, First.get())).setScale(2, RoundingMode.HALF_UP));
+        Expressions.getNumberValue(c.calculate(p)).setScale(2, RoundingMode.HALF_UP));
+
+    vals.remove("p");
+    c = new C2R().phenotypes(phens).values(vals).defaultAggregateFunction(Last.get());
     assertEquals(
         new BigDecimal("8.00"),
-        Expressions.getNumberValue(c.calculate(e, Last.get())).setScale(2, RoundingMode.HALF_UP));
+        Expressions.getNumberValue(c.calculate(p)).setScale(2, RoundingMode.HALF_UP));
   }
 
   @Test
@@ -327,38 +351,65 @@ public class C2RTest {
 
   @Test
   public void testBMI() {
-    C2R c = new C2R();
-    Expression e = Divide.of(Exp.ofEntity("m"), Power.of(Exp.ofEntity("l"), Exp.of(2)));
+    Phenotype bmi =
+        new Phe("bmi")
+            .expression(Divide.of(Exp.ofEntity("m"), Power.of(Exp.ofEntity("l"), Exp.of(2))))
+            .get();
+    Phenotype m = new Phe("m").get();
+    Phenotype l = new Phe("l").get();
 
-    c.setVariable("m", 65);
-    c.setVariable("l", 1.78);
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("m", null, Val.of(65));
+    vals.addValue("l", null, Val.of(1.78));
+
+    Entities phens = Entities.of(bmi, m, l);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
 
     assertEquals(
         new BigDecimal("20.52"),
-        Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
+        Expressions.getNumberValue(c.calculate(bmi)).setScale(2, RoundingMode.HALF_UP));
   }
 
   @Test
   public void test1() {
-    C2R c = new C2R();
-    Expression e = Multiply.of(Exp.ofEntity("a"), Add.of(Exp.ofEntity("b"), Exp.ofEntity("c")));
+    Phenotype p =
+        new Phe("p")
+            .expression(
+                Multiply.of(Exp.ofEntity("a"), Add.of(Exp.ofEntity("b"), Exp.ofEntity("c"))))
+            .get();
+    Phenotype a = new Phe("a").get();
+    Phenotype b = new Phe("b").get();
+    Phenotype c = new Phe("c").get();
 
-    c.setVariable("a", 2);
-    c.setVariable("b", 3);
-    c.setVariable("c", 4);
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, Val.of(2));
+    vals.addValue("b", null, Val.of(3));
+    vals.addValue("c", null, Val.of(4));
 
-    assertEquals(new BigDecimal("14.00"), Expressions.getNumberValue(c.calculate(e)).setScale(2));
+    Entities phens = Entities.of(p, a, b, c);
+
+    C2R c2r = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(new BigDecimal("14.00"), Expressions.getNumberValue(c2r.calculate(p)).setScale(2));
   }
 
   @Test
   public void test2() {
-    C2R c = new C2R();
-    Expression e = Power.of(Exp.ofEntity("a"), Exp.ofEntity("b"));
+    Phenotype p = new Phe("p").expression(Power.of(Exp.ofEntity("a"), Exp.ofEntity("b"))).get();
+    Phenotype a = new Phe("a").get();
+    Phenotype b = new Phe("b").get();
 
-    c.setVariable("a", new NumberValue().value(new BigDecimal(-5)).dataType(DataType.NUMBER));
-    c.setVariable("b", 3);
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, Val.of(-5));
+    vals.addValue("b", null, Val.of(3));
 
-    assertEquals(new BigDecimal("-125.00"), Expressions.getNumberValue(c.calculate(e)).setScale(2));
+    Entities phens = Entities.of(p, a, b);
+
+    C2R c2r = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        new BigDecimal("-125.00"), Expressions.getNumberValue(c2r.calculate(p)).setScale(2));
   }
 
   @Test
@@ -393,13 +444,13 @@ public class C2RTest {
 
   @Test
   public void testInSet() {
-    C2R c = new C2R();
+    C2R c = new C2R().defaultAggregateFunction(Avg.get());
     Expression e = In.of(Exp.of(2, 10), Exp.of(5, 6, 7));
-    assertTrue(Expressions.getBooleanValue(c.calculate(e, Avg.get())));
+    assertTrue(Expressions.getBooleanValue(c.calculate(e)));
 
-    c = new C2R();
+    c = new C2R().defaultAggregateFunction(Avg.get());
     e = In.of(Exp.of(2, 10), Exp.of(5, 7));
-    assertFalse(Expressions.getBooleanValue(c.calculate(e, Avg.get())));
+    assertFalse(Expressions.getBooleanValue(c.calculate(e)));
 
     c = new C2R();
     e = In.of(Exp.of(1, 2), Exp.of(Res.of(Quantifier.ALL, 1, 2, 3)));

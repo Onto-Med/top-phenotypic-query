@@ -33,11 +33,11 @@ public class First extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args, defaultAggregateFunction);
-    args = Aggregator.aggregateIfMultiple(args, defaultAggregateFunction, c2r);
+    args = c2r.calculate(args);
+    Exceptions.checkArgumentsAreNotNull(getFunction(), args);
+    args = Aggregator.aggregateIfMultiple(args, c2r);
     args = args.stream().sorted(Values.VALUE_DATE_COMPARATOR).collect(Collectors.toList());
     return args.get(0);
   }

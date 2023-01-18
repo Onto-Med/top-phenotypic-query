@@ -32,12 +32,12 @@ public class Eq extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args, defaultAggregateFunction);
+    args = c2r.calculate(args);
+    Exceptions.checkArgumentsAreNotNull(getFunction(), args);
     Exceptions.checkArgumentsHaveSameType(getFunction(), args);
-    args = Aggregator.aggregate(args, defaultAggregateFunction, c2r);
+    args = Aggregator.aggregate(args, c2r);
     return Exp.of(Values.compare(args.get(0).getValue(), args.get(1).getValue()) == 0);
   }
 }

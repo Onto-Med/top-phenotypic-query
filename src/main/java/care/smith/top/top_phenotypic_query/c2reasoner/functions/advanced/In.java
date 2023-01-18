@@ -13,6 +13,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
@@ -23,7 +24,6 @@ public class In extends FunctionEntity {
 
   private In() {
     super("in", NotationEnum.PREFIX, 2, 2);
-    defaultValue(Exp.ofFalse());
   }
 
   public static In get() {
@@ -39,15 +39,15 @@ public class In extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args, defaultAggregateFunction);
+    args = c2r.calculate(args);
+    if (args == null) return Exp.ofFalse();
     Exceptions.checkArgumentsHaveSameType(getFunction(), args);
 
     if (args.get(1).getValues() != null) {
-      Expression val = Aggregator.aggregate(args.get(0), defaultAggregateFunction, c2r);
-      return Exp.of(Values.contains(args.get(1).getValues(), val.getValue()));
+      Expression val = Aggregator.aggregate(args.get(0), c2r);
+      return Exp.of(Values.contains(args.get(1).getValues(), Expressions.getValue(val)));
     }
 
     Restriction r = args.get(1).getRestriction();

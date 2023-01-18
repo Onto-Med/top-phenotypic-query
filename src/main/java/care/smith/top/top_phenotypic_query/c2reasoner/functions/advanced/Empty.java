@@ -4,10 +4,10 @@ import java.util.List;
 
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
-import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class Empty extends FunctionEntity {
@@ -31,12 +31,9 @@ public class Empty extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    Expression arg = args.get(0);
-    Value val = arg.getValue();
-    List<Value> vals = arg.getValues();
-    return Exp.of(val == null && (vals == null || vals.isEmpty()));
+    Expression arg = c2r.calculate(args.get(0));
+    return Exp.of(arg == null || !Expressions.hasValues(arg));
   }
 }

@@ -33,26 +33,18 @@ public class Switch extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    if (args.size() % 2 == 0)
-      return calculate(args, args.size(), null, defaultAggregateFunction, c2r);
-    return calculate(
-        args, args.size() - 1, args.get(args.size() - 1), defaultAggregateFunction, c2r);
+    if (args.size() % 2 == 0) return calculate(args, args.size(), null, c2r);
+    return calculate(args, args.size() - 1, args.get(args.size() - 1), c2r);
   }
 
   private Expression calculate(
-      List<Expression> args,
-      int lastValueNum,
-      Expression defaultValue,
-      FunctionEntity defaultAggregateFunction,
-      C2R c2r) {
+      List<Expression> args, int lastValueNum, Expression defaultValue, C2R c2r) {
     for (int i = 0; i < lastValueNum; i += 2) {
-      Expression cond = c2r.calculate(args.get(i), defaultAggregateFunction);
+      Expression cond = c2r.calculate(args.get(i));
       Exceptions.checkArgumentType(getFunction(), DataType.BOOLEAN, cond);
-      if (Expressions.getBooleanValue(cond))
-        return c2r.calculate(args.get(i + 1), defaultAggregateFunction);
+      if (Expressions.getBooleanValue(cond)) return c2r.calculate(args.get(i + 1));
     }
     if (defaultValue != null) return defaultValue;
     throw new ArithmeticException("No default value defined for the function 'switch'!");

@@ -34,15 +34,15 @@ public class MinTrue extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.NUMBER, args.get(0));
     int min = Expressions.getNumberValue(args.get(0)).intValue();
     int count = 0;
     for (Expression arg : args.subList(1, args.size())) {
-      arg = c2r.calculate(arg, defaultAggregateFunction);
-      arg = Aggregator.aggregate(arg, defaultAggregateFunction, c2r);
+      arg = c2r.calculate(arg);
+      if (arg == null) continue;
+      arg = Aggregator.aggregate(arg, c2r);
       Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
       if (Expressions.hasValueTrue(arg)) {
         count++;
