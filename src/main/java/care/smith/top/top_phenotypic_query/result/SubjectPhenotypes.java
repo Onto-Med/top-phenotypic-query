@@ -54,7 +54,7 @@ public class SubjectPhenotypes extends HashMap<String, PhenotypeValues> {
     }
     values.setValues(dateRange, vals);
     log.debug(
-        "values are set: {}::{}::{}::{}",
+        "values added to result set: {}::{}::{}::{}",
         subjectId,
         phenotypeName,
         Restrictions.toString(dateRange),

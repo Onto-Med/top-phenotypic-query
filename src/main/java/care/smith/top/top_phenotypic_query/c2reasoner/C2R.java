@@ -172,6 +172,10 @@ public class C2R {
     return this;
   }
 
+  public C2R defaultAggregateFunction(String functionId) {
+    return defaultAggregateFunction(getFunction(functionId));
+  }
+
   public void addFunction(FunctionEntity function) {
     functions.put(function.getFunction().getId(), function);
   }

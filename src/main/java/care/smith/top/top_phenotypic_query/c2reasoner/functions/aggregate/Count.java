@@ -33,7 +33,7 @@ public class Count extends FunctionEntity {
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     Expression arg = c2r.calculate(args.get(0));
-    Exceptions.checkArgumentIsNotNull(getFunction(), arg);
+    if (arg == null) return null;
     Exceptions.checkArgumentHasValues(getFunction(), arg);
     return Exp.of(arg.getValues().size());
   }

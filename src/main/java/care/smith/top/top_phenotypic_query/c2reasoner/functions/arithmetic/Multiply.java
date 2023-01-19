@@ -37,7 +37,7 @@ public class Multiply extends FunctionEntity {
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = c2r.calculate(args);
-    Exceptions.checkArgumentsAreNotNull(getFunction(), args);
+    if (args == null) return null;
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
     args = Aggregator.aggregate(args, c2r);
     BigDecimal arg1 = Expressions.getNumberValue(args.get(0));

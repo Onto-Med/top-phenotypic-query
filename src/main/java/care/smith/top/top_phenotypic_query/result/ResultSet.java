@@ -1,8 +1,12 @@
 package care.smith.top.top_phenotypic_query.result;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
@@ -16,6 +20,8 @@ import care.smith.top.top_phenotypic_query.util.builder.Val;
 public class ResultSet extends HashMap<String, SubjectPhenotypes> {
 
   private static final long serialVersionUID = 1L;
+
+  private Logger log = LoggerFactory.getLogger(ResultSet.class);
 
   public ResultSet() {}
 
@@ -33,6 +39,10 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
 
   public Set<String> getSubjectIds() {
     return keySet();
+  }
+
+  public Collection<SubjectPhenotypes> getPhenotypes() {
+    return values();
   }
 
   public SubjectPhenotypes getPhenotypes(String subjectId) {
@@ -164,6 +174,11 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
     }
 
     return insert;
+  }
+
+  public void removeSubject(String id) {
+    remove(id);
+    log.debug("subject removed from result set: {}", id);
   }
 
   @Override

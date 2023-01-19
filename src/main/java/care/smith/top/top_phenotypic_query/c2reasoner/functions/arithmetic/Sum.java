@@ -38,7 +38,7 @@ public class Sum extends FunctionEntity {
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = c2r.calculate(args);
-    Exceptions.checkArgumentsAreNotNull(getFunction(), args);
+    if (args == null) return null;
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
     args = Aggregator.aggregateIfMultiple(args, c2r);
     BigDecimal result = BigDecimal.ZERO;

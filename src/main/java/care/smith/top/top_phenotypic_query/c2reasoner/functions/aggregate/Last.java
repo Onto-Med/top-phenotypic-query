@@ -36,7 +36,7 @@ public class Last extends FunctionEntity {
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = c2r.calculate(args);
-    Exceptions.checkArgumentsAreNotNull(getFunction(), args);
+    if (args == null) return null;
     args = Aggregator.aggregateIfMultiple(args, c2r);
     args = args.stream().sorted(Values.VALUE_DATE_COMPARATOR).collect(Collectors.toList());
     return args.get(args.size() - 1);

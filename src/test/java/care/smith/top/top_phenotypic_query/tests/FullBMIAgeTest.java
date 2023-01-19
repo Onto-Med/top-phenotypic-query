@@ -42,13 +42,15 @@ public class FullBMIAgeTest extends AbstractTest {
     adapter.close();
 
     assertEquals(Set.of("1"), rs.getSubjectIds());
-    assertEquals(15, rs.getPhenotypes("1").size());
+    assertEquals(13, rs.getPhenotypes("1").size());
     assertTrue(rs.getPhenotypes("1").hasPhenotype(overWeight.getId()));
     assertTrue(rs.getPhenotypes("1").hasPhenotype(female.getId()));
 
     SubjectPhenotypes phes = rs.getPhenotypes("1");
     Set<String> phesExpected = new HashSet<>(pf.getPhenotypes().getIds());
     phesExpected.add("birthdate");
+    phesExpected.remove("BMI27_30");
+    phesExpected.remove("BMI19_27");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
     assertEquals(new BigDecimal(21), Values.getNumberValue(getValue("Age", phes)));
@@ -60,9 +62,7 @@ public class FullBMIAgeTest extends AbstractTest {
 
     assertEquals(new BigDecimal("25.95155709342561"), Values.getNumberValue(getValue("BMI", phes)));
     assertFalse(Values.getBooleanValue(getValue("BMI19_25", phes)));
-    assertTrue(Values.getBooleanValue(getValue("BMI19_27", phes)));
     assertTrue(Values.getBooleanValue(getValue("BMI25_30", phes)));
-    assertFalse(Values.getBooleanValue(getValue("BMI27_30", phes)));
 
     assertEquals(BigDecimal.ONE, Values.getNumberValue(getValue("Finding", phes)));
     assertTrue(Values.getBooleanValue(getValue("Overweight", phes)));

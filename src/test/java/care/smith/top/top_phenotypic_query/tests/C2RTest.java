@@ -372,6 +372,48 @@ public class C2RTest {
   }
 
   @Test
+  public void testBMI2() {
+    Phenotype bmi =
+        new Phe("bmi")
+            .expression(Divide.of(Exp.ofEntity("m"), Power.of(Exp.ofEntity("l"), Exp.of(2))))
+            .get();
+    Phenotype m = new Phe("m").get();
+    Phenotype l = new Phe("l").get();
+    Phenotype bmiR = new Phe("bmiR").restriction(bmi, Res.gt(20)).get();
+
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("m", null, Val.of(65));
+    vals.addValue("l", null, Val.of(1.78));
+
+    Entities phens = Entities.of(bmi, m, l, bmiR).deriveAdditionalProperties();
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertTrue(Expressions.getBooleanValue(c.calculate(bmiR)));
+  }
+
+  @Test
+  public void testBMI3() {
+    Phenotype bmi =
+        new Phe("bmi")
+            .expression(Divide.of(Exp.ofEntity("m"), Power.of(Exp.ofEntity("l"), Exp.of(2))))
+            .get();
+    Phenotype m = new Phe("m").get();
+    Phenotype l = new Phe("l").get();
+    Phenotype bmiR = new Phe("bmiR").restriction(bmi, Res.lt(20)).get();
+
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("m", null, Val.of(65));
+    vals.addValue("l", null, Val.of(1.78));
+
+    Entities phens = Entities.of(bmi, m, l, bmiR).deriveAdditionalProperties();
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertFalse(Expressions.getBooleanValue(c.calculate(bmiR)));
+  }
+
+  @Test
   public void test1() {
     Phenotype p =
         new Phe("p")

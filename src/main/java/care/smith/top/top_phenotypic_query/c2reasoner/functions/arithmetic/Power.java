@@ -38,7 +38,7 @@ public class Power extends FunctionEntity {
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = c2r.calculate(args);
-    Exceptions.checkArgumentsAreNotNull(getFunction(), args);
+    if (args == null) return null;
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
 
     BigDecimal arg1 = Expressions.getNumberValue(Aggregator.aggregate(args.get(0), c2r));

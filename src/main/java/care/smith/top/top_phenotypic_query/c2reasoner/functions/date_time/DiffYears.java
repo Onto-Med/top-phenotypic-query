@@ -37,7 +37,7 @@ public class DiffYears extends FunctionEntity {
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = c2r.calculate(args);
-    Exceptions.checkArgumentsAreNotNull(getFunction(), args);
+    if (args == null) return null;
     Exceptions.checkArgumentsType(getFunction(), DataType.DATE_TIME, args);
     LocalDateTime start = Expressions.getDateTimeValue(args.get(0));
     LocalDateTime end = Expressions.getDateTimeValue(args.get(1));

@@ -36,7 +36,7 @@ public class PlusMonths extends FunctionEntity {
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = c2r.calculate(args);
-    Exceptions.checkArgumentsAreNotNull(getFunction(), args);
+    if (args == null) return null;
     Exceptions.checkArgumentType(getFunction(), DataType.DATE_TIME, args.get(0));
     Exceptions.checkArgumentType(getFunction(), DataType.NUMBER, args.get(1));
     LocalDateTime start = Expressions.getDateTimeValue(args.get(0));

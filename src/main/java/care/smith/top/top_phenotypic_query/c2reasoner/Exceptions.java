@@ -63,15 +63,15 @@ public class Exceptions {
     checkArgumentType(f, dt, arg);
   }
 
-  public static void checkArgumentIsNotNull(ExpressionFunction f, Expression arg) {
-    String msg = "One argument of the function '%s' is null!";
-    if (arg == null) throw new ArithmeticException(String.format(msg, f.getId()));
-  }
-
-  public static void checkArgumentsAreNotNull(ExpressionFunction f, List<Expression> args) {
-    String msg = "One argument of the function '%s' is null!";
-    if (args == null) throw new ArithmeticException(String.format(msg, f.getId()));
-  }
+  //  public static void checkArgumentIsNotNull(ExpressionFunction f, Expression arg) {
+  //    String msg = "One argument of the function '%s' is null!";
+  //    if (arg == null) throw new ArithmeticException(String.format(msg, f.getId()));
+  //  }
+  //
+  //  public static void checkArgumentsAreNotNull(ExpressionFunction f, List<Expression> args) {
+  //    String msg = "One argument of the function '%s' is null!";
+  //    if (args == null) throw new ArithmeticException(String.format(msg, f.getId()));
+  //  }
 
   public static void checkArgumentsNumber(ExpressionFunction f, List<Expression> args) {
     String msg = "The number of arguments (%s) is not suitable for the function '%s'!";
