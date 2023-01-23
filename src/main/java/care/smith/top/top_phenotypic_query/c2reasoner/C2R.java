@@ -27,6 +27,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.constants.True;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Empty;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Li;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Restrict;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
@@ -125,6 +126,7 @@ public class C2R {
     addFunction(Empty.get());
     addFunction(Switch.get());
     addFunction(Restrict.get());
+    addFunction(Li.get());
   }
 
   public MathContext getMathContext() {

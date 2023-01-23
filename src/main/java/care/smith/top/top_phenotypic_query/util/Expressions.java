@@ -72,6 +72,22 @@ public class Expressions {
     return null;
   }
 
+  public static boolean hasStringType(Expression exp) {
+    return getDataType(exp) == DataType.STRING;
+  }
+
+  public static boolean hasNumberType(Expression exp) {
+    return getDataType(exp) == DataType.NUMBER;
+  }
+
+  public static boolean hasBooleanType(Expression exp) {
+    return getDataType(exp) == DataType.BOOLEAN;
+  }
+
+  public static boolean hasDateTimeType(Expression exp) {
+    return getDataType(exp) == DataType.DATE_TIME;
+  }
+
   public static String toStringValues(Expression exp) {
     if (exp.getValues() != null) return Values.toString(exp.getValues());
     return null;

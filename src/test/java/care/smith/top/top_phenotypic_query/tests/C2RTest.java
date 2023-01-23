@@ -19,6 +19,7 @@ import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Li;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Restrict;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
@@ -52,6 +53,23 @@ import care.smith.top.top_phenotypic_query.util.builder.Res;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 
 public class C2RTest {
+
+  @Test
+  public void testList() {
+    assertEquals(Exp.of(5, 6, 7), new C2R().calculate(Li.of(Exp.of(5), Exp.of(6), Exp.of(7))));
+
+    Value v1 = Val.of(3, DateUtil.parse("2001-01-01"));
+    Value v2 = Val.of(5, DateUtil.parse("2000-01-01"));
+    Value v3 = Val.of(7, DateUtil.parse("2001-01-01"));
+    Value v4 = Val.of(9, DateUtil.parse("2000-01-01"));
+
+    assertEquals(Exp.of(v1, v3), new C2R().calculate(Li.of(Exp.of(v1, v2), Exp.of(v3, v4))));
+    assertEquals(
+        Exp.of(4, 8),
+        new C2R()
+            .defaultAggregateFunction(Avg.get())
+            .calculate(Li.of(Exp.of(v1, v2), Exp.of(v3, v4))));
+  }
 
   @Test
   public void testRestrict1() {

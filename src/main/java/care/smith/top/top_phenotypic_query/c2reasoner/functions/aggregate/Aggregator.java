@@ -32,24 +32,22 @@ public class Aggregator {
     return args;
   }
 
+  public static List<Expression> aggregateIfNumber(List<Expression> args, C2R c2r) {
+    if (containsMultipleValues(args))
+      return args.stream()
+          .map(
+              a -> {
+                if (Expressions.hasNumberType(a)) return aggregate(a, c2r);
+                else return a;
+              })
+          .collect(Collectors.toList());
+    return args;
+  }
+
   public static List<Expression> aggregateIfMultiple(List<Expression> args, C2R c2r) {
     if (args.size() > 1) return aggregate(args, c2r);
-    return argToList(args.get(0));
+    return Exp.toList(args.get(0).getValues());
   }
-
-  private static List<Expression> argToList(Expression arg) {
-    if (arg.getValues() != null) return Exp.toList(arg.getValues());
-    return List.of(arg);
-  }
-
-  //  public static List<Expression> flatten(List<Expression> args) {
-  //    List<Expression> vals = new ArrayList<>();
-  //    for (Expression arg : args) {
-  //      if (arg.getValues() != null) vals.addAll(Exp.toList(arg.getValues()));
-  //      else vals.add(arg);
-  //    }
-  //    return vals;
-  //  }
 
   private static boolean containsMultipleValues(List<Expression> args) {
     for (Expression arg : args) if (hasMultipleValues(arg)) return true;
