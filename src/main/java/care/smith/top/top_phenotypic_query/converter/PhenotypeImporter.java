@@ -5,9 +5,32 @@ import java.io.InputStream;
 
 import care.smith.top.model.Entity;
 
+/**
+ * Implementations of this interface are used to convert a specifically formatted input into a list
+ * of phenotypes.
+ */
 public interface PhenotypeImporter {
 
-  public Entity[] read(InputStream stream);
+  /**
+   * Get the file extension an input file is expected to have.
+   *
+   * @return The file extension.
+   */
+  String getFileExtension();
 
-  public Entity[] read(File file);
+  /**
+   * Read from an input stream and convert it's content to a list of phenotypes.
+   *
+   * @param stream The input stream
+   * @return The resulting phenotype list.
+   */
+  Entity[] read(InputStream stream);
+
+  /**
+   * Read from a file and convert it's content to a list of phenotypes.
+   *
+   * @param file The input file.
+   * @return The resulting phenotype list.
+   */
+  Entity[] read(File file);
 }
