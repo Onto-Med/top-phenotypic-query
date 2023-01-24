@@ -8,6 +8,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class Date extends FunctionEntity {
@@ -31,11 +32,11 @@ public class Date extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    Expression arg = c2r.calculate(args.get(0), defaultAggregateFunction);
-    arg = Aggregator.aggregate(arg, defaultAggregateFunction, c2r);
-    return Exp.of(arg.getValue().getDateTime());
+    Expression arg = c2r.calculate(args.get(0));
+    if (arg == null) return null;
+    arg = Aggregator.aggregate(arg, c2r);
+    return Exp.of(Expressions.getValue(arg).getDateTime());
   }
 }

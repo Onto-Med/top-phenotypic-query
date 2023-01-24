@@ -1,18 +1,15 @@
 package care.smith.top.top_phenotypic_query.search;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.QueryCriterion;
-import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
-import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class SubjectQueryMan {
@@ -122,16 +119,27 @@ public class SubjectQueryMan {
     return rs;
   }
 
+  //  private void checkRestrictions(ResultSet rs, Phenotype pheVar, Set<Phenotype> restrVars) {
+  //    if (pheVar == null || restrVars.isEmpty()) return;
+  //    for (String sbjId : rs.getSubjectIds()) {
+  //      for (Phenotype restr : restrVars) {
+  //        C2R calc = new C2R();
+  //        SubjectPhenotypes phes = rs.getPhenotypes(sbjId);
+  //        List<Value> vals = phes.getValues(pheVar.getId(), null);
+  //        calc.setVariable(pheVar.getId(), vals);
+  //        Expression res = calc.calculate(restr.getExpression());
+  //        phes.setValues(restr.getId(), null, Expressions.getValueOrValues(res));
+  //      }
+  //    }
+  //  }
+
   private void checkRestrictions(ResultSet rs, Phenotype pheVar, Set<Phenotype> restrVars) {
     if (pheVar == null || restrVars.isEmpty()) return;
-    for (String sbjId : rs.getSubjectIds()) {
+    for (SubjectPhenotypes sbjPhes : rs.getPhenotypes()) {
       for (Phenotype restr : restrVars) {
-        C2R calc = new C2R();
-        SubjectPhenotypes phes = rs.getPhenotypes(sbjId);
-        List<Value> vals = phes.getValues(pheVar.getId(), null);
-        calc.setVariable(pheVar.getId(), vals);
-        Expression res = calc.calculate(restr.getExpression());
-        phes.setValues(restr.getId(), null, Expressions.getValueOrValues(res));
+        Entities phes = Entities.of(pheVar, restr);
+        C2R calc = new C2R().phenotypes(phes).values(sbjPhes);
+        calc.calculate(restr);
       }
     }
   }

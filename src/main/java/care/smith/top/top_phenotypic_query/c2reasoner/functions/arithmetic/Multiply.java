@@ -34,15 +34,15 @@ public class Multiply extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args, defaultAggregateFunction);
+    args = c2r.calculate(args);
+    if (args == null) return null;
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
-    args = Aggregator.aggregate(args, defaultAggregateFunction, c2r);
+    args = Aggregator.aggregate(args, c2r);
     BigDecimal arg1 = Expressions.getNumberValue(args.get(0));
     BigDecimal arg2 = Expressions.getNumberValue(args.get(1));
-    BigDecimal mul = arg1.multiply(arg2, mc);
+    BigDecimal mul = arg1.multiply(arg2, c2r.getMathContext());
     return Exp.of(mul);
   }
 }

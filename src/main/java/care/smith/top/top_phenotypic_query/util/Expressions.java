@@ -10,13 +10,19 @@ import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
-import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 
 public class Expressions {
 
-  private static Value getValue(Expression exp) {
-    if (exp.getValue() != null) return exp.getValue();
-    if (exp.getValues() != null && !exp.getValues().isEmpty()) return exp.getValues().get(0);
+  public static boolean hasValues(Expression exp) {
+    return exp.getValues() != null && !exp.getValues().isEmpty();
+  }
+
+  public static boolean hasSingleValue(Expression exp) {
+    return exp.getValues() != null && exp.getValues().size() == 1;
+  }
+
+  public static Value getValue(Expression exp) {
+    if (hasValues(exp)) return exp.getValues().get(0);
     return null;
   }
 
@@ -52,14 +58,8 @@ public class Expressions {
     return Values.getDateTimeValues(exp.getValues());
   }
 
-  public static List<Value> getValueOrValues(Expression exp) {
-    if (exp.getValue() != null) return List.of(exp.getValue());
-    if (exp.getValues() != null) return exp.getValues();
-    return null;
-  }
-
   public static boolean hasValueTrue(Expression exp) {
-    return Values.getBooleanValue(exp.getValue());
+    return Values.getBooleanValue(getValue(exp));
   }
 
   public static boolean hasValueFalse(Expression exp) {
@@ -67,15 +67,28 @@ public class Expressions {
   }
 
   public static DataType getDataType(Expression exp) {
-    if (exp.getValue() != null) return exp.getValue().getDataType();
-    if (exp.getValues() != null && !exp.getValues().isEmpty())
-      return exp.getValues().get(0).getDataType();
+    if (hasValues(exp)) return getValue(exp).getDataType();
     if (exp.getRestriction() != null) return exp.getRestriction().getType();
     return null;
   }
 
+  public static boolean hasStringType(Expression exp) {
+    return getDataType(exp) == DataType.STRING;
+  }
+
+  public static boolean hasNumberType(Expression exp) {
+    return getDataType(exp) == DataType.NUMBER;
+  }
+
+  public static boolean hasBooleanType(Expression exp) {
+    return getDataType(exp) == DataType.BOOLEAN;
+  }
+
+  public static boolean hasDateTimeType(Expression exp) {
+    return getDataType(exp) == DataType.DATE_TIME;
+  }
+
   public static String toStringValues(Expression exp) {
-    if (exp.getValue() != null) return Values.toString(exp.getValue());
     if (exp.getValues() != null) return Values.toString(exp.getValues());
     return null;
   }
@@ -106,10 +119,5 @@ public class Expressions {
       }
     } else if (exp.getArguments() != null)
       for (Expression arg : exp.getArguments()) addVariables(arg, vars, phenotypes, direct);
-  }
-
-  public static Expression getDefaultValue(Expression exp) {
-    if (exp.getFunctionId() == null) return null;
-    return new C2R().getFunction(exp.getFunctionId()).getDefaultValue();
   }
 }

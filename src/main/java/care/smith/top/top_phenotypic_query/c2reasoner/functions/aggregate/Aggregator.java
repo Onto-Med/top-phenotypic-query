@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import care.smith.top.model.Expression;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
@@ -17,47 +16,45 @@ public class Aggregator {
 
   private static Logger log = LoggerFactory.getLogger(Aggregator.class);
 
-  public static List<Expression> aggregate(
-      List<Expression> args, FunctionEntity function, C2R c2r) {
-    if (containsLists(args))
-      return args.stream().map(a -> aggregate(a, function, c2r)).collect(Collectors.toList());
+  public static Expression aggregate(Expression arg, C2R c2r) {
+    if (!hasMultipleValues(arg)) return arg;
+    Expression ag = c2r.getDefaultAggregateFunction().calculate(Exp.toList(arg.getValues()), c2r);
+    log.debug(
+        "aggregate: {} = {}",
+        c2r.getDefaultAggregateFunction().toStringValues(arg.getValues()),
+        Values.toStringWithoutDateTime(Expressions.getValue(ag)));
+    return ag;
+  }
+
+  public static List<Expression> aggregate(List<Expression> args, C2R c2r) {
+    if (containsMultipleValues(args))
+      return args.stream().map(a -> aggregate(a, c2r)).collect(Collectors.toList());
     return args;
   }
 
-  public static List<Expression> aggregateIfMultiple(
-      List<Expression> args, FunctionEntity function, C2R c2r) {
-    if (args.size() > 1) return aggregate(args, function, c2r);
-    return argToList(args.get(0));
+  public static List<Expression> aggregateIfNumber(List<Expression> args, C2R c2r) {
+    if (containsMultipleValues(args))
+      return args.stream()
+          .map(
+              a -> {
+                if (Expressions.hasNumberType(a)) return aggregate(a, c2r);
+                else return a;
+              })
+          .collect(Collectors.toList());
+    return args;
   }
 
-  private static List<Expression> argToList(Expression arg) {
-    if (arg.getValues() != null) return Exp.toList(arg.getValues());
-    return List.of(arg);
+  public static List<Expression> aggregateIfMultiple(List<Expression> args, C2R c2r) {
+    if (args.size() > 1) return aggregate(args, c2r);
+    return Exp.toList(args.get(0).getValues());
   }
 
-  public static Expression aggregate(Expression arg, FunctionEntity function, C2R c2r) {
-    if (arg.getValues() == null || arg.getValues().isEmpty()) return arg;
-    else {
-      Expression ag = function.calculate(Exp.toList(arg.getValues()), function, c2r);
-      log.debug(
-          "aggregate: {} = {}",
-          function.toStringValues(arg.getValues()),
-          Values.toStringWithoutDateTime(ag.getValue()));
-      return ag;
-    }
-  }
-
-  public static List<Expression> flatten(List<Expression> args) {
-    List<Expression> vals = new ArrayList<>();
-    for (Expression arg : args) {
-      if (arg.getValues() != null) vals.addAll(Exp.toList(arg.getValues()));
-      else vals.add(arg);
-    }
-    return vals;
-  }
-
-  private static boolean containsLists(List<Expression> args) {
-    for (Expression arg : args) if (arg.getValues() != null) return true;
+  private static boolean containsMultipleValues(List<Expression> args) {
+    for (Expression arg : args) if (hasMultipleValues(arg)) return true;
     return false;
+  }
+
+  private static boolean hasMultipleValues(Expression arg) {
+    return arg.getValues() != null && arg.getValues().size() > 1;
   }
 }

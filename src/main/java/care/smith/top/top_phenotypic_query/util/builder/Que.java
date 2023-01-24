@@ -16,7 +16,6 @@ public class Que {
   private DataAdapterConfig config;
   private Query query = new Query();
   private Entity[] entities;
-  private String defAggFunc = "Last";
 
   public Que(String configFilePath, Entity... entities) throws InstantiationException {
     this.config = getConfig(configFilePath);
@@ -44,33 +43,41 @@ public class Que {
     return config;
   }
 
-  public Que defAggFunc(String defaultAggregateFunctionId) {
-    this.defAggFunc = defaultAggregateFunctionId;
-    return this;
-  }
-
   public Que inc(Phenotype p) {
-    return cri(p, null, true);
-  }
-
-  public Que exc(Phenotype p) {
-    return cri(p, null, false);
+    return cri(true, p, null, null);
   }
 
   public Que inc(Phenotype p, DateTimeRestriction dtr) {
-    return cri(p, dtr, true);
+    return cri(true, p, dtr, null);
+  }
+
+  public Que inc(Phenotype p, String defAggFunc) {
+    return cri(true, p, null, defAggFunc);
+  }
+
+  public Que inc(Phenotype p, DateTimeRestriction dtr, String defAggFunc) {
+    return cri(true, p, dtr, defAggFunc);
+  }
+
+  public Que exc(Phenotype p) {
+    return cri(false, p, null, null);
   }
 
   public Que exc(Phenotype p, DateTimeRestriction dtr) {
-    return cri(p, dtr, false);
+    return cri(false, p, dtr, null);
   }
 
-  private Que cri(Phenotype p, DateTimeRestriction dtr, boolean inc) {
-    QueryCriterion cri =
-        new QueryCriterion()
-            .inclusion(inc)
-            .defaultAggregationFunctionId(defAggFunc)
-            .subjectId(p.getId());
+  public Que exc(Phenotype p, String defAggFunc) {
+    return cri(false, p, null, defAggFunc);
+  }
+
+  public Que exc(Phenotype p, DateTimeRestriction dtr, String defAggFunc) {
+    return cri(false, p, dtr, defAggFunc);
+  }
+
+  private Que cri(boolean inc, Phenotype p, DateTimeRestriction dtr, String defAggFunc) {
+    QueryCriterion cri = new QueryCriterion().inclusion(inc).subjectId(p.getId());
+    if (defAggFunc != null) cri.defaultAggregationFunctionId(defAggFunc);
     if (dtr != null) cri.dateTimeRestriction(dtr);
     query.addCriteriaItem(cri);
     return this;

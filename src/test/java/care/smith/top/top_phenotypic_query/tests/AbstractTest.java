@@ -15,7 +15,6 @@ import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ItemType;
 import care.smith.top.model.NumberRestriction;
-import care.smith.top.model.NumberValue;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
@@ -362,16 +361,10 @@ public abstract class AbstractTest {
     Expression oldAndBmi27_30 = And.of(Exp.ofEntity("Old"), Exp.ofEntity("BMI27_30"));
     Expression overweight = Or.of(youngAndBmi25_30, oldAndBmi27_30);
 
-    return Switch.of(normalWeight, getValue(0), overweight, getValue(1), getValue(-1));
+    return Switch.of(normalWeight, Exp.of(0), overweight, Exp.of(1), Exp.of(-1));
   }
 
   protected static Value getValue(String pheName, SubjectPhenotypes phes) {
     return phes.getValues(pheName, getDTR(2000)).get(0);
-  }
-
-  static Expression getValue(int value) {
-    NumberValue v = new NumberValue().value(BigDecimal.valueOf(value));
-    v.setDataType(DataType.NUMBER);
-    return new Expression().value(v);
   }
 }

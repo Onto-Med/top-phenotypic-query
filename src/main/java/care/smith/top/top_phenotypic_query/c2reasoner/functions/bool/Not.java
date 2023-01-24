@@ -38,11 +38,11 @@ public class Not extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    Expression arg = c2r.calculate(args.get(0), defaultAggregateFunction);
-    arg = Aggregator.aggregate(arg, defaultAggregateFunction, c2r);
+    Expression arg = c2r.calculate(args.get(0));
+    if (arg == null) return Exp.ofTrue();
+    arg = Aggregator.aggregate(arg, c2r);
     Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
     if (Expressions.hasValueTrue(arg)) return Exp.ofFalse();
     return Exp.ofTrue();

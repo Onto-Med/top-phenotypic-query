@@ -23,6 +23,6 @@ public class ConstantEntity {
   }
 
   public Expression getValueExpression() {
-    return new Expression().value(getValue());
+    return new Expression().addValuesItem(getValue());
   }
 }

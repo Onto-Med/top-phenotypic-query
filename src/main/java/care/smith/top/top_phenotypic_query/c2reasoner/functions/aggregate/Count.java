@@ -30,10 +30,10 @@ public class Count extends FunctionEntity {
   }
 
   @Override
-  public Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r) {
+  public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    Expression arg = c2r.calculate(args.get(0), defaultAggregateFunction);
+    Expression arg = c2r.calculate(args.get(0));
+    if (arg == null) return null;
     Exceptions.checkArgumentHasValues(getFunction(), arg);
     return Exp.of(arg.getValues().size());
   }

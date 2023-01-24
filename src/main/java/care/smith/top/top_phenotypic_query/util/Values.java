@@ -23,9 +23,9 @@ public class Values {
       new Comparator<Expression>() {
         @Override
         public int compare(Expression e1, Expression e2) {
-          if (e1.getValue() == null || e2.getValue() == null) return 0;
-          LocalDateTime d1 = e1.getValue().getDateTime();
-          LocalDateTime d2 = e2.getValue().getDateTime();
+          if (!Expressions.hasValues(e1) || !Expressions.hasValues(e2)) return 0;
+          LocalDateTime d1 = Expressions.getValue(e1).getDateTime();
+          LocalDateTime d2 = Expressions.getValue(e2).getDateTime();
           if (d1 == null || d2 == null) return 0;
           return d1.compareTo(d2);
         }

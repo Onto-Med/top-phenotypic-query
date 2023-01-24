@@ -1,6 +1,7 @@
 package care.smith.top.top_phenotypic_query.c2reasoner;
 
 import java.math.MathContext;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import care.smith.top.model.Constant;
+import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
-import care.smith.top.model.NumberValue;
+import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.ConstantEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.E;
@@ -25,6 +27,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.constants.True;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Empty;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Li;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Restrict;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
@@ -56,25 +59,35 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.DiffYe
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusDays;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusMonths;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYears;
+import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
+import care.smith.top.top_phenotypic_query.util.Entities;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class C2R {
 
-  private MathContext mc;
+  private MathContext mc = MathContext.DECIMAL64;
   private Map<String, FunctionEntity> functions = new HashMap<>();
   private Map<String, ConstantEntity> constants = new HashMap<>();
-  private Map<String, Expression> variables = new HashMap<>();
+
+  private Entities phenotypes;
+  private SubjectPhenotypes values;
+  private DateTimeRestriction dateTimeRestriction;
+  private FunctionEntity defaultAggregateFunction = Last.get();
 
   private Logger log = LoggerFactory.getLogger(C2R.class);
 
   public C2R() {
-    this(MathContext.DECIMAL64);
+    init();
   }
 
-  public C2R(MathContext mc) {
-    this.mc = mc;
+  public C2R(boolean withStandardFunctions) {
+    if (withStandardFunctions) init();
+  }
+
+  private void init() {
     addConstant(Pi.get());
     addConstant(E.get());
     addConstant(True.get());
@@ -113,59 +126,60 @@ public class C2R {
     addFunction(Empty.get());
     addFunction(Switch.get());
     addFunction(Restrict.get());
+    addFunction(Li.get());
   }
 
   public MathContext getMathContext() {
     return mc;
   }
 
-  public Expression calculate(Expression exp) {
-    return calculate(exp, Last.get());
+  public C2R mathContext(MathContext mc) {
+    this.mc = mc;
+    return this;
   }
 
-  public List<Expression> calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction) {
-    return args.stream()
-        .map(a -> calculate(a, defaultAggregateFunction))
-        .collect(Collectors.toList());
+  public Entities getPhenotypes() {
+    return phenotypes;
   }
 
-  public Expression calculate(Expression exp, FunctionEntity defaultAggregateFunction) {
-    if (exp.getConstantId() != null) return calcConstant(exp);
-    if (exp.getEntityId() != null) return calcVariable(exp);
-    if (exp.getFunctionId() != null) return calcFunction(exp, defaultAggregateFunction);
-    return exp;
+  public C2R phenotypes(Entities phenotypes) {
+    this.phenotypes = phenotypes;
+    return this;
   }
 
-  private Expression calcConstant(Expression exp) {
-    log.debug("start setting constant: {} ...", exp.getConstantId());
-    Exceptions.checkConstantExists(exp, constants);
-    Expression result = getConstant(exp.getConstantId()).getValueExpression();
-    log.debug("end setting constant: {} = {}", exp.getConstantId(), toString(result));
-    return result;
+  public SubjectPhenotypes getValues() {
+    return values;
   }
 
-  private Expression calcVariable(Expression exp) {
-    log.debug("start setting variable: {} ...", exp.getEntityId());
-    Exceptions.checkVariableIsSet(exp, variables);
-    Expression result = variables.get(exp.getEntityId());
-    log.debug("end setting variable: {} = {}", exp.getEntityId(), toString(result));
-    return result;
+  public C2R values(SubjectPhenotypes values) {
+    this.values = values;
+    return this;
   }
 
-  public Expression calcFunction(Expression exp, FunctionEntity defaultAggregateFunction) {
-    String expStr = toString(exp);
-    log.debug("start calculating function '{}': {} ...", exp.getFunctionId(), expStr);
-    Exceptions.checkFunctionExists(exp, functions);
-    FunctionEntity func = getFunction(exp.getFunctionId());
-    Expression result = func.calculate(exp.getArguments(), defaultAggregateFunction, this);
-    log.debug(
-        "end calculating function '{}': {} = {}", exp.getFunctionId(), expStr, toString(result));
-    return result;
+  public DateTimeRestriction getDateTimeRestriction() {
+    return dateTimeRestriction;
+  }
+
+  public C2R dateTimeRestriction(DateTimeRestriction dateTimeRestriction) {
+    this.dateTimeRestriction = dateTimeRestriction;
+    return this;
+  }
+
+  public FunctionEntity getDefaultAggregateFunction() {
+    return defaultAggregateFunction;
+  }
+
+  public C2R defaultAggregateFunction(FunctionEntity defaultAggregateFunction) {
+    this.defaultAggregateFunction = defaultAggregateFunction;
+    return this;
+  }
+
+  public C2R defaultAggregateFunction(String functionId) {
+    return defaultAggregateFunction(getFunction(functionId));
   }
 
   public void addFunction(FunctionEntity function) {
-    functions.put(function.getFunction().getId(), function.mathContext(mc));
+    functions.put(function.getFunction().getId(), function);
   }
 
   public Set<ExpressionFunction> getExpressionFunctions() {
@@ -196,49 +210,77 @@ public class C2R {
     return constants.get(id);
   }
 
-  public Map<String, Expression> getVariables() {
-    return variables;
+  public Expression calculate(Phenotype phe) {
+    log.debug("start calculating variable: {} ...", phe.getId());
+
+    List<Value> vals = values.getValues(phe.getId(), dateTimeRestriction);
+    if (vals != null) return logVariable(phe.getId(), Exp.of(vals), false);
+
+    if (Phenotypes.isSingle(phe) && Phenotypes.hasBooleanType(phe))
+      return logVariable(phe.getId(), Exp.ofFalse(), true);
+
+    if (phe.getExpression() == null) return logVariable(phe.getId(), null, false);
+
+    return logVariable(phe.getId(), calculate(phe.getExpression()), true);
   }
 
-  public void setVariable(String name, Expression value) {
-    variables.put(name, value);
+  private Expression logVariable(String pheId, Expression res, boolean addToRS) {
+    log.debug("end calculating variable: {} = {}", pheId, toString(res));
+    if (addToRS && res != null) values.setValues(pheId, dateTimeRestriction, res.getValues());
+    return res;
   }
 
-  public void setVariable(String name, Value value) {
-    variables.put(name, Exp.of(value));
+  public Expression calculateVariable(String pheId) {
+    return calculate(phenotypes.getPhenotype(pheId));
   }
 
-  public void setVariable(String name, Value... values) {
-    variables.put(name, Exp.of(values));
+  public Expression calculate(Expression exp) {
+    if (exp.getConstantId() != null) return calculateConstant(exp.getConstantId());
+    if (exp.getEntityId() != null) return calculateVariable(exp.getEntityId());
+    if (exp.getFunctionId() != null) return calculateFunction(exp);
+    return exp;
   }
 
-  public void setVariable(String name, List<Value> values) {
-    variables.put(name, Exp.of(values));
+  private Expression calculateConstant(String constantId) {
+    log.debug("start calculating constant: {} ...", constantId);
+    Exceptions.checkConstantExists(constantId, constants);
+    Expression result = getConstant(constantId).getValueExpression();
+    log.debug("end calculating constant: {} = {}", constantId, toString(result));
+    return result;
   }
 
-  public void setVariable(String name, Number value) {
-    setVariable(name, Exp.of(value));
+  public Expression calculateFunction(Expression exp) {
+    String expStr = toString(exp);
+    log.debug("start calculating function '{}': {} ...", exp.getFunctionId(), expStr);
+    Exceptions.checkFunctionExists(exp, functions);
+    FunctionEntity func = getFunction(exp.getFunctionId());
+    Expression result = func.calculate(exp.getArguments(), this);
+    log.debug(
+        "end calculating function '{}': {} = {}", exp.getFunctionId(), expStr, toString(result));
+    return result;
   }
 
-  public void setVariable(String name, NumberValue... values) {
-    setVariable(name, Exp.of(values));
-  }
-
-  public void setVariable(String name, Number... values) {
-    setVariable(name, Exp.of(values));
+  public List<Expression> calculate(List<Expression> args) {
+    List<Expression> calculated = new ArrayList<>();
+    for (Expression arg : args) {
+      Expression res = calculate(arg);
+      if (res == null) return null;
+      calculated.add(res);
+    }
+    return calculated;
   }
 
   public String toString(Expression exp) {
+    if (exp == null) return "null";
     if (exp.getEntityId() != null) return exp.getEntityId();
     if (exp.getConstantId() != null)
       return getConstant(exp.getConstantId()).getConstant().getTitle();
-    if (exp.getValue() != null) return Values.toString(exp.getValue());
     if (exp.getValues() != null) return Values.toString(exp.getValues());
     if (exp.getRestriction() != null) return Restrictions.toString(exp.getRestriction());
-    return toStringFunction(exp);
+    return functionToString(exp);
   }
 
-  private String toStringFunction(Expression exp) {
+  private String functionToString(Expression exp) {
     List<String> args =
         exp.getArguments().stream().map(e -> toString(e)).collect(Collectors.toList());
     return getFunction(exp.getFunctionId()).toString(args);

@@ -31,7 +31,7 @@ public class Exp {
   }
 
   public static Expression of(Value val) {
-    return new Expression().value(val);
+    return new Expression().addValuesItem(val);
   }
 
   public static Expression of(List<Value> vals) {

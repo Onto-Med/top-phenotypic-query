@@ -29,15 +29,13 @@ public class Exceptions {
   public static void checkArgumentType(ExpressionFunction f, DataType dt, Expression arg) {
     String msg = "The argument '%s' has a wrong data type for the function '%s'!";
     if (dt != Expressions.getDataType(arg))
-      throw new ArithmeticException(
-          String.format(msg, Expressions.toStringValues(arg), f.getId()));
+      throw new ArithmeticException(String.format(msg, Expressions.toStringValues(arg), f.getId()));
   }
 
   public static void checkArgumentTypes(ExpressionFunction f, Expression arg, DataType... dts) {
     String msg = "The argument '%s' has a wrong data type for the function '%s'!";
     for (DataType dt : dts) if (dt == Expressions.getDataType(arg)) return;
-    throw new ArithmeticException(
-        String.format(msg, Expressions.toStringValues(arg), f.getId()));
+    throw new ArithmeticException(String.format(msg, Expressions.toStringValues(arg), f.getId()));
   }
 
   //  public static void checkArgumentsContainLists(ExpressionFunction f, List<Expression> args) {
@@ -55,7 +53,8 @@ public class Exceptions {
 
   public static void checkArgumentHasValue(ExpressionFunction f, Expression arg) {
     String msg = "The argument of the function '%s' must have a single value!";
-    if (arg.getValue() == null) throw new ArithmeticException(String.format(msg, f.getId()));
+    if (!Expressions.hasSingleValue(arg))
+      throw new ArithmeticException(String.format(msg, f.getId()));
   }
 
   public static void checkArgumentHasValueOfType(
@@ -63,6 +62,16 @@ public class Exceptions {
     checkArgumentHasValue(f, arg);
     checkArgumentType(f, dt, arg);
   }
+
+  //  public static void checkArgumentIsNotNull(ExpressionFunction f, Expression arg) {
+  //    String msg = "One argument of the function '%s' is null!";
+  //    if (arg == null) throw new ArithmeticException(String.format(msg, f.getId()));
+  //  }
+  //
+  //  public static void checkArgumentsAreNotNull(ExpressionFunction f, List<Expression> args) {
+  //    String msg = "One argument of the function '%s' is null!";
+  //    if (args == null) throw new ArithmeticException(String.format(msg, f.getId()));
+  //  }
 
   public static void checkArgumentsNumber(ExpressionFunction f, List<Expression> args) {
     String msg = "The number of arguments (%s) is not suitable for the function '%s'!";
@@ -77,10 +86,10 @@ public class Exceptions {
       throw new ArithmeticException(String.format(msg, exp.getEntityId()));
   }
 
-  public static void checkConstantExists(Expression exp, Map<String, ConstantEntity> constants) {
+  public static void checkConstantExists(String constantId, Map<String, ConstantEntity> constants) {
     String msg = "Constant '%s' does not exists!";
-    if (!constants.containsKey(exp.getConstantId()))
-      throw new ArithmeticException(String.format(msg, exp.getConstantId()));
+    if (!constants.containsKey(constantId))
+      throw new ArithmeticException(String.format(msg, constantId));
   }
 
   public static void checkFunctionExists(Expression exp, Map<String, FunctionEntity> functions) {

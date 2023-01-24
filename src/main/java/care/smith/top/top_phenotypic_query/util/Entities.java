@@ -125,6 +125,10 @@ public class Entities {
         .collect(Collectors.toSet());
   }
 
+  public Set<String> getPhenotypeIds() {
+    return getPhenotypes().stream().map(e -> e.getId()).collect(Collectors.toSet());
+  }
+
   public Collection<Phenotype> getPhenotypes() {
     return getEntities().stream()
         .filter(e -> e.getEntityType() != EntityType.CATEGORY)

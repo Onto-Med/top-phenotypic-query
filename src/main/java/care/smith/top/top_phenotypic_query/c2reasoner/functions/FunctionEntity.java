@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions;
 
-import java.math.MathContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,8 +13,6 @@ import care.smith.top.top_phenotypic_query.util.Values;
 public abstract class FunctionEntity {
 
   private ExpressionFunction function;
-  private Expression defaultValue;
-  protected MathContext mc = MathContext.DECIMAL64;
 
   protected FunctionEntity(String title, NotationEnum notation) {
     this.function =
@@ -37,14 +34,6 @@ public abstract class FunctionEntity {
     function.maxArgumentNumber(num);
   }
 
-  protected void defaultValue(Expression defaultValue) {
-    this.defaultValue = defaultValue;
-  }
-
-  public Expression getDefaultValue() {
-    return defaultValue;
-  }
-
   public String getFunctionId() {
     return function.getId();
   }
@@ -53,21 +42,7 @@ public abstract class FunctionEntity {
     return function;
   }
 
-  public MathContext getMathContext() {
-    return mc;
-  }
-
-  public void setMathContext(MathContext mc) {
-    this.mc = mc;
-  }
-
-  public FunctionEntity mathContext(MathContext mc) {
-    setMathContext(mc);
-    return this;
-  }
-
-  public abstract Expression calculate(
-      List<Expression> args, FunctionEntity defaultAggregateFunction, C2R c2r);
+  public abstract Expression calculate(List<Expression> args, C2R c2r);
 
   public String toString(List<String> args) {
     if (function.getNotation() == NotationEnum.PREFIX)

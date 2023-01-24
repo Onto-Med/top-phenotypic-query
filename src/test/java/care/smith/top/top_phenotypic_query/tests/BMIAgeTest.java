@@ -51,7 +51,7 @@ public class BMIAgeTest extends AbstractTest {
       if (Phenotypes.isRestriction(p)) p.setExpression(Exp.ofRestriction(p));
     }
 
-    ResultSet initialRS = getResultSet();
+    getResultSet();
 
     CompositeSearch search = new CompositeSearch(null, cri, getResultSet(), phenotypes);
     ResultSet finalRS = search.execute();
@@ -59,16 +59,19 @@ public class BMIAgeTest extends AbstractTest {
     assertEquals(Set.of("Subject1"), finalRS.getSubjectIds());
 
     SubjectPhenotypes phes = finalRS.getPhenotypes("Subject1");
-    assertEquals(phenotypes.getIds(), phes.getPhenotypeNames());
+
+    Set<String> phesExpected = phenotypes.getPhenotypeIds();
+    phesExpected.remove("BMI27_30");
+    phesExpected.remove("BMI19_27");
+
+    assertEquals(phesExpected, phes.getPhenotypeNames());
 
     assertFalse(Values.getBooleanValue(getValue("Old", phes)));
     assertTrue(Values.getBooleanValue(getValue("Young", phes)));
 
     assertEquals(new BigDecimal("25.95155709342561"), Values.getNumberValue(getValue("BMI", phes)));
     assertFalse(Values.getBooleanValue(getValue("BMI19_25", phes)));
-    assertTrue(Values.getBooleanValue(getValue("BMI19_27", phes)));
     assertTrue(Values.getBooleanValue(getValue("BMI25_30", phes)));
-    assertFalse(Values.getBooleanValue(getValue("BMI27_30", phes)));
 
     assertEquals(BigDecimal.ONE, Values.getNumberValue(getValue("Finding", phes)));
     assertTrue(Values.getBooleanValue(getValue("Overweight", phes)));
