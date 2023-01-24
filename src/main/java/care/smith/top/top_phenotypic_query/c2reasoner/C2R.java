@@ -275,7 +275,6 @@ public class C2R {
     if (exp.getEntityId() != null) return exp.getEntityId();
     if (exp.getConstantId() != null)
       return getConstant(exp.getConstantId()).getConstant().getTitle();
-    if (exp.getValue() != null) return Values.toString(exp.getValue());
     if (exp.getValues() != null) return Values.toString(exp.getValues());
     if (exp.getRestriction() != null) return Restrictions.toString(exp.getRestriction());
     return functionToString(exp);

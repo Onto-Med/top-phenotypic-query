@@ -97,6 +97,32 @@ public class C2RTest {
   }
 
   @Test
+  public void testRestrict1b() {
+    Value v1 = Val.of(5, DateUtil.parse("2000-01-01"));
+    Value v2 = Val.of(10, DateUtil.parse("2001-01-01"));
+    Value v3 = Val.of(15, DateUtil.parse("2002-01-01"));
+    Value v4 = Val.of(8, DateUtil.parse("2003-01-01"));
+
+    Phenotype a = new Phe("a").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, v1);
+    vals.addValue("a", null, v2);
+    vals.addValue("a", null, v3);
+    vals.addValue("a", null, v4);
+
+    Expression rest = Exp.of(Res.geLt(5, 15));
+    Phenotype p = new Phe("p").expression(Restrict.of(Exp.of(a), rest)).get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(5), BigDecimal.valueOf(10), BigDecimal.valueOf(8)),
+        Expressions.getNumberValues(c.calculate(p)));
+  }
+
+  @Test
   public void testRestrict2() {
     Value v1 = Val.of(5, DateUtil.parse("2000-01-01"));
     Value v2 = Val.of(10, DateUtil.parse("2001-01-01"));
@@ -119,6 +145,32 @@ public class C2RTest {
     assertEquals(
         List.of(BigDecimal.valueOf(10), BigDecimal.valueOf(15)),
         Expressions.getNumberValues(c.calculate(e)));
+  }
+
+  @Test
+  public void testRestrict2b() {
+    Value v1 = Val.of(5, DateUtil.parse("2000-01-01"));
+    Value v2 = Val.of(10, DateUtil.parse("2001-01-01"));
+    Value v3 = Val.of(15, DateUtil.parse("2002-01-01"));
+    Value v4 = Val.of(8, DateUtil.parse("2003-01-01"));
+
+    Phenotype a = new Phe("a").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, v1);
+    vals.addValue("a", null, v2);
+    vals.addValue("a", null, v3);
+    vals.addValue("a", null, v4);
+
+    Expression rest = Exp.of(Res.geLt(DateUtil.parse("2001-01-01"), DateUtil.parse("2002-01-02")));
+    Phenotype p = new Phe("p").expression(Restrict.of(Exp.of(a), rest)).get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(10), BigDecimal.valueOf(15)),
+        Expressions.getNumberValues(c.calculate(p)));
   }
 
   @Test
