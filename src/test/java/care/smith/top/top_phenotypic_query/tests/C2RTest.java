@@ -62,13 +62,10 @@ public class C2RTest {
     Value v2 = Val.of(5, DateUtil.parse("2000-01-01"));
     Value v3 = Val.of(7, DateUtil.parse("2001-01-01"));
     Value v4 = Val.of(9, DateUtil.parse("2000-01-01"));
+    Expression li = Li.of(Exp.of(v1, v2), Exp.of(v3, v4));
 
-    assertEquals(Exp.of(v1, v3), new C2R().calculate(Li.of(Exp.of(v1, v2), Exp.of(v3, v4))));
-    assertEquals(
-        Exp.of(4, 8),
-        new C2R()
-            .defaultAggregateFunction(Avg.get())
-            .calculate(Li.of(Exp.of(v1, v2), Exp.of(v3, v4))));
+    assertEquals(Exp.of(v1, v3), new C2R().calculate(li));
+    assertEquals(Exp.of(4, 8), new C2R().defaultAggregateFunction(Avg.get()).calculate(li));
   }
 
   @Test
