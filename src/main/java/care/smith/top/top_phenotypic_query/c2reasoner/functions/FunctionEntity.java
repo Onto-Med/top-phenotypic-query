@@ -17,7 +17,11 @@ public abstract class FunctionEntity {
 
   protected FunctionEntity(String title, NotationEnum notation) {
     this.function =
-        new ExpressionFunction().id(getClass().getSimpleName()).title(title).notation(notation);
+        new ExpressionFunction()
+            .id(getClass().getSimpleName())
+            .title(title)
+            .notation(notation)
+            .type(getType());
   }
 
   protected FunctionEntity(
