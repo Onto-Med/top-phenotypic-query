@@ -25,7 +25,6 @@ import org.hl7.fhir.r4.model.Reference;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRClient;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
-import care.smith.top.top_phenotypic_query.util.DateUtil;
 
 public class DB2FHIRTestIntern {
 
@@ -154,7 +153,7 @@ public class DB2FHIRTestIntern {
     Phenotype(ResultSet rs, Map<String, String> patIds, boolean withValue) throws SQLException {
       id = rs.getString("phenotype_id");
       patientId = patIds.get(rs.getString("subject_id"));
-      date = DateUtil.toDate(rs.getTimestamp("created_at"));
+      date = rs.getTimestamp("created_at");
       system = rs.getString("code_system");
       code = rs.getString("code");
       if (withValue) {

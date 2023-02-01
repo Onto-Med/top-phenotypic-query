@@ -23,16 +23,19 @@ import care.smith.top.top_phenotypic_query.util.builder.Val;
 public class FHIRAdapter extends DataAdapter {
 
   private FHIRClient client;
+  private FHIRPath path;
   private static final Logger log = LoggerFactory.getLogger(FHIRAdapter.class);
 
   public FHIRAdapter(DataAdapterConfig config) {
     super(config);
     this.client = new FHIRClient(config);
+    this.path = client.getFHIRPath();
   }
 
   public FHIRAdapter(String configFilePath) {
     super(configFilePath);
     this.client = new FHIRClient(config);
+    this.path = client.getFHIRPath();
   }
 
   @Override
@@ -46,17 +49,16 @@ public class FHIRAdapter extends DataAdapter {
     String pheCol = out.getValue(Phenotypes.getDataType(phe));
 
     for (Resource res : resources) {
-      String sbj = FHIRUtil.getString(client.evaluateFHIRPath(res, out.getSubject()));
-      LocalDateTime date = FHIRUtil.getDate(client.evaluateFHIRPath(res, out.getDateTime()));
+      String sbj = path.getString(res, out.getSubject());
+      LocalDateTime date = path.getDateTime(res, out.getDateTime());
       Value val = null;
-      if (Phenotypes.hasDateTimeType(phe))
-        val = Val.of(FHIRUtil.getDate(client.evaluateFHIRPath(res, pheCol)), date);
+      if (Phenotypes.hasDateTimeType(phe)) val = Val.of(path.getDateTime(res, pheCol), date);
       else if (Phenotypes.hasNumberType(phe))
-        val = Val.of(FHIRUtil.getNumber(client.evaluateFHIRPath(res, pheCol)), date);
+        val = Val.of(path.getNumber(res, pheCol), date);
       else if (Phenotypes.hasBooleanType(phe)) {
         rs.addValue(sbj, phe, search.getDateTimeRestriction(), Val.ofTrue());
         continue;
-      } else val = Val.of(FHIRUtil.getString(client.evaluateFHIRPath(res, pheCol)), date);
+      } else val = Val.of(path.getString(res, pheCol), date);
       if (val != null)
         rs.addValueWithRestriction(
             sbj,
@@ -84,7 +86,7 @@ public class FHIRAdapter extends DataAdapter {
     for (Resource res : resources) {
       String sbj = FHIRUtil.getId(res);
       if (bd != null) {
-        LocalDateTime bdVal = FHIRUtil.getDate(client.evaluateFHIRPath(res, out.getBirthdate()));
+        LocalDateTime bdVal = path.getDateTime(res, out.getBirthdate());
         if (bdVal != null) {
           Value val = Val.of(bdVal);
           if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, null, val);
@@ -96,7 +98,7 @@ public class FHIRAdapter extends DataAdapter {
         }
       }
       if (sex != null) {
-        String sexVal = FHIRUtil.getString(client.evaluateFHIRPath(res, out.getSex()));
+        String sexVal = path.getString(res, out.getSex());
         if (sexVal != null) rs.addValueWithRestriction(sbj, sex, null, Val.of(sexVal));
       }
     }

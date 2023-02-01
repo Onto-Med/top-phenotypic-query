@@ -4,11 +4,9 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
@@ -23,30 +21,35 @@ public class DateUtil {
 
   private static DateTimeFormatter parseFormatter =
       new DateTimeFormatterBuilder()
-          .appendPattern("[yyyy-MM-dd'T'HH:mm:ss][yyyy-MM-dd][dd.MM.yyyy][dd.MM.yy]")
+          .appendPattern(
+              "[yyyy-MM-dd'T'HH:mm:ss][yyyy-MM-dd'T'HH:mm][yyyy-MM-dd][dd.MM.yyyy][dd.MM.yy]")
           .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
           .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
           .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
           .toFormatter();
 
   public static LocalDateTime ofMilli(long milli) {
-    return Instant.ofEpochMilli(milli).atZone(ZoneId.systemDefault()).toLocalDateTime();
+    return new Timestamp(milli).toLocalDateTime();
+  }
+
+  public static LocalDateTime ofDate(Date date) {
+    return ofMilli(date.getTime());
   }
 
   public static long toMilli(LocalDateTime dateTime) {
-    return dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-  }
-
-  public static LocalDateTime parse(String dateTime) {
-    return LocalDateTime.parse(dateTime, parseFormatter);
+    return toDate(dateTime).getTime();
   }
 
   public static Date toDate(LocalDateTime dateTime) {
     return Timestamp.valueOf(dateTime);
   }
 
-  public static Date toDate(Timestamp timestamp) {
-    return new Date(timestamp.getTime());
+  public static LocalDateTime parse(String dateTime) {
+    return LocalDateTime.parse(dateTime, parseFormatter);
+  }
+
+  public static Date parseToDate(String dateTime) {
+    return toDate(parse(dateTime));
   }
 
   public static String format(LocalDateTime dateTime) {

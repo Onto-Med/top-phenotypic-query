@@ -1,22 +1,25 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Base;
+import org.hl7.fhir.r4.model.BaseDateTimeType;
+import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.DateTimeType;
-import org.hl7.fhir.r4.model.DateType;
 import org.hl7.fhir.r4.model.DecimalType;
+import org.hl7.fhir.r4.model.Enumeration;
+import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Reference;
-import org.springframework.util.CollectionUtils;
+import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.UriType;
 
 import ca.uhn.fhir.context.FhirContext;
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 
 public class FHIRUtil {
 
@@ -44,27 +47,37 @@ public class FHIRUtil {
     return r.getReferenceElement().getIdPart();
   }
 
-  public static String getString(List<Base> values) {
-    if (CollectionUtils.isEmpty(values)) return null;
-    return values.get(0).toString();
+  public static String getString(Base value) {
+    if (value == null) return null;
+    if (value instanceof Enumeration<?>) return ((Enumeration<?>) value).asStringValue();
+    if (value instanceof StringType) return ((StringType) value).getValue();
+    if (value instanceof UriType) return ((UriType) value).getValue();
+    return null;
   }
 
-  public static LocalDateTime getDate(List<Base> values) {
-    if (CollectionUtils.isEmpty(values)) return null;
-    Base date = values.get(0);
-    if (date instanceof DateTimeType)
-      return new Timestamp((((DateTimeType) date).getValue()).getTime()).toLocalDateTime();
-    return new Timestamp((((DateType) date).getValue()).getTime()).toLocalDateTime();
+  public static LocalDateTime getDateTime(Base value) {
+    if (value == null) return null;
+    if (value instanceof BaseDateTimeType)
+      return DateUtil.ofDate(((BaseDateTimeType) value).getValue());
+    return null;
   }
 
-  public static BigDecimal getNumber(List<Base> values) {
-    if (CollectionUtils.isEmpty(values)) return null;
-    return ((DecimalType) values.get(0)).getValue();
+  public static BigDecimal getNumber(Base value) {
+    if (value == null) return null;
+    if (value instanceof DecimalType) return ((DecimalType) value).getValue();
+    if (value instanceof IntegerType)
+      return BigDecimal.valueOf(((IntegerType) value).getValue().longValue());
+    return null;
   }
 
-  public static BigDecimal getIdentifier(List<Base> values) {
-    if (CollectionUtils.isEmpty(values)) return null;
-    return ((DecimalType) values.get(0)).getValue();
+  public static Boolean getBoolean(Base value) {
+    if (value == null) return null;
+    if (value instanceof BooleanType) return ((BooleanType) value).getValue();
+    return null;
+  }
+
+  public static DateTimeType parse(String dateTime) {
+    return new DateTimeType(DateUtil.parseToDate(dateTime));
   }
 
   public static Stream<String> codeableConceptToCodeUrisStream(CodeableConcept cc) {

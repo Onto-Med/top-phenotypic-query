@@ -6,15 +6,12 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
-import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext;
-import org.hl7.fhir.r4.model.Base;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome.IssueType;
 import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
 import org.hl7.fhir.r4.model.Resource;
-import org.hl7.fhir.r4.utils.FHIRPathEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +27,7 @@ import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 public class FHIRClient {
 
   private IGenericClient client;
-  private FHIRPathEngine engine;
+  private FHIRPath path;
   private static final Logger log = LoggerFactory.getLogger(FHIRClient.class);
 
   public FHIRClient(DataAdapterConfig config) {
@@ -48,11 +45,11 @@ public class FHIRClient {
     else if (StringUtils.isNotBlank(token))
       client.registerInterceptor(new BearerTokenAuthInterceptor(token));
 
-    this.engine = new FHIRPathEngine(new HapiWorkerContext(ctx, ctx.getValidationSupport()));
+    this.path = new FHIRPath(ctx);
   }
 
-  public List<Base> evaluateFHIRPath(Resource res, String path) {
-    return engine.evaluate(res, path);
+  public FHIRPath getFHIRPath() {
+    return path;
   }
 
   public List<Resource> executeQuery(String query) {

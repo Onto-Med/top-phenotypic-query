@@ -38,7 +38,7 @@ phenotypeQueries:
     dateTimeIntervalPart: "&date{operator}{value}"
     output:
       subject: subject.reference.value
-      dateTime: effective  
+      dateTime: performed  
 birthdateMapping:
   code: http://loinc.org|21112-8
 ageMapping:
