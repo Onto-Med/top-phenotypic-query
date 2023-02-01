@@ -54,7 +54,7 @@ public class FHIRPathTest {
 
     assertEquals("Patient/1", path.getString(obs, "subject.reference.value"));
     assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(obs, "effective"));
-    assertEquals(BigDecimal.valueOf(4.12), path.getNumber(obs, "value.value"));
+    assertEquals(BigDecimal.valueOf(4.12), path.getNumber(obs, "value"));
     assertEquals("10 trillion/L", path.getString(obs, "value.unit"));
     assertEquals("http://unitsofmeasure.org", path.getString(obs, "value.system"));
     assertEquals("10*12/L", path.getString(obs, "value.code"));

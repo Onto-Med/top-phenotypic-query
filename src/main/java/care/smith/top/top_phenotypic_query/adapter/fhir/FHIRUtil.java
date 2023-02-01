@@ -14,6 +14,7 @@ import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.DecimalType;
 import org.hl7.fhir.r4.model.Enumeration;
 import org.hl7.fhir.r4.model.IntegerType;
+import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
 import org.hl7.fhir.r4.model.UriType;
@@ -64,6 +65,7 @@ public class FHIRUtil {
 
   public static BigDecimal getNumber(Base value) {
     if (value == null) return null;
+    if (value instanceof Quantity) return ((Quantity) value).getValue();
     if (value instanceof DecimalType) return ((DecimalType) value).getValue();
     if (value instanceof IntegerType)
       return BigDecimal.valueOf(((IntegerType) value).getValue().longValue());
