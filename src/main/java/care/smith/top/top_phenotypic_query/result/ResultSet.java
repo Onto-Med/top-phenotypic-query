@@ -61,7 +61,7 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
 
   public void addValue(
       String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
-    if (val != null) addValue(subjectId, Phenotypes.getPhenotypeId(phenotype), dateRange, val);
+    if (val != null) addValue(subjectId, Phenotypes.getUnrestrictedPhenotypeId(phenotype), dateRange, val);
   }
 
   public void addValue(

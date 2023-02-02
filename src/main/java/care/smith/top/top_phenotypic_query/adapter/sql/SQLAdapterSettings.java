@@ -78,7 +78,7 @@ public class SQLAdapterSettings extends DataAdapterSettings {
 
   @Override
   protected void addCodeList(Phenotype p, PhenotypeQueryBuilder builder, SingleSearch search) {
-    String valuesAsString = generateQuestionMarks(Phenotypes.getCodes(p).size());
+    String valuesAsString = generateQuestionMarks(Phenotypes.getUnrestrictedPhenotypeCodes(p).size());
     builder.baseQuery(valuesAsString);
   }
 
@@ -132,7 +132,7 @@ public class SQLAdapterSettings extends DataAdapterSettings {
     int paramNum = 1;
 
     if (search.getPhenotypeQuery().getBaseQuery().contains(Props.VAR_CODES)) {
-      for (Code code : Phenotypes.getCodes(search.getPhenotype()))
+      for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(search.getPhenotype()))
         ps.setString(paramNum++, Phenotypes.getCodeUri(code));
     }
 

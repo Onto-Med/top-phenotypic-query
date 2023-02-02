@@ -119,20 +119,6 @@ public class SubjectQueryMan {
     return rs;
   }
 
-  //  private void checkRestrictions(ResultSet rs, Phenotype pheVar, Set<Phenotype> restrVars) {
-  //    if (pheVar == null || restrVars.isEmpty()) return;
-  //    for (String sbjId : rs.getSubjectIds()) {
-  //      for (Phenotype restr : restrVars) {
-  //        C2R calc = new C2R();
-  //        SubjectPhenotypes phes = rs.getPhenotypes(sbjId);
-  //        List<Value> vals = phes.getValues(pheVar.getId(), null);
-  //        calc.setVariable(pheVar.getId(), vals);
-  //        Expression res = calc.calculate(restr.getExpression());
-  //        phes.setValues(restr.getId(), null, Expressions.getValueOrValues(res));
-  //      }
-  //    }
-  //  }
-
   private void checkRestrictions(ResultSet rs, Phenotype pheVar, Set<Phenotype> restrVars) {
     if (pheVar == null || restrVars.isEmpty()) return;
     for (SubjectPhenotypes sbjPhes : rs.getPhenotypes()) {
