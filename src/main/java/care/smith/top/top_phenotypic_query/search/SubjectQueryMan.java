@@ -119,6 +119,24 @@ public class SubjectQueryMan {
     return rs;
   }
 
+  public ResultSet executeAllSubjectsQuery() {
+    Phenotype sex = getUnrestrictedPhenotype(sexInclusion, sexExclusion, sexPhenotypeVariable);
+    Phenotype bd =
+        getUnrestrictedPhenotype(
+            birthdateInclusion, birthdateExclusion, birthdatePhenotypeVariable);
+    Phenotype age = getUnrestrictedPhenotype(ageInclusion, ageExclusion, agePhenotypeVariable);
+    return adapter.execute(new SubjectSearch(null, sex, bd, age, adapter));
+  }
+
+  private Phenotype getUnrestrictedPhenotype(Phenotype... phes) {
+    for (Phenotype p : phes) {
+      if (p == null) continue;
+      if (Phenotypes.isPhenotype(p)) return p;
+      if (Phenotypes.isRestriction(p)) return p.getSuperPhenotype();
+    }
+    return null;
+  }
+
   private void checkRestrictions(ResultSet rs, Phenotype pheVar, Set<Phenotype> restrVars) {
     if (pheVar == null || restrVars.isEmpty()) return;
     for (SubjectPhenotypes sbjPhes : rs.getPhenotypes()) {

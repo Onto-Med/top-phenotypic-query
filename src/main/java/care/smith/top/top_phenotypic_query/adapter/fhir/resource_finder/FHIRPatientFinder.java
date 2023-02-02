@@ -35,7 +35,11 @@ public class FHIRPatientFinder extends FHIRPathResourceFinder {
   @Override
   protected void addResource(Resource res) {
     String sbj = FHIRUtil.getId(res);
-    if (search.getBirthdateDerived() != null) {
+    if (bd == null && sex == null) {
+      rs.addSubject(sbj);
+      return;
+    }
+    if (bd != null) {
       LocalDateTime bdVal = path.getDateTime(res, out.getBirthdate());
       if (bdVal != null) {
         Value val = Val.of(bdVal);
