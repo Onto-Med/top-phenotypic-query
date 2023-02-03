@@ -3,12 +3,12 @@ package care.smith.top.top_phenotypic_query.search;
 import java.util.HashSet;
 import java.util.Set;
 
-import care.smith.top.model.Phenotype;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import care.smith.top.model.Phenotype;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class SingleQueryMan {
 
@@ -18,12 +18,6 @@ public class SingleQueryMan {
   private Set<SingleSearch> exclusions = new HashSet<>();
   private Set<SingleSearch> variables = new HashSet<>();
   private SubjectQueryMan subjectQueryMan;
-
-  private DataAdapter adapter;
-
-  public SingleQueryMan(DataAdapter adapter) {
-    this.adapter = adapter;
-  }
 
   public Set<SingleSearch> getInclusionCriteria() {
     return inclusions;
@@ -62,13 +56,16 @@ public class SingleQueryMan {
   }
 
   public ResultSet execute() {
-    ResultSet rs = subjectQueryMan.executeInclusion();
-    if (rs != null && rs.isEmpty()) return rs;
+    ResultSet rs = null;
 
-    if (rs == null && inclusions.isEmpty()) {
-      rs = adapter.executeAllSubjectsQuery();
+    if (!subjectQueryMan.hasInclusion() && inclusions.isEmpty()) {
+      rs = subjectQueryMan.executeAllSubjectsQuery();
       if (rs.isEmpty()) return rs;
     } else {
+      if (subjectQueryMan.hasInclusion()) {
+        rs = subjectQueryMan.executeInclusion();
+        if (rs.isEmpty()) return rs;
+      }
       for (SingleSearch inc : inclusions) {
         ResultSet res = inc.execute();
         if (res.isEmpty()) return res;
@@ -80,6 +77,16 @@ public class SingleQueryMan {
       }
     }
 
+    if (subjectQueryMan.hasSexExclusion()) {
+      ResultSet sexExc = subjectQueryMan.executeSexExclusion();
+      if (!sexExc.isEmpty()) rs = rs.subtract(sexExc);
+    }
+
+    if (subjectQueryMan.hasBirthdateExclusion()) {
+      ResultSet bdExc = subjectQueryMan.executeBirthdateExclusion();
+      if (!bdExc.isEmpty()) rs = rs.subtract(bdExc);
+    }
+
     for (SingleSearch exc : exclusions) {
       ResultSet res = exc.execute();
       if (res.isEmpty()) continue;
@@ -87,14 +94,11 @@ public class SingleQueryMan {
       if (rs.isEmpty()) return rs;
     }
 
-    ResultSet sexExc = subjectQueryMan.executeSexExclusion();
-    if (sexExc != null && !sexExc.isEmpty()) rs = rs.subtract(sexExc);
-
-    ResultSet bdExc = subjectQueryMan.executeBirthdateExclusion();
-    if (bdExc != null && !bdExc.isEmpty()) rs = rs.subtract(bdExc);
-
-    ResultSet sbjVars = subjectQueryMan.executeVariables();
-    if (sbjVars != null && !sbjVars.isEmpty()) rs = rs.insert(sbjVars);
+    if ((!subjectQueryMan.hasInclusion() && !inclusions.isEmpty())
+        && subjectQueryMan.hasVariables()) {
+      ResultSet sbjVars = subjectQueryMan.executeAllSubjectsQuery();
+      if (!sbjVars.isEmpty()) rs = rs.insert(sbjVars);
+    }
 
     for (SingleSearch var : variables) {
       ResultSet res = var.execute();

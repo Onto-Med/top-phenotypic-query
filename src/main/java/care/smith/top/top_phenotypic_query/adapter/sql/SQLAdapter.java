@@ -129,6 +129,10 @@ public class SQLAdapter extends DataAdapter {
 
       while (sqlRS.next()) {
         String sbj = sqlRS.getString(sbjCol);
+        if (bd == null && sex == null) {
+          rs.addSubject(sqlRS.getString(sbjCol));
+          continue;
+        }
         if (bd != null) {
           Timestamp bdSqlVal = sqlRS.getTimestamp(bdCol);
           if (bdSqlVal != null) {
@@ -154,20 +158,6 @@ public class SQLAdapter extends DataAdapter {
           }
         }
       }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return rs;
-  }
-
-  @Override
-  public ResultSet executeAllSubjectsQuery() {
-    ResultSet rs = new ResultSet();
-    try {
-      log.debug("Execute SQL query: {}", SubjectSearch.getBaseQuery(config));
-      java.sql.ResultSet sqlRS = executeQuery(SubjectSearch.getBaseQuery(config));
-      String sbjCol = SubjectSearch.getIdColumn(config);
-      while (sqlRS.next()) rs.addSubject(sqlRS.getString(sbjCol));
     } catch (SQLException e) {
       e.printStackTrace();
     }

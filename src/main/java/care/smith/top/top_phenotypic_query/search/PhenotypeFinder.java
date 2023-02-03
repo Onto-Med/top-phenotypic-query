@@ -42,8 +42,8 @@ public class PhenotypeFinder {
   }
 
   private ResultSet executeSingleSearches() {
-    SingleQueryMan man = new SingleQueryMan(adapter);
-    SubjectQueryMan sbjMan = new SubjectQueryMan(adapter);
+    SingleQueryMan man = new SingleQueryMan();
+    SubjectQueryMan sbjMan = new SubjectQueryMan(adapter, query, phenotypes);
     for (QueryCriterion cri : query.getCriteria()) {
       Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
       if (Phenotypes.isSingle(phe)) {

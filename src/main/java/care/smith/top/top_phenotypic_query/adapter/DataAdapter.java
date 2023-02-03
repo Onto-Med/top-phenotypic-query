@@ -52,8 +52,6 @@ public abstract class DataAdapter {
 
   public abstract ResultSet execute(SingleSearch search);
 
-  public abstract ResultSet executeAllSubjectsQuery();
-
   public abstract DataAdapterSettings getSettings();
 
   public abstract void close();

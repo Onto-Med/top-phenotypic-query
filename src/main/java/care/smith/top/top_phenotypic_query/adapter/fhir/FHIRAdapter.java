@@ -1,8 +1,5 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir;
 
-import java.util.List;
-
-import org.hl7.fhir.r4.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,16 +37,6 @@ public class FHIRAdapter extends DataAdapter {
     String query = getSettings().createSubjectPreparedQuery(search);
     log.debug("Execute FHIR query: {}", query);
     return client.findPatients(query, search);
-  }
-
-  @Override
-  public ResultSet executeAllSubjectsQuery() {
-    String query = SubjectSearch.getBaseQuery(config);
-    log.debug("Execute FHIR query: {}", query);
-    ResultSet rs = new ResultSet();
-    List<Resource> resources = client.findResources(query);
-    for (Resource res : resources) rs.addSubject(FHIRUtil.getId(res));
-    return rs;
   }
 
   @Override

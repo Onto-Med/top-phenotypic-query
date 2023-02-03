@@ -10,6 +10,7 @@ import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 
 public class Expressions {
 
@@ -119,5 +120,17 @@ public class Expressions {
       }
     } else if (exp.getArguments() != null)
       for (Expression arg : exp.getArguments()) addVariables(arg, vars, phenotypes, direct);
+  }
+
+  public static boolean containsNegation(Expression exp, Entities phenotypes) {
+    if (exp.getFunctionId() != null) {
+      if (Not.get().getFunctionId().equals(exp.getFunctionId())) return true;
+      for (Expression arg : exp.getArguments()) if (containsNegation(arg, phenotypes)) return true;
+    } else if (exp.getEntityId() != null) {
+      Phenotype phe = phenotypes.getPhenotype(exp.getEntityId());
+      if (phe.getExpression() == null) return false;
+      return containsNegation(phe.getExpression(), phenotypes);
+    }
+    return false;
   }
 }

@@ -50,6 +50,8 @@ public abstract class AbstractTest {
       getPhenotype("Sex", "http://loinc.org", "46098-0", DataType.STRING);
   protected static Phenotype female =
       getRestriction("Female", sex, "http://hl7.org/fhir/administrative-gender|female");
+  protected static Phenotype male =
+      getRestriction("Male", sex, "http://hl7.org/fhir/administrative-gender|male");
   protected static Phenotype femaleOrMale =
       getRestriction(
           "FemaleOrMale",
@@ -74,6 +76,7 @@ public abstract class AbstractTest {
     old,
     sex,
     female,
+    male,
     weight,
     height,
     bmi,
