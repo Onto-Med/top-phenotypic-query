@@ -6,28 +6,28 @@ import care.smith.top.model.QueryCriterion;
 
 public class Queries {
 
-  //  public static boolean isAllSubjectsQueryRequired(Query query, Entities phenotypes) {
-  //    for (QueryCriterion cri : query.getCriteria()) {
-  //      Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
-  //      if (cri.isInclusion()) {
-  //        if (Phenotypes.isSingle(phe)) return false;
-  //        if (Phenotypes.isCompositePhenotype(phe)
-  //            && !Expressions.containsNegation(phe.getExpression(), phenotypes)) return false;
-  //        if (Phenotypes.isCompositeRestriction(phe)
-  //            && !Expressions.containsNegation(phe.getExpression(), phenotypes)
-  //            && !Expressions.containsNegation(phe.getSuperPhenotype().getExpression(),
-  // phenotypes))
-  //          return false;
-  //      }
-  //    }
-  //    return true;
-  //  }
+  public static QueryType getType(Query query, Entities phenotypes) {
+    boolean cicWithoutNegation = false;
 
-  public static boolean containsSingleInclusionCriteria(Query query, Entities phenotypes) {
     for (QueryCriterion cri : query.getCriteria()) {
       Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
-      if (cri.isInclusion() && Phenotypes.isSingle(phe)) return true;
+      if (cri.isInclusion()) {
+        if (Phenotypes.isSingle(phe)) return QueryType.TYPE_1;
+        if ((Phenotypes.isCompositePhenotype(phe)
+                && !Expressions.containsNegation(phe.getExpression(), phenotypes))
+            || (Phenotypes.isCompositeRestriction(phe)
+                && !Expressions.containsNegation(
+                    phe.getSuperPhenotype().getExpression(), phenotypes)))
+          cicWithoutNegation = true;
+      }
     }
-    return false;
+
+    return (cicWithoutNegation) ? QueryType.TYPE_2 : QueryType.TYPE_3;
+  }
+
+  public enum QueryType {
+    TYPE_1, // contains single inclusion criteria
+    TYPE_2, // no single inclusion criteria but composite inclusion criteria without negation
+    TYPE_3 // no inclusion criteria or only composite inclusion criteria with negation
   }
 }
