@@ -10,6 +10,7 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import care.smith.top.top_phenotypic_query.util.Queries;
 
 public class PhenotypeFinder {
 
@@ -42,7 +43,7 @@ public class PhenotypeFinder {
   }
 
   private ResultSet executeSingleSearches() {
-    SingleQueryMan man = new SingleQueryMan();
+    SingleQueryMan man = new SingleQueryMan(Queries.getType(query, phenotypes));
     SubjectQueryMan sbjMan = new SubjectQueryMan(adapter, query, phenotypes);
     for (QueryCriterion cri : query.getCriteria()) {
       Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
