@@ -61,7 +61,8 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
 
   public void addValue(
       String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
-    if (val != null) addValue(subjectId, Phenotypes.getUnrestrictedPhenotypeId(phenotype), dateRange, val);
+    if (val != null)
+      addValue(subjectId, Phenotypes.getUnrestrictedPhenotypeId(phenotype), dateRange, val);
   }
 
   public void addValue(
@@ -174,6 +175,33 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
     }
 
     return insert;
+  }
+
+  public ResultSet unite(ResultSet rs2) {
+    ResultSet union = new ResultSet(this);
+
+    for (String sbjId : rs2.getSubjectIds()) {
+      SubjectPhenotypes phenotypes1 = union.getPhenotypes(sbjId);
+      SubjectPhenotypes phenotypes2 = rs2.getPhenotypes(sbjId);
+      if (phenotypes1 == null) {
+        union.setPhenotypes(phenotypes2);
+        continue;
+      }
+      for (String pheName : phenotypes2.getPhenotypeNames()) {
+        if (!phenotypes1.hasPhenotype(pheName))
+          phenotypes1.setValues(phenotypes2.getValues(pheName));
+        else {
+          PhenotypeValues values1 = phenotypes1.getValues(pheName);
+          PhenotypeValues values2 = phenotypes2.getValues(pheName);
+          for (DateTimeRestriction dateRange : values2.getDateTimeRestrictions()) {
+            if (!values1.hasDateTimeRestriction(dateRange))
+              values1.setValues(dateRange, values2.getValues(dateRange));
+          }
+        }
+      }
+    }
+
+    return union;
   }
 
   public void removeSubject(String id) {
