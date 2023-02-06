@@ -65,22 +65,22 @@ public class SingleQueryMan {
     ResultSet main = null;
     if (queryType == QueryType.TYPE_1) {
       log.debug("TYPE 1 Single Query");
-      main = executeStandardSearch(new ResultSet());
+      main = executeStandardSearch(new ResultSet(), true);
     } else if (queryType == QueryType.TYPE_2) {
       log.debug("TYPE 2 Single Query");
       main = subjectQueryMan.executeVariables(queryType);
       for (SingleSearch var : variables) main = unite(main, var.execute());
-      main = executeStandardSearch(main);
+      main = executeStandardSearch(main, false);
     } else if (queryType == QueryType.TYPE_3) {
       log.debug("TYPE 3 Single Query");
-      main = executeStandardSearch(subjectQueryMan.executeAllSubjectsQuery());
+      main = executeStandardSearch(subjectQueryMan.executeAllSubjectsQuery(), true);
     }
     log.debug(main.toString());
 
     return main;
   }
 
-  public ResultSet executeStandardSearch(ResultSet main) {
+  public ResultSet executeStandardSearch(ResultSet main, boolean withVariables) {
     if (subjectQueryMan.hasInclusion()) {
       main = intersect(main, subjectQueryMan.executeInclusion());
       if (main.isEmpty()) return main;
@@ -106,9 +106,10 @@ public class SingleQueryMan {
       if (main.isEmpty()) return main;
     }
 
-    main = insert(main, subjectQueryMan.executeVariables(queryType));
-
-    for (SingleSearch var : variables) main = insert(main, var.execute());
+    if (withVariables) {
+      main = insert(main, subjectQueryMan.executeVariables(queryType));
+      for (SingleSearch var : variables) main = insert(main, var.execute());
+    }
 
     return main;
   }
