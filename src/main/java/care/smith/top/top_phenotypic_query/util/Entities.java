@@ -11,9 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -34,8 +32,15 @@ public class Entities {
   private Repository repo;
 
   private Entities(Entity... entities) {
-    this.entities =
-        Stream.of(entities).collect(Collectors.toMap(Entity::getId, Function.identity()));
+    add(entities);
+  }
+
+  public void add(Entity e) {
+    entities.put(e.getId(), e);
+  }
+
+  public void add(Entity... entities) {
+    for (Entity e : entities) add(e);
   }
 
   public Entities deriveAdditionalProperties() {

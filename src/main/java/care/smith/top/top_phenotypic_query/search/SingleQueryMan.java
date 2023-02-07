@@ -7,22 +7,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.Query;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import care.smith.top.top_phenotypic_query.util.Queries;
 import care.smith.top.top_phenotypic_query.util.Queries.QueryType;
 
 public class SingleQueryMan {
 
   private static final Logger log = LoggerFactory.getLogger(SingleQueryMan.class);
 
-  private QueryType queryType;
   private Set<SingleSearch> inclusions = new HashSet<>();
   private Set<SingleSearch> exclusions = new HashSet<>();
   private Set<SingleSearch> variables = new HashSet<>();
   private SubjectQueryMan subjectQueryMan;
+  private Query query;
+  private Entities phenotypes;
 
-  public SingleQueryMan(QueryType queryType) {
-    this.queryType = queryType;
+  public SingleQueryMan(SubjectQueryMan subjectQueryMan, Query query, Entities phenotypes) {
+    this.subjectQueryMan = subjectQueryMan;
+    this.query = query;
+    this.phenotypes = phenotypes;
   }
 
   public Set<SingleSearch> getInclusionCriteria() {
@@ -57,11 +63,12 @@ public class SingleQueryMan {
     variables.add(variable);
   }
 
-  public void setSubjectQueryMan(SubjectQueryMan man) {
-    this.subjectQueryMan = man;
+  public boolean hasInclusion() {
+    return !inclusions.isEmpty();
   }
 
   public ResultSet execute() {
+    QueryType queryType = Queries.getType(query, phenotypes, subjectQueryMan, this);
     ResultSet main = null;
     if (queryType == QueryType.TYPE_1) {
       log.debug("TYPE 1 Single Query");
