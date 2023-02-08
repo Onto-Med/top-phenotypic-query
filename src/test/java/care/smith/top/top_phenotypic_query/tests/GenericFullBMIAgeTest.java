@@ -66,7 +66,7 @@ public class GenericFullBMIAgeTest extends AbstractTest {
     System.out.println(rs);
 
     assertEquals(Set.of("1"), rs.getSubjectIds());
-    assertEquals(12, rs.getPhenotypes("1").size());
+    assertEquals(13, rs.getPhenotypes("1").size());
     assertTrue(rs.getPhenotypes("1").hasPhenotype(overWeight.getId()));
 
     SubjectPhenotypes phes = rs.getPhenotypes("1");
@@ -74,7 +74,6 @@ public class GenericFullBMIAgeTest extends AbstractTest {
     phesExpected.add("birthdate");
     phesExpected.remove("BMI27_30");
     phesExpected.remove("BMI19_27");
-    phesExpected.remove("Male");
     phesExpected.remove("Female");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 

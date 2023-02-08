@@ -48,7 +48,7 @@ public class BMIAgeTest extends AbstractTest {
             overWeight);
 
     for (Phenotype p : phenotypes.getPhenotypes()) {
-      if (Phenotypes.isRestriction(p)) p.setExpression(Exp.ofRestriction(p));
+      if (Phenotypes.isRestriction(p)) p.setExpression(Exp.inRestriction(p));
     }
 
     getResultSet();

@@ -13,7 +13,6 @@ import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
-import care.smith.top.top_phenotypic_query.util.Queries.QueryType;
 
 public class SubjectQueryMan {
 
@@ -91,10 +90,16 @@ public class SubjectQueryMan {
 
   public ResultSet executeInclusion() {
     if (!hasInclusion()) return null;
-    Phenotype sex = (sexInclusion != null) ? sexInclusion : sexPhenotypeVariable;
-    Phenotype bd = (birthdateInclusion != null) ? birthdateInclusion : birthdatePhenotypeVariable;
-    Phenotype age = (ageInclusion != null) ? ageInclusion : agePhenotypeVariable;
+    Phenotype sex = getInclusion(sexInclusion, sexExclusion, sexPhenotypeVariable);
+    Phenotype bd = getInclusion(birthdateInclusion, birthdateExclusion, birthdatePhenotypeVariable);
+    Phenotype age = getInclusion(ageInclusion, ageExclusion, agePhenotypeVariable);
     return adapter.execute(new SubjectSearch(null, sex, bd, age, adapter));
+  }
+
+  private Phenotype getInclusion(Phenotype inc, Phenotype exc, Phenotype var) {
+    if (inc != null) return inc;
+    if (exc != null) return exc.getSuperPhenotype();
+    return var;
   }
 
   public ResultSet executeSexExclusion() {
@@ -115,44 +120,46 @@ public class SubjectQueryMan {
     return adapter.execute(new SubjectSearch(null, sex, bd, age, adapter));
   }
 
-  public ResultSet executeVariables(QueryType queryType) {
-    if (queryType == QueryType.TYPE_3 || !hasVariables() || hasInclusion()) return new ResultSet();
-    if ((sexRestrictionVariables.isEmpty()
-            && birthdateRestrictionVariables.isEmpty()
-            && ageRestrictionVariables.isEmpty())
-        || sexRestrictionVariables.size() > 1
-        || birthdateRestrictionVariables.size() + ageRestrictionVariables.size() > 1)
-      return executeAllSubjectsQuery();
-    return executeRestrictedVariables();
-  }
+  //  public ResultSet executeVariables(QueryType queryType) {
+  //	  if (queryType == QueryType.TYPE_3 || !hasVariables() || hasInclusion()) return new
+  // ResultSet();
+  //	  if ((sexRestrictionVariables.isEmpty()
+  //			  && birthdateRestrictionVariables.isEmpty()
+  //			  && ageRestrictionVariables.isEmpty())
+  //			  || sexRestrictionVariables.size() > 1
+  //			  || birthdateRestrictionVariables.size() + ageRestrictionVariables.size() > 1)
+  //		  return executeAllSubjectsQuery();
+  //	  return executeRestrictedVariables();
+  //  }
 
-  private ResultSet executeRestrictedVariables() {
-    ResultSet rs = new ResultSet();
-    rs = uniteVariables(rs, executeSexVariable());
-    rs = uniteVariables(rs, executeBirthdateVariable());
-    return rs;
-  }
+  //  private ResultSet executeRestrictedVariables() {
+  //    ResultSet rs = new ResultSet();
+  //    rs = uniteVariables(rs, executeSexVariable());
+  //    rs = uniteVariables(rs, executeBirthdateVariable());
+  //    return rs;
+  //  }
 
-  private ResultSet executeBirthdateVariable() {
-    Phenotype age = agePhenotypeVariable;
-    Phenotype bd = birthdatePhenotypeVariable;
+  public ResultSet executeBirthdateRestrictionVariable() {
+    Phenotype age = null;
+    Phenotype bd = null;
     if (!ageRestrictionVariables.isEmpty()) age = ageRestrictionVariables.iterator().next();
     if (!birthdateRestrictionVariables.isEmpty())
       bd = birthdateRestrictionVariables.iterator().next();
+    if (age == null && bd == null) return new ResultSet();
     return adapter.execute(new SubjectSearch(null, null, bd, age, adapter));
   }
 
-  private ResultSet executeSexVariable() {
-    Phenotype sex = sexPhenotypeVariable;
-    if (!sexRestrictionVariables.isEmpty()) sex = sexRestrictionVariables.iterator().next();
+  public ResultSet executeSexRestrictionVariable() {
+    if (!sexRestrictionVariables.isEmpty()) return new ResultSet();
+    Phenotype sex = sexRestrictionVariables.iterator().next();
     return adapter.execute(new SubjectSearch(null, sex, null, null, adapter));
   }
 
-  private ResultSet uniteVariables(ResultSet rs, ResultSet varRs) {
-    if (varRs.isEmpty()) return rs;
-    if (rs.isEmpty()) return varRs;
-    return rs.unite(varRs);
-  }
+  //  private ResultSet uniteVariables(ResultSet rs, ResultSet varRs) {
+  //    if (varRs.isEmpty()) return rs;
+  //    if (rs.isEmpty()) return varRs;
+  //    return rs.unite(varRs);
+  //  }
 
   public boolean hasInclusion() {
     return hasParameter(sexInclusion, birthdateInclusion, ageInclusion);
@@ -174,9 +181,17 @@ public class SubjectQueryMan {
     return hasParameter(sexPhenotypeVariable, birthdatePhenotypeVariable, agePhenotypeVariable);
   }
 
-  public boolean hasParameter() {
-    return hasInclusion() || hasSexExclusion() || hasBirthdateExclusion() || hasVariables();
+  public boolean hasSexRestrictionVariable() {
+    return !sexRestrictionVariables.isEmpty();
   }
+
+  public boolean hasBirthdateRestrictionVariable() {
+    return !birthdateRestrictionVariables.isEmpty() || !ageRestrictionVariables.isEmpty();
+  }
+
+  //  public boolean hasParameter() {
+  //    return hasInclusion() || hasSexExclusion() || hasBirthdateExclusion() || hasVariables();
+  //  }
 
   private boolean hasParameter(Phenotype... phes) {
     for (Phenotype p : phes) if (p != null) return true;
@@ -185,17 +200,20 @@ public class SubjectQueryMan {
 
   // has only unrestricted or more than two restricted parameters of the same unrestricted phenotype
   public boolean hasComplexParameters() {
-    Phenotype sex = getParameter(sexInclusion, sexExclusion, sexPhenotypeVariable);
-    Phenotype bd = getParameter(birthdateInclusion, birthdateExclusion, birthdatePhenotypeVariable);
-    Phenotype age = getParameter(ageInclusion, ageExclusion, agePhenotypeVariable);
-    int sexRestrNum = countRestrictions(sexInclusion, sexExclusion, sexRestrictionVariables);
-    int bdRestrNum =
-        countRestrictions(birthdateInclusion, birthdateExclusion, birthdateRestrictionVariables);
-    int ageRestrNum = countRestrictions(ageInclusion, ageExclusion, ageRestrictionVariables);
-    return (((sex != null || bd != null || age != null)
-            && (sexRestrNum + bdRestrNum + ageRestrNum) == 0)
-        || sexRestrNum > 1
-        || bdRestrNum + ageRestrNum > 1);
+    int sexRestrNum = countRestrictions(sexExclusion, sexRestrictionVariables);
+    int bdRestrNum = countRestrictions(birthdateExclusion, birthdateRestrictionVariables);
+    int ageRestrNum = countRestrictions(ageExclusion, ageRestrictionVariables);
+
+    return (!hasInclusion()
+        && ((isUnrestricted(sexPhenotypeVariable, sexRestrictionVariables)
+                || isUnrestricted(birthdatePhenotypeVariable, birthdateRestrictionVariables)
+                || isUnrestricted(agePhenotypeVariable, ageRestrictionVariables))
+            || sexRestrNum > 1
+            || bdRestrNum + ageRestrNum > 1));
+  }
+
+  private boolean isUnrestricted(Phenotype var, Set<Phenotype> restrictions) {
+    return var != null && restrictions.isEmpty();
   }
 
   private Phenotype getParameter(Phenotype... phes) {
@@ -207,28 +225,27 @@ public class SubjectQueryMan {
     return null;
   }
 
-  private int countRestrictions(Phenotype inc, Phenotype exc, Set<Phenotype> restrVars) {
+  private int countRestrictions(Phenotype exc, Set<Phenotype> restrVars) {
     Set<String> restrictions = restrVars.stream().map(Phenotype::getId).collect(Collectors.toSet());
-    if (inc != null) restrictions.add(inc.getId());
     if (exc != null) restrictions.add(exc.getId());
     return restrictions.size();
   }
 
-  public ResultSet calculateInclusion(ResultSet main) {
-    if (main == null || !hasInclusion()) return null;
-
-    Entities phes = getInclusionEntities();
-    for (String sbjId : new HashSet<>(main.getSubjectIds())) {
-      if (fulfillInclusion(phes, sbjId, sexInclusion, main))
-        if (fulfillInclusion(phes, sbjId, birthdateInclusion, main))
-          fulfillInclusion(phes, sbjId, ageInclusion, main);
-    }
-
-    return main;
-  }
+  //  public ResultSet calculateInclusion(ResultSet main) {
+  //    if (main == null || !hasInclusion()) return null;
+  //
+  //    Entities phes = getInclusionEntities();
+  //    for (String sbjId : new HashSet<>(main.getSubjectIds())) {
+  //      if (fulfillInclusion(phes, sbjId, sexInclusion, main))
+  //        if (fulfillInclusion(phes, sbjId, birthdateInclusion, main))
+  //          fulfillInclusion(phes, sbjId, ageInclusion, main);
+  //    }
+  //
+  //    return main;
+  //  }
 
   public ResultSet calculateExclusion(ResultSet main) {
-    if (main == null || !hasExclusion()) return null;
+    if (main == null || !hasExclusion()) return main;
 
     Entities phes = getExclusionEntities();
     for (String sbjId : new HashSet<>(main.getSubjectIds())) {
@@ -240,12 +257,12 @@ public class SubjectQueryMan {
     return main;
   }
 
-  private boolean fulfillInclusion(Entities phes, String sbjId, Phenotype inc, ResultSet main) {
-    if (inc == null) return true;
-    boolean res = calculateCriterion(phes, main.getPhenotypes(sbjId), inc);
-    if (!res) main.removeSubject(sbjId);
-    return res;
-  }
+  //  private boolean fulfillInclusion(Entities phes, String sbjId, Phenotype inc, ResultSet main) {
+  //    if (inc == null) return true;
+  //    boolean res = calculateCriterion(phes, main.getPhenotypes(sbjId), inc);
+  //    if (!res) main.removeSubject(sbjId);
+  //    return res;
+  //  }
 
   private boolean fulfillExclusion(Entities phes, String sbjId, Phenotype exc, ResultSet main) {
     if (exc == null) return false;
@@ -258,14 +275,14 @@ public class SubjectQueryMan {
     return Expressions.getBooleanValue(new C2R().phenotypes(phes).values(sbjPhes).calculate(cri));
   }
 
-  private Entities getInclusionEntities() {
-    Entities e = Entities.of();
-    if (sexInclusion != null) e.add(sexInclusion, sexInclusion.getSuperPhenotype());
-    if (birthdateInclusion != null)
-      e.add(birthdateInclusion, birthdateInclusion.getSuperPhenotype());
-    if (ageInclusion != null) e.add(ageInclusion, ageInclusion.getSuperPhenotype());
-    return e;
-  }
+  //  private Entities getInclusionEntities() {
+  //    Entities e = Entities.of();
+  //    if (sexInclusion != null) e.add(sexInclusion, sexInclusion.getSuperPhenotype());
+  //    if (birthdateInclusion != null)
+  //      e.add(birthdateInclusion, birthdateInclusion.getSuperPhenotype());
+  //    if (ageInclusion != null) e.add(ageInclusion, ageInclusion.getSuperPhenotype());
+  //    return e;
+  //  }
 
   private Entities getExclusionEntities() {
     Entities e = Entities.of();

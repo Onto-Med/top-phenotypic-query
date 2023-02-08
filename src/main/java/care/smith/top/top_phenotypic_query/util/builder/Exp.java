@@ -82,11 +82,14 @@ public class Exp {
     return of(Val.ofFalse());
   }
 
-  public static Expression ofRestriction(Phenotype p) {
+  public static Expression inRestriction(Phenotype p) {
     if (!Phenotypes.isRestriction(p)) return null;
-    Restriction r = p.getRestriction();
+    return inRestriction(p.getSuperPhenotype(), p.getRestriction());
+  }
+
+  public static Expression inRestriction(Phenotype superPhe, Restriction r) {
     if (r == null) return null;
-    return In.of(of(p.getSuperPhenotype()), of(r));
+    return In.of(of(superPhe), of(r));
   }
 
   public static Expression function(String functionId, List<Expression> args) {

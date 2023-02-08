@@ -141,6 +141,13 @@ public class DataAdapterConfig {
     return null;
   }
 
+  public CodeMapping getCodeMappingIncludingSubjectParameters(Phenotype p) {
+    if (isAge(p)) return getAgeMapping();
+    if (isBirthdate(p)) return getBirthdateMapping();
+    if (isSex(p)) return getSexMapping();
+    return getCodeMapping(p);
+  }
+
   public void setCodeMappings(List<CodeMapping> codeMappings) {
     if (codeMappings != null)
       for (CodeMapping cm : codeMappings) this.codeMappings.put(cm.getCode(), cm);

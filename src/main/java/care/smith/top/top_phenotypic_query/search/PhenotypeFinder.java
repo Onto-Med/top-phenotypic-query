@@ -20,9 +20,9 @@ public class PhenotypeFinder {
 
   public PhenotypeFinder(Query query, Entity[] entities, DataAdapter adapter) {
     this.query = query;
-    this.phenotypes = Entities.of(entities).deriveAdditionalProperties();
     this.adapter = adapter;
     this.config = adapter.getConfig();
+    this.phenotypes = Entities.of(entities).deriveAdditionalProperties(config);
   }
 
   public Entities getPhenotypes() {

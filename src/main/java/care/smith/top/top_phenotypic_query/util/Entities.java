@@ -23,6 +23,9 @@ import care.smith.top.model.EntityType;
 import care.smith.top.model.LocalisableText;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Repository;
+import care.smith.top.model.Restriction;
+import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 
@@ -43,16 +46,30 @@ public class Entities {
     for (Entity e : entities) add(e);
   }
 
-  public Entities deriveAdditionalProperties() {
+  public Entities deriveAdditionalProperties(DataAdapterConfig config) {
     for (Phenotype p : getPhenotypes()) {
       Phenotype supP = p.getSuperPhenotype();
       if (Phenotypes.isRestriction(p)) {
-        p.setExpression(Exp.ofRestriction(p));
         if (Phenotypes.isSingle(p) && p.getRestriction() == null) p.setRestriction(Res.ofCodes(p));
+        if (config == null
+            || Phenotypes.isCompositePhenotype(supP)
+            || !setInExpression(config, supP, p)) p.setExpression(Exp.inRestriction(p));
       }
       if (supP != null) p.setSuperPhenotype(getPhenotype(supP.getId()));
     }
     return this;
+  }
+
+  public Entities deriveAdditionalProperties() {
+    return deriveAdditionalProperties(null);
+  }
+
+  private boolean setInExpression(DataAdapterConfig config, Phenotype supP, Phenotype p) {
+    CodeMapping codeMap = config.getCodeMappingIncludingSubjectParameters(supP);
+    if (codeMap == null) return false;
+    Restriction sourceRestr = codeMap.getSourceRestriction(p.getRestriction(), supP);
+    p.setExpression(Exp.inRestriction(supP, sourceRestr));
+    return true;
   }
 
   public static Entities of(Entity... entities) {
