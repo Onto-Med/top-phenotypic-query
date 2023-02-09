@@ -35,9 +35,9 @@ public class Queries {
   public enum QueryType {
     TYPE_1, // all subjects query (ASQ) required, if:
     // a) no single IC and no composite IC without negation or
-    // b) only unrestricted subject parameters or
-    // c) more than one subject restriction of the same unrestricted phenotype (age and birth date
-    // count together)
+    // b) no subject single IC but an unrestricted subject variable or
+    // c) no subject single IC but more than one subject restriction of the same unrestricted
+    // phenotype (age and birth date count together)
     TYPE_2, // no ASQ, but subject single IC
     TYPE_3, // no ASQ, no subject single IC, but other single IC
     TYPE_4 // no ASQ, no single IC (i.e., composite IC without negation exist)

@@ -207,6 +207,11 @@ public class SingleQueryMan {
       if (main.isEmpty()) return main;
     }
 
+    if (sbjQueryMan.hasAgeExclusion()) {
+      main = subtract(main, sbjQueryMan.executeAgeExclusion());
+      if (main.isEmpty()) return main;
+    }
+
     if (sbjQueryMan.hasBirthdateExclusion())
       return subtract(main, sbjQueryMan.executeBirthdateExclusion());
 
@@ -225,47 +230,21 @@ public class SingleQueryMan {
       if (insert) main = insert(main, rs);
       else main = unite(main, rs);
     }
+
+    if (sbjQueryMan.hasAgeRestrictionVariable()) {
+      ResultSet rs = sbjQueryMan.executeAgeRestrictionVariable();
+      if (insert) main = insert(main, rs);
+      else main = unite(main, rs);
+    }
+
     if (sbjQueryMan.hasBirthdateRestrictionVariable()) {
       ResultSet rs = sbjQueryMan.executeBirthdateRestrictionVariable();
       if (insert) main = insert(main, rs);
       else main = unite(main, rs);
     }
+
     return main;
   }
-
-  //  public ResultSet executeStandardSearch(ResultSet main, boolean withVariables) {
-  //    if (subjectQueryMan.hasInclusion()) {
-  //      main = intersect(main, subjectQueryMan.executeInclusion());
-  //      if (main.isEmpty()) return main;
-  //    }
-  //
-  //    for (SingleSearch inc : inclusions) {
-  //      main = intersect(main, inc.execute());
-  //      if (main.isEmpty()) return main;
-  //    }
-  //
-  //    if (subjectQueryMan.hasSexExclusion()) {
-  //      main = subtract(main, subjectQueryMan.executeSexExclusion());
-  //      if (main.isEmpty()) return main;
-  //    }
-  //
-  //    if (subjectQueryMan.hasBirthdateExclusion()) {
-  //      main = subtract(main, subjectQueryMan.executeBirthdateExclusion());
-  //      if (main.isEmpty()) return main;
-  //    }
-  //
-  //    for (SingleSearch exc : exclusions) {
-  //      main = subtract(main, exc.execute());
-  //      if (main.isEmpty()) return main;
-  //    }
-  //
-  //    if (withVariables) {
-  //      main = insert(main, subjectQueryMan.executeVariables(queryType));
-  //      for (SingleSearch var : variables) main = insert(main, var.execute());
-  //    }
-  //
-  //    return main;
-  //  }
 
   private ResultSet intersect(ResultSet main, ResultSet rs) {
     if (rs.isEmpty() || main.isEmpty()) return rs;

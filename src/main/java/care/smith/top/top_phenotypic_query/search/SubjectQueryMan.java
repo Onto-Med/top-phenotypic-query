@@ -53,7 +53,6 @@ public class SubjectQueryMan {
   }
 
   public void addSexVariable(Phenotype sexVariable) {
-    if (contains(sexVariable, sexInclusion, sexExclusion)) return;
     if (Phenotypes.isPhenotype(sexVariable)) sexPhenotypeVariable = sexVariable;
     else if (Phenotypes.isRestriction(sexVariable)) {
       sexRestrictionVariables.add(sexVariable);
@@ -62,7 +61,6 @@ public class SubjectQueryMan {
   }
 
   public void addBirthdateVariable(Phenotype birthdateVariable) {
-    if (contains(birthdateVariable, birthdateInclusion, birthdateExclusion)) return;
     if (Phenotypes.isPhenotype(birthdateVariable)) birthdatePhenotypeVariable = birthdateVariable;
     else if (Phenotypes.isRestriction(birthdateVariable)) {
       birthdateRestrictionVariables.add(birthdateVariable);
@@ -71,21 +69,11 @@ public class SubjectQueryMan {
   }
 
   public void addAgeVariable(Phenotype ageVariable) {
-    if (contains(ageVariable, ageInclusion, ageExclusion)) return;
     if (Phenotypes.isPhenotype(ageVariable)) agePhenotypeVariable = ageVariable;
     else if (Phenotypes.isRestriction(ageVariable)) {
       ageRestrictionVariables.add(ageVariable);
       agePhenotypeVariable = ageVariable.getSuperPhenotype();
     }
-  }
-
-  private boolean contains(Phenotype var, Phenotype inc, Phenotype exc) {
-    if (inc != null && var.getId().equals(inc.getId())) return true;
-    if (exc != null && var.getId().equals(exc.getId())) return true;
-    if (inc != null
-        && inc.getSuperPhenotype() != null
-        && (var.getId().equals(inc.getSuperPhenotype().getId()))) return true;
-    return false;
   }
 
   public ResultSet executeInclusion() {
@@ -108,73 +96,63 @@ public class SubjectQueryMan {
   }
 
   public ResultSet executeBirthdateExclusion() {
-    if (birthdateExclusion == null && ageExclusion == null) return null;
+    if (birthdateExclusion == null) return null;
+    return adapter.execute(new SubjectSearch(null, null, birthdateExclusion, null, adapter));
+  }
+
+  public ResultSet executeAgeExclusion() {
+    if (ageExclusion == null) return null;
     return adapter.execute(
-        new SubjectSearch(null, null, birthdateExclusion, ageExclusion, adapter));
+        new SubjectSearch(null, null, getBirthdateParameter(), ageExclusion, adapter));
   }
 
   public ResultSet executeAllSubjectsQuery() {
-    Phenotype sex = getParameter(sexInclusion, sexExclusion, sexPhenotypeVariable);
-    Phenotype bd = getParameter(birthdateInclusion, birthdateExclusion, birthdatePhenotypeVariable);
-    Phenotype age = getParameter(ageInclusion, ageExclusion, agePhenotypeVariable);
-    return adapter.execute(new SubjectSearch(null, sex, bd, age, adapter));
+    return adapter.execute(
+        new SubjectSearch(
+            null, getSexParameter(), getBirthdateParameter(), getAgeParameter(), adapter));
   }
 
-  //  public ResultSet executeVariables(QueryType queryType) {
-  //	  if (queryType == QueryType.TYPE_3 || !hasVariables() || hasInclusion()) return new
-  // ResultSet();
-  //	  if ((sexRestrictionVariables.isEmpty()
-  //			  && birthdateRestrictionVariables.isEmpty()
-  //			  && ageRestrictionVariables.isEmpty())
-  //			  || sexRestrictionVariables.size() > 1
-  //			  || birthdateRestrictionVariables.size() + ageRestrictionVariables.size() > 1)
-  //		  return executeAllSubjectsQuery();
-  //	  return executeRestrictedVariables();
-  //  }
-
-  //  private ResultSet executeRestrictedVariables() {
-  //    ResultSet rs = new ResultSet();
-  //    rs = uniteVariables(rs, executeSexVariable());
-  //    rs = uniteVariables(rs, executeBirthdateVariable());
-  //    return rs;
-  //  }
-
   public ResultSet executeBirthdateRestrictionVariable() {
-    Phenotype age = null;
-    Phenotype bd = null;
-    if (!ageRestrictionVariables.isEmpty()) age = ageRestrictionVariables.iterator().next();
-    if (!birthdateRestrictionVariables.isEmpty())
-      bd = birthdateRestrictionVariables.iterator().next();
-    if (age == null && bd == null) return new ResultSet();
+    if (!hasBirthdateRestrictionVariable()) return new ResultSet();
+    Phenotype bd = birthdateRestrictionVariables.iterator().next();
+    if (hasBirthdateExclusion() && bd.getId().equals(birthdateExclusion.getId()))
+      return new ResultSet();
+    return adapter.execute(new SubjectSearch(null, null, bd, null, adapter));
+  }
+
+  public ResultSet executeAgeRestrictionVariable() {
+    if (!hasAgeRestrictionVariable()) return new ResultSet();
+    Phenotype age = ageRestrictionVariables.iterator().next();
+    if (hasAgeExclusion() && age.getId().equals(ageExclusion.getId())) return new ResultSet();
+    Phenotype bd = getBirthdateParameter();
     return adapter.execute(new SubjectSearch(null, null, bd, age, adapter));
   }
 
   public ResultSet executeSexRestrictionVariable() {
-    if (!sexRestrictionVariables.isEmpty()) return new ResultSet();
+    if (!hasSexRestrictionVariable()) return new ResultSet();
     Phenotype sex = sexRestrictionVariables.iterator().next();
+    if (hasSexExclusion() && sex.getId().equals(sexExclusion.getId())) return new ResultSet();
     return adapter.execute(new SubjectSearch(null, sex, null, null, adapter));
   }
-
-  //  private ResultSet uniteVariables(ResultSet rs, ResultSet varRs) {
-  //    if (varRs.isEmpty()) return rs;
-  //    if (rs.isEmpty()) return varRs;
-  //    return rs.unite(varRs);
-  //  }
 
   public boolean hasInclusion() {
     return hasParameter(sexInclusion, birthdateInclusion, ageInclusion);
   }
 
-  public boolean hasExclusion() {
-    return hasSexExclusion() || hasBirthdateExclusion();
+  private boolean hasExclusion() {
+    return hasParameter(sexExclusion, birthdateExclusion, ageExclusion);
   }
 
   public boolean hasSexExclusion() {
-    return hasParameter(sexExclusion);
+    return sexExclusion != null;
   }
 
   public boolean hasBirthdateExclusion() {
-    return hasParameter(birthdateExclusion, ageExclusion);
+    return birthdateExclusion != null;
+  }
+
+  public boolean hasAgeExclusion() {
+    return ageExclusion != null;
   }
 
   public boolean hasVariables() {
@@ -186,19 +164,21 @@ public class SubjectQueryMan {
   }
 
   public boolean hasBirthdateRestrictionVariable() {
-    return !birthdateRestrictionVariables.isEmpty() || !ageRestrictionVariables.isEmpty();
+    return !birthdateRestrictionVariables.isEmpty();
   }
 
-  //  public boolean hasParameter() {
-  //    return hasInclusion() || hasSexExclusion() || hasBirthdateExclusion() || hasVariables();
-  //  }
+  public boolean hasAgeRestrictionVariable() {
+    return !ageRestrictionVariables.isEmpty();
+  }
 
   private boolean hasParameter(Phenotype... phes) {
     for (Phenotype p : phes) if (p != null) return true;
     return false;
   }
 
-  // has only unrestricted or more than two restricted parameters of the same unrestricted phenotype
+  // no subject single IC but an unrestricted subject variable or
+  // no subject single IC but more than one subject restriction of the same unrestricted phenotype
+  // (age and birth date count together)
   public boolean hasComplexParameters() {
     int sexRestrNum = countRestrictions(sexExclusion, sexRestrictionVariables);
     int bdRestrNum = countRestrictions(birthdateExclusion, birthdateRestrictionVariables);
@@ -223,6 +203,18 @@ public class SubjectQueryMan {
       if (Phenotypes.isRestriction(p)) return p.getSuperPhenotype();
     }
     return null;
+  }
+
+  private Phenotype getSexParameter() {
+    return getParameter(sexInclusion, sexExclusion, sexPhenotypeVariable);
+  }
+
+  private Phenotype getBirthdateParameter() {
+    return getParameter(birthdateInclusion, birthdateExclusion, birthdatePhenotypeVariable);
+  }
+
+  private Phenotype getAgeParameter() {
+    return getParameter(ageInclusion, ageExclusion, agePhenotypeVariable);
   }
 
   private int countRestrictions(Phenotype exc, Set<Phenotype> restrVars) {

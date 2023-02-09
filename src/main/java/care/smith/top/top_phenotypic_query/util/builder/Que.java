@@ -43,6 +43,10 @@ public class Que {
     return config;
   }
 
+  public Query getQuery() {
+    return query;
+  }
+
   public Que inc(Phenotype p) {
     return cri(true, p, null, null);
   }
@@ -83,8 +87,12 @@ public class Que {
     return this;
   }
 
+  public PhenotypeFinder getFinder() {
+    return new PhenotypeFinder(query, entities, adapter);
+  }
+
   public ResultSet execute() {
-    PhenotypeFinder pf = new PhenotypeFinder(query, entities, adapter);
+    PhenotypeFinder pf = getFinder();
     ResultSet rs = pf.execute();
     adapter.close();
     return rs;
