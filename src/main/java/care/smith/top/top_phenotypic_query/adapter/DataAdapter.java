@@ -1,11 +1,19 @@
 package care.smith.top.top_phenotypic_query.adapter;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
 
+import care.smith.top.model.Expression;
+import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
+import care.smith.top.top_phenotypic_query.util.Entities;
+import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public abstract class DataAdapter {
 
@@ -55,4 +63,25 @@ public abstract class DataAdapter {
   public abstract DataAdapterSettings getSettings();
 
   public abstract void close();
+
+  public void checkQuantifier(SingleSearch search, ResultSet rs) {
+    if (!search.hasRestriction()) return;
+    Restriction r = search.getSourceRestriction();
+    if (Restrictions.hasExistentialQuantifier(r)) return;
+
+    Entities phes = Entities.of(search.getPhenotype(), search.getSuperPhenotype());
+
+    for (String sbjId : new HashSet<>(rs.getSubjectIds())) {
+      SubjectPhenotypes sbjPhes = rs.getPhenotypes(sbjId);
+      Expression resExp =
+          new C2R()
+              .phenotypes(phes)
+              .values(sbjPhes)
+              .dateTimeRestriction(search.getDateTimeRestriction())
+              .calculate(search.getPhenotype().getExpression());
+      Boolean res = Expressions.getBooleanValue(resExp);
+      if (!res)
+        rs.removeValues(sbjId, search.getPhenotype().getId(), search.getDateTimeRestriction());
+    }
+  }
 }

@@ -106,6 +106,12 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
     addRestriction(subjectId, phenotype, dateRange, val);
   }
 
+  public void removeValues(String sbjId, String pheName, DateTimeRestriction dateRange) {
+    getPhenotypes(sbjId).removeValues(pheName, dateRange);
+    SubjectPhenotypes phes = getPhenotypes(sbjId);
+    if (phes != null && phes.isEmpty()) removeSubject(sbjId);
+  }
+
   public void addSubject(String subjectId) {
     if (!getSubjectIds().contains(subjectId)) put(subjectId, new SubjectPhenotypes(subjectId));
   }

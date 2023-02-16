@@ -16,6 +16,7 @@ import care.smith.top.model.BooleanRestriction;
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.NumberRestriction;
+import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
@@ -346,5 +347,9 @@ public class Restrictions {
             .map(v -> UCUM.convert(v, inUnit, outUnit))
             .collect(Collectors.toList());
     return nr.values(vals);
+  }
+
+  public static boolean hasExistentialQuantifier(Restriction r) {
+    return r.getQuantifier() == Quantifier.MIN && r.getCardinality().intValue() == 1;
   }
 }

@@ -11,7 +11,6 @@ import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 
 public class Phenotypes {
@@ -86,7 +85,7 @@ public class Phenotypes {
   public static boolean hasExistentialQuantifier(Phenotype p) {
     Restriction r = p.getRestriction();
     if (r == null) return false;
-    return r.getQuantifier() == Quantifier.MIN && r.getCardinality().intValue() == 1;
+    return Restrictions.hasExistentialQuantifier(r);
   }
 
   public static DataType getDataType(Phenotype p) {
