@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -207,6 +208,21 @@ public class Entities {
 
   private static final String ANN_SEP = "|";
   private static final String PROP_VAL_SEP = "::";
+
+  public static Set<String> getTitlesAndSynonyms(Entity e, String lang) {
+    Set<String> anns = new LinkedHashSet<>();
+    anns.addAll(getAnnotations(e.getTitles(), lang));
+    if (e.getSynonyms() != null && !e.getSynonyms().isEmpty())
+      anns.addAll(getAnnotations(e.getSynonyms(), lang));
+    return anns;
+  }
+
+  private static List<String> getAnnotations(List<LocalisableText> txts, String lang) {
+    return txts.stream()
+        .filter(t -> lang.equals(t.getLang()))
+        .map(t -> t.getText())
+        .collect(Collectors.toList());
+  }
 
   public static String getAnnotations(Entity e) {
     String txt = toString("title", e.getTitles());
