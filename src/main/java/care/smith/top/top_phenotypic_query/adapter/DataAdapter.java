@@ -3,6 +3,9 @@ package care.smith.top.top_phenotypic_query.adapter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import care.smith.top.model.Expression;
 import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
@@ -18,6 +21,8 @@ import care.smith.top.top_phenotypic_query.util.Restrictions;
 public abstract class DataAdapter {
 
   protected DataAdapterConfig config;
+
+  private Logger log = LoggerFactory.getLogger(DataAdapter.class);
 
   protected DataAdapter(DataAdapterConfig config) {
     this.config = config;
@@ -79,9 +84,17 @@ public abstract class DataAdapter {
               .values(sbjPhes)
               .dateTimeRestriction(search.getDateTimeRestriction())
               .calculate(search.getPhenotype().getExpression());
-      Boolean res = Expressions.getBooleanValue(resExp);
-      if (!res)
-        rs.removeValues(sbjId, search.getPhenotype().getId(), search.getDateTimeRestriction());
+
+      boolean isOK = Expressions.getBooleanValue(resExp);
+
+      log.debug(
+          "check quantifier: {}::{}::{}::{}",
+          sbjId,
+          search.getPhenotype().getId(),
+          Restrictions.toString(r),
+          isOK);
+
+      if (!isOK) rs.removeSubject(sbjId);
     }
   }
 }

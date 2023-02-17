@@ -29,7 +29,9 @@ public class FHIRAdapter extends DataAdapter {
   public ResultSet execute(SingleSearch search) {
     String query = getSettings().createSinglePreparedQuery(search);
     log.debug("Execute FHIR query: {}", query);
-    return client.findPhenotypes(query, search);
+    ResultSet rs = client.findPhenotypes(query, search);
+    checkQuantifier(search, rs);
+    return rs;
   }
 
   @Override

@@ -104,6 +104,7 @@ public class SQLAdapter extends DataAdapter {
               search.getSourceUnit(),
               search.getModelUnit());
       }
+      checkQuantifier(search, rs);
     } catch (SQLException e) {
       e.printStackTrace();
     }
