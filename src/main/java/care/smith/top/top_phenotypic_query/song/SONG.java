@@ -88,11 +88,11 @@ public class SONG {
 
   public Expression generate(Expression exp) {
     if (exp.getEntityId() != null) return generateVariable(exp.getEntityId());
-    if (exp.getFunctionId() != null) return generateFunction(exp);
+    if (exp.getFunctionId() != null) return generateOperator(exp);
     return exp;
   }
 
-  public Expression generateFunction(Expression exp) {
+  public Expression generateOperator(Expression exp) {
     String expStr = toString(exp);
     log.debug("start generating query for operator '{}': {} ...", exp.getFunctionId(), expStr);
     SearchOperator oper = getOperator(exp.getFunctionId());
@@ -120,10 +120,10 @@ public class SONG {
     if (exp.getEntityId() != null) return exp.getEntityId();
     if (exp.getValues() != null) return Values.toString(exp.getValues());
     if (exp.getRestriction() != null) return Restrictions.toString(exp.getRestriction());
-    return functionToString(exp);
+    return operatorToString(exp);
   }
 
-  private String functionToString(Expression exp) {
+  private String operatorToString(Expression exp) {
     List<String> args =
         exp.getArguments().stream().map(e -> toString(e)).collect(Collectors.toList());
     return getOperator(exp.getFunctionId()).toString(args);

@@ -5,20 +5,19 @@ import java.util.List;
 import care.smith.top.model.Expression;
 import care.smith.top.top_phenotypic_query.song.SONG;
 
-public class And extends care.smith.top.top_phenotypic_query.song.operator.And {
+public class Or extends care.smith.top.top_phenotypic_query.song.operator.And {
 
-  private static And INSTANCE = new And();
+  private static Or INSTANCE = new Or();
 
-  private And() {}
+  private Or() {}
 
-  public static And get() {
+  public static Or get() {
     return INSTANCE;
   }
 
   @Override
   public Expression generate(List<Expression> args, SONG song) {
-    args = song.generate(args);
-    //    return Exp.of(args.stream().collect(Collectors.joining(" AND ")));
+
     return null;
   }
 }
