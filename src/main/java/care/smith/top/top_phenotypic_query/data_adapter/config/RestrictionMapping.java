@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.adapter.config;
+package care.smith.top.top_phenotypic_query.data_adapter.config;
 
 import java.util.ArrayList;
 import java.util.List;

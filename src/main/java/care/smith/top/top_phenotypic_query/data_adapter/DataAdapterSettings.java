@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.adapter;
+package care.smith.top.top_phenotypic_query.data_adapter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,9 +10,9 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
-import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
-import care.smith.top.top_phenotypic_query.adapter.config.Props;
-import care.smith.top.top_phenotypic_query.adapter.config.SubjectQueryBuilder;
+import care.smith.top.top_phenotypic_query.data_adapter.config.PhenotypeQueryBuilder;
+import care.smith.top.top_phenotypic_query.data_adapter.config.Props;
+import care.smith.top.top_phenotypic_query.data_adapter.config.SubjectQueryBuilder;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;

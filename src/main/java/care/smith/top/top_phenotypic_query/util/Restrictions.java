@@ -21,7 +21,7 @@ import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
 import care.smith.top.model.Value;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
+import care.smith.top.top_phenotypic_query.data_adapter.DataAdapterSettings;
 import care.smith.top.top_phenotypic_query.ucum.UCUM;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 

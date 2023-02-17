@@ -13,11 +13,11 @@ import org.hl7.fhir.r4.model.Patient;
 
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRAdapter;
-import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRClient;
-import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
+import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRAdapter;
+import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRClient;
+import care.smith.top.top_phenotypic_query.data_adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.tests.AbstractTest;

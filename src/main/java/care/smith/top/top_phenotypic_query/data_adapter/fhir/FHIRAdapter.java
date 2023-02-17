@@ -1,11 +1,11 @@
-package care.smith.top.top_phenotypic_query.adapter.fhir;
+package care.smith.top.top_phenotypic_query.data_adapter.fhir;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.data_adapter.DataAdapterSettings;
+import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;

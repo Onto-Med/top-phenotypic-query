@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder;
+package care.smith.top.top_phenotypic_query.data_adapter.fhir.resource_finder;
 
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
