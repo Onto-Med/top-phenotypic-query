@@ -1,7 +1,7 @@
-package care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder;
+package care.smith.top.top_phenotypic_query.data_adapter.fhir.resource_finder;
 
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRPath;
+import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRPath;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 
 public abstract class FHIRPathResourceFinder extends FHIRAbstractResourceFinder {

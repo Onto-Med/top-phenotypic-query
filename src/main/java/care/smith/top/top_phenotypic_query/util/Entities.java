@@ -25,8 +25,8 @@ import care.smith.top.model.LocalisableText;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Repository;
 import care.smith.top.model.Restriction;
-import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.data_adapter.config.CodeMapping;
+import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 

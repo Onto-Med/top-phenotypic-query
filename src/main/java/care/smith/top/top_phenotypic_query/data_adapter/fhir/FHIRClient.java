@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.adapter.fhir;
+package care.smith.top.top_phenotypic_query.data_adapter.fhir;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +20,10 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder.FHIRPatientFinder;
-import care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder.FHIRPhenotypeFinder;
-import care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder.FHIRResourceFinder;
+import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.data_adapter.fhir.resource_finder.FHIRPatientFinder;
+import care.smith.top.top_phenotypic_query.data_adapter.fhir.resource_finder.FHIRPhenotypeFinder;
+import care.smith.top.top_phenotypic_query.data_adapter.fhir.resource_finder.FHIRResourceFinder;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;

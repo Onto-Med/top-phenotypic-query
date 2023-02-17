@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.adapter.sql;
+package care.smith.top.top_phenotypic_query.data_adapter.sql;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -25,11 +25,11 @@ import care.smith.top.model.Quantifier;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
 import care.smith.top.model.Value;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
-import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
+import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.data_adapter.DataAdapterSettings;
+import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.data_adapter.config.PhenotypeOutput;
+import care.smith.top.top_phenotypic_query.data_adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
