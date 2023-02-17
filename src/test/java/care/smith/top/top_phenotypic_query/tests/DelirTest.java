@@ -273,7 +273,7 @@ public class DelirTest {
 
     for (String id : ids)
       dbIds.add(
-          ((Patient) client.executeQuery("http://localhost:8080/baseR4/Patient?_id=" + id).get(0))
+          ((Patient) client.findResources("http://localhost:8080/baseR4/Patient?_id=" + id).get(0))
               .getIdentifierFirstRep()
               .getValue());
 

@@ -26,7 +26,7 @@ public class Res {
   public static StringRestriction ofCodes(Phenotype p) {
     return (StringRestriction)
         new StringRestriction()
-            .values(Phenotypes.getOwnCodeUris(p))
+            .values(Phenotypes.getCodeUris(p))
             .quantifier(Quantifier.MIN)
             .cardinality(1)
             .type(DataType.STRING);

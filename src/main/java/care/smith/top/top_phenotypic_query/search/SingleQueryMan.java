@@ -3,12 +3,16 @@ package care.smith.top.top_phenotypic_query.search;
 import java.util.HashSet;
 import java.util.Set;
 
-import care.smith.top.model.Phenotype;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Query;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.util.Entities;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import care.smith.top.top_phenotypic_query.util.Queries;
+import care.smith.top.top_phenotypic_query.util.Queries.QueryType;
 
 public class SingleQueryMan {
 
@@ -17,12 +21,14 @@ public class SingleQueryMan {
   private Set<SingleSearch> inclusions = new HashSet<>();
   private Set<SingleSearch> exclusions = new HashSet<>();
   private Set<SingleSearch> variables = new HashSet<>();
-  private SubjectQueryMan subjectQueryMan;
+  private SubjectQueryMan sbjQueryMan;
+  private Query query;
+  private Entities phenotypes;
 
-  private DataAdapter adapter;
-
-  public SingleQueryMan(DataAdapter adapter) {
-    this.adapter = adapter;
+  public SingleQueryMan(SubjectQueryMan subjectQueryMan, Query query, Entities phenotypes) {
+    this.sbjQueryMan = subjectQueryMan;
+    this.query = query;
+    this.phenotypes = phenotypes;
   }
 
   public Set<SingleSearch> getInclusionCriteria() {
@@ -57,53 +63,207 @@ public class SingleQueryMan {
     variables.add(variable);
   }
 
-  public void setSubjectQueryMan(SubjectQueryMan man) {
-    this.subjectQueryMan = man;
+  public boolean hasInclusion() {
+    return !inclusions.isEmpty();
   }
 
+  //  public ResultSet execute() {
+  //    QueryType queryType = Queries.getType(query, phenotypes, subjectQueryMan, this);
+  //    ResultSet main = null;
+  //    if (queryType == QueryType.TYPE_1) {
+  //      log.debug("TYPE 1 Single Query");
+  //      main = executeStandardSearch(new ResultSet(), true);
+  //    } else if (queryType == QueryType.TYPE_2) {
+  //      log.debug("TYPE 2 Single Query");
+  //      main = subjectQueryMan.executeVariables(queryType);
+  //      for (SingleSearch var : variables) main = unite(main, var.execute());
+  //      main = executeStandardSearch(main, false);
+  //    } else if (queryType == QueryType.TYPE_3) {
+  //      log.debug("TYPE 3 Single Query");
+  //      main = executeStandardSearch(subjectQueryMan.executeAllSubjectsQuery(), true);
+  //    }
+  //    log.debug(main.toString());
+  //
+  //    return main;
+  //  }
   public ResultSet execute() {
-    ResultSet rs = subjectQueryMan.executeInclusion();
-    if (rs != null && rs.isEmpty()) return rs;
+    QueryType queryType = Queries.getType(query, phenotypes, sbjQueryMan, this);
+    ResultSet main = null;
 
-    if (rs == null && inclusions.isEmpty()) {
-      rs = adapter.executeAllSubjectsQuery();
-      if (rs.isEmpty()) return rs;
-    } else {
-      for (SingleSearch inc : inclusions) {
-        ResultSet res = inc.execute();
-        if (res.isEmpty()) return res;
-        if (rs == null) rs = res;
-        else {
-          rs = rs.intersect(res);
-          if (rs.isEmpty()) return rs;
-        }
+    if (queryType == QueryType.TYPE_1) main = executeType1Query();
+    else if (queryType == QueryType.TYPE_2) main = executeType2Query();
+    else if (queryType == QueryType.TYPE_3) main = executeType3Query();
+    else main = executeType4Query();
+
+    return main;
+  }
+
+  private ResultSet executeType1Query() {
+    log.debug("TYPE 1 Single Query");
+
+    ResultSet main = sbjQueryMan.executeAllSubjectsQuery();
+    if (main.isEmpty()) return main;
+
+    main = executeSingleInclusions(main);
+    if (main.isEmpty()) return main;
+
+    main = executeSingleExclusions(main);
+    if (main.isEmpty()) return main;
+
+    main = sbjQueryMan.calculateExclusion(main);
+    if (main.isEmpty()) return main;
+
+    main = executeSingleVariables(main, true);
+
+    log.debug(main.toString());
+
+    return main;
+  }
+
+  private ResultSet executeType2Query() {
+    log.debug("TYPE 2 Single Query");
+
+    ResultSet main = sbjQueryMan.executeInclusion();
+    if (main.isEmpty()) return main;
+
+    main = executeSingleInclusions(main);
+    if (main.isEmpty()) return main;
+
+    main = executeSingleExclusions(main);
+    if (main.isEmpty()) return main;
+
+    main = sbjQueryMan.calculateExclusion(main);
+    if (main.isEmpty()) return main;
+
+    main = executeSingleVariables(main, true);
+
+    log.debug(main.toString());
+
+    return main;
+  }
+
+  private ResultSet executeType3Query() {
+    log.debug("TYPE 3 Single Query");
+
+    ResultSet main = executeSingleInclusions(new ResultSet());
+    if (main.isEmpty()) return main;
+
+    main = executeSingleExclusions(main);
+    if (main.isEmpty()) return main;
+
+    main = executeSubjectExclusions(main);
+    if (main.isEmpty()) return main;
+
+    main = executeSingleVariables(main, true);
+
+    main = executeSubjectVariables(main, true);
+
+    log.debug(main.toString());
+
+    return main;
+  }
+
+  private ResultSet executeType4Query() {
+    log.debug("TYPE 4 Single Query");
+
+    ResultSet main = executeSingleVariables(new ResultSet(), false);
+
+    main = executeSubjectVariables(main, false);
+
+    main = executeSingleExclusions(main);
+    if (main.isEmpty()) return main;
+
+    main = executeSubjectExclusions(main);
+    if (main.isEmpty()) return main;
+
+    log.debug(main.toString());
+
+    return main;
+  }
+
+  private ResultSet executeSingleInclusions(ResultSet main) {
+    for (SingleSearch inc : inclusions) {
+      if (main.isEmpty()) {
+        main = inc.execute();
+        continue;
       }
+      main = intersect(main, inc.execute());
+      if (main.isEmpty()) return main;
     }
+    return main;
+  }
 
+  private ResultSet executeSingleExclusions(ResultSet main) {
     for (SingleSearch exc : exclusions) {
-      ResultSet res = exc.execute();
-      if (res.isEmpty()) continue;
-      rs = rs.subtract(res);
-      if (rs.isEmpty()) return rs;
+      main = subtract(main, exc.execute());
+      if (main.isEmpty()) return main;
+    }
+    return main;
+  }
+
+  private ResultSet executeSubjectExclusions(ResultSet main) {
+    if (sbjQueryMan.hasSexExclusion()) {
+      main = subtract(main, sbjQueryMan.executeSexExclusion());
+      if (main.isEmpty()) return main;
     }
 
-    ResultSet sexExc = subjectQueryMan.executeSexExclusion();
-    if (sexExc != null && !sexExc.isEmpty()) rs = rs.subtract(sexExc);
-
-    ResultSet bdExc = subjectQueryMan.executeBirthdateExclusion();
-    if (bdExc != null && !bdExc.isEmpty()) rs = rs.subtract(bdExc);
-
-    ResultSet sbjVars = subjectQueryMan.executeVariables();
-    if (sbjVars != null && !sbjVars.isEmpty()) rs = rs.insert(sbjVars);
-
-    for (SingleSearch var : variables) {
-      ResultSet res = var.execute();
-      if (res.isEmpty()) continue;
-      rs = rs.insert(res);
+    if (sbjQueryMan.hasAgeExclusion()) {
+      main = subtract(main, sbjQueryMan.executeAgeExclusion());
+      if (main.isEmpty()) return main;
     }
 
-    log.debug(rs.toString());
+    if (sbjQueryMan.hasBirthdateExclusion())
+      return subtract(main, sbjQueryMan.executeBirthdateExclusion());
 
-    return rs;
+    return main;
+  }
+
+  private ResultSet executeSingleVariables(ResultSet main, boolean insert) {
+    if (insert) for (SingleSearch var : variables) main = insert(main, var.execute());
+    else for (SingleSearch var : variables) main = unite(main, var.execute());
+    return main;
+  }
+
+  private ResultSet executeSubjectVariables(ResultSet main, boolean insert) {
+    if (sbjQueryMan.hasSexRestrictionVariable()) {
+      ResultSet rs = sbjQueryMan.executeSexRestrictionVariable();
+      if (insert) main = insert(main, rs);
+      else main = unite(main, rs);
+    }
+
+    if (sbjQueryMan.hasAgeRestrictionVariable()) {
+      ResultSet rs = sbjQueryMan.executeAgeRestrictionVariable();
+      if (insert) main = insert(main, rs);
+      else main = unite(main, rs);
+    }
+
+    if (sbjQueryMan.hasBirthdateRestrictionVariable()) {
+      ResultSet rs = sbjQueryMan.executeBirthdateRestrictionVariable();
+      if (insert) main = insert(main, rs);
+      else main = unite(main, rs);
+    }
+
+    return main;
+  }
+
+  private ResultSet intersect(ResultSet main, ResultSet rs) {
+    if (rs.isEmpty() || main.isEmpty()) return rs;
+    return main.intersect(rs);
+  }
+
+  private ResultSet subtract(ResultSet main, ResultSet rs) {
+    if (rs.isEmpty() || main.isEmpty()) return main;
+    return main.subtract(rs);
+  }
+
+  private ResultSet insert(ResultSet main, ResultSet rs) {
+    if (rs.isEmpty() || main.isEmpty()) return main;
+    return main.insert(rs);
+  }
+
+  private ResultSet unite(ResultSet main, ResultSet rs) {
+    if (main.isEmpty()) return rs;
+    if (rs.isEmpty()) return main;
+    return main.unite(rs);
   }
 }

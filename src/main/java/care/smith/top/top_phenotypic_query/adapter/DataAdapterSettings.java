@@ -96,6 +96,6 @@ public abstract class DataAdapterSettings {
   public abstract String formatOperator(RestrictionOperator oper);
 
   public String getCodeUrisAsString(Phenotype p) {
-    return formatList(Phenotypes.getCodeUris(p).map(u -> formatString(u)));
+    return formatList(Phenotypes.getUnrestrictedPhenotypeCodeUris(p).map(u -> formatString(u)));
   }
 }

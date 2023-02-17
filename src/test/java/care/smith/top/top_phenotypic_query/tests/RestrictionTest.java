@@ -6,18 +6,18 @@ import java.net.URL;
 
 import org.junit.jupiter.api.Test;
 
-import care.smith.top.model.DataType;
 import care.smith.top.model.Entity;
-import care.smith.top.model.EntityType;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.Quantifier;
-import care.smith.top.model.StringRestriction;
+import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRAdapter;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import care.smith.top.top_phenotypic_query.util.builder.Phe;
+import care.smith.top.top_phenotypic_query.util.builder.Res;
 
-public class RestrictionTest extends AbstractTest {
+public class RestrictionTest {
 
   @Test
   public void test() {
@@ -25,34 +25,21 @@ public class RestrictionTest extends AbstractTest {
         Thread.currentThread().getContextClassLoader().getResource("config/FHIR_Adapter_Test.yml");
     DataAdapter adapter = new FHIRAdapter(DataAdapterConfig.getInstance(configFile.getPath()));
 
-    Phenotype p = getPhenotype("P", "http://phe.org", "p").dataType(DataType.STRING);
-    Phenotype p1 = newRestriction(p);
+    Phenotype p = new Phe("p", "http://phe.org", "p").string().get();
+    Phenotype p1 = new Phe("p1", "http://phe.org", "p1a", "p1b").restriction(p, null).get();
     Entity[] phenotypes = {p, p1};
 
     PhenotypeFinder pf = new PhenotypeFinder(null, phenotypes, adapter);
 
     Phenotype actual = pf.getPhenotypes().getPhenotype("p1");
 
+    Restriction r = Res.of("http://phe.org|p1a", "http://phe.org|p1b");
     Phenotype expected =
-        newRestriction(p)
-            .restriction(
-                new StringRestriction()
-                    .addValuesItem("http://phe.org|p1a")
-                    .addValuesItem("http://phe.org|p1b")
-                    .quantifier(Quantifier.MIN)
-                    .cardinality(1)
-                    .type(DataType.STRING));
+        new Phe("p1", "http://phe.org", "p1a", "p1b")
+            .restriction(p, r)
+            .get()
+            .expression(Exp.inRestriction(p, r));
 
     assertEquals(expected, actual);
-  }
-
-  private Phenotype newRestriction(Phenotype parent) {
-    return (Phenotype)
-        new Phenotype()
-            .superPhenotype(parent)
-            .entityType(EntityType.SINGLE_RESTRICTION)
-            .id("p1")
-            .addCodesItem(getCode("http://phe.org", "p1a"))
-            .addCodesItem(getCode("http://phe.org", "p1b"));
   }
 }

@@ -11,9 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -25,6 +23,9 @@ import care.smith.top.model.EntityType;
 import care.smith.top.model.LocalisableText;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Repository;
+import care.smith.top.model.Restriction;
+import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 
@@ -34,20 +35,41 @@ public class Entities {
   private Repository repo;
 
   private Entities(Entity... entities) {
-    this.entities =
-        Stream.of(entities).collect(Collectors.toMap(Entity::getId, Function.identity()));
+    add(entities);
   }
 
-  public Entities deriveAdditionalProperties() {
+  public void add(Entity e) {
+    entities.put(e.getId(), e);
+  }
+
+  public void add(Entity... entities) {
+    for (Entity e : entities) add(e);
+  }
+
+  public Entities deriveAdditionalProperties(DataAdapterConfig config) {
     for (Phenotype p : getPhenotypes()) {
       Phenotype supP = p.getSuperPhenotype();
       if (Phenotypes.isRestriction(p)) {
-        p.setExpression(Exp.ofRestriction(p));
         if (Phenotypes.isSingle(p) && p.getRestriction() == null) p.setRestriction(Res.ofCodes(p));
+        if (config == null
+            || Phenotypes.isCompositePhenotype(supP)
+            || !setInExpression(config, supP, p)) p.setExpression(Exp.inRestriction(p));
       }
       if (supP != null) p.setSuperPhenotype(getPhenotype(supP.getId()));
     }
     return this;
+  }
+
+  public Entities deriveAdditionalProperties() {
+    return deriveAdditionalProperties(null);
+  }
+
+  private boolean setInExpression(DataAdapterConfig config, Phenotype supP, Phenotype p) {
+    CodeMapping codeMap = config.getCodeMappingIncludingSubjectParameters(supP);
+    if (codeMap == null) return false;
+    Restriction sourceRestr = codeMap.getSourceRestriction(p.getRestriction(), supP);
+    p.setExpression(Exp.inRestriction(supP, sourceRestr));
+    return true;
   }
 
   public static Entities of(Entity... entities) {

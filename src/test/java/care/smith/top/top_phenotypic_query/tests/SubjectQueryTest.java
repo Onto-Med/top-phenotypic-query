@@ -75,7 +75,7 @@ public class SubjectQueryTest extends AbstractTest {
     assertEquals(Set.of("1"), rs.getSubjectIds());
 
     SubjectPhenotypes phes = rs.getPhenotypes("1");
-    assertEquals(Set.of("Sex", "Female"), phes.getPhenotypeNames());
+    assertEquals(Set.of("Sex", "Female", "Young", "birthdate", "Age"), phes.getPhenotypeNames());
     assertEquals("female", Values.getStringValue(phes.getValues("Sex", null).get(0)));
     assertTrue(Values.getBooleanValue(phes.getValues("Female", null).get(0)));
   }
@@ -97,7 +97,7 @@ public class SubjectQueryTest extends AbstractTest {
     assertEquals(Set.of("4"), rs.getSubjectIds());
 
     SubjectPhenotypes phes = rs.getPhenotypes("4");
-    assertEquals(Set.of("Age", "Young", "birthdate"), phes.getPhenotypeNames());
+    assertEquals(Set.of("Sex", "Female", "Young", "birthdate", "Age"), phes.getPhenotypeNames());
     assertEquals(BigDecimal.valueOf(32), Values.getNumberValue(phes.getValues("Age", null).get(0)));
     assertEquals(
         LocalDateTime.parse("1991-01-01T00:00:00"),

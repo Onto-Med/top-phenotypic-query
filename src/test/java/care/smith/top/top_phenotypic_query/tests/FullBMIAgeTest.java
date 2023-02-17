@@ -51,6 +51,7 @@ public class FullBMIAgeTest extends AbstractTest {
     phesExpected.add("birthdate");
     phesExpected.remove("BMI27_30");
     phesExpected.remove("BMI19_27");
+    phesExpected.remove("Male");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
     assertEquals(new BigDecimal(21), Values.getNumberValue(getValue("Age", phes)));

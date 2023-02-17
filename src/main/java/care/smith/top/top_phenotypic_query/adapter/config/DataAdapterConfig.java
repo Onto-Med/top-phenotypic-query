@@ -93,7 +93,7 @@ public class DataAdapterConfig {
   }
 
   public boolean isBirthdate(Phenotype p) {
-    for (Code code : Phenotypes.getCodes(p)) {
+    for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(p)) {
       if (birthdateMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
     return false;
@@ -108,7 +108,7 @@ public class DataAdapterConfig {
   }
 
   public boolean isAge(Phenotype p) {
-    for (Code code : Phenotypes.getCodes(p)) {
+    for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(p)) {
       if (ageMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
     return false;
@@ -123,7 +123,7 @@ public class DataAdapterConfig {
   }
 
   public boolean isSex(Phenotype p) {
-    for (Code code : Phenotypes.getCodes(p)) {
+    for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(p)) {
       if (sexMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
     return false;
@@ -134,11 +134,18 @@ public class DataAdapterConfig {
   }
 
   public CodeMapping getCodeMapping(Phenotype p) {
-    for (Code code : Phenotypes.getCodes(p)) {
+    for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(p)) {
       CodeMapping map = getCodeMapping(Phenotypes.getCodeUri(code));
       if (map != null) return map;
     }
     return null;
+  }
+
+  public CodeMapping getCodeMappingIncludingSubjectParameters(Phenotype p) {
+    if (isAge(p)) return getAgeMapping();
+    if (isBirthdate(p)) return getBirthdateMapping();
+    if (isSex(p)) return getSexMapping();
+    return getCodeMapping(p);
   }
 
   public void setCodeMappings(List<CodeMapping> codeMappings) {

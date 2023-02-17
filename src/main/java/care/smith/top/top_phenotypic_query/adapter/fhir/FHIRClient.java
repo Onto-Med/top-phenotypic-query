@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.instance.model.api.IBaseOperationOutcome;
 import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.OperationOutcome;
 import org.hl7.fhir.r4.model.OperationOutcome.IssueType;
 import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
@@ -17,12 +16,17 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.primitive.IdDt;
-import ca.uhn.fhir.rest.api.CacheControlDirective;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder.FHIRPatientFinder;
+import care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder.FHIRPhenotypeFinder;
+import care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder.FHIRResourceFinder;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.search.SingleSearch;
+import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 
 public class FHIRClient {
 
@@ -48,34 +52,22 @@ public class FHIRClient {
     this.path = new FHIRPath(ctx);
   }
 
-  public FHIRPath getFHIRPath() {
-    return path;
-  }
-
-  public List<Resource> executeQuery(String query) {
-    Bundle firstPage =
-        client
-            .search()
-            .byUrl(query)
-            .returnBundle(Bundle.class)
-            .cacheControl(new CacheControlDirective().setNoCache(true))
-            .execute();
+  public List<Resource> findResources(String query) {
     List<Resource> resources = new ArrayList<>();
-    addResources(firstPage, resources);
-    addPages(firstPage, resources);
+    new FHIRResourceFinder(client, resources).findResources(query);
     return resources;
   }
 
-  private void addResources(Bundle bundle, List<Resource> resources) {
-    for (BundleEntryComponent bec : bundle.getEntry()) resources.add(bec.getResource());
+  public ResultSet findPatients(String query, SubjectSearch search) {
+    ResultSet rs = new ResultSet();
+    new FHIRPatientFinder(client, path, rs, search).findResources(query);
+    return rs;
   }
 
-  private void addPages(Bundle lastPage, List<Resource> resources) {
-    if (lastPage.getLink(Bundle.LINK_NEXT) != null) {
-      Bundle nextPage = client.loadPage().next(lastPage).execute();
-      addResources(nextPage, resources);
-      addPages(nextPage, resources);
-    }
+  public ResultSet findPhenotypes(String query, SingleSearch search) {
+    ResultSet rs = new ResultSet();
+    new FHIRPhenotypeFinder(client, path, rs, search).findResources(query);
+    return rs;
   }
 
   public Optional<String> createResource(Resource res) {

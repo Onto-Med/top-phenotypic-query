@@ -61,6 +61,19 @@ public class SubjectPhenotypes extends HashMap<String, PhenotypeValues> {
         Values.toString(vals));
   }
 
+  //  public void removeValues(String pheName, DateTimeRestriction dateRange) {
+  //    PhenotypeValues vals = getValues(pheName);
+  //    if (vals != null && vals.containsKey(dateRange)) {
+  //      vals.remove(dateRange);
+  //      log.debug(
+  //          "values removed from result set: {}::{}::{}",
+  //          subjectId,
+  //          pheName,
+  //          Restrictions.toString(dateRange));
+  //    }
+  //    if (vals != null && vals.isEmpty()) remove(pheName);
+  //  }
+
   public PhenotypeValues getValues(String phenotypeName) {
     return get(phenotypeName);
   }

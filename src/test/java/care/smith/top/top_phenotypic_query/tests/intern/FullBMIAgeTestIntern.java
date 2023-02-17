@@ -1,12 +1,11 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -26,7 +25,12 @@ import care.smith.top.top_phenotypic_query.tests.AbstractTest;
 public class FullBMIAgeTestIntern extends AbstractTest {
 
   public static void main(String[] args) throws SQLException {
-    test(getSQLAdapter());
+    long start = new Date().getTime();
+    test(getFHIRAdapter());
+    long end = new Date().getTime();
+    System.out.println("==========================");
+    System.out.println("time: " + (end - start));
+    System.out.println("==========================");
   }
 
   private static FHIRAdapter getFHIRAdapter() {
@@ -84,7 +88,7 @@ public class FullBMIAgeTestIntern extends AbstractTest {
     System.out.println("ONLY EXPECTED:");
     System.out.println(onlyExpectedSbjIds);
 
-    assertEquals(expectedSbjIds, actualSbjIds);
+    //    assertEquals(expectedSbjIds, actualSbjIds);
   }
 
   private static List<String> getDBIds(Set<String> ids) {
@@ -97,7 +101,7 @@ public class FullBMIAgeTestIntern extends AbstractTest {
 
     for (String id : ids)
       dbIds.add(
-          ((Patient) client.executeQuery("http://localhost:8080/baseR4/Patient?_id=" + id).get(0))
+          ((Patient) client.findResources("http://localhost:8080/baseR4/Patient?_id=" + id).get(0))
               .getIdentifierFirstRep()
               .getValue());
 

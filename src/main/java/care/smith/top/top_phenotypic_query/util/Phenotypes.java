@@ -11,7 +11,6 @@ import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 
 public class Phenotypes {
@@ -52,7 +51,7 @@ public class Phenotypes {
     return e.getEntityType() == EntityType.CATEGORY;
   }
 
-  public static String getPhenotypeId(Phenotype p) {
+  public static String getUnrestrictedPhenotypeId(Phenotype p) {
     return (isRestriction(p)) ? p.getSuperPhenotype().getId() : p.getId();
   }
 
@@ -60,22 +59,22 @@ public class Phenotypes {
     return code.getCodeSystem().getUri().toString() + "|" + code.getCode();
   }
 
-  public static List<Code> getCodes(Phenotype p) {
+  public static List<Code> getUnrestrictedPhenotypeCodes(Phenotype p) {
     return (isRestriction(p)) ? p.getSuperPhenotype().getCodes() : p.getCodes();
   }
 
-  public static List<String> getCodes(Phenotype p, String codeSystem) {
-    return getCodes(p).stream()
+  public static List<String> getUnrestrictedPhenotypeCodes(Phenotype p, String codeSystem) {
+    return getUnrestrictedPhenotypeCodes(p).stream()
         .filter(c -> Objects.equals(c.getCodeSystem().getUri().toString(), codeSystem))
         .map(c -> c.getCode())
         .collect(Collectors.toList());
   }
 
-  public static Stream<String> getCodeUris(Phenotype p) {
-    return getCodes(p).stream().map(c -> getCodeUri(c));
+  public static Stream<String> getUnrestrictedPhenotypeCodeUris(Phenotype p) {
+    return getUnrestrictedPhenotypeCodes(p).stream().map(c -> getCodeUri(c));
   }
 
-  public static List<String> getOwnCodeUris(Phenotype p) {
+  public static List<String> getCodeUris(Phenotype p) {
     return p.getCodes().stream().map(c -> getCodeUri(c)).collect(Collectors.toList());
   }
 
@@ -86,7 +85,7 @@ public class Phenotypes {
   public static boolean hasExistentialQuantifier(Phenotype p) {
     Restriction r = p.getRestriction();
     if (r == null) return false;
-    return r.getQuantifier() == Quantifier.MIN && r.getCardinality().intValue() == 1;
+    return Restrictions.hasExistentialQuantifier(r);
   }
 
   public static DataType getDataType(Phenotype p) {

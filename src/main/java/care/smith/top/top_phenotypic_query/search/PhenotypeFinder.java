@@ -20,9 +20,9 @@ public class PhenotypeFinder {
 
   public PhenotypeFinder(Query query, Entity[] entities, DataAdapter adapter) {
     this.query = query;
-    this.phenotypes = Entities.of(entities).deriveAdditionalProperties();
     this.adapter = adapter;
     this.config = adapter.getConfig();
+    this.phenotypes = Entities.of(entities).deriveAdditionalProperties(config);
   }
 
   public Entities getPhenotypes() {
@@ -42,8 +42,8 @@ public class PhenotypeFinder {
   }
 
   private ResultSet executeSingleSearches() {
-    SingleQueryMan man = new SingleQueryMan(adapter);
     SubjectQueryMan sbjMan = new SubjectQueryMan(adapter);
+    SingleQueryMan man = new SingleQueryMan(sbjMan, query, phenotypes);
     for (QueryCriterion cri : query.getCriteria()) {
       Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
       if (Phenotypes.isSingle(phe)) {
@@ -68,7 +68,6 @@ public class PhenotypeFinder {
         }
       }
     }
-    man.setSubjectQueryMan(sbjMan);
     return man.execute();
   }
 }
