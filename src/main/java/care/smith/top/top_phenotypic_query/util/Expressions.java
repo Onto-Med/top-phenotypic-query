@@ -36,6 +36,11 @@ public class Expressions {
     return Values.getStringValue(getValue(exp));
   }
 
+  public static boolean hasBlankStringValue(Expression exp) {
+    String val = Values.getStringValue(getValue(exp));
+    return val != null && val.isBlank();
+  }
+
   public static Boolean getBooleanValue(Expression exp) {
     return Values.getBooleanValue(getValue(exp));
   }

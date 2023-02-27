@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.song.operator.lucene;
+package care.smith.top.top_phenotypic_query.song.functions.lucene;
 
 import care.smith.top.top_phenotypic_query.song.SONG;
 import care.smith.top.top_phenotypic_query.util.Entities;
@@ -12,9 +12,7 @@ public class Lucene extends SONG {
   }
 
   private Lucene() {
-    addOperator(And.get());
-    addOperator(Or.get());
-    addOperator(Not.get());
+    super(LuceneAnd.get(), LuceneOr.get(), LuceneNot.get());
   }
 
   public Lucene lang(String lang) {
