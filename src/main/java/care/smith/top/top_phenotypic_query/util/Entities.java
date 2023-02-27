@@ -206,9 +206,6 @@ public class Entities {
         .orElse(null);
   }
 
-  private static final String ANN_SEP = "|";
-  private static final String PROP_VAL_SEP = "::";
-
   public static Set<String> getTitlesAndSynonyms(Entity e, String lang) {
     Set<String> anns = new LinkedHashSet<>();
     anns.addAll(getAnnotations(e.getTitles(), lang));
@@ -223,6 +220,9 @@ public class Entities {
         .map(t -> t.getText())
         .collect(Collectors.toList());
   }
+
+  private static final String ANN_SEP = "|";
+  private static final String PROP_VAL_SEP = "::";
 
   public static String getAnnotations(Entity e) {
     String txt = toString("title", e.getTitles());
