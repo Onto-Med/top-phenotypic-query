@@ -5,6 +5,8 @@ import java.util.List;
 import care.smith.top.model.Expression;
 import care.smith.top.top_phenotypic_query.song.SONG;
 import care.smith.top.top_phenotypic_query.song.functions.Not;
+import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class LuceneNot extends Not {
 
@@ -18,7 +20,8 @@ public class LuceneNot extends Not {
 
   @Override
   public Expression generate(List<Expression> args, SONG song) {
-
-    return null;
+    args = song.generate(args);
+    if (args.isEmpty()) return Exp.of("");
+    return Exp.of("NOT " + Expressions.getStringValue(args.get(0)));
   }
 }

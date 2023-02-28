@@ -24,7 +24,8 @@ public class LuceneAnd extends And {
     args = song.generate(args);
     if (args.isEmpty()) return Exp.of("");
     if (args.size() == 1) return args.get(0);
-    return Exp.of(
-        args.stream().map(a -> Expressions.getStringValue(a)).collect(Collectors.joining(" AND ")));
+    String query =
+        args.stream().map(a -> Expressions.getStringValue(a)).collect(Collectors.joining(" AND "));
+    return Exp.of("(" + query + ")");
   }
 }
