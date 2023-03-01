@@ -10,16 +10,18 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import care.smith.top.model.Entity;
+import care.smith.top.model.EntityType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.song.functions.And;
 import care.smith.top.top_phenotypic_query.song.functions.Not;
 import care.smith.top.top_phenotypic_query.song.functions.Or;
+import care.smith.top.top_phenotypic_query.song.functions.SubTree;
 import care.smith.top.top_phenotypic_query.song.functions.TextFunction;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
@@ -36,10 +38,15 @@ public class SONG {
     addFunction(and);
     addFunction(or);
     addFunction(not);
+    addFunction(SubTree.get());
   }
 
   public Entities getConcepts() {
     return concepts;
+  }
+
+  public Entity getConcept(String id) {
+    return concepts.getEntity(id);
   }
 
   public void setConcepts(Entities concepts) {
@@ -70,36 +77,36 @@ public class SONG {
     this.lang = lang;
   }
 
-  public Expression generate(Phenotype phe) {
-    log.debug("start generating query for variable: {} ...", phe.getId());
+  public Expression generate(Entity con) {
+    log.debug("start generating query for variable: {} ...", con.getId());
 
-    if (Phenotypes.isSingle(phe)) {
-      Set<String> terms = Entities.getTitlesAndSynonyms(phe, lang);
+    if (con.getEntityType() == EntityType.CATEGORY) {
+      Set<String> labels = Entities.getLabels(con, lang);
       Expression res = null;
-      if (terms.isEmpty()) res = Exp.of("");
+      if (labels.isEmpty()) res = Exp.of("");
       else {
-        List<Expression> args = terms.stream().map(t -> Exp.of(t)).collect(Collectors.toList());
+        List<Expression> args = labels.stream().map(t -> Exp.of(t)).collect(Collectors.toList());
         res = getFunction(Or.ID).generate(args, this);
       }
       log.debug(
           "end generating query for variable: {} = {}",
-          phe.getId(),
+          con.getId(),
           Expressions.getStringValue(res));
       return res;
     }
 
-    Expression res = generate(phe.getExpression());
+    Expression res = generate(((Phenotype) con).getExpression());
     log.debug(
-        "end generating query for variable: {} = {}", phe.getId(), Expressions.getStringValue(res));
+        "end generating query for variable: {} = {}", con.getId(), Expressions.getStringValue(res));
     return res;
   }
 
-  public Expression generateVariable(String pheId) {
-    return generate(concepts.getPhenotype(pheId));
+  public Expression generateConcept(String conId) {
+    return generate(getConcept(conId));
   }
 
   public Expression generate(Expression exp) {
-    if (exp.getEntityId() != null) return generateVariable(exp.getEntityId());
+    if (exp.getEntityId() != null) return generateConcept(exp.getEntityId());
     if (exp.getFunctionId() != null) return generateFunction(exp);
     return exp;
   }

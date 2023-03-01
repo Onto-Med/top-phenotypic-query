@@ -1,9 +1,9 @@
 package care.smith.top.top_phenotypic_query.song.functions;
 
+import care.smith.top.model.Entity;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
-import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public abstract class Not extends TextFunction {
@@ -27,7 +27,7 @@ public abstract class Not extends TextFunction {
     return Exp.function(ID, arg);
   }
 
-  public static Expression of(Phenotype arg) {
+  public static Expression of(Entity arg) {
     return of(Exp.of(arg));
   }
 

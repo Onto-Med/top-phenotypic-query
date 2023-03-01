@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.data_adapter.config;
+package care.smith.top.top_phenotypic_query.adapter.config;
 
 import java.io.File;
 import java.io.IOException;

@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
-import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;

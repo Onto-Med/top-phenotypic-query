@@ -18,9 +18,9 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Reference;
 
-import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRClient;
-import care.smith.top.top_phenotypic_query.data_adapter.sql.SQLAdapter;
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRClient;
+import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 
 public class FHIRClientTestIntern {
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import care.smith.top.model.Entity;
 import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
@@ -14,7 +15,7 @@ import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class Exp {
 
-  public static Expression of(Phenotype p) {
+  public static Expression of(Entity p) {
     return ofEntity(p.getId());
   }
 
@@ -74,11 +75,11 @@ public class Exp {
     return vals.stream().map(v -> of(v)).collect(Collectors.toList());
   }
 
-  public static Expression[] toArray(Phenotype... entities) {
+  public static Expression[] toArray(Entity... entities) {
     return Stream.of(entities).map(e -> of(e)).toArray(Expression[]::new);
   }
 
-  public static List<Expression> toList(Phenotype... entities) {
+  public static List<Expression> toList(Entity... entities) {
     return Stream.of(entities).map(e -> of(e)).collect(Collectors.toList());
   }
 

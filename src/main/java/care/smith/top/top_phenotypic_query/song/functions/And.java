@@ -2,10 +2,10 @@ package care.smith.top.top_phenotypic_query.song.functions;
 
 import java.util.List;
 
+import care.smith.top.model.Entity;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
-import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public abstract class And extends TextFunction {
@@ -28,7 +28,7 @@ public abstract class And extends TextFunction {
     return of(List.of(args));
   }
 
-  public static Expression of(Phenotype... args) {
+  public static Expression of(Entity... args) {
     return of(Exp.toList(args));
   }
 }
