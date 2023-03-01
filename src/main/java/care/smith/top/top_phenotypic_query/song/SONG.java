@@ -58,7 +58,7 @@ public class SONG {
   }
 
   public static ExpressionFunction[] getExpressionFunctions() {
-    return new ExpressionFunction[] {And.FUNCTION, Or.FUNCTION, Not.FUNCTION};
+    return new ExpressionFunction[] {And.FUNCTION, Or.FUNCTION, Not.FUNCTION, SubTree.FUNCTION};
   }
 
   public Collection<TextFunction> getFunctions() {
