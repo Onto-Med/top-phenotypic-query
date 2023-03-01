@@ -25,8 +25,8 @@ import care.smith.top.model.LocalisableText;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Repository;
 import care.smith.top.model.Restriction;
-import care.smith.top.top_phenotypic_query.data_adapter.config.CodeMapping;
-import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 
@@ -206,12 +206,22 @@ public class Entities {
         .orElse(null);
   }
 
-  public static Set<String> getTitlesAndSynonyms(Entity e, String lang) {
-    Set<String> anns = new LinkedHashSet<>();
-    anns.addAll(getAnnotations(e.getTitles(), lang));
+  public static Set<String> getLabels(Entity e, String lang) {
+    Set<String> labels = new LinkedHashSet<>();
+    labels.addAll(getAnnotations(e.getTitles(), lang));
     if (e.getSynonyms() != null && !e.getSynonyms().isEmpty())
-      anns.addAll(getAnnotations(e.getSynonyms(), lang));
-    return anns;
+      labels.addAll(getAnnotations(e.getSynonyms(), lang));
+    return labels;
+  }
+
+  public static Set<String> getLabels(Entity e, String lang, boolean includeSubTree) {
+    Set<String> labels = getLabels(e, lang);
+    if (!includeSubTree) return labels;
+    Category c = (Category) e;
+    if (c.getSubCategories() == null) return labels;
+    for (Category child : c.getSubCategories())
+      labels.addAll(getLabels(child, lang, includeSubTree));
+    return labels;
   }
 
   private static List<String> getAnnotations(List<LocalisableText> txts, String lang) {

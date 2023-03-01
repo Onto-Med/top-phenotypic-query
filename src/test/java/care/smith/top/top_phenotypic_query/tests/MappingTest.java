@@ -16,8 +16,8 @@ import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
-import care.smith.top.top_phenotypic_query.data_adapter.config.CodeMapping;
-import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 

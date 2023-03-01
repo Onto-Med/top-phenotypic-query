@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.data_adapter.fhir;
+package care.smith.top.top_phenotypic_query.adapter.fhir;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

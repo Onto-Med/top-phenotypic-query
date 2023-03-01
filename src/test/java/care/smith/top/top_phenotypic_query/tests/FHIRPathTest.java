@@ -19,8 +19,8 @@ import org.hl7.fhir.r4.model.StringType;
 import org.junit.jupiter.api.Test;
 
 import ca.uhn.fhir.context.FhirContext;
-import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRPath;
-import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRUtil;
+import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRPath;
+import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRUtil;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 
 public class FHIRPathTest {

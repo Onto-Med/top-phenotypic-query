@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.data_adapter.fhir.resource_finder;
+package care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder;
 
 import java.time.LocalDateTime;
 
@@ -7,8 +7,8 @@ import org.hl7.fhir.r4.model.Resource;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
-import care.smith.top.top_phenotypic_query.data_adapter.config.PhenotypeOutput;
-import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRPath;
+import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeOutput;
+import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRPath;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
