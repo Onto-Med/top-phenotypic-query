@@ -19,12 +19,12 @@ public class SongTest {
 
   Category a =
       new Cat("a")
-          .title("a-de", "de")
-          .title("a-en", "en")
-          .synonym("a1-de", "de")
-          .synonym("a1-en", "en")
-          .synonym("a2-de", "de")
-          .synonym("a2-en", "en")
+          .title("a- de", "de")
+          .title("a- en", "en")
+          .synonym("a1- de", "de")
+          .synonym("a1- en", "en")
+          .synonym("a2- de", "de")
+          .synonym("a2- en", "en")
           .get();
 
   Category b =
@@ -77,7 +77,7 @@ public class SongTest {
     String query =
         Expressions.getStringValue(Lucene.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
-        "(((a-de OR a1-de OR a2-de) OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR c1-de OR c2-de))",
+        "(((\"a- de\" OR \"a1- de\" OR \"a2- de\") OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR c1-de OR c2-de))",
         query);
   }
 
@@ -87,7 +87,7 @@ public class SongTest {
     String query =
         Expressions.getStringValue(Lucene.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
-        "(((a-de OR a1-de OR a2-de) OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR c1-de OR c2-de OR d-de OR d1-de OR d2-de OR e-de OR e1-de OR e2-de))",
+        "(((\"a- de\" OR \"a1- de\" OR \"a2- de\") OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR c1-de OR c2-de OR d-de OR d1-de OR d2-de OR e-de OR e1-de OR e2-de))",
         query);
   }
 }

@@ -244,8 +244,8 @@ public class Entities {
 
   private static List<String> getAnnotations(List<LocalisableText> txts, String lang) {
     return txts.stream()
-        .filter(t -> lang.equals(t.getLang()))
-        .map(t -> t.getText())
+        .filter(t -> lang.trim().equals(t.getLang().trim()) && !t.getText().isBlank())
+        .map(t -> t.getText().trim())
         .collect(Collectors.toList());
   }
 
