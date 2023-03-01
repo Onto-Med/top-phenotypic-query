@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,13 +82,7 @@ public class SONG {
     log.debug("start generating query for variable: {} ...", con.getId());
 
     if (con.getEntityType() == EntityType.CATEGORY) {
-      Set<String> labels = Entities.getLabels(con, lang);
-      Expression res = null;
-      if (labels.isEmpty()) res = Exp.of("");
-      else {
-        List<Expression> args = labels.stream().map(t -> Exp.of(t)).collect(Collectors.toList());
-        res = getFunction(Or.ID).generate(args, this);
-      }
+      Expression res = getLabelsExpression(con, false);
       log.debug(
           "end generating query for variable: {} = {}",
           con.getId(),
@@ -99,6 +94,27 @@ public class SONG {
     log.debug(
         "end generating query for variable: {} = {}", con.getId(), Expressions.getStringValue(res));
     return res;
+  }
+
+  public Expression getLabelsExpression(String conId, boolean includeSubTree) {
+    return getLabelsExpression(getConcept(conId), includeSubTree);
+  }
+
+  public Expression getLabelsExpression(Entity con, boolean includeSubTree) {
+    Set<String> labels = Entities.getLabels(con, lang, includeSubTree);
+    Expression res = null;
+    if (labels.isEmpty()) res = Exp.of("");
+    else {
+      List<Expression> args =
+          labels.stream().map(t -> Exp.of(quotePhrase(t))).collect(Collectors.toList());
+      res = getFunction(Or.ID).generate(args, this);
+    }
+    return res;
+  }
+
+  private String quotePhrase(String s) {
+    if (StringUtils.containsWhitespace(s)) return "\"" + s + "\"";
+    return s;
   }
 
   public Expression generateConcept(String conId) {
