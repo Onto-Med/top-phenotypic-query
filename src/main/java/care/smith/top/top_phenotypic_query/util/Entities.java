@@ -206,22 +206,22 @@ public class Entities {
         .orElse(null);
   }
 
-  public static Set<String> getLabels(Entity e, String lang) {
-    Set<String> labels = new LinkedHashSet<>();
-    labels.addAll(getAnnotations(e.getTitles(), lang));
+  public static Set<String> getTerms(Entity e, String lang) {
+    Set<String> terms = new LinkedHashSet<>();
+    terms.addAll(getAnnotations(e.getTitles(), lang));
     if (e.getSynonyms() != null && !e.getSynonyms().isEmpty())
-      labels.addAll(getAnnotations(e.getSynonyms(), lang));
-    return labels;
+      terms.addAll(getAnnotations(e.getSynonyms(), lang));
+    return terms;
   }
 
-  public static Set<String> getLabels(Entity e, String lang, boolean includeSubTree) {
-    Set<String> labels = getLabels(e, lang);
-    if (!includeSubTree) return labels;
+  public static Set<String> getTerms(Entity e, String lang, boolean includeSubTree) {
+    Set<String> terms = getTerms(e, lang);
+    if (!includeSubTree) return terms;
     Category c = (Category) e;
-    if (c.getSubCategories() == null) return labels;
+    if (c.getSubCategories() == null) return terms;
     for (Category child : c.getSubCategories())
-      labels.addAll(getLabels(child, lang, includeSubTree));
-    return labels;
+      terms.addAll(getTerms(child, lang, includeSubTree));
+    return terms;
   }
 
   private static List<String> getAnnotations(List<LocalisableText> txts, String lang) {

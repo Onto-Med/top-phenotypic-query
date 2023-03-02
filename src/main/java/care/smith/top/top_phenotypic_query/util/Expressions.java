@@ -138,4 +138,12 @@ public class Expressions {
     }
     return false;
   }
+
+  public static boolean isEmpty(Expression exp) {
+    return exp.getConstantId() == null
+        && exp.getEntityId() == null
+        && exp.getFunctionId() == null
+        && exp.getRestriction() == null
+        && !hasValues(exp);
+  }
 }

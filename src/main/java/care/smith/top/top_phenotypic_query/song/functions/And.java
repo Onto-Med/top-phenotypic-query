@@ -8,7 +8,7 @@ import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
-public abstract class And extends TextFunction {
+public abstract class And extends QueryFunction {
 
   public static final String ID = "AND";
   private static final NotationEnum NOTATION = NotationEnum.INFIX;

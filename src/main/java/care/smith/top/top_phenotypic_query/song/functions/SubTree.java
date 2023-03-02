@@ -9,7 +9,7 @@ import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.song.SONG;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
-public class SubTree extends TextFunction {
+public class SubTree extends TermFunction {
 
   public static final String ID = "SubTree";
   private static final NotationEnum NOTATION = NotationEnum.PREFIX;
@@ -49,6 +49,6 @@ public class SubTree extends TextFunction {
     if (args.isEmpty()) return Exp.of("");
     Expression arg = args.get(0);
     if (arg.getEntityId() == null) return Exp.of("");
-    return song.getLabelsExpression(arg.getEntityId(), true);
+    return song.getTermsExpression(arg.getEntityId(), true);
   }
 }
