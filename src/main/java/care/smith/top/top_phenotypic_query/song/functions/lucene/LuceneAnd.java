@@ -22,7 +22,7 @@ public class LuceneAnd extends And {
   @Override
   public Expression generate(List<Expression> args, SONG song) {
     args = song.generate(args);
-    if (args.isEmpty()) return Exp.of("");
+    if (args.isEmpty()) return new Expression();
     if (args.size() == 1) return args.get(0);
     String query =
         args.stream().map(a -> Expressions.getStringValue(a)).collect(Collectors.joining(" AND "));

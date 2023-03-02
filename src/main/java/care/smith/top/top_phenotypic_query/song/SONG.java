@@ -26,6 +26,7 @@ import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import care.smith.top.top_phenotypic_query.util.builder.Val;
 
 public class SONG {
 
@@ -34,6 +35,10 @@ public class SONG {
   private String lang;
 
   private Logger log = LoggerFactory.getLogger(SONG.class);
+
+  public static final String EXPRESSION_TYPE_QUERY = "query";
+  public static final String EXPRESSION_TYPE_TERMS_RAW = "terms_raw";
+  public static final String EXPRESSION_TYPE_TERMS_READY = "terms_ready";
 
   protected SONG(And and, Or or, Not not) {
     addFunction(and);
@@ -54,12 +59,12 @@ public class SONG {
     this.concepts = concepts;
   }
 
-  private void addFunction(TextFunction f) {
-    functions.put(f.getId(), f);
-  }
-
   public static ExpressionFunction[] getExpressionFunctions() {
     return new ExpressionFunction[] {And.FUNCTION, Or.FUNCTION, Not.FUNCTION, SubTree.FUNCTION};
+  }
+
+  private void addFunction(TextFunction f) {
+    functions.put(f.getId(), f);
   }
 
   public Collection<TextFunction> getFunctions() {
@@ -78,41 +83,81 @@ public class SONG {
     this.lang = lang;
   }
 
-  public Expression generate(Entity con) {
-    log.debug("start generating query for variable: {} ...", con.getId());
+  public boolean hasQuery(Entity con) {
+    // if single concept
+    if (con.getEntityType() == EntityType.CATEGORY) return false;
+    // else composite concept
+    Expression exp = ((Phenotype) con).getExpression();
+    return getFunction(exp.getFunctionId()).isQueryFunction();
+  }
 
+  public boolean hasTerms(Entity con) {
+    return !hasQuery(con);
+  }
+
+  public boolean hasQuery(Expression exp) {
+    return EXPRESSION_TYPE_QUERY.equals(exp.getConstantId());
+  }
+
+  public boolean hasTerms(Expression exp) {
+    return EXPRESSION_TYPE_TERMS.equals(exp.getConstantId());
+  }
+
+  public String getQuery(Expression exp) {
+	  if (EXPRESSION_TYPE_QUERY.equals(exp.getConstantId())) return Expressions.getStringValue(exp);
+	  return 
+  }
+
+  public Expression generate(Entity con) {
+    log.debug("start generating query for concept: {} ...", con.getId());
+
+    // if single concept
     if (con.getEntityType() == EntityType.CATEGORY) {
-      Expression res = getLabelsExpression(con, false);
-      log.debug(
-          "end generating query for variable: {} = {}",
-          con.getId(),
-          Expressions.getStringValue(res));
+      Expression res = getTermsExpression(con, false);
+      log.debug("end generating query for concept: {} = {}", con.getId(), toString(res));
       return res;
     }
 
+    // else composite concept
     Expression res = generate(((Phenotype) con).getExpression());
-    log.debug(
-        "end generating query for variable: {} = {}", con.getId(), Expressions.getStringValue(res));
+    log.debug("end generating query for concept : {} = {}", con.getId(), toString(res));
     return res;
   }
 
-  public Expression getLabelsExpression(String conId, boolean includeSubTree) {
-    return getLabelsExpression(getConcept(conId), includeSubTree);
+  public Expression getTermsExpression(String conId, boolean includeSubTree) {
+    return getTermsExpression(getConcept(conId), includeSubTree);
   }
 
-  public Expression getLabelsExpression(Entity con, boolean includeSubTree) {
-    Set<String> labels = Entities.getLabels(con, lang, includeSubTree);
-    Expression res = null;
-    if (labels.isEmpty()) res = Exp.of("");
-    else {
-      List<Expression> args =
-          labels.stream().map(t -> Exp.of(quotePhrase(t))).collect(Collectors.toList());
-      res = getFunction(Or.ID).generate(args, this);
-    }
-    return res;
+  public Expression getTermsExpression(Entity con, boolean includeSubTree) {
+    Set<String> terms = Entities.getTerms(con, lang, includeSubTree);
+    if (terms.isEmpty()) return new Expression();
+    return Exp.of(terms.stream().map(t -> Val.of(t)).collect(Collectors.toList()))
+        .constantId(EXPRESSION_TYPE_TERMS);
   }
 
-  private String quotePhrase(String s) {
+  public Expression getTermsQueryExpression(List<String> terms) {
+    List<Expression> args = terms.stream().map(t -> Exp.of(t)).collect(Collectors.toList());
+    return getFunction(Or.ID).generate(args, this);
+  }
+
+  private String getTermsQuery(Expression exp) {
+	  List<Expression> args = terms.stream().map(t -> Exp.of(t)).collect(Collectors.toList());
+	  return getFunction(Or.ID).generate(args, this);
+  }
+
+  //  public Expression getLabelsExpression(Entity con, boolean includeSubTree) {
+  //	  Set<String> labels = Entities.getLabels(con, lang, includeSubTree);
+  //	  Expression res = null;
+  //	  if (labels.isEmpty()) res = Exp.of("");
+  //	  else {
+  //		  List<Expression> args =
+  //				  labels.stream().map(t -> Exp.of(quotePhrase(t))).collect(Collectors.toList());
+  //		  res = getFunction(Or.ID).generate(args, this);
+  //	  }
+  //	  return res;
+  //  }
+
+  public String quotePhrase(String s) {
     if (StringUtils.containsWhitespace(s)) return "\"" + s + "\"";
     return s;
   }
@@ -136,14 +181,14 @@ public class SONG {
         "end generating query for function '{}': {} = {}",
         exp.getFunctionId(),
         expStr,
-        Expressions.getStringValue(res));
+        toString(res));
     return res;
   }
 
   public List<Expression> generate(List<Expression> args) {
     return args.stream()
         .map(a -> generate(a))
-        .filter(a -> !Expressions.hasBlankStringValue(a))
+        .filter(a -> !Expressions.isEmpty(a))
         .collect(Collectors.toList());
   }
 
