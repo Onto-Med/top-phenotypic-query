@@ -6,7 +6,7 @@ import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
-public abstract class Not extends QueryFunction {
+public abstract class Not extends TextFunction {
 
   public static final String ID = "NOT";
   private static final NotationEnum NOTATION = NotationEnum.PREFIX;
