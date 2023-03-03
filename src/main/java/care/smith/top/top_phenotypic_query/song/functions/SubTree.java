@@ -46,9 +46,9 @@ public class SubTree extends TermFunction {
 
   @Override
   public Expression generate(List<Expression> args, SONG song) {
-    if (args.isEmpty()) return Exp.of("");
+    if (args.isEmpty()) return new Expression();
     Expression arg = args.get(0);
-    if (arg.getEntityId() == null) return Exp.of("");
-    return song.getTermsExpression(arg.getEntityId(), true);
+    if (arg.getEntityId() == null) return new Expression();
+    return song.getTermsExpression(arg.getEntityId(), SONG.EXPRESSION_TYPE_TERMS_INITIAL, true);
   }
 }

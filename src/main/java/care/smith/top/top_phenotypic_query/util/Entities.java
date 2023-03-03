@@ -135,6 +135,10 @@ public class Entities {
     return (Phenotype) getEntity(id);
   }
 
+  public Category getCategory(String id) {
+    return (Category) getEntity(id);
+  }
+
   public Phenotype getPhenotypeWithTitle(String title) {
     for (Phenotype p : getPhenotypes())
       for (LocalisableText t : p.getTitles()) if (title.equalsIgnoreCase(t.getText())) return p;
@@ -238,8 +242,17 @@ public class Entities {
     Set<String> anns = new LinkedHashSet<>();
     anns.addAll(getAnnotations(e.getTitles(), lang));
     if (e.getSynonyms() != null && !e.getSynonyms().isEmpty())
-      anns.addAll(getAnnotations(e.getSynonyms(), lang));
-    return anns;
+      terms.addAll(getAnnotations(e.getSynonyms(), lang));
+    return terms;
+  }
+
+  public static Set<String> getTerms(Entity e, String lang, boolean includeSubTree) {
+    Set<String> terms = getTerms(e, lang);
+    if (!includeSubTree) return terms;
+    Category c = (Category) e;
+    if (c.getSubCategories() == null) return terms;
+    for (Category child : c.getSubCategories()) terms.addAll(getTerms(child, lang, includeSubTree));
+    return terms;
   }
 
   private static List<String> getAnnotations(List<LocalisableText> txts, String lang) {

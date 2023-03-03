@@ -35,10 +35,11 @@ public class RestrictionTest {
 
     Restriction r = Res.of("http://phe.org|p1a", "http://phe.org|p1b");
     Phenotype expected =
-        new Phe("p1", "http://phe.org", "p1a", "p1b")
-            .restriction(p, r)
-            .get()
-            .expression(Exp.inRestriction(p, r));
+        (Phenotype)
+            new Phe("p1", "http://phe.org", "p1a", "p1b")
+                .restriction(p, r)
+                .get()
+                .expression(Exp.inRestriction(p, r));
 
     assertEquals(expected, actual);
   }
