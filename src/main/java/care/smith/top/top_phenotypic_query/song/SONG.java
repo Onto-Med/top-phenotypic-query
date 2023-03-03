@@ -83,28 +83,6 @@ public class SONG {
     this.lang = lang;
   }
 
-  //  public boolean hasQuery(Category con) {
-  //    if (con.getExpression() == null) return false;
-  //    return getFunction(con.getExpression().getFunctionId()).isQueryFunction();
-  //  }
-  //
-  //  public boolean hasTerms(Category con) {
-  //    return !hasQuery(con);
-  //  }
-
-  //  public boolean hasQuery(Expression exp) {
-  //    return EXPRESSION_TYPE_QUERY.equals(exp.getConstantId());
-  //  }
-  //
-  //  public boolean hasTerms(Expression exp) {
-  //    return !hasQuery(exp);
-  //  }
-
-  public String getQuery(Expression exp) {
-    if (Expressions.hasQuery(exp)) return Expressions.getStringValue(exp);
-    return getTermsQuery(exp);
-  }
-
   public Expression generate(Category con) {
     log.debug("start generating query for concept: {} ...", con.getId());
 
@@ -119,6 +97,41 @@ public class SONG {
     Expression res = generate(con.getExpression());
     log.debug("end generating query for concept : {} = {}", con.getId(), toString(res));
     return res;
+  }
+
+  public Expression generate(Expression exp) {
+    if (exp.getEntityId() != null) return generateConcept(exp.getEntityId());
+    if (exp.getFunctionId() != null) return generateFunction(exp);
+    return exp;
+  }
+
+  public Expression generateConcept(String conId) {
+    return generate(getConcept(conId));
+  }
+
+  public Expression generateFunction(Expression exp) {
+    String expStr = toString(exp);
+    log.debug("start generating query for function '{}': {} ...", exp.getFunctionId(), expStr);
+    TextFunction func = getFunction(exp.getFunctionId());
+    Expression res = func.generate(exp.getArguments(), this);
+    log.debug(
+        "end generating query for function '{}': {} = {}",
+        exp.getFunctionId(),
+        expStr,
+        toString(res));
+    return res;
+  }
+
+  public List<Expression> generate(List<Expression> args) {
+    return args.stream()
+        .map(a -> generate(a))
+        .filter(a -> !Expressions.isEmpty(a))
+        .collect(Collectors.toList());
+  }
+
+  public String getQuery(Expression exp) {
+    if (Expressions.hasQuery(exp)) return Expressions.getStringValue(exp);
+    return getTermsQuery(exp);
   }
 
   public Expression getTermsExpression(String conId, String type, boolean includeSubTree) {
@@ -152,47 +165,6 @@ public class SONG {
   private String quotePhrase(String s) {
     if (StringUtils.containsWhitespace(s)) return "\"" + s + "\"";
     return s;
-  }
-  //  public Expression getLabelsExpression(Entity con, boolean includeSubTree) {
-  //	  Set<String> labels = Entities.getLabels(con, lang, includeSubTree);
-  //	  Expression res = null;
-  //	  if (labels.isEmpty()) res = Exp.of("");
-  //	  else {
-  //		  List<Expression> args =
-  //				  labels.stream().map(t -> Exp.of(quotePhrase(t))).collect(Collectors.toList());
-  //		  res = getFunction(Or.ID).generate(args, this);
-  //	  }
-  //	  return res;
-  //  }
-
-  public Expression generateConcept(String conId) {
-    return generate(getConcept(conId));
-  }
-
-  public Expression generate(Expression exp) {
-    if (exp.getEntityId() != null) return generateConcept(exp.getEntityId());
-    if (exp.getFunctionId() != null) return generateFunction(exp);
-    return exp;
-  }
-
-  public Expression generateFunction(Expression exp) {
-    String expStr = toString(exp);
-    log.debug("start generating query for function '{}': {} ...", exp.getFunctionId(), expStr);
-    TextFunction func = getFunction(exp.getFunctionId());
-    Expression res = func.generate(exp.getArguments(), this);
-    log.debug(
-        "end generating query for function '{}': {} = {}",
-        exp.getFunctionId(),
-        expStr,
-        toString(res));
-    return res;
-  }
-
-  public List<Expression> generate(List<Expression> args) {
-    return args.stream()
-        .map(a -> generate(a))
-        .filter(a -> !Expressions.isEmpty(a))
-        .collect(Collectors.toList());
   }
 
   public String toString(Expression exp) {

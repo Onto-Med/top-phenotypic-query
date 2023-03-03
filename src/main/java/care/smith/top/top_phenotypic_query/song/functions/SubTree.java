@@ -9,7 +9,7 @@ import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.song.SONG;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
-public class SubTree extends TermFunction {
+public class SubTree extends TextFunction {
 
   public static final String ID = "SubTree";
   private static final NotationEnum NOTATION = NotationEnum.PREFIX;

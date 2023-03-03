@@ -36,13 +36,5 @@ public abstract class TextFunction {
         args.stream().map(Values::toStringWithoutDateTime).collect(Collectors.toList()));
   }
 
-  public boolean isTermFunction() {
-    return this instanceof TermFunction;
-  }
-
-  public boolean isQueryFunction() {
-    return this instanceof QueryFunction;
-  }
-
   public abstract Expression generate(List<Expression> args, SONG song);
 }
