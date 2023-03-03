@@ -131,6 +131,10 @@ public class Entities {
     return (Phenotype) getEntity(id);
   }
 
+  public Category getCategory(String id) {
+    return (Category) getEntity(id);
+  }
+
   public Phenotype getPhenotypeWithTitle(String title) {
     for (Phenotype p : getPhenotypes())
       for (LocalisableText t : p.getTitles()) if (title.equalsIgnoreCase(t.getText())) return p;
@@ -219,8 +223,7 @@ public class Entities {
     if (!includeSubTree) return terms;
     Category c = (Category) e;
     if (c.getSubCategories() == null) return terms;
-    for (Category child : c.getSubCategories())
-      terms.addAll(getTerms(child, lang, includeSubTree));
+    for (Category child : c.getSubCategories()) terms.addAll(getTerms(child, lang, includeSubTree));
     return terms;
   }
 

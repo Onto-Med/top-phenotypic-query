@@ -19,53 +19,53 @@ public class SongTest {
 
   Category a =
       new Cat("a")
-          .title("a- de", "de")
-          .title("a- en", "en")
-          .synonym("a1- de", "de")
-          .synonym("a1- en", "en")
-          .synonym("a2- de", "de")
-          .synonym("a2- en", "en")
+          .titleDe("a- de")
+          .titleEn("a- en")
+          .synonymDe("a1- de")
+          .synonymEn("a1- en")
+          .synonymDe("a2- de")
+          .synonymEn("a2- en")
           .get();
 
   Category b =
       new Cat("b")
-          .title("b-de", "de")
-          .title("b-en", "en")
-          .synonym("b1-de", "de")
-          .synonym("b1-en", "en")
-          .synonym("b2-de", "de")
-          .synonym("b2-en", "en")
+          .titleDe("b-de")
+          .titleEn("b-en")
+          .synonymDe("b1-de")
+          .synonymEn("b1-en")
+          .synonymDe("b2-de")
+          .synonymEn("b2-en")
           .get();
 
   Category e =
       new Cat("e")
-          .title("e-de", "de")
-          .title("e-en", "en")
-          .synonym("e1-de", "de")
-          .synonym("e1-en", "en")
-          .synonym("e2-de", "de")
-          .synonym("e2-en", "en")
+          .titleDe("e-de")
+          .titleEn("e-en")
+          .synonymDe("e1-de")
+          .synonymEn("e1-en")
+          .synonymDe("e2-de")
+          .synonymEn("e2-en")
           .get();
 
   Category d =
       new Cat("d")
-          .title("d-de", "de")
-          .title("d-en", "en")
-          .synonym("d1-de", "de")
-          .synonym("d1-en", "en")
-          .synonym("d2-de", "de")
-          .synonym("d2-en", "en")
+          .titleDe("d-de")
+          .titleEn("d-en")
+          .synonymDe("d1-de")
+          .synonymEn("d1-en")
+          .synonymDe("d2-de")
+          .synonymEn("d2-en")
           .subCategories(e)
           .get();
 
   Category c =
       new Cat("c")
-          .title("c-de", "de")
-          .title("c-en", "en")
-          .synonym("c1-de", "de")
-          .synonym("c1-en", "en")
-          .synonym("c2-de", "de")
-          .synonym("c2-en", "en")
+          .titleDe("c-de")
+          .titleEn("c-en")
+          .synonymDe("c1-de")
+          .synonymEn("c1-en")
+          .synonymDe("c2-de")
+          .synonymEn("c2-en")
           .subCategories(d)
           .get();
 

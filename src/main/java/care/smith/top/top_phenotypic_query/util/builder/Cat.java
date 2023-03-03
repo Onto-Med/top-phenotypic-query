@@ -6,6 +6,7 @@ import care.smith.top.model.Category;
 import care.smith.top.model.Code;
 import care.smith.top.model.CodeSystem;
 import care.smith.top.model.EntityType;
+import care.smith.top.model.Expression;
 import care.smith.top.model.LocalisableText;
 import care.smith.top.top_phenotypic_query.util.Entities;
 
@@ -103,6 +104,21 @@ public class Cat {
 
   public Cat annotations(String txt) {
     Entities.addAnnotations(c, txt);
+    return this;
+  }
+
+  public Cat expression(Expression exp) {
+    c.setExpression(exp);
+    return this;
+  }
+
+  public Cat single() {
+    c.setEntityType(EntityType.SINGLE_CONCEPT);
+    return this;
+  }
+
+  public Cat composite() {
+    c.setEntityType(EntityType.COMPOSITE_CONCEPT);
     return this;
   }
 

@@ -11,11 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import care.smith.top.model.Category;
 import care.smith.top.model.Entity;
-import care.smith.top.model.EntityType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
-import care.smith.top.model.Phenotype;
+import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.song.functions.And;
 import care.smith.top.top_phenotypic_query.song.functions.Not;
 import care.smith.top.top_phenotypic_query.song.functions.Or;
@@ -37,8 +37,8 @@ public class SONG {
   private Logger log = LoggerFactory.getLogger(SONG.class);
 
   public static final String EXPRESSION_TYPE_QUERY = "query";
-  public static final String EXPRESSION_TYPE_TERMS_RAW = "terms_raw";
-  public static final String EXPRESSION_TYPE_TERMS_READY = "terms_ready";
+  public static final String EXPRESSION_TYPE_TERMS_INITIAL = "terms_initial";
+  public static final String EXPRESSION_TYPE_TERMS_PROCESSED = "terms_processed";
 
   protected SONG(And and, Or or, Not not) {
     addFunction(and);
@@ -51,8 +51,8 @@ public class SONG {
     return concepts;
   }
 
-  public Entity getConcept(String id) {
-    return concepts.getEntity(id);
+  public Category getConcept(String id) {
+    return concepts.getCategory(id);
   }
 
   public void setConcepts(Entities concepts) {
@@ -83,56 +83,52 @@ public class SONG {
     this.lang = lang;
   }
 
-  public boolean hasQuery(Entity con) {
-    // if single concept
-    if (con.getEntityType() == EntityType.CATEGORY) return false;
-    // else composite concept
-    Expression exp = ((Phenotype) con).getExpression();
-    return getFunction(exp.getFunctionId()).isQueryFunction();
-  }
+  //  public boolean hasQuery(Category con) {
+  //    if (con.getExpression() == null) return false;
+  //    return getFunction(con.getExpression().getFunctionId()).isQueryFunction();
+  //  }
+  //
+  //  public boolean hasTerms(Category con) {
+  //    return !hasQuery(con);
+  //  }
 
-  public boolean hasTerms(Entity con) {
-    return !hasQuery(con);
-  }
-
-  public boolean hasQuery(Expression exp) {
-    return EXPRESSION_TYPE_QUERY.equals(exp.getConstantId());
-  }
-
-  public boolean hasTerms(Expression exp) {
-    return EXPRESSION_TYPE_TERMS.equals(exp.getConstantId());
-  }
+  //  public boolean hasQuery(Expression exp) {
+  //    return EXPRESSION_TYPE_QUERY.equals(exp.getConstantId());
+  //  }
+  //
+  //  public boolean hasTerms(Expression exp) {
+  //    return !hasQuery(exp);
+  //  }
 
   public String getQuery(Expression exp) {
-	  if (EXPRESSION_TYPE_QUERY.equals(exp.getConstantId())) return Expressions.getStringValue(exp);
-	  return 
+    if (Expressions.hasQuery(exp)) return Expressions.getStringValue(exp);
+    return getTermsQuery(exp);
   }
 
-  public Expression generate(Entity con) {
+  public Expression generate(Category con) {
     log.debug("start generating query for concept: {} ...", con.getId());
 
     // if single concept
-    if (con.getEntityType() == EntityType.CATEGORY) {
-      Expression res = getTermsExpression(con, false);
+    if (con.getExpression() == null) {
+      Expression res = getTermsExpression(con, EXPRESSION_TYPE_TERMS_INITIAL, false);
       log.debug("end generating query for concept: {} = {}", con.getId(), toString(res));
       return res;
     }
 
     // else composite concept
-    Expression res = generate(((Phenotype) con).getExpression());
+    Expression res = generate(con.getExpression());
     log.debug("end generating query for concept : {} = {}", con.getId(), toString(res));
     return res;
   }
 
-  public Expression getTermsExpression(String conId, boolean includeSubTree) {
-    return getTermsExpression(getConcept(conId), includeSubTree);
+  public Expression getTermsExpression(String conId, String type, boolean includeSubTree) {
+    return getTermsExpression(getConcept(conId), type, includeSubTree);
   }
 
-  public Expression getTermsExpression(Entity con, boolean includeSubTree) {
+  public Expression getTermsExpression(Entity con, String type, boolean includeSubTree) {
     Set<String> terms = Entities.getTerms(con, lang, includeSubTree);
     if (terms.isEmpty()) return new Expression();
-    return Exp.of(terms.stream().map(t -> Val.of(t)).collect(Collectors.toList()))
-        .constantId(EXPRESSION_TYPE_TERMS);
+    return Exp.of(terms.stream().map(t -> Val.of(t)).collect(Collectors.toList())).type(type);
   }
 
   public Expression getTermsQueryExpression(List<String> terms) {
@@ -141,10 +137,22 @@ public class SONG {
   }
 
   private String getTermsQuery(Expression exp) {
-	  List<Expression> args = terms.stream().map(t -> Exp.of(t)).collect(Collectors.toList());
-	  return getFunction(Or.ID).generate(args, this);
+    List<Expression> args =
+        exp.getValues().stream().map(v -> Exp.of(getTerm(v, exp))).collect(Collectors.toList());
+    if (args.size() == 1) return Expressions.getStringValue(args.get(0));
+    return Expressions.getStringValue(getFunction(Or.ID).generate(args, this));
   }
 
+  private String getTerm(Value val, Expression exp) {
+    String term = Values.getStringValue(val);
+    if (Expressions.hasTermsInitial(exp)) return quotePhrase(term);
+    return term;
+  }
+
+  private String quotePhrase(String s) {
+    if (StringUtils.containsWhitespace(s)) return "\"" + s + "\"";
+    return s;
+  }
   //  public Expression getLabelsExpression(Entity con, boolean includeSubTree) {
   //	  Set<String> labels = Entities.getLabels(con, lang, includeSubTree);
   //	  Expression res = null;
@@ -156,11 +164,6 @@ public class SONG {
   //	  }
   //	  return res;
   //  }
-
-  public String quotePhrase(String s) {
-    if (StringUtils.containsWhitespace(s)) return "\"" + s + "\"";
-    return s;
-  }
 
   public Expression generateConcept(String conId) {
     return generate(getConcept(conId));
