@@ -17,6 +17,7 @@ import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.song.functions.And;
+import care.smith.top.top_phenotypic_query.song.functions.Dist;
 import care.smith.top.top_phenotypic_query.song.functions.Not;
 import care.smith.top.top_phenotypic_query.song.functions.Or;
 import care.smith.top.top_phenotypic_query.song.functions.SubTree;
@@ -40,10 +41,11 @@ public class SONG {
   public static final String EXPRESSION_TYPE_TERMS_INITIAL = "terms_initial";
   public static final String EXPRESSION_TYPE_TERMS_PROCESSED = "terms_processed";
 
-  protected SONG(And and, Or or, Not not) {
+  protected SONG(And and, Or or, Not not, Dist dist) {
     addFunction(and);
     addFunction(or);
     addFunction(not);
+    addFunction(dist);
     addFunction(SubTree.get());
   }
 

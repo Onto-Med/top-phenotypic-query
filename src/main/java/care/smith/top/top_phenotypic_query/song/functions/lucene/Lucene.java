@@ -12,7 +12,7 @@ public class Lucene extends SONG {
   }
 
   private Lucene() {
-    super(LuceneAnd.get(), LuceneOr.get(), LuceneNot.get());
+    super(LuceneAnd.get(), LuceneOr.get(), LuceneNot.get(), LuceneDist.get());
   }
 
   public Lucene lang(String lang) {
