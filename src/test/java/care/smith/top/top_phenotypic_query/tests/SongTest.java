@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import care.smith.top.model.Category;
 import care.smith.top.model.Expression;
 import care.smith.top.top_phenotypic_query.song.functions.And;
+import care.smith.top.top_phenotypic_query.song.functions.Dist;
 import care.smith.top.top_phenotypic_query.song.functions.Not;
 import care.smith.top.top_phenotypic_query.song.functions.Or;
 import care.smith.top.top_phenotypic_query.song.functions.SubTree;
@@ -14,6 +15,7 @@ import care.smith.top.top_phenotypic_query.song.functions.lucene.Lucene;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Cat;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
 public class SongTest {
 
@@ -88,6 +90,16 @@ public class SongTest {
         Expressions.getStringValue(Lucene.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
         "(((\"a- de\" OR \"a1- de\" OR \"a2- de\") OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR c1-de OR c2-de OR d-de OR d1-de OR d2-de OR e-de OR e1-de OR e2-de))",
+        query);
+  }
+
+  @Test
+  public void test3() {
+    Expression exp = And.of(Or.of(Dist.of(a, 5), Exp.of(b)), Not.of(c));
+    String query =
+        Expressions.getStringValue(Lucene.get().concepts(concepts).lang("de").generate(exp));
+    assertEquals(
+        "(((\"a- de\"~5 OR \"a1- de\"~5 OR \"a2- de\"~5) OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR c1-de OR c2-de))",
         query);
   }
 }
