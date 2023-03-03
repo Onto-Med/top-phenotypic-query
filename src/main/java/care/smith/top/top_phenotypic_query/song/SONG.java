@@ -22,6 +22,7 @@ import care.smith.top.top_phenotypic_query.song.functions.Not;
 import care.smith.top.top_phenotypic_query.song.functions.Or;
 import care.smith.top.top_phenotypic_query.song.functions.SubTree;
 import care.smith.top.top_phenotypic_query.song.functions.TextFunction;
+import care.smith.top.top_phenotypic_query.song.functions.XProd;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
@@ -47,6 +48,7 @@ public class SONG {
     addFunction(not);
     addFunction(dist);
     addFunction(SubTree.get());
+    addFunction(XProd.get());
   }
 
   public Entities getConcepts() {
@@ -62,7 +64,9 @@ public class SONG {
   }
 
   public static ExpressionFunction[] getExpressionFunctions() {
-    return new ExpressionFunction[] {And.FUNCTION, Or.FUNCTION, Not.FUNCTION, SubTree.FUNCTION};
+    return new ExpressionFunction[] {
+      And.FUNCTION, Or.FUNCTION, Not.FUNCTION, Dist.FUNCTION, SubTree.FUNCTION, XProd.FUNCTION
+    };
   }
 
   private void addFunction(TextFunction f) {
