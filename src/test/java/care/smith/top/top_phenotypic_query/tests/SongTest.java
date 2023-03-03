@@ -11,6 +11,7 @@ import care.smith.top.top_phenotypic_query.song.functions.Dist;
 import care.smith.top.top_phenotypic_query.song.functions.Not;
 import care.smith.top.top_phenotypic_query.song.functions.Or;
 import care.smith.top.top_phenotypic_query.song.functions.SubTree;
+import care.smith.top.top_phenotypic_query.song.functions.XProd;
 import care.smith.top.top_phenotypic_query.song.functions.lucene.Lucene;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
@@ -100,6 +101,26 @@ public class SongTest {
         Expressions.getStringValue(Lucene.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
         "(((\"a- de\"~5 OR \"a1- de\"~5 OR \"a2- de\"~5) OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR c1-de OR c2-de))",
+        query);
+  }
+
+  @Test
+  public void test4() {
+    Expression exp = And.of(XProd.of(a, b), Not.of(c));
+    String query =
+        Expressions.getStringValue(Lucene.get().concepts(concepts).lang("de").generate(exp));
+    assertEquals(
+        "((\"a- de b-de\" OR \"a- de b1-de\" OR \"a- de b2-de\" OR \"a1- de b-de\" OR \"a1- de b1-de\" OR \"a1- de b2-de\" OR \"a2- de b-de\" OR \"a2- de b1-de\" OR \"a2- de b2-de\") AND NOT (c-de OR c1-de OR c2-de))",
+        query);
+  }
+
+  @Test
+  public void test5() {
+    Expression exp = And.of(Dist.of(XProd.of(a, b), 2), Not.of(c));
+    String query =
+        Expressions.getStringValue(Lucene.get().concepts(concepts).lang("de").generate(exp));
+    assertEquals(
+        "((\"a- de b-de\"~2 OR \"a- de b1-de\"~2 OR \"a- de b2-de\"~2 OR \"a1- de b-de\"~2 OR \"a1- de b1-de\"~2 OR \"a1- de b2-de\"~2 OR \"a2- de b-de\"~2 OR \"a2- de b1-de\"~2 OR \"a2- de b2-de\"~2) AND NOT (c-de OR c1-de OR c2-de))",
         query);
   }
 }
