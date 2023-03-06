@@ -72,25 +72,35 @@ public class SongTest {
           .subCategories(d)
           .get();
 
-  Entities concepts = Entities.of(a, b, c, d, e);
+  Category f =
+      new Cat("f")
+          .titleDe("f-de")
+          .titleEn("f-en")
+          .synonymDe("f1-de")
+          .synonymEn("f1-en")
+          .synonymDe("f2- de")
+          .synonymEn("f2-en")
+          .get();
+
+  Entities concepts = Entities.of(a, b, c, d, e, f);
 
   @Test
   public void test1() {
-    Expression exp = And.of(Or.of(a, b), Not.of(c));
+    Expression exp = And.of(Or.of(a, b), Not.of(c, f));
     String query =
         Expressions.getStringValue(Lucene.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
-        "(((\"a- de\" OR \"a1- de\" OR \"a2- de\") OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR c1-de OR c2-de))",
+        "(((\"a- de\" OR \"a1- de\" OR \"a2- de\") OR (b-de OR b1-de OR b2-de)) AND NOT c-de AND NOT c1-de AND NOT c2-de AND NOT f-de AND NOT f1-de AND NOT \"f2- de\")",
         query);
   }
 
   @Test
   public void test2() {
-    Expression exp = And.of(Or.of(a, b), Not.of(SubTree.of(c)));
+    Expression exp = And.of(Or.of(a, b), Not.of(SubTree.of(c), Exp.of(f)));
     String query =
         Expressions.getStringValue(Lucene.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
-        "(((\"a- de\" OR \"a1- de\" OR \"a2- de\") OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR c1-de OR c2-de OR d-de OR d1-de OR d2-de OR e-de OR e1-de OR e2-de))",
+        "(((\"a- de\" OR \"a1- de\" OR \"a2- de\") OR (b-de OR b1-de OR b2-de)) AND NOT c-de AND NOT c1-de AND NOT c2-de AND NOT d-de AND NOT d1-de AND NOT d2-de AND NOT e-de AND NOT e1-de AND NOT e2-de AND NOT f-de AND NOT f1-de AND NOT \"f2- de\")",
         query);
   }
 
@@ -100,7 +110,7 @@ public class SongTest {
     String query =
         Expressions.getStringValue(Lucene.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
-        "(((\"a- de\"~5 OR \"a1- de\"~5 OR \"a2- de\"~5) OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR c1-de OR c2-de))",
+        "(((\"a- de\"~5 OR \"a1- de\"~5 OR \"a2- de\"~5) OR (b-de OR b1-de OR b2-de)) AND NOT c-de AND NOT c1-de AND NOT c2-de)",
         query);
   }
 
@@ -110,7 +120,7 @@ public class SongTest {
     String query =
         Expressions.getStringValue(Lucene.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
-        "((\"a- de b-de\" OR \"a- de b1-de\" OR \"a- de b2-de\" OR \"a1- de b-de\" OR \"a1- de b1-de\" OR \"a1- de b2-de\" OR \"a2- de b-de\" OR \"a2- de b1-de\" OR \"a2- de b2-de\") AND NOT (c-de OR c1-de OR c2-de))",
+        "((\"a- de b-de\" OR \"a- de b1-de\" OR \"a- de b2-de\" OR \"a1- de b-de\" OR \"a1- de b1-de\" OR \"a1- de b2-de\" OR \"a2- de b-de\" OR \"a2- de b1-de\" OR \"a2- de b2-de\") AND NOT c-de AND NOT c1-de AND NOT c2-de)",
         query);
   }
 
@@ -120,7 +130,7 @@ public class SongTest {
     String query =
         Expressions.getStringValue(Lucene.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
-        "((\"a- de b-de\"~2 OR \"a- de b1-de\"~2 OR \"a- de b2-de\"~2 OR \"a1- de b-de\"~2 OR \"a1- de b1-de\"~2 OR \"a1- de b2-de\"~2 OR \"a2- de b-de\"~2 OR \"a2- de b1-de\"~2 OR \"a2- de b2-de\"~2) AND NOT (c-de OR c1-de OR c2-de))",
+        "((\"a- de b-de\"~2 OR \"a- de b1-de\"~2 OR \"a- de b2-de\"~2 OR \"a1- de b-de\"~2 OR \"a1- de b1-de\"~2 OR \"a1- de b2-de\"~2 OR \"a2- de b-de\"~2 OR \"a2- de b1-de\"~2 OR \"a2- de b2-de\"~2) AND NOT c-de AND NOT c1-de AND NOT c2-de)",
         query);
   }
 }
