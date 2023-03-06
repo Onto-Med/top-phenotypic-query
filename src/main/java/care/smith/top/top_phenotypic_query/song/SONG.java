@@ -162,7 +162,7 @@ public class SONG {
     return Expressions.getStringValue(getFunction(Or.ID).generate(args, this));
   }
 
-  private String getTerm(Value val, Expression exp) {
+  public String getTerm(Value val, Expression exp) {
     String term = Values.getStringValue(val);
     if (Expressions.hasTermsInitial(exp)) return quotePhrase(term);
     return term;

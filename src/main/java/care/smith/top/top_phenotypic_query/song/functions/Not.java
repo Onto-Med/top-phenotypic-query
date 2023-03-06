@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.song.functions;
 
+import java.util.List;
+
 import care.smith.top.model.Entity;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
@@ -12,26 +14,21 @@ public abstract class Not extends TextFunction {
   private static final NotationEnum NOTATION = NotationEnum.PREFIX;
 
   public static final ExpressionFunction FUNCTION =
-      new ExpressionFunction()
-          .id(ID)
-          .title(ID)
-          .notation(NOTATION)
-          .minArgumentNumber(1)
-          .maxArgumentNumber(1);
+      new ExpressionFunction().id(ID).title(ID).notation(NOTATION).minArgumentNumber(1);
 
   protected Not() {
     super(ID, ID, NOTATION);
   }
 
-  public static Expression of(Expression arg) {
-    return Exp.function(ID, arg);
+  public static Expression of(List<Expression> args) {
+    return Exp.function(ID, args);
   }
 
-  public static Expression of(Entity arg) {
-    return of(Exp.of(arg));
+  public static Expression of(Expression... args) {
+    return of(List.of(args));
   }
 
-  public static Expression of(String phenotypeId) {
-    return of(Exp.ofEntity(phenotypeId));
+  public static Expression of(Entity... args) {
+    return of(Exp.toList(args));
   }
 }
