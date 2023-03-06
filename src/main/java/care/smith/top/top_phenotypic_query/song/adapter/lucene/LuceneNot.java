@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.song.functions.lucene;
+package care.smith.top.top_phenotypic_query.song.adapter.lucene;
 
 import java.util.LinkedHashSet;
 import java.util.List;
