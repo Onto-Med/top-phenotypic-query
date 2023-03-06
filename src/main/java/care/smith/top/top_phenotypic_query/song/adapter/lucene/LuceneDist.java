@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.song.functions.lucene;
+package care.smith.top.top_phenotypic_query.song.adapter.lucene;
 
 import java.util.List;
 import java.util.stream.Collectors;

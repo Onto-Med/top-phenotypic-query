@@ -1,26 +1,26 @@
-package care.smith.top.top_phenotypic_query.song.functions.lucene;
+package care.smith.top.top_phenotypic_query.song.adapter.lucene;
 
 import care.smith.top.top_phenotypic_query.song.SONG;
 import care.smith.top.top_phenotypic_query.util.Entities;
 
-public class Lucene extends SONG {
+public class LuceneSong extends SONG {
 
-  private static Lucene INSTANCE = new Lucene();
+  private static LuceneSong INSTANCE = new LuceneSong();
 
-  public static Lucene get() {
+  public static LuceneSong get() {
     return INSTANCE;
   }
 
-  private Lucene() {
+  private LuceneSong() {
     super(LuceneAnd.get(), LuceneOr.get(), LuceneNot.get(), LuceneDist.get());
   }
 
-  public Lucene lang(String lang) {
+  public LuceneSong lang(String lang) {
     setLang(lang);
     return this;
   }
 
-  public Lucene concepts(Entities concepts) {
+  public LuceneSong concepts(Entities concepts) {
     setConcepts(concepts);
     return this;
   }
