@@ -106,12 +106,12 @@ public class SONG {
   }
 
   public Expression generate(Expression exp) {
-    if (exp.getEntityId() != null) return generateConcept(exp.getEntityId());
+    if (exp.getEntityId() != null) return generate(exp.getEntityId());
     if (exp.getFunctionId() != null) return generateFunction(exp);
     return exp;
   }
 
-  public Expression generateConcept(String conId) {
+  public Expression generate(String conId) {
     return generate(getConcept(conId));
   }
 
