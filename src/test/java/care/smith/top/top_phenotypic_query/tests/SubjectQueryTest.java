@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import care.smith.top.model.DataType;
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.Query;
+import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
@@ -33,8 +33,8 @@ public class SubjectQueryTest extends AbstractTest {
 
   @Test
   public void test1() throws InstantiationException {
-    Query query =
-        new Query()
+    PhenotypeQuery query =
+        new PhenotypeQuery()
             .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(female.getId()))
             .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(young.getId()));
     URL configFile =
@@ -60,8 +60,8 @@ public class SubjectQueryTest extends AbstractTest {
 
   @Test
   public void test2() throws InstantiationException {
-    Query query =
-        new Query()
+    PhenotypeQuery query =
+        new PhenotypeQuery()
             .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(female.getId()))
             .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(young.getId()));
     URL configFile =
@@ -82,8 +82,8 @@ public class SubjectQueryTest extends AbstractTest {
 
   @Test
   public void test3() throws InstantiationException {
-    Query query =
-        new Query()
+    PhenotypeQuery query =
+        new PhenotypeQuery()
             .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(female.getId()))
             .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(young.getId()));
     URL configFile =
@@ -107,8 +107,8 @@ public class SubjectQueryTest extends AbstractTest {
 
   @Test
   public void test4() throws InstantiationException {
-    Query query =
-        new Query()
+    PhenotypeQuery query =
+        new PhenotypeQuery()
             .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(female.getId()))
             .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(young.getId()));
     URL configFile =

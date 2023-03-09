@@ -5,7 +5,7 @@ import java.net.MalformedURLException;
 import java.sql.SQLException;
 
 import care.smith.top.model.Entity;
-import care.smith.top.model.Query;
+import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
@@ -32,7 +32,7 @@ public class POLARTestIntern extends AbstractTest {
             .inclusion(true)
             .defaultAggregationFunctionId(defAgrFunc.getId())
             .subjectId(entities.getPhenotypeWithTitle("Extended algorithm").getId());
-    Query query = new Query().addCriteriaItem(cri1);
+    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri1);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phens, adapter);
     ResultSet rs = pf.execute();

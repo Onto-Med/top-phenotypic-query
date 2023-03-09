@@ -3,7 +3,7 @@ package care.smith.top.top_phenotypic_query.util.builder;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.Query;
+import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
@@ -14,7 +14,7 @@ public class Que {
 
   private DataAdapter adapter;
   private DataAdapterConfig config;
-  private Query query = new Query();
+  private PhenotypeQuery query = new PhenotypeQuery();
   private Entity[] entities;
 
   public Que(String configFilePath, Entity... entities) throws InstantiationException {
@@ -43,7 +43,7 @@ public class Que {
     return config;
   }
 
-  public Query getQuery() {
+  public PhenotypeQuery getQuery() {
     return query;
   }
 

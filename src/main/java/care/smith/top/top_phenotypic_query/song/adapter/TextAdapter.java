@@ -2,6 +2,7 @@ package care.smith.top.top_phenotypic_query.song.adapter;
 
 import java.lang.reflect.InvocationTargetException;
 
+import care.smith.top.model.ConceptQuery;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 
 public abstract class TextAdapter {
@@ -42,5 +43,5 @@ public abstract class TextAdapter {
   }
 
   // generate and execute query
-  public abstract Documents execute(TextQuery query);
+  public abstract Documents execute(ConceptQuery query);
 }

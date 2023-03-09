@@ -1,7 +1,7 @@
 package care.smith.top.top_phenotypic_query.util;
 
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.Query;
+import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.search.SingleQueryMan;
 import care.smith.top.top_phenotypic_query.search.SubjectQueryMan;
@@ -9,7 +9,7 @@ import care.smith.top.top_phenotypic_query.search.SubjectQueryMan;
 public class Queries {
 
   public static QueryType getType(
-      Query query, Entities phenotypes, SubjectQueryMan sbjMan, SingleQueryMan sinMan) {
+      PhenotypeQuery query, Entities phenotypes, SubjectQueryMan sbjMan, SingleQueryMan sinMan) {
     boolean sic = false;
     boolean cicWithoutNegation = false;
 

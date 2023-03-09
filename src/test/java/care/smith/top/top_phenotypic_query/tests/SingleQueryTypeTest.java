@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.Query;
+import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
@@ -136,7 +136,7 @@ public class SingleQueryTypeTest {
 
   private static QueryType getType(Que q) {
     DataAdapter adapter = q.getAdapter();
-    Query query = q.getQuery();
+    PhenotypeQuery query = q.getQuery();
     DataAdapterConfig config = q.getConfig();
     Entities entities = q.getFinder().getPhenotypes();
 
