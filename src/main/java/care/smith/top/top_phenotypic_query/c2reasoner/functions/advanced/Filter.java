@@ -13,20 +13,23 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
+import care.smith.top.top_phenotypic_query.util.builder.DateTimeInterval;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import care.smith.top.top_phenotypic_query.util.builder.NumberInterval;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 
-public class Restrict extends FunctionEntity {
+public class Filter extends FunctionEntity {
 
-  private static Restrict INSTANCE = new Restrict();
+  private static Filter INSTANCE = new Filter();
 
-  private Restrict() {
-    super("restrict", NotationEnum.PREFIX, 2, 2);
+  private Filter() {
+    super("filter", NotationEnum.PREFIX, 3, 9);
   }
 
-  public static Restrict get() {
+  public static Filter get() {
     return INSTANCE;
   }
 
@@ -43,7 +46,23 @@ public class Restrict extends FunctionEntity {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = c2r.calculate(args);
     if (args == null) return null;
-    Exceptions.checkArgumentTypes(getFunction(), args.get(1), DataType.NUMBER, DataType.DATE_TIME);
+
+    for (int i = 1; i < args.size(); i++) {
+      if (i % 2 == 0)
+        Exceptions.checkArgumentTypes(
+            getFunction(), args.get(i), DataType.NUMBER, DataType.DATE_TIME);
+      else Exceptions.checkArgumentTypes(getFunction(), args.get(i), DataType.STRING);
+    }
+
+    NumberInterval ni = new NumberInterval();
+    DateTimeInterval di = new DateTimeInterval();
+
+    for (int i = 1; i < args.size(); i += 2) {
+      Expression oper = args.get(i);
+      Expression val = args.get(i + 1);
+      if (Expressions.hasNumberType(val)) ni.limit(oper, val);
+      if (Expressions.hasDateTimeType(val)) di.limit(oper, val);
+    }
 
     List<Value> vals = args.get(0).getValues();
     Restriction r = args.get(1).getRestriction();

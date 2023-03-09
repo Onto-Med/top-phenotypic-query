@@ -20,7 +20,7 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Li;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Restrict;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
@@ -86,7 +86,7 @@ public class C2RTest {
                 15));
 
     C2R c = new C2R();
-    Expression e = Restrict.of(vals, rest);
+    Expression e = Filter.of(vals, rest);
 
     assertEquals(
         List.of(BigDecimal.valueOf(5), BigDecimal.valueOf(10), BigDecimal.valueOf(8)),
@@ -108,7 +108,7 @@ public class C2RTest {
     vals.addValue("a", null, v4);
 
     Expression rest = Exp.of(Res.geLt(5, 15));
-    Phenotype p = new Phe("p").expression(Restrict.of(Exp.of(a), rest)).get();
+    Phenotype p = new Phe("p").expression(Filter.of(Exp.of(a), rest)).get();
 
     Entities phens = Entities.of(p, a);
 
@@ -137,7 +137,7 @@ public class C2RTest {
                 DateUtil.parse("2002-01-02")));
 
     C2R c = new C2R();
-    Expression e = Restrict.of(vals, rest);
+    Expression e = Filter.of(vals, rest);
 
     assertEquals(
         List.of(BigDecimal.valueOf(10), BigDecimal.valueOf(15)),
@@ -159,7 +159,7 @@ public class C2RTest {
     vals.addValue("a", null, v4);
 
     Expression rest = Exp.of(Res.geLt(DateUtil.parse("2001-01-01"), DateUtil.parse("2002-01-02")));
-    Phenotype p = new Phe("p").expression(Restrict.of(Exp.of(a), rest)).get();
+    Phenotype p = new Phe("p").expression(Filter.of(Exp.of(a), rest)).get();
 
     Entities phens = Entities.of(p, a);
 

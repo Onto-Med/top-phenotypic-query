@@ -76,18 +76,22 @@ public class Values {
   }
 
   public static String getStringValue(Value val) {
+    if (val == null) return null;
     return ((StringValue) val).getValue();
   }
 
   public static BigDecimal getNumberValue(Value val) {
+    if (val == null) return null;
     return ((NumberValue) val).getValue();
   }
 
   public static LocalDateTime getDateTimeValue(Value val) {
+    if (val == null) return null;
     return ((DateTimeValue) val).getValue();
   }
 
   public static Boolean getBooleanValue(Value val) {
+    if (val == null) return null;
     return ((BooleanValue) val).isValue();
   }
 
