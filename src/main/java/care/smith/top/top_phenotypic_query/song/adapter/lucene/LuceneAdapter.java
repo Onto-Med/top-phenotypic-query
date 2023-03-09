@@ -1,10 +1,9 @@
 package care.smith.top.top_phenotypic_query.song.adapter.lucene;
 
+import care.smith.top.model.ConceptQuery;
 import care.smith.top.top_phenotypic_query.song.adapter.Documents;
 import care.smith.top.top_phenotypic_query.song.adapter.TextAdapter;
 import care.smith.top.top_phenotypic_query.song.adapter.TextAdapterConfig;
-import care.smith.top.top_phenotypic_query.song.adapter.TextQuery;
-import care.smith.top.top_phenotypic_query.util.Expressions;
 
 public class LuceneAdapter extends TextAdapter {
 
@@ -17,8 +16,8 @@ public class LuceneAdapter extends TextAdapter {
   }
 
   @Override
-  public Documents execute(TextQuery query) {
-    String q = Expressions.getStringValue(LuceneSong.get().generate(query.getExpression()));
+  public Documents execute(ConceptQuery query) {
+    //    String q = Expressions.getStringValue(LuceneSong.get().generate(query.getExpression()));
     // execute query
     // return resulting documents
     return null;
