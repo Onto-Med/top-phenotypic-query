@@ -18,9 +18,9 @@ import care.smith.top.model.Quantifier;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Li;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
@@ -69,24 +69,16 @@ public class C2RTest {
   }
 
   @Test
-  public void testRestrict1() {
+  public void testFilter1() {
     Value v1 = Val.of(5, DateUtil.parse("2000-01-01"));
     Value v2 = Val.of(10, DateUtil.parse("2001-01-01"));
     Value v3 = Val.of(15, DateUtil.parse("2002-01-01"));
     Value v4 = Val.of(8, DateUtil.parse("2003-01-01"));
     Expression vals = Exp.of(v1, v2, v3, v4);
 
-    Expression rest =
-        Exp.of(
-            Res.of(
-                null,
-                RestrictionOperator.GREATER_THAN_OR_EQUAL_TO,
-                5,
-                RestrictionOperator.LESS_THAN,
-                15));
-
     C2R c = new C2R();
-    Expression e = Filter.of(vals, rest);
+    Expression e =
+        Filter.of(vals, Exp.ofConstant("ge"), Exp.of(5), Exp.ofConstant("lt"), Exp.of(15));
 
     assertEquals(
         List.of(BigDecimal.valueOf(5), BigDecimal.valueOf(10), BigDecimal.valueOf(8)),
@@ -94,7 +86,7 @@ public class C2RTest {
   }
 
   @Test
-  public void testRestrict1b() {
+  public void testFilter1b() {
     Value v1 = Val.of(5, DateUtil.parse("2000-01-01"));
     Value v2 = Val.of(10, DateUtil.parse("2001-01-01"));
     Value v3 = Val.of(15, DateUtil.parse("2002-01-01"));
@@ -107,8 +99,12 @@ public class C2RTest {
     vals.addValue("a", null, v3);
     vals.addValue("a", null, v4);
 
-    Expression rest = Exp.of(Res.geLt(5, 15));
-    Phenotype p = new Phe("p").expression(Filter.of(Exp.of(a), rest)).get();
+    Phenotype p =
+        new Phe("p")
+            .expression(
+                Filter.of(
+                    Exp.of(a), Exp.ofConstant("ge"), Exp.of(5), Exp.ofConstant("lt"), Exp.of(15)))
+            .get();
 
     Entities phens = Entities.of(p, a);
 
@@ -120,24 +116,21 @@ public class C2RTest {
   }
 
   @Test
-  public void testRestrict2() {
+  public void testFilter2() {
     Value v1 = Val.of(5, DateUtil.parse("2000-01-01"));
     Value v2 = Val.of(10, DateUtil.parse("2001-01-01"));
     Value v3 = Val.of(15, DateUtil.parse("2002-01-01"));
     Value v4 = Val.of(8, DateUtil.parse("2003-01-01"));
     Expression vals = Exp.of(v1, v2, v3, v4);
 
-    Expression rest =
-        Exp.of(
-            Res.of(
-                null,
-                RestrictionOperator.GREATER_THAN_OR_EQUAL_TO,
-                DateUtil.parse("2001-01-01"),
-                RestrictionOperator.LESS_THAN,
-                DateUtil.parse("2002-01-02")));
-
     C2R c = new C2R();
-    Expression e = Filter.of(vals, rest);
+    Expression e =
+        Filter.of(
+            vals,
+            Exp.ofConstant("ge"),
+            Exp.of(DateUtil.parse("2001-01-01")),
+            Exp.ofConstant("lt"),
+            Exp.of(DateUtil.parse("2002-01-02")));
 
     assertEquals(
         List.of(BigDecimal.valueOf(10), BigDecimal.valueOf(15)),
@@ -145,7 +138,7 @@ public class C2RTest {
   }
 
   @Test
-  public void testRestrict2b() {
+  public void testFilter2b() {
     Value v1 = Val.of(5, DateUtil.parse("2000-01-01"));
     Value v2 = Val.of(10, DateUtil.parse("2001-01-01"));
     Value v3 = Val.of(15, DateUtil.parse("2002-01-01"));
@@ -158,8 +151,16 @@ public class C2RTest {
     vals.addValue("a", null, v3);
     vals.addValue("a", null, v4);
 
-    Expression rest = Exp.of(Res.geLt(DateUtil.parse("2001-01-01"), DateUtil.parse("2002-01-02")));
-    Phenotype p = new Phe("p").expression(Filter.of(Exp.of(a), rest)).get();
+    Phenotype p =
+        new Phe("p")
+            .expression(
+                Filter.of(
+                    Exp.of(a),
+                    Exp.ofConstant("ge"),
+                    Exp.of(DateUtil.parse("2001-01-01")),
+                    Exp.ofConstant("lt"),
+                    Exp.of(DateUtil.parse("2002-01-02"))))
+            .get();
 
     Entities phens = Entities.of(p, a);
 
@@ -168,6 +169,42 @@ public class C2RTest {
     assertEquals(
         List.of(BigDecimal.valueOf(10), BigDecimal.valueOf(15)),
         Expressions.getNumberValues(c.calculate(p)));
+  }
+
+  @Test
+  public void testFilter3() {
+    Value v1 = Val.of(5, DateUtil.parse("2000-01-01"));
+    Value v2 = Val.of(10, DateUtil.parse("2001-01-01"));
+    Value v3 = Val.of(15, DateUtil.parse("2002-01-01"));
+    Value v4 = Val.of(8, DateUtil.parse("2003-01-01"));
+
+    Phenotype a = new Phe("a").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, v1);
+    vals.addValue("a", null, v2);
+    vals.addValue("a", null, v3);
+    vals.addValue("a", null, v4);
+
+    Phenotype p =
+        new Phe("p")
+            .expression(
+                Filter.of(
+                    Exp.of(a),
+                    Exp.ofConstant("ge"),
+                    Exp.of(DateUtil.parse("2001-01-01")),
+                    Exp.ofConstant("lt"),
+                    Exp.of(DateUtil.parse("2002-01-02")),
+                    Exp.ofConstant("gt"),
+                    Exp.of(9),
+                    Exp.ofConstant("le"),
+                    Exp.of(10)))
+            .get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(List.of(BigDecimal.valueOf(10)), Expressions.getNumberValues(c.calculate(p)));
   }
 
   @Test

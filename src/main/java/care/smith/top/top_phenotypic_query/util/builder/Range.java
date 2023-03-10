@@ -1,35 +1,32 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
-import java.util.List;
-
 import care.smith.top.model.Expression;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.RestrictionOperator;
-import care.smith.top.model.Value;
-import care.smith.top.top_phenotypic_query.util.Values;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 
-public class Interval {
+public class Range {
 
   protected RestrictionOperator minOperator;
   protected RestrictionOperator maxOperator;
   protected Integer cardinality;
   protected Quantifier quantifier;
 
-  protected Interval() {}
+  protected Range() {}
 
-  protected Interval(Quantifier quantifier) {
+  protected Range(Quantifier quantifier) {
     this.quantifier = quantifier;
   }
 
-  protected Interval(Quantifier quantifier, Integer cardinality) {
+  protected Range(Quantifier quantifier, Integer cardinality) {
     this.quantifier = quantifier;
     this.cardinality = cardinality;
   }
 
   protected RestrictionOperator getOperator(Expression exp) {
     if (exp == null) return null;
-    List<Value> vals = exp.getValues();
-    if (vals == null || vals.isEmpty()) return null;
-    return RestrictionOperator.valueOf(Values.getStringValue(vals.get(0)));
+    String val = Expressions.getStringValue(exp);
+    if (val == null) return null;
+    return RestrictionOperator.fromValue(val);
   }
 }

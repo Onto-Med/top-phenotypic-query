@@ -7,25 +7,25 @@ import care.smith.top.model.StringConstant;
 import care.smith.top.model.StringValue;
 import care.smith.top.model.Value;
 
-public class Gt extends ConstantEntity {
+public class GeC extends ConstantEntity {
 
-  private static final Gt INSTANCE = new Gt();
+  private static final GeC INSTANCE = new GeC();
 
-  private Gt() {
+  private GeC() {
     super(createConstant(), createValue());
   }
 
   private static Constant createConstant() {
-    return new StringConstant().id("gt").title(">").dataType(DataType.STRING);
+    return new StringConstant().id("ge").title(">=").dataType(DataType.STRING);
   }
 
   private static Value createValue() {
     return new StringValue()
-        .value(RestrictionOperator.GREATER_THAN.getValue())
+        .value(RestrictionOperator.GREATER_THAN_OR_EQUAL_TO.getValue())
         .dataType(DataType.STRING);
   }
 
-  public static Gt get() {
+  public static GeC get() {
     return INSTANCE;
   }
 }

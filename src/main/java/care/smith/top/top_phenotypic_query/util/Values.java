@@ -32,6 +32,7 @@ public class Values {
       };
 
   public static BigDecimal toDecimal(Number num) {
+    if (num == null) return null;
     return new BigDecimal(num.toString());
   }
 

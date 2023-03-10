@@ -7,11 +7,11 @@ import care.smith.top.model.StringConstant;
 import care.smith.top.model.StringValue;
 import care.smith.top.model.Value;
 
-public class Lt extends ConstantEntity {
+public class LtC extends ConstantEntity {
 
-  private static final Lt INSTANCE = new Lt();
+  private static final LtC INSTANCE = new LtC();
 
-  private Lt() {
+  private LtC() {
     super(createConstant(), createValue());
   }
 
@@ -25,7 +25,7 @@ public class Lt extends ConstantEntity {
         .dataType(DataType.STRING);
   }
 
-  public static Lt get() {
+  public static LtC get() {
     return INSTANCE;
   }
 }
