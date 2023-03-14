@@ -4,6 +4,7 @@ import java.util.List;
 
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
@@ -28,6 +29,10 @@ public class Empty extends FunctionEntity {
 
   public static Expression of(Expression... args) {
     return of(List.of(args));
+  }
+
+  public static Expression of(Phenotype... args) {
+    return of(Exp.toList(args));
   }
 
   @Override

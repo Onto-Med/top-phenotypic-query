@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.result;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -127,6 +129,48 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
     PhenotypeValues values = getValues(subjectId, phenotypeName);
     if (values == null) return null;
     return values.getValues(dateRange);
+  }
+
+  public List<BigDecimal> getNumberValues(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
+    List<Value> vals = getValues(subjectId, phenotypeName, dateRange);
+    if (vals == null || vals.isEmpty()) return new ArrayList<>();
+    return Values.getNumberValues(vals);
+  }
+
+  public List<Boolean> getBooleanValues(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
+    List<Value> vals = getValues(subjectId, phenotypeName, dateRange);
+    if (vals == null || vals.isEmpty()) return new ArrayList<>();
+    return Values.getBooleanValues(vals);
+  }
+
+  public List<String> getStringValues(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
+    List<Value> vals = getValues(subjectId, phenotypeName, dateRange);
+    if (vals == null || vals.isEmpty()) return new ArrayList<>();
+    return Values.getStringValues(vals);
+  }
+
+  public BigDecimal getNumberValue(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
+    List<BigDecimal> vals = getNumberValues(subjectId, phenotypeName, dateRange);
+    if (vals.isEmpty()) return null;
+    return vals.get(0);
+  }
+
+  public Boolean getBooleanValue(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
+    List<Boolean> vals = getBooleanValues(subjectId, phenotypeName, dateRange);
+    if (vals.isEmpty()) return null;
+    return vals.get(0);
+  }
+
+  public String getStringValue(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
+    List<String> vals = getStringValues(subjectId, phenotypeName, dateRange);
+    if (vals.isEmpty()) return null;
+    return vals.get(0);
   }
 
   public ResultSet intersect(ResultSet rs2) {

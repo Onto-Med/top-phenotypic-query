@@ -188,7 +188,7 @@ public class C2R {
   }
 
   public C2R defaultAggregateFunction(FunctionEntity defaultAggregateFunction) {
-    this.defaultAggregateFunction = defaultAggregateFunction;
+    if (defaultAggregateFunction != null) this.defaultAggregateFunction = defaultAggregateFunction;
     return this;
   }
 
