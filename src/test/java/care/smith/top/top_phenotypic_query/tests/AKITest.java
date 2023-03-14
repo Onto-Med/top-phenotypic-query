@@ -148,13 +148,15 @@ public class AKITest extends DelirTest {
   //  private static Phenotype exist48 =
   //      new Phe("exist48").expression(Not.of(Empty.of(furtherCreaVals48))).get();
 
-  private static Phenotype rv1 = new Phe("rv1").expression(Min.of(furtherCreaVals0_7)).get();
-  private static Phenotype rv2 = new Phe("rv2").expression(Median.of(furtherCreaVals8_365)).get();
+  private static Phenotype rv =
+      new Phe("rv")
+          .expression(
+              If.of(Exp.of(exist0_7), Min.of(furtherCreaVals0_7), Median.of(furtherCreaVals8_365)))
+          .get();
 
-  private static Phenotype rv1Or2 = new Phe("rv1Or2").expression(If.of(exist0_7, rv1, rv2)).get();
-
-  private static Phenotype rv = new Phe("rv").expression(Divide.of(crea, rv1Or2)).get();
-  private static Phenotype rvGt1_5 = new Phe("rvGt1_5").restriction(rv, Res.gt(1.5)).get();
+  private static Phenotype rvRatio = new Phe("rvRatio").expression(Divide.of(crea, rv)).get();
+  private static Phenotype rvRatioGt1_5 =
+      new Phe("rvRatioGt1_5").restriction(rvRatio, Res.gt(1.5)).get();
 
   //  private static Phenotype dif48 =
   //      new Phe("dif48").expression(Subtract.of(Exp.of(crea), Min.of(furtherCreaVals48))).get();
@@ -171,11 +173,9 @@ public class AKITest extends DelirTest {
     furtherCreaVals0_7,
     furtherCreaVals8_365,
     exist0_7,
-    rv1,
-    rv2,
-    rv1Or2,
     rv,
-    rvGt1_5
+    rvRatio,
+    rvRatioGt1_5
   };
 
   @Test
@@ -183,18 +183,18 @@ public class AKITest extends DelirTest {
     DateTimeRestriction dtr =
         Res.geLe(
             LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minusDays(365), LocalDateTime.now());
-    ResultSet rs = new Que(CONFIG, entities).inc(countGt1, dtr).inc(rvGt1_5, dtr).execute();
+    ResultSet rs = new Que(CONFIG, entities).inc(countGt1, dtr).inc(rvRatioGt1_5, dtr).execute();
 
     System.out.println(rs);
 
     assertEquals(Set.of("1", "2"), rs.getSubjectIds());
 
-    assertEquals(BigDecimal.valueOf(90), rs.getNumberValue("1", "rv1Or2", dtr));
-    assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("1", "rv", dtr));
-    assertTrue(rs.getBooleanValue("1", "rvGt1_5", dtr));
+    assertEquals(BigDecimal.valueOf(90), rs.getNumberValue("1", "rv", dtr));
+    assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("1", "rvRatio", dtr));
+    assertTrue(rs.getBooleanValue("1", "rvRatioGt1_5", dtr));
 
-    assertEquals(BigDecimal.valueOf(60), rs.getNumberValue("2", "rv1Or2", dtr));
-    assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("2", "rv", dtr));
-    assertTrue(rs.getBooleanValue("2", "rvGt1_5", dtr));
+    assertEquals(BigDecimal.valueOf(60), rs.getNumberValue("2", "rv", dtr));
+    assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("2", "rvRatio", dtr));
+    assertTrue(rs.getBooleanValue("2", "rvRatioGt1_5", dtr));
   }
 }
