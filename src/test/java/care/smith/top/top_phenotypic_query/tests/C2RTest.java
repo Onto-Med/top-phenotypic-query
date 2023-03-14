@@ -29,6 +29,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutLas
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Last;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Median;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Min;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Add;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
@@ -92,6 +93,32 @@ public class C2RTest {
 
     assertEquals(List.of(BigDecimal.valueOf(1)), Expressions.getNumberValues(c.calculate(c1)));
     assertEquals(List.of(BigDecimal.valueOf(2)), Expressions.getNumberValues(c.calculate(c2)));
+  }
+
+  @Test
+  public void testMedian() {
+    Phenotype a = new Phe("a").number().get();
+    Phenotype b = new Phe("b").number().get();
+    Phenotype c1 = new Phe("c1").expression(Median.of(a)).get();
+    Phenotype c2 = new Phe("c2").expression(Median.of(b)).get();
+
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, Val.of(5));
+    vals.addValue("a", null, Val.of(3));
+    vals.addValue("a", null, Val.of(2));
+    vals.addValue("a", null, Val.of(4));
+    vals.addValue("b", null, Val.of(5));
+    vals.addValue("b", null, Val.of(3));
+    vals.addValue("b", null, Val.of(2));
+    vals.addValue("b", null, Val.of(4));
+    vals.addValue("b", null, Val.of(1));
+
+    Entities phens = Entities.of(a, b, c1, c2);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(List.of(BigDecimal.valueOf(3.5)), Expressions.getNumberValues(c.calculate(c1)));
+    assertEquals(List.of(BigDecimal.valueOf(3)), Expressions.getNumberValues(c.calculate(c2)));
   }
 
   @Test

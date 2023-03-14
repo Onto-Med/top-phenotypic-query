@@ -1,24 +1,28 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
-public class Count extends FunctionEntity {
+public class Median extends FunctionEntity {
 
-  private static final Count INSTANCE = new Count();
+  private static final Median INSTANCE = new Median();
 
-  private Count() {
-    super("count", NotationEnum.PREFIX, 1, 1);
+  private Median() {
+    super("median", NotationEnum.PREFIX);
+    minArgumentNumber(1);
   }
 
-  public static Count get() {
+  public static Median get() {
     return INSTANCE;
   }
 
@@ -37,8 +41,15 @@ public class Count extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    Expression arg = c2r.calculate(args.get(0));
-    if (arg == null || arg.getValues() == null) return Exp.of(0);
-    return Exp.of(arg.getValues().size());
+    args = c2r.calculate(args);
+    if (args == null) return null;
+    Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
+    args = Aggregator.aggregateIfMultiple(args, c2r);
+    args = args.stream().sorted(Values.VALUE_COMPARATOR).collect(Collectors.toList());
+
+    int size = args.size();
+    if (size % 2 == 0)
+      return Avg.get().calculate(List.of(args.get(size / 2 - 1), args.get(size / 2)), c2r);
+    else return args.get(size / 2);
   }
 }
