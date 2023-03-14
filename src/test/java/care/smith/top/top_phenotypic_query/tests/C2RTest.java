@@ -19,6 +19,7 @@ import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Filter;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Li;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
@@ -68,6 +69,29 @@ public class C2RTest {
 
     assertEquals(Exp.of(v1, v3), new C2R().calculate(li));
     assertEquals(Exp.of(4, 8), new C2R().defaultAggregateFunction(Avg.get()).calculate(li));
+  }
+
+  @Test
+  public void testIf() {
+    Phenotype t = new Phe("t").bool().get();
+    Phenotype f = new Phe("f").bool().get();
+    Phenotype x = new Phe("x").number().get();
+    Phenotype y = new Phe("y").number().get();
+    Phenotype c1 = new Phe("c1").expression(If.of(t, x, y)).get();
+    Phenotype c2 = new Phe("c2").expression(If.of(f, x, y)).get();
+
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("t", null, Val.ofTrue());
+    vals.addValue("f", null, Val.ofFalse());
+    vals.addValue("x", null, Val.of(1));
+    vals.addValue("y", null, Val.of(2));
+
+    Entities phens = Entities.of(t, f, x, y, c1, c2);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(List.of(BigDecimal.valueOf(1)), Expressions.getNumberValues(c.calculate(c1)));
+    assertEquals(List.of(BigDecimal.valueOf(2)), Expressions.getNumberValues(c.calculate(c2)));
   }
 
   @Test
