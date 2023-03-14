@@ -23,6 +23,8 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Li;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutFirst;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutLast;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Last;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
@@ -66,6 +68,60 @@ public class C2RTest {
 
     assertEquals(Exp.of(v1, v3), new C2R().calculate(li));
     assertEquals(Exp.of(4, 8), new C2R().defaultAggregateFunction(Avg.get()).calculate(li));
+  }
+
+  @Test
+  public void testFirst() {
+    Value v1 = Val.of(3, DateUtil.parse("2002-01-01"));
+    Value v2 = Val.of(5, DateUtil.parse("2001-01-01"));
+    Value v3 = Val.of(7, DateUtil.parse("2004-01-01"));
+    Value v4 = Val.of(9, DateUtil.parse("2003-01-01"));
+
+    Phenotype a = new Phe("a").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, v1);
+    vals.addValue("a", null, v2);
+    vals.addValue("a", null, v3);
+    vals.addValue("a", null, v4);
+
+    Phenotype x = new Phe("x").expression(First.of(a)).get();
+    Phenotype y = new Phe("y").expression(CutFirst.of(a)).get();
+
+    Entities phens = Entities.of(a, x, y);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(List.of(BigDecimal.valueOf(5)), Expressions.getNumberValues(c.calculate(x)));
+    assertEquals(
+        List.of(BigDecimal.valueOf(3), BigDecimal.valueOf(9), BigDecimal.valueOf(7)),
+        Expressions.getNumberValues(c.calculate(y)));
+  }
+
+  @Test
+  public void testLast() {
+    Value v1 = Val.of(3, DateUtil.parse("2002-01-01"));
+    Value v2 = Val.of(5, DateUtil.parse("2001-01-01"));
+    Value v3 = Val.of(7, DateUtil.parse("2004-01-01"));
+    Value v4 = Val.of(9, DateUtil.parse("2003-01-01"));
+
+    Phenotype a = new Phe("a").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, v1);
+    vals.addValue("a", null, v2);
+    vals.addValue("a", null, v3);
+    vals.addValue("a", null, v4);
+
+    Phenotype x = new Phe("x").expression(Last.of(a)).get();
+    Phenotype y = new Phe("y").expression(CutLast.of(a)).get();
+
+    Entities phens = Entities.of(a, x, y);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(List.of(BigDecimal.valueOf(7)), Expressions.getNumberValues(c.calculate(x)));
+    assertEquals(
+        List.of(BigDecimal.valueOf(5), BigDecimal.valueOf(3), BigDecimal.valueOf(9)),
+        Expressions.getNumberValues(c.calculate(y)));
   }
 
   @Test

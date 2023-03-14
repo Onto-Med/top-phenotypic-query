@@ -37,6 +37,8 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Li;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Count;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutFirst;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutLast;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Last;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
@@ -112,7 +114,9 @@ public class C2R {
     addFunction(Avg.get());
     addFunction(Count.get());
     addFunction(First.get());
+    addFunction(CutFirst.get());
     addFunction(Last.get());
+    addFunction(CutLast.get());
     addFunction(Min.get());
     addFunction(Max.get());
     addFunction(Date.get());

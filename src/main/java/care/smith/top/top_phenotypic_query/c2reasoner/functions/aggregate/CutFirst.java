@@ -6,22 +6,24 @@ import java.util.stream.Collectors;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
-public class Last extends FunctionEntity {
+public class CutFirst extends FunctionEntity {
 
-  private static final Last INSTANCE = new Last();
+  private static final CutFirst INSTANCE = new CutFirst();
 
-  private Last() {
-    super("last", NotationEnum.PREFIX);
+  private CutFirst() {
+    super("cutFirst", NotationEnum.PREFIX);
     minArgumentNumber(1);
   }
 
-  public static Last get() {
+  public static CutFirst get() {
     return INSTANCE;
   }
 
@@ -43,7 +45,12 @@ public class Last extends FunctionEntity {
     args = c2r.calculate(args);
     if (args == null) return null;
     args = Aggregator.aggregateIfMultiple(args, c2r);
-    args = args.stream().sorted(Values.VALUE_DATE_COMPARATOR).collect(Collectors.toList());
-    return args.get(args.size() - 1);
+    List<Value> vals =
+        args.stream()
+            .sorted(Values.VALUE_DATE_COMPARATOR)
+            .skip(1)
+            .map(e -> Expressions.getValue(e))
+            .collect(Collectors.toList());
+    return Exp.of(vals);
   }
 }
