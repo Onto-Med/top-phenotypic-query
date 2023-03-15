@@ -19,6 +19,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Count;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutLast;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Median;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Min;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
@@ -108,24 +109,23 @@ public class AKITest extends DelirTest {
   //          .expression(Or.of(And.of(male, creaLtRIm), And.of(female, creaLtRIf)))
   //          .get();
 
-  private static Phenotype furtherCreaVals =
-      new Phe("furtherCreaVals").expression(CutLast.of(crea)).get();
+  private static Phenotype refCrea = new Phe("refCrea").expression(CutLast.of(crea)).get();
 
-  private static Phenotype furtherCreaVals0_7 =
-      new Phe("furtherCreaVals0_7")
+  private static Phenotype refCrea0_7 =
+      new Phe("refCrea0_7")
           .expression(
               Filter.of(
-                  Exp.of(furtherCreaVals),
+                  Exp.of(refCrea),
                   Exp.ofConstant("ge"),
                   PlusDays.of(Exp.ofConstant("today"), Exp.of(-7)),
                   Exp.ofConstant("lt"),
                   Exp.ofConstant("now")))
           .get();
-  private static Phenotype furtherCreaVals8_365 =
-      new Phe("furtherCreaVals8_365")
+  private static Phenotype refCrea8_365 =
+      new Phe("refCrea8_365")
           .expression(
               Filter.of(
-                  Exp.of(furtherCreaVals),
+                  Exp.of(refCrea),
                   Exp.ofConstant("ge"),
                   PlusDays.of(Exp.ofConstant("today"), Exp.of(-365)),
                   Exp.ofConstant("lt"),
@@ -143,18 +143,27 @@ public class AKITest extends DelirTest {
   //          .get();
 
   private static Phenotype exist0_7 =
-      new Phe("exist0_7").expression(Not.of(Empty.of(furtherCreaVals0_7))).get();
+      new Phe("exist0_7").expression(Not.of(Empty.of(refCrea0_7))).get();
+  private static Phenotype exist8_365 =
+      new Phe("exist8_365").expression(Not.of(Empty.of(refCrea8_365))).get();
+
+  private static Phenotype rvRatio0_7 =
+      new Phe("rvRatio0_7")
+          .expression(
+              If.of(Exp.of(exist0_7), Divide.of(Exp.of(crea), Min.of(refCrea0_7)), Exp.of(-1)))
+          .get();
+  private static Phenotype rvRatio8_365 =
+      new Phe("rvRatio8_365")
+          .expression(
+              If.of(
+                  Exp.of(exist8_365), Divide.of(Exp.of(crea), Median.of(refCrea8_365)), Exp.of(-1)))
+          .get();
 
   //  private static Phenotype exist48 =
   //      new Phe("exist48").expression(Not.of(Empty.of(furtherCreaVals48))).get();
 
-  private static Phenotype rv =
-      new Phe("rv")
-          .expression(
-              If.of(Exp.of(exist0_7), Min.of(furtherCreaVals0_7), Median.of(furtherCreaVals8_365)))
-          .get();
-
-  private static Phenotype rvRatio = new Phe("rvRatio").expression(Divide.of(crea, rv)).get();
+  private static Phenotype rvRatio =
+      new Phe("rvRatio").expression(Max.of(rvRatio0_7, rvRatio8_365)).get();
   private static Phenotype rvRatioGt1_5 =
       new Phe("rvRatioGt1_5").restriction(rvRatio, Res.gt(1.5)).get();
 
@@ -169,11 +178,13 @@ public class AKITest extends DelirTest {
     crea,
     count,
     countGt1,
-    furtherCreaVals,
-    furtherCreaVals0_7,
-    furtherCreaVals8_365,
+    refCrea,
+    refCrea0_7,
+    refCrea8_365,
     exist0_7,
-    rv,
+    exist8_365,
+    rvRatio0_7,
+    rvRatio8_365,
     rvRatio,
     rvRatioGt1_5
   };
@@ -187,14 +198,21 @@ public class AKITest extends DelirTest {
 
     System.out.println(rs);
 
-    assertEquals(Set.of("1", "2"), rs.getSubjectIds());
+    assertEquals(Set.of("1", "2", "5"), rs.getSubjectIds());
 
-    assertEquals(BigDecimal.valueOf(90), rs.getNumberValue("1", "rv", dtr));
+    assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("1", "rvRatio0_7", dtr));
+    assertEquals(BigDecimal.valueOf(-1), rs.getNumberValue("1", "rvRatio8_365", dtr));
     assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("1", "rvRatio", dtr));
     assertTrue(rs.getBooleanValue("1", "rvRatioGt1_5", dtr));
 
-    assertEquals(BigDecimal.valueOf(60), rs.getNumberValue("2", "rv", dtr));
+    assertEquals(BigDecimal.valueOf(-1), rs.getNumberValue("2", "rvRatio0_7", dtr));
+    assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("2", "rvRatio8_365", dtr));
     assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("2", "rvRatio", dtr));
     assertTrue(rs.getBooleanValue("2", "rvRatioGt1_5", dtr));
+
+    assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("5", "rvRatio0_7", dtr));
+    assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("5", "rvRatio8_365", dtr));
+    assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("5", "rvRatio", dtr));
+    assertTrue(rs.getBooleanValue("5", "rvRatioGt1_5", dtr));
   }
 }
