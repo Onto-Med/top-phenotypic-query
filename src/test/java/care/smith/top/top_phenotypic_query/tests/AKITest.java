@@ -14,6 +14,7 @@ import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Entity;
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Empty;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
@@ -25,6 +26,13 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Min;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusDays;
+import care.smith.top.top_phenotypic_query.h2.DB;
+import care.smith.top.top_phenotypic_query.h2.FKField;
+import care.smith.top.top_phenotypic_query.h2.NumberField;
+import care.smith.top.top_phenotypic_query.h2.PKField;
+import care.smith.top.top_phenotypic_query.h2.Table;
+import care.smith.top.top_phenotypic_query.h2.TextField;
+import care.smith.top.top_phenotypic_query.h2.TimeField;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
@@ -194,7 +202,11 @@ public class AKITest extends DelirTest {
     DateTimeRestriction dtr =
         Res.geLe(
             LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minusDays(365), LocalDateTime.now());
-    ResultSet rs = new Que(CONFIG, entities).inc(countGt1, dtr).inc(rvRatioGt1_5, dtr).execute();
+    Que q = new Que(CONFIG, entities).inc(countGt1, dtr).inc(rvRatioGt1_5, dtr);
+
+    generateData(q.getConfig());
+
+    ResultSet rs = q.execute();
 
     System.out.println(rs);
 
@@ -214,5 +226,28 @@ public class AKITest extends DelirTest {
     assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("5", "rvRatio8_365", dtr));
     assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("5", "rvRatio", dtr));
     assertTrue(rs.getBooleanValue("5", "rvRatioGt1_5", dtr));
+  }
+
+  void generateData(DataAdapterConfig config) {
+    PKField sbjId = new PKField("subject_id");
+    TimeField bd = new TimeField("birth_date");
+    TextField sex = (TextField) new TextField("sex").notNull();
+
+    Table subject = new Table("subject", sbjId, bd, sex).values(sbjId.value(1));
+
+    PKField assmId = new PKField("assessment_id");
+    FKField sbjIdFk = new FKField("subject_id", subject);
+    TimeField time = new TimeField("created_at");
+    NumberField crea = new NumberField("crea");
+
+    Table assessment1 = new Table("assessment1", assmId, sbjIdFk, time, crea);
+
+    //            .values("1", "'2023-03-12T12:43:00'", "180")
+    //            .values("1", "'2023-03-11T12:43:00'", "100")
+    //            .values("1", "'2023-03-10T12:43:00'", "90");
+
+    DB db = new DB(config);
+    db.execute(subject);
+    db.execute(assessment1);
   }
 }
