@@ -64,13 +64,18 @@ public class Filter extends FunctionEntity {
     }
 
     List<Value> vals = args.get(0).getValues();
-    if (nr.isPresent()) vals = filterNumber(vals, Restrictions.getInterval(nr.get()));
-    if (dr.isPresent()) vals = filterDate(vals, Restrictions.getInterval(dr.get()));
+
+    if (Expressions.hasDateTimeType(args.get(0))) {
+      if (dr.isPresent()) vals = filterValue(vals, Restrictions.getInterval(dr.get()));
+    } else {
+      if (nr.isPresent()) vals = filterValue(vals, Restrictions.getInterval(nr.get()));
+      if (dr.isPresent()) vals = filterDate(vals, Restrictions.getInterval(dr.get()));
+    }
 
     return Exp.of(vals);
   }
 
-  private List<Value> filterNumber(List<Value> vals, Map<RestrictionOperator, Value> inter) {
+  private List<Value> filterValue(List<Value> vals, Map<RestrictionOperator, Value> inter) {
     return vals.stream().filter(v -> Values.contains(inter, v)).collect(Collectors.toList());
   }
 

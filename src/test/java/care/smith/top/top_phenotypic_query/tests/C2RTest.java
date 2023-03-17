@@ -279,6 +279,40 @@ public class C2RTest {
   }
 
   @Test
+  public void testFilter2c() {
+    Value v1 = Val.of(DateUtil.parse("2001-01-03"), DateUtil.parse("2000-01-02"));
+    Value v2 = Val.of(DateUtil.parse("2000-01-03"), DateUtil.parse("2001-01-02"));
+    Value v3 = Val.of(DateUtil.parse("2003-01-03"), DateUtil.parse("2002-01-02"));
+    Value v4 = Val.of(DateUtil.parse("2002-01-03"), DateUtil.parse("2003-01-02"));
+
+    Phenotype a = new Phe("a").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, v1);
+    vals.addValue("a", null, v2);
+    vals.addValue("a", null, v3);
+    vals.addValue("a", null, v4);
+
+    Phenotype p =
+        new Phe("p")
+            .expression(
+                Filter.of(
+                    Exp.of(a),
+                    Exp.ofConstant("ge"),
+                    Exp.of(DateUtil.parse("2001-01-01")),
+                    Exp.ofConstant("le"),
+                    Exp.of(DateUtil.parse("2002-01-04"))))
+            .get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        List.of(DateUtil.parse("2001-01-03"), DateUtil.parse("2002-01-03")),
+        Expressions.getDateTimeValues(c.calculate(p)));
+  }
+
+  @Test
   public void testFilter3() {
     Value v1 = Val.of(5, DateUtil.parse("2000-01-01"));
     Value v2 = Val.of(10, DateUtil.parse("2001-01-01"));
