@@ -1,5 +1,13 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
@@ -16,6 +24,8 @@ public class Que {
   private DataAdapterConfig config;
   private Query query = new Query();
   private Entity[] entities;
+
+  private Logger log = LoggerFactory.getLogger(Que.class);
 
   public Que(String configFilePath, Entity... entities) throws InstantiationException {
     this.config = getConfig(configFilePath);
@@ -96,5 +106,25 @@ public class Que {
     ResultSet rs = pf.execute();
     adapter.close();
     return rs;
+  }
+
+  public Que executeSql(String... statements) {
+    try {
+      Connection con =
+          DriverManager.getConnection(
+              config.getConnectionAttribute("url"),
+              config.getConnectionAttribute("user"),
+              config.getConnectionAttribute("password"));
+      for (String sql : statements) {
+        log.debug("execute sql statement:{}{}", System.lineSeparator(), sql);
+        Statement stmt = con.createStatement();
+        stmt.execute(sql);
+        stmt.close();
+      }
+      con.close();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return this;
   }
 }
