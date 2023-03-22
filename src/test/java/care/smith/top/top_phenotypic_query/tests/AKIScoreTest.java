@@ -17,13 +17,18 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Empty;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Count;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutLast;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Median;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Min;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Subtract;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Or;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Gt;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusDays;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
@@ -32,7 +37,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 
-public class AKITest {
+public class AKIScoreTest {
 
   private static final String CONFIG = "config/AKI_SQL_Adapter.yml";
 
@@ -43,14 +48,61 @@ public class AKITest {
           .number("mmol/L")
           .get();
 
-  private static Phenotype count =
-      new Phe("count").titleEn("Creatinine values count").expression(Count.of(crea)).get();
+  private static Phenotype creaMan = new Phe("creaMan").restriction(crea, Res.geLe(68, 133)).get();
+  private static Phenotype creaManMin = new Phe("creaManMin").restriction(crea, Res.lt(68)).get();
 
-  private static Phenotype countGt1 =
-      new Phe("countGt1")
-          .titleEn("Creatinine values count > 1")
-          .restriction(count, Res.gt(1))
+  private static Phenotype creaWoman =
+      new Phe("creaWoman").restriction(crea, Res.geLe(53, 97)).get();
+  private static Phenotype creaWomanMin =
+      new Phe("creaWomanMin").restriction(crea, Res.lt(53)).get();
+
+  private static Phenotype creaChild =
+      new Phe("creaChild").restriction(crea, Res.geLe(35, 124)).get();
+  private static Phenotype creaChildMin =
+      new Phe("creaChildMin").restriction(crea, Res.lt(35)).get();
+
+  private static Phenotype creaChildGtX3ULRI =
+      new Phe("creaChildGtX3ULRI").restriction(crea, Res.gt(372)).get();
+
+  private static Phenotype creaOldGt354 =
+      new Phe("creaOldGt354").restriction(crea, Res.gt(354)).get();
+
+  private static Phenotype age = new Phe("age", "http://loinc.org", "30525-0").get();
+  private static Phenotype young = new Phe("young").restriction(age, Res.lt(18)).get();
+  private static Phenotype old = new Phe("old").restriction(age, Res.ge(18)).get();
+
+  private static Phenotype sex = new Phe("sex", "http://loinc.org", "46098-0").string().get();
+  private static Phenotype female = new Phe("female").restriction(sex, Res.of("female")).get();
+  private static Phenotype male = new Phe("male").restriction(sex, Res.of("male")).get();
+
+  private static Phenotype ltRI =
+      new Phe("ltRI")
+          .expression(
+              Or.of(
+                  And.of(old, female, creaWomanMin),
+                  And.of(old, male, creaManMin),
+                  And.of(young, creaChildMin)))
           .get();
+
+  private static Phenotype withinRI =
+      new Phe("withinRI")
+          .expression(
+              Or.of(
+                  And.of(old, female, creaWoman),
+                  And.of(old, male, creaMan),
+                  And.of(young, creaChild)))
+          .get();
+
+  private static Phenotype scoreRI =
+      new Phe("scoreRI")
+          .expression(
+              Switch.of(
+                  Exp.of(ltRI), Exp.of("low"), Exp.of(withinRI), Exp.of("ok"), Exp.of("high")))
+          .get();
+
+  private static Phenotype count = new Phe("count").expression(Count.of(crea)).get();
+  private static Phenotype countEq1 = new Phe("countEq1").restriction(count, Res.of(1)).get();
+  private static Phenotype countGt0 = new Phe("countGt0").restriction(count, Res.gt(0)).get();
 
   private static Phenotype refCrea = new Phe("refCrea").expression(CutLast.of(crea)).get();
 
@@ -64,6 +116,7 @@ public class AKITest {
                   Exp.ofConstant("lt"),
                   Exp.ofConstant("now")))
           .get();
+
   private static Phenotype refCrea8_365 =
       new Phe("refCrea8_365")
           .expression(
@@ -77,6 +130,7 @@ public class AKITest {
 
   private static Phenotype exist0_7 =
       new Phe("exist0_7").expression(Not.of(Empty.of(refCrea0_7))).get();
+
   private static Phenotype exist8_365 =
       new Phe("exist8_365").expression(Not.of(Empty.of(refCrea8_365))).get();
 
@@ -85,6 +139,7 @@ public class AKITest {
           .expression(
               If.of(Exp.of(exist0_7), Divide.of(Exp.of(crea), Min.of(refCrea0_7)), Exp.of(-1)))
           .get();
+
   private static Phenotype rvRatio8_365 =
       new Phe("rvRatio8_365")
           .expression(
@@ -96,11 +151,95 @@ public class AKITest {
       new Phe("rvRatio").expression(Max.of(rvRatio0_7, rvRatio8_365)).get();
   private static Phenotype rvRatioGe1_5 =
       new Phe("rvRatioGe1_5").restriction(rvRatio, Res.ge(1.5)).get();
+  private static Phenotype rvRatioGe1_5Lt2 =
+      new Phe("rvRatioGe1_5Lt2").restriction(rvRatio, Res.geLt(1.5, 2)).get();
+  private static Phenotype rvRatioGe2Lt3 =
+      new Phe("rvRatioGe2Lt3").restriction(rvRatio, Res.geLt(2, 3)).get();
+  private static Phenotype rvRatioGe3 = new Phe("rvRatioGe3").restriction(rvRatio, Res.ge(3)).get();
+
+  private static Phenotype refCrea48 =
+      new Phe("refCrea48")
+          .expression(
+              Filter.of(
+                  Exp.of(refCrea),
+                  Exp.ofConstant("ge"),
+                  PlusDays.of(Exp.ofConstant("now"), Exp.of(-2)),
+                  Exp.ofConstant("lt"),
+                  Exp.ofConstant("now")))
+          .get();
+
+  private static Phenotype exist48 =
+      new Phe("exist48").expression(Not.of(Empty.of(refCrea48))).get();
+
+  private static Phenotype min48 = new Phe("min48").expression(Min.of(refCrea48)).get();
+
+  private static Phenotype changed48 =
+      new Phe("changed48").expression(And.of(Exp.of(exist48), Gt.of(crea, min48))).get();
+
+  private static Phenotype diff48 = new Phe("diff48").expression(Subtract.of(crea, min48)).get();
+  private static Phenotype diff48Le26 = new Phe("diff48Le26").restriction(diff48, Res.le(26)).get();
+
+  private static Phenotype scoreRvRatioLt1_5 =
+      new Phe("scoreRvRatioLt1_5")
+          .expression(
+              Switch.of(
+                  Not.of(changed48),
+                  Exp.of("repeat"),
+                  Exp.of(diff48Le26),
+                  Exp.of("no alert"),
+                  Exp.of("alert 1")))
+          .get();
+
+  private static Phenotype scoreRvRatioGe1_5 =
+      new Phe("scoreRvRatioGe1_5")
+          .expression(
+              Switch.of(
+                  And.of(young, creaChildGtX3ULRI),
+                  Exp.of("alert 3"),
+                  And.of(old, creaOldGt354),
+                  Exp.of("alert 3"),
+                  And.of(Exp.of(young), Not.of(creaChildGtX3ULRI), Exp.of(rvRatioGe3)),
+                  Exp.of("alert 3"),
+                  And.of(Exp.of(old), Not.of(creaOldGt354), Exp.of(rvRatioGe3)),
+                  Exp.of("alert 3"),
+                  And.of(Exp.of(young), Not.of(creaChildGtX3ULRI), Exp.of(rvRatioGe2Lt3)),
+                  Exp.of("alert 2"),
+                  And.of(Exp.of(old), Not.of(creaOldGt354), Exp.of(rvRatioGe2Lt3)),
+                  Exp.of("alert 2"),
+                  And.of(Exp.of(young), Not.of(creaChildGtX3ULRI), Exp.of(rvRatioGe1_5Lt2)),
+                  Exp.of("alert 1"),
+                  And.of(Exp.of(old), Not.of(creaOldGt354), Exp.of(rvRatioGe1_5Lt2)),
+                  Exp.of("alert 1")))
+          .get();
+
+  private static Phenotype scoreAKI =
+      new Phe("scoreAKI")
+          .expression(
+              Switch.of(countEq1, scoreRI, rvRatioGe1_5, scoreRvRatioGe1_5, scoreRvRatioLt1_5))
+          .get();
 
   private static Entity[] entities = {
     crea,
+    creaMan,
+    creaManMin,
+    creaWoman,
+    creaWomanMin,
+    creaChild,
+    creaChildMin,
+    creaChildGtX3ULRI,
+    creaOldGt354,
+    age,
+    young,
+    old,
+    sex,
+    male,
+    female,
+    ltRI,
+    withinRI,
+    scoreRI,
     count,
-    countGt1,
+    countEq1,
+    countGt0,
     refCrea,
     refCrea0_7,
     refCrea8_365,
@@ -109,7 +248,19 @@ public class AKITest {
     rvRatio0_7,
     rvRatio8_365,
     rvRatio,
-    rvRatioGe1_5
+    rvRatioGe1_5,
+    rvRatioGe1_5Lt2,
+    rvRatioGe2Lt3,
+    rvRatioGe3,
+    refCrea48,
+    exist48,
+    min48,
+    changed48,
+    diff48,
+    diff48Le26,
+    scoreRvRatioLt1_5,
+    scoreRvRatioGe1_5,
+    scoreAKI
   };
 
   @Test
@@ -119,8 +270,7 @@ public class AKITest {
             LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minusDays(365), LocalDateTime.now());
     ResultSet rs =
         new Que(CONFIG, entities)
-            .inc(countGt1, dtr)
-            .inc(rvRatioGe1_5, dtr)
+            .inc(countGt0, dtr)
             .executeSql(CREATE_SBJ, CREATE_ASM, insertSubjects(), insertAssesments())
             .execute();
 
@@ -131,17 +281,17 @@ public class AKITest {
     assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("1", "rvRatio0_7", dtr));
     assertEquals(BigDecimal.valueOf(-1), rs.getNumberValue("1", "rvRatio8_365", dtr));
     assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("1", "rvRatio", dtr));
-    assertTrue(rs.getBooleanValue("1", "rvRatioGe1_5", dtr));
+    assertTrue(rs.getBooleanValue("1", "rvRatioGt1_5", dtr));
 
     assertEquals(BigDecimal.valueOf(-1), rs.getNumberValue("2", "rvRatio0_7", dtr));
     assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("2", "rvRatio8_365", dtr));
     assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("2", "rvRatio", dtr));
-    assertTrue(rs.getBooleanValue("2", "rvRatioGe1_5", dtr));
+    assertTrue(rs.getBooleanValue("2", "rvRatioGt1_5", dtr));
 
     assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("5", "rvRatio0_7", dtr));
     assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("5", "rvRatio8_365", dtr));
     assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("5", "rvRatio", dtr));
-    assertTrue(rs.getBooleanValue("5", "rvRatioGe1_5", dtr));
+    assertTrue(rs.getBooleanValue("5", "rvRatioGt1_5", dtr));
   }
 
   private static final String LS = System.lineSeparator();

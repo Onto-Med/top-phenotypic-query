@@ -50,6 +50,10 @@ public class Exp {
     return of(Val.of(val));
   }
 
+  public static Expression of(String val) {
+    return of(Val.of(val));
+  }
+
   public static Expression of(Number... numbers) {
     return of(Val.of(numbers));
   }
