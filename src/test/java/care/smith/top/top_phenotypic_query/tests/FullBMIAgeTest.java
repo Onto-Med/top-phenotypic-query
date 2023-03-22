@@ -25,12 +25,14 @@ public class FullBMIAgeTest extends AbstractTest {
   @Test
   public void test() throws InstantiationException {
     QueryCriterion cri1 =
-        new QueryCriterion()
-            .inclusion(true)
-            .defaultAggregationFunctionId(defAgrFunc.getId())
-            .subjectId(overWeight.getId())
-            .dateTimeRestriction(getDTR(2000));
-    QueryCriterion cri2 = new QueryCriterion().inclusion(true).subjectId(female.getId());
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(true)
+                .defaultAggregationFunctionId(defAgrFunc.getId())
+                .subjectId(overWeight.getId())
+                .dateTimeRestriction(getDTR(2000));
+    QueryCriterion cri2 =
+        (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId());
     Query query = new Query().addCriteriaItem(cri1).addCriteriaItem(cri2);
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test3.yml");

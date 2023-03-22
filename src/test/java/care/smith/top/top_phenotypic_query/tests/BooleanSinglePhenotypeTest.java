@@ -52,8 +52,10 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
   @Test
   public void test1() {
-    QueryCriterion cri1 = new QueryCriterion().inclusion(false).subjectId(h.getId());
-    QueryCriterion cri2 = new QueryCriterion().inclusion(true).subjectId(w.getId());
+    QueryCriterion cri1 =
+        (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(h.getId());
+    QueryCriterion cri2 =
+        (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(w.getId());
     Query query = new Query().addCriteriaItem(cri1).addCriteriaItem(cri2);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
@@ -64,8 +66,10 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
   @Test
   public void test2() {
-    QueryCriterion cri1 = new QueryCriterion().inclusion(true).subjectId(h.getId());
-    QueryCriterion cri2 = new QueryCriterion().inclusion(false).subjectId(w.getId());
+    QueryCriterion cri1 =
+        (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(h.getId());
+    QueryCriterion cri2 =
+        (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(w.getId());
     Query query = new Query().addCriteriaItem(cri1).addCriteriaItem(cri2);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
@@ -83,7 +87,8 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
     Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
-    QueryCriterion cri = new QueryCriterion().inclusion(true).subjectId(composite.getId());
+    QueryCriterion cri =
+        (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(composite.getId());
     Query query = new Query().addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
@@ -101,7 +106,8 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
     Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
-    QueryCriterion cri = new QueryCriterion().inclusion(true).subjectId(composite.getId());
+    QueryCriterion cri =
+        (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(composite.getId());
     Query query = new Query().addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
@@ -119,7 +125,8 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
     Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
-    QueryCriterion cri = new QueryCriterion().inclusion(false).subjectId(composite.getId());
+    QueryCriterion cri =
+        (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(composite.getId());
     Query query = new Query().addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
@@ -137,7 +144,8 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
 
     Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
-    QueryCriterion cri = new QueryCriterion().inclusion(false).subjectId(composite.getId());
+    QueryCriterion cri =
+        (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(composite.getId());
     Query query = new Query().addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);

@@ -28,10 +28,11 @@ public class POLARTestIntern extends AbstractTest {
     DataAdapter adapter = DataAdapter.getInstance("test_files/POLAR_SQL_Adapter_Test_intern.yml");
 
     QueryCriterion cri1 =
-        new QueryCriterion()
-            .inclusion(true)
-            .defaultAggregationFunctionId(defAgrFunc.getId())
-            .subjectId(entities.getPhenotypeWithTitle("Extended algorithm").getId());
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(true)
+                .defaultAggregationFunctionId(defAgrFunc.getId())
+                .subjectId(entities.getPhenotypeWithTitle("Extended algorithm").getId());
     Query query = new Query().addCriteriaItem(cri1);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phens, adapter);

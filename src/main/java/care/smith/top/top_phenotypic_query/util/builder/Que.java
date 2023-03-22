@@ -90,7 +90,7 @@ public class Que {
   }
 
   private Que cri(boolean inc, Phenotype p, DateTimeRestriction dtr, String defAggFunc) {
-    QueryCriterion cri = new QueryCriterion().inclusion(inc).subjectId(p.getId());
+    QueryCriterion cri = (QueryCriterion) new QueryCriterion().inclusion(inc).subjectId(p.getId());
     if (defAggFunc != null) cri.defaultAggregationFunctionId(defAggFunc);
     if (dtr != null) cri.dateTimeRestriction(dtr);
     query.addCriteriaItem(cri);
