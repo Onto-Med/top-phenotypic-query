@@ -30,10 +30,12 @@ public class PhenotypeValues extends HashMap<DateTimeRestriction, List<Value>> {
 
   public void addValue(DateTimeRestriction dateRange, Value value) {
     List<Value> vals = get(dateRange);
+
     if (vals == null) {
       vals = new ArrayList<>();
       put(dateRange, vals);
     }
+
     vals.add(value);
   }
 

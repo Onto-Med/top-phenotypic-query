@@ -56,7 +56,7 @@ public class PreparedStatementTest extends AbstractTest {
   @Test
   public void test2() throws InstantiationException, SQLException {
     QueryCriterion qc = (QueryCriterion) new QueryCriterion().dateTimeRestriction(getDTR(2000));
-    SingleSearch search = new SingleSearch(null, qc, heavy, adapter, false);
+    SingleSearch search = new SingleSearch(null, qc, heavy, adapter);
     SQLAdapterSettings settings = SQLAdapterSettings.get();
 
     String pqExpected =

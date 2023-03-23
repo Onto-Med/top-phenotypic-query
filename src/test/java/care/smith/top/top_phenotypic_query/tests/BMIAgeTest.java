@@ -10,6 +10,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
@@ -31,7 +32,8 @@ public class BMIAgeTest extends AbstractTest {
                 .inclusion(true)
                 .defaultAggregationFunctionId(defAgrFunc.getId())
                 .subjectId(overWeight.getId())
-                .dateTimeRestriction(getDTR(2000));
+                .dateTimeRestriction(getDTR(2000))
+                .type(TypeEnum.QUERYCRITERION);
 
     Entities phenotypes =
         Entities.of(

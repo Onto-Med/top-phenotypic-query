@@ -17,6 +17,7 @@ import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
@@ -88,7 +89,11 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
     Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
     QueryCriterion cri =
-        (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(composite.getId());
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(true)
+                .subjectId(composite.getId())
+                .type(TypeEnum.QUERYCRITERION);
     Query query = new Query().addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
@@ -107,7 +112,11 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
     Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
     QueryCriterion cri =
-        (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(composite.getId());
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(true)
+                .subjectId(composite.getId())
+                .type(TypeEnum.QUERYCRITERION);
     Query query = new Query().addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
@@ -126,7 +135,11 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
     Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
     QueryCriterion cri =
-        (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(composite.getId());
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(false)
+                .subjectId(composite.getId())
+                .type(TypeEnum.QUERYCRITERION);
     Query query = new Query().addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
@@ -145,7 +158,11 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
     Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
     QueryCriterion cri =
-        (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(composite.getId());
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(false)
+                .subjectId(composite.getId())
+                .type(TypeEnum.QUERYCRITERION);
     Query query = new Query().addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);

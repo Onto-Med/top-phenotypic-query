@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.ProjectionEntry;
+import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
@@ -90,10 +92,36 @@ public class Que {
   }
 
   private Que cri(boolean inc, Phenotype p, DateTimeRestriction dtr, String defAggFunc) {
-    QueryCriterion cri = (QueryCriterion) new QueryCriterion().inclusion(inc).subjectId(p.getId());
-    if (defAggFunc != null) cri.defaultAggregationFunctionId(defAggFunc);
-    if (dtr != null) cri.dateTimeRestriction(dtr);
-    query.addCriteriaItem(cri);
+    query.addCriteriaItem(
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(inc)
+                .subjectId(p.getId())
+                .dateTimeRestriction(dtr)
+                .defaultAggregationFunctionId(defAggFunc)
+                .type(TypeEnum.QUERYCRITERION));
+    return this;
+  }
+
+  public Que pro(Phenotype p) {
+    return pro(p, null, null);
+  }
+
+  public Que pro(Phenotype p, DateTimeRestriction dtr) {
+    return pro(p, dtr, null);
+  }
+
+  public Que pro(Phenotype p, String defAggFunc) {
+    return pro(p, null, defAggFunc);
+  }
+
+  private Que pro(Phenotype p, DateTimeRestriction dtr, String defAggFunc) {
+    query.addProjectionItem(
+        new ProjectionEntry()
+            .subjectId(p.getId())
+            .dateTimeRestriction(dtr)
+            .defaultAggregationFunctionId(defAggFunc)
+            .type(TypeEnum.PROJECTIONENTRY));
     return this;
   }
 

@@ -5,8 +5,8 @@ import java.util.Objects;
 
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.Query;
-import care.smith.top.model.QueryCriterion;
 import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
@@ -16,50 +16,26 @@ import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQuery;
 import care.smith.top.top_phenotypic_query.adapter.config.Props;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public class SingleSearch extends PhenotypeSearch {
 
-  private QueryCriterion criterion;
+  private ProjectionEntry entry;
   private Phenotype phenotype;
   private DataAdapter adapter;
   private DataAdapterConfig config;
-  private int type;
 
   public SingleSearch(
-      Query query,
-      QueryCriterion criterion,
-      Phenotype phenotype,
-      DataAdapter adapter,
-      boolean isCriterion) {
+      Query query, ProjectionEntry entry, Phenotype phenotype, DataAdapter adapter) {
     super(query);
-    this.criterion = criterion;
+    this.entry = entry;
     this.phenotype = phenotype;
     this.adapter = adapter;
     this.config = adapter.getConfig();
-    if (isCriterion) {
-      if (criterion.isInclusion()) this.type = 1;
-      else this.type = 2;
-    } else this.type = 0;
   }
 
-  protected boolean isVariable() {
-    return type == 0;
-  }
-
-  protected boolean isCriterion() {
-    return type != 0;
-  }
-
-  protected boolean isInclusion() {
-    return type == 1;
-  }
-
-  protected boolean isExclusion() {
-    return type == 2;
-  }
-
-  public QueryCriterion getCriterion() {
-    return criterion;
+  public ProjectionEntry getEntry() {
+    return entry;
   }
 
   public Phenotype getPhenotype() {
@@ -71,11 +47,11 @@ public class SingleSearch extends PhenotypeSearch {
   }
 
   public boolean hasDateTimeRestriction() {
-    return criterion.getDateTimeRestriction() != null;
+    return entry.getDateTimeRestriction() != null;
   }
 
   public DateTimeRestriction getDateTimeRestriction() {
-    return criterion.getDateTimeRestriction();
+    return entry.getDateTimeRestriction();
   }
 
   public CodeMapping getCodeMapping() {
@@ -140,7 +116,7 @@ public class SingleSearch extends PhenotypeSearch {
 
   @Override
   public int hashCode() {
-    return Objects.hash(criterion.getDateTimeRestriction(), phenotype.getId());
+    return Objects.hash(entry.getDateTimeRestriction(), phenotype.getId());
   }
 
   @Override
@@ -149,8 +125,15 @@ public class SingleSearch extends PhenotypeSearch {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     SingleSearch other = (SingleSearch) obj;
-    return Objects.equals(
-            criterion.getDateTimeRestriction(), other.criterion.getDateTimeRestriction())
+    return Objects.equals(entry.getDateTimeRestriction(), other.entry.getDateTimeRestriction())
         && Objects.equals(phenotype.getId(), other.phenotype.getId());
+  }
+
+  @Override
+  public String toString() {
+    return "SingleSearch: "
+        + phenotype.getId()
+        + "::"
+        + Restrictions.toString(getDateTimeRestriction());
   }
 }

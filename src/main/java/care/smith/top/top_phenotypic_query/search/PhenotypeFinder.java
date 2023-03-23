@@ -2,6 +2,7 @@ package care.smith.top.top_phenotypic_query.search;
 
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
@@ -34,40 +35,67 @@ public class PhenotypeFinder {
   }
 
   private ResultSet executeCompositeSearches(ResultSet rs) {
-    for (QueryCriterion cri : query.getCriteria()) {
-      Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
-      if (Phenotypes.isComposite(phe)) new CompositeSearch(query, cri, rs, phenotypes).execute();
-    }
+    if (query.getCriteria() != null)
+      for (QueryCriterion cri : query.getCriteria()) executeCompositeSearch(cri, rs);
+
+    if (query.getProjection() != null)
+      for (ProjectionEntry pro : query.getProjection()) executeCompositeSearch(pro, rs);
+
     return rs;
+  }
+
+  private void executeCompositeSearch(ProjectionEntry pro, ResultSet rs) {
+    Phenotype phe = phenotypes.getPhenotype(pro.getSubjectId());
+    if (Phenotypes.isComposite(phe)) new CompositeSearch(query, pro, rs, phenotypes).execute();
   }
 
   private ResultSet executeSingleSearches() {
     SubjectQueryMan sbjMan = new SubjectQueryMan(adapter);
     SingleQueryMan man = new SingleQueryMan(sbjMan, query, phenotypes);
-    for (QueryCriterion cri : query.getCriteria()) {
-      Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
-      if (Phenotypes.isSingle(phe)) {
-        if (config.isAge(phe)) sbjMan.setAgeCriterion(cri, phe);
-        else if (config.isBirthdate(phe)) sbjMan.setBirthdateCriterion(cri, phe);
-        else if (config.isSex(phe)) sbjMan.setSexCriterion(cri, phe);
-        else man.addCriterion(new SingleSearch(query, cri, phe, adapter, true));
-      }
-    }
 
-    for (QueryCriterion cri : query.getCriteria()) {
-      Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
-      if (Phenotypes.isComposite(phe)) {
-        for (String var : Expressions.getVariables(phe.getExpression(), phenotypes)) {
-          Phenotype varPhe = phenotypes.getPhenotype(var);
-          if (Phenotypes.isSingle(varPhe)) {
-            if (config.isAge(varPhe)) sbjMan.addAgeVariable(varPhe);
-            else if (config.isBirthdate(varPhe)) sbjMan.addBirthdateVariable(varPhe);
-            else if (config.isSex(varPhe)) sbjMan.addSexVariable(varPhe);
-            else man.addVariable(new SingleSearch(query, cri, varPhe, adapter, false));
-          }
+    if (query.getCriteria() != null) {
+      for (QueryCriterion cri : query.getCriteria()) {
+        Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
+        if (Phenotypes.isSingle(phe)) {
+          if (config.isAge(phe)) sbjMan.setAgeCriterion(cri, phe);
+          else if (config.isBirthdate(phe)) sbjMan.setBirthdateCriterion(cri, phe);
+          else if (config.isSex(phe)) sbjMan.setSexCriterion(cri, phe);
+          else if (cri.isInclusion()) man.addInclusion(new SingleSearch(query, cri, phe, adapter));
+          else man.addExclusion(new SingleSearch(query, cri, phe, adapter));
+        }
+      }
+      for (QueryCriterion cri : query.getCriteria()) {
+        Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
+        if (Phenotypes.isComposite(phe)) {
+          for (String var : Expressions.getVariables(phe.getExpression(), phenotypes))
+            addVariable(var, cri, sbjMan, man);
         }
       }
     }
+
+    if (query.getProjection() != null) {
+      for (ProjectionEntry pro : query.getProjection())
+        addVariable(pro.getSubjectId(), pro, sbjMan, man);
+      for (ProjectionEntry pro : query.getProjection()) {
+        Phenotype phe = phenotypes.getPhenotype(pro.getSubjectId());
+        if (Phenotypes.isComposite(phe)) {
+          for (String var : Expressions.getVariables(phe.getExpression(), phenotypes))
+            addVariable(var, pro, sbjMan, man);
+        }
+      }
+    }
+
     return man.execute();
+  }
+
+  private void addVariable(
+      String var, ProjectionEntry pro, SubjectQueryMan sbjMan, SingleQueryMan man) {
+    Phenotype varPhe = phenotypes.getPhenotype(var);
+    if (Phenotypes.isSingle(varPhe)) {
+      if (config.isAge(varPhe)) sbjMan.addAgeVariable(varPhe);
+      else if (config.isBirthdate(varPhe)) sbjMan.addBirthdateVariable(varPhe);
+      else if (config.isSex(varPhe)) sbjMan.addSexVariable(varPhe);
+      else man.addVariable(new SingleSearch(query, pro, varPhe, adapter));
+    }
   }
 }

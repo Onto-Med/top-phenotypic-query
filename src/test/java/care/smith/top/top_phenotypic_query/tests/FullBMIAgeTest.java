@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
@@ -30,7 +31,8 @@ public class FullBMIAgeTest extends AbstractTest {
                 .inclusion(true)
                 .defaultAggregationFunctionId(defAgrFunc.getId())
                 .subjectId(overWeight.getId())
-                .dateTimeRestriction(getDTR(2000));
+                .dateTimeRestriction(getDTR(2000))
+                .type(TypeEnum.QUERYCRITERION);
     QueryCriterion cri2 =
         (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId());
     Query query = new Query().addCriteriaItem(cri1).addCriteriaItem(cri2);

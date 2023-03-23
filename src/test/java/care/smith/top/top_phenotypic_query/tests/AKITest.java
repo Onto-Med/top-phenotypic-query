@@ -43,6 +43,10 @@ public class AKITest {
           .number("mmol/L")
           .get();
 
+  private static Phenotype age = new Phe("age", "http://loinc.org", "30525-0").number("a").get();
+  private static Phenotype young = new Phe("young").restriction(age, Res.lt(18)).get();
+  private static Phenotype old = new Phe("old").restriction(age, Res.ge(18)).get();
+
   private static Phenotype count =
       new Phe("count").titleEn("Creatinine values count").expression(Count.of(crea)).get();
 
@@ -109,7 +113,10 @@ public class AKITest {
     rvRatio0_7,
     rvRatio8_365,
     rvRatio,
-    rvRatioGe1_5
+    rvRatioGe1_5,
+    age,
+    young,
+    old
   };
 
   @Test
@@ -121,6 +128,7 @@ public class AKITest {
         new Que(CONFIG, entities)
             .inc(countGt1, dtr)
             .inc(rvRatioGe1_5, dtr)
+            .inc(old)
             .executeSql(CREATE_SBJ, CREATE_ASM, insertSubjects(), insertAssesments())
             .execute();
 

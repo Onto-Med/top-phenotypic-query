@@ -1,6 +1,8 @@
 package care.smith.top.top_phenotypic_query.util;
 
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.ProjectionEntry;
+import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.search.SingleQueryMan;
@@ -14,19 +16,20 @@ public class Queries {
     boolean sic = false;
     boolean cicWithoutNegation = false;
 
-    for (QueryCriterion cri : query.getCriteria()) {
-      criExist = true;
-      Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
-      if (cri.isInclusion()) {
-        if (Phenotypes.isSingle(phe)) sic = true;
-        else if ((Phenotypes.isCompositePhenotype(phe)
-                && !Expressions.containsNegation(phe.getExpression(), phenotypes))
-            || (Phenotypes.isCompositeRestriction(phe)
-                && !Expressions.containsNegation(
-                    phe.getSuperPhenotype().getExpression(), phenotypes)))
-          cicWithoutNegation = true;
+    if (query.getCriteria() != null)
+      for (QueryCriterion cri : query.getCriteria()) {
+        criExist = true;
+        Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
+        if (cri.isInclusion()) {
+          if (Phenotypes.isSingle(phe)) sic = true;
+          else if ((Phenotypes.isCompositePhenotype(phe)
+                  && !Expressions.containsNegation(phe.getExpression(), phenotypes))
+              || (Phenotypes.isCompositeRestriction(phe)
+                  && !Expressions.containsNegation(
+                      phe.getSuperPhenotype().getExpression(), phenotypes)))
+            cicWithoutNegation = true;
+        }
       }
-    }
 
     if (criExist && (!sic && !cicWithoutNegation) || sbjMan.hasComplexParameters())
       return QueryType.TYPE_1;
@@ -45,5 +48,9 @@ public class Queries {
     TYPE_3, // no ASQ, no subject single IC, but other single IC
     TYPE_4 // no ASQ, no single IC (i.e., composite IC without negation exist or no criteria exist
     // but only projection)
+  }
+
+  public static boolean isCriterion(ProjectionEntry entry) {
+    return entry.getType() == TypeEnum.QUERYCRITERION;
   }
 }

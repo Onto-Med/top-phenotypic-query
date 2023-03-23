@@ -77,7 +77,7 @@ public class SqlAdapterTest extends AbstractTest {
                 .defaultAggregationFunctionId("last")
                 .subjectId(tall.getId());
 
-    SingleSearch search = new SingleSearch(null, cri, tall, adapter, true);
+    SingleSearch search = new SingleSearch(null, cri, tall, adapter);
     assertNotNull(search);
 
     ResultSet rs = search.execute();
