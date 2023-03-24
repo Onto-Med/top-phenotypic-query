@@ -45,13 +45,16 @@ public class FullBMIAgeTestIntern extends AbstractTest {
 
   private static void test(DataAdapter adapter) throws SQLException {
     QueryCriterion cri1 =
-        new QueryCriterion()
-            .inclusion(true)
-            .defaultAggregationFunctionId(defAgrFunc.getId())
-            .subjectId(overWeight.getId())
-            .dateTimeRestriction(getDTR(2000));
-    QueryCriterion cri2 = new QueryCriterion().inclusion(true).subjectId(female.getId());
-    QueryCriterion cri3 = new QueryCriterion().inclusion(true).subjectId(old.getId());
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(true)
+                .defaultAggregationFunctionId(defAgrFunc.getId())
+                .subjectId(overWeight.getId())
+                .dateTimeRestriction(getDTR(2000));
+    QueryCriterion cri2 =
+        (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId());
+    QueryCriterion cri3 =
+        (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(old.getId());
     PhenotypeQuery query =
         new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2).addCriteriaItem(cri3);
 

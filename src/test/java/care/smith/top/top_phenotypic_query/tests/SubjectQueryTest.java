@@ -35,8 +35,10 @@ public class SubjectQueryTest extends AbstractTest {
   public void test1() throws InstantiationException {
     PhenotypeQuery query =
         new PhenotypeQuery()
-            .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(female.getId()))
-            .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(young.getId()));
+            .addCriteriaItem(
+                (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId()))
+            .addCriteriaItem(
+                (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(young.getId()));
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);
@@ -62,8 +64,10 @@ public class SubjectQueryTest extends AbstractTest {
   public void test2() throws InstantiationException {
     PhenotypeQuery query =
         new PhenotypeQuery()
-            .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(female.getId()))
-            .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(young.getId()));
+            .addCriteriaItem(
+                (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId()))
+            .addCriteriaItem(
+                (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(young.getId()));
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);
@@ -84,8 +88,10 @@ public class SubjectQueryTest extends AbstractTest {
   public void test3() throws InstantiationException {
     PhenotypeQuery query =
         new PhenotypeQuery()
-            .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(female.getId()))
-            .addCriteriaItem(new QueryCriterion().inclusion(true).subjectId(young.getId()));
+            .addCriteriaItem(
+                (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(female.getId()))
+            .addCriteriaItem(
+                (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(young.getId()));
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);
@@ -109,8 +115,10 @@ public class SubjectQueryTest extends AbstractTest {
   public void test4() throws InstantiationException {
     PhenotypeQuery query =
         new PhenotypeQuery()
-            .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(female.getId()))
-            .addCriteriaItem(new QueryCriterion().inclusion(false).subjectId(young.getId()));
+            .addCriteriaItem(
+                (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(female.getId()))
+            .addCriteriaItem(
+                (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(young.getId()));
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test2.yml");
     assertNotNull(configFile);

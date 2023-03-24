@@ -26,11 +26,12 @@ public class BMIAgeTest extends AbstractTest {
   @Test
   public void test() {
     QueryCriterion cri =
-        new QueryCriterion()
-            .inclusion(true)
-            .defaultAggregationFunctionId(defAgrFunc.getId())
-            .subjectId(overWeight.getId())
-            .dateTimeRestriction(getDTR(2000));
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(true)
+                .defaultAggregationFunctionId(defAgrFunc.getId())
+                .subjectId(overWeight.getId())
+                .dateTimeRestriction(getDTR(2000));
 
     Entities phenotypes =
         Entities.of(
