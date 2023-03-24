@@ -10,6 +10,7 @@ import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 
 public class Expressions {
@@ -118,8 +119,14 @@ public class Expressions {
         Expression varPheExp = varPhe.getExpression();
         if (varPheExp != null) addVariables(varPheExp, vars, phenotypes, direct);
       }
-    } else if (exp.getArguments() != null)
+    } else if (exp.getArguments() != null && !isSingleRestriction(exp, phenotypes))
       for (Expression arg : exp.getArguments()) addVariables(arg, vars, phenotypes, direct);
+  }
+
+  private static boolean isSingleRestriction(Expression e, Entities phenotypes) {
+    return In.get().getFunctionId().equals(e.getFunctionId())
+        && Phenotypes.isSinglePhenotype(
+            phenotypes.getPhenotype(e.getArguments().get(0).getEntityId()));
   }
 
   public static boolean containsNegation(Expression exp, Entities phenotypes) {
