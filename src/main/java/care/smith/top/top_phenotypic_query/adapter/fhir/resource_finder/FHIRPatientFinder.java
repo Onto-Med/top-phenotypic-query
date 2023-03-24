@@ -43,17 +43,17 @@ public class FHIRPatientFinder extends FHIRPathResourceFinder {
       LocalDateTime bdVal = path.getDateTime(res, out.getBirthdate());
       if (bdVal != null) {
         Value val = Val.of(bdVal);
-        if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, null, val);
+        if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, val);
         else rs.addValue(sbj, bd, null, val);
         if (age != null) {
           Value ageVal = Val.of(SubjectSearch.birthdateToAge(bdVal));
-          rs.addValueWithRestriction(sbj, age, null, ageVal);
+          rs.addValueWithRestriction(sbj, age, ageVal);
         }
       }
     }
     if (sex != null) {
       String sexVal = path.getString(res, out.getSex());
-      if (sexVal != null) rs.addValueWithRestriction(sbj, sex, null, Val.of(sexVal));
+      if (sexVal != null) rs.addValueWithRestriction(sbj, sex, Val.of(sexVal));
     }
   }
 }

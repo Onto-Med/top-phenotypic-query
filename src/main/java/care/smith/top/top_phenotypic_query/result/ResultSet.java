@@ -67,34 +67,25 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
       addValue(subjectId, Phenotypes.getUnrestrictedPhenotypeId(phenotype), dateRange, val);
   }
 
-  public void addValue(
-      String subjectId,
-      Phenotype phenotype,
-      DateTimeRestriction dateRange,
-      Value val,
-      String sourceUnit,
-      String modelUnit) {
+  private Value convert(Value val, String sourceUnit, String modelUnit) {
     if (sourceUnit != null && modelUnit != null && Values.hasNumberType(val))
-      val =
-          Val.of(
-              UCUM.convert(Values.getNumberValue(val), sourceUnit, modelUnit), val.getDateTime());
-
-    addValue(subjectId, phenotype, dateRange, val);
+      return Val.of(
+          UCUM.convert(Values.getNumberValue(val), sourceUnit, modelUnit), val.getDateTime());
+    return val;
   }
 
   private void addRestriction(
       String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
-    if (val != null) {
+    if (Phenotypes.isRestriction(phenotype) && val != null) {
       List<Value> vals = getValues(subjectId, phenotype.getId(), dateRange);
       if (vals == null || vals.isEmpty())
         addValue(subjectId, phenotype.getId(), dateRange, Val.ofTrue());
     }
   }
 
-  public void addValueWithRestriction(
-      String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
-    addValue(subjectId, phenotype, dateRange, val);
-    addRestriction(subjectId, phenotype, dateRange, val);
+  public void addValueWithRestriction(String subjectId, Phenotype phenotype, Value val) {
+    addValue(subjectId, phenotype, null, val);
+    addRestriction(subjectId, phenotype, null, val);
   }
 
   public void addValueWithRestriction(
@@ -104,8 +95,14 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
       Value val,
       String sourceUnit,
       String modelUnit) {
-    addValue(subjectId, phenotype, dateRange, val, sourceUnit, modelUnit);
+    addValue(subjectId, phenotype, dateRange, convert(val, sourceUnit, modelUnit));
     addRestriction(subjectId, phenotype, dateRange, val);
+  }
+
+  public void replacePhenotype(String sbjId, String oldPheName, String newPheName) {
+    SubjectPhenotypes phes = getPhenotypes(sbjId);
+    PhenotypeValues vals = phes.remove(oldPheName).phenotypeName(newPheName);
+    phes.setValues(vals);
   }
 
   //  public void removeValues(String sbjId, String pheName, DateTimeRestriction dateRange) {

@@ -20,6 +20,11 @@ public class PhenotypeValues extends HashMap<DateTimeRestriction, List<Value>> {
     this.phenotypeName = phenotypeName;
   }
 
+  public PhenotypeValues phenotypeName(String phenotypeName) {
+    this.phenotypeName = phenotypeName;
+    return this;
+  }
+
   public String getPhenotypeName() {
     return phenotypeName;
   }

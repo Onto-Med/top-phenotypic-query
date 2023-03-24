@@ -51,7 +51,10 @@ public class Switch extends FunctionEntity {
       Exceptions.checkArgumentType(getFunction(), DataType.BOOLEAN, cond);
       if (Expressions.getBooleanValue(cond)) return c2r.calculate(args.get(i + 1));
     }
-    if (defaultValue != null) return defaultValue;
+    if (defaultValue != null) {
+      defaultValue = c2r.calculate(defaultValue);
+      if (defaultValue != null) return defaultValue;
+    }
     throw new ArithmeticException("No default value defined for the function 'switch'!");
   }
 }

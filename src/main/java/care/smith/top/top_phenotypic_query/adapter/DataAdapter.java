@@ -72,7 +72,10 @@ public abstract class DataAdapter {
   public void checkQuantifier(SingleSearch search, ResultSet rs) {
     if (!search.hasRestriction()) return;
     Restriction r = search.getSourceRestriction();
-    if (Restrictions.hasExistentialQuantifier(r)) return;
+    if (Restrictions.hasExistentialQuantifier(r)) {
+      replacePhenotypes(search, rs);
+      return;
+    }
 
     Entities phes = Entities.of(search.getPhenotype(), search.getSuperPhenotype());
 
@@ -95,6 +98,16 @@ public abstract class DataAdapter {
           isOK);
 
       if (!isOK) rs.removeSubject(sbjId);
+      else replacePhenotype(sbjId, search, rs);
     }
+  }
+
+  private void replacePhenotype(String sbjId, SingleSearch search, ResultSet rs) {
+    rs.replacePhenotype(
+        sbjId, search.getSuperPhenotype().getId(), search.getPhenotype().getId() + "_values");
+  }
+
+  private void replacePhenotypes(SingleSearch search, ResultSet rs) {
+    for (String sbjId : new HashSet<>(rs.getSubjectIds())) replacePhenotype(sbjId, search, rs);
   }
 }

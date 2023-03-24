@@ -1,9 +1,7 @@
 package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
@@ -270,7 +268,6 @@ public class AKIScoreTest {
             LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minusDays(365), LocalDateTime.now());
     ResultSet rs =
         new Que(CONFIG, entities)
-            .inc(countGt0, dtr)
             .pro(scoreAKI, dtr)
             .executeSql(
                 DROP_SBJ, DROP_ASM, CREATE_SBJ, CREATE_ASM, insertSubjects(), insertAssesments())
@@ -278,22 +275,18 @@ public class AKIScoreTest {
 
     System.out.println(rs);
 
-    assertEquals(Set.of("1", "2", "5"), rs.getSubjectIds());
+    assertEquals(Set.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"), rs.getSubjectIds());
 
-    assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("1", "rvRatio0_7", dtr));
-    assertEquals(BigDecimal.valueOf(-1), rs.getNumberValue("1", "rvRatio8_365", dtr));
-    assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("1", "rvRatio", dtr));
-    assertTrue(rs.getBooleanValue("1", "rvRatioGt1_5", dtr));
-
-    assertEquals(BigDecimal.valueOf(-1), rs.getNumberValue("2", "rvRatio0_7", dtr));
-    assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("2", "rvRatio8_365", dtr));
-    assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("2", "rvRatio", dtr));
-    assertTrue(rs.getBooleanValue("2", "rvRatioGt1_5", dtr));
-
-    assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("5", "rvRatio0_7", dtr));
-    assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("5", "rvRatio8_365", dtr));
-    assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("5", "rvRatio", dtr));
-    assertTrue(rs.getBooleanValue("5", "rvRatioGt1_5", dtr));
+    assertEquals("alert 2", rs.getStringValue("1", "scoreAKI", dtr));
+    assertEquals("alert 3", rs.getStringValue("2", "scoreAKI", dtr));
+    assertEquals("high", rs.getStringValue("3", "scoreAKI", dtr));
+    assertEquals("repeat", rs.getStringValue("4", "scoreAKI", dtr));
+    assertEquals("alert 3", rs.getStringValue("5", "scoreAKI", dtr));
+    assertEquals("no alert", rs.getStringValue("6", "scoreAKI", dtr));
+    assertEquals("alert 1", rs.getStringValue("7", "scoreAKI", dtr));
+    assertEquals("alert 3", rs.getStringValue("8", "scoreAKI", dtr));
+    assertEquals("alert 3", rs.getStringValue("9", "scoreAKI", dtr));
+    assertEquals("alert 2", rs.getStringValue("10", "scoreAKI", dtr));
   }
 
   private static final String LS = System.lineSeparator();
@@ -331,11 +324,16 @@ public class AKIScoreTest {
   private String insertSubjects() {
     LocalDateTime now = LocalDateTime.now();
     StringBuffer sb = new StringBuffer("INSERT INTO subject VALUES").append(LS);
-    sb.append(insertSbj(1, now.minusYears(20), "female")).append(LS);
-    //    sb.append(insertSbj(2, now.minusYears(30), "female")).append(",").append(LS);
-    //    sb.append(insertSbj(3, now.minusYears(40), "male")).append(",").append(LS);
-    //    sb.append(insertSbj(4, now.minusYears(50), "male")).append(",").append(LS);
-    //    sb.append(insertSbj(5, now.minusYears(60), "female"));
+    sb.append(insertSbj(1, now.minusYears(20), "female")).append(",").append(LS);
+    sb.append(insertSbj(2, now.minusYears(30), "female")).append(",").append(LS);
+    sb.append(insertSbj(3, now.minusYears(40), "male")).append(",").append(LS);
+    sb.append(insertSbj(4, now.minusYears(50), "male")).append(",").append(LS);
+    sb.append(insertSbj(5, now.minusYears(60), "female")).append(",").append(LS);
+    sb.append(insertSbj(6, now.minusYears(70), "male")).append(",").append(LS);
+    sb.append(insertSbj(7, now.minusYears(80), "female")).append(",").append(LS);
+    sb.append(insertSbj(8, now.minusYears(90), "male")).append(",").append(LS);
+    sb.append(insertSbj(9, now.minusYears(16), "female")).append(",").append(LS);
+    sb.append(insertSbj(10, now.minusYears(17), "male")).append(LS);
     return sb.toString();
   }
 
@@ -343,66 +341,60 @@ public class AKIScoreTest {
     return bracket(String.join(", ", id.toString(), quote(DateUtil.format(bd)), quote(sex)));
   }
 
-  //  (1, '2023-03-12T12:43:00', 180),
-  //  (1, '2023-03-11T12:43:00', 100),
-  //  (1, '2023-03-10T12:43:00', 90),
-
-  //  (2, '2023-03-12T12:43:00', 180),
-  //  (2, '2023-01-02T12:43:00', 110),
-  //  (2, '2023-01-03T12:43:00', 65),
-  //  (2, '2023-01-04T12:43:00', 55),
-  //  (2, '2023-01-05T12:43:00', 50),
-
-  //  (3, '2023-03-12T12:43:00', 180),
-  //  (3, '2020-01-02T12:43:00', 110),
-  //  (3, '2020-01-03T12:43:00', 105),
-
-  //  (4, '2023-03-12T12:43:00', 190),
-  //  (4, '2023-01-02T12:43:00', 170),
-  //  (4, '2023-01-03T12:43:00', 160),
-
-  //  (5, '2023-03-12T12:43:00', 180),
-  //  (5, '2023-03-11T12:43:00', 100),
-  //  (5, '2023-03-10T12:43:00', 90),
-  //  (5, '2023-01-02T12:43:00', 110),
-  //  (5, '2023-01-03T12:43:00', 65),
-  //  (5, '2023-01-04T12:43:00', 55),
-  //  (5, '2023-01-05T12:43:00', 50);
-
   private String insertAssesments() {
     LocalDateTime now = LocalDateTime.now();
     StringBuffer sb =
         new StringBuffer("INSERT INTO assessment1 (subject_id, created_at, crea) VALUES")
             .append(LS);
-    sb.append(insertAsm(1, now.minusDays(1), 180)).append(",").append(LS);
+    sb.append(insertAsm(1, now.minusHours(1), 180)).append(",").append(LS);
     sb.append(insertAsm(1, now.minusDays(2), 100)).append(",").append(LS);
-    sb.append(insertAsm(1, now.minusDays(3), 90)).append(LS);
+    sb.append(insertAsm(1, now.minusDays(3), 90)).append(",").append(LS);
 
-    //    sb.append(insertAsm(2, now.minusDays(1), 180)).append(",").append(LS);
-    //    sb.append(insertAsm(2, now.minusMonths(2), 110)).append(",").append(LS);
-    //    sb.append(insertAsm(2, now.minusMonths(3), 65)).append(",").append(LS);
-    //    sb.append(insertAsm(2, now.minusMonths(4), 55)).append(",").append(LS);
-    //    sb.append(insertAsm(2, now.minusMonths(5), 50)).append(",").append(LS);
-    //
-    //    sb.append(insertAsm(3, now.minusDays(1), 180)).append(",").append(LS);
-    //    sb.append(insertAsm(3, now.minusYears(2), 110)).append(",").append(LS);
-    //    sb.append(insertAsm(3, now.minusYears(2), 105)).append(",").append(LS);
-    //
-    //    sb.append(insertAsm(4, now.minusDays(1), 180)).append(",").append(LS);
-    //    sb.append(insertAsm(4, now.minusDays(2), 170)).append(",").append(LS);
-    //    sb.append(insertAsm(4, now.minusDays(3), 169)).append(",").append(LS);
-    //    sb.append(insertAsm(4, now.minusMonths(2), 168)).append(",").append(LS);
-    //    sb.append(insertAsm(4, now.minusMonths(3), 167)).append(",").append(LS);
-    //    sb.append(insertAsm(4, now.minusMonths(4), 166)).append(",").append(LS);
-    //    sb.append(insertAsm(4, now.minusMonths(5), 165)).append(",").append(LS);
-    //
-    //    sb.append(insertAsm(5, now.minusDays(1), 180)).append(",").append(LS);
-    //    sb.append(insertAsm(5, now.minusDays(2), 100)).append(",").append(LS);
-    //    sb.append(insertAsm(5, now.minusDays(3), 90)).append(",").append(LS);
-    //    sb.append(insertAsm(5, now.minusMonths(2), 110)).append(",").append(LS);
-    //    sb.append(insertAsm(5, now.minusMonths(3), 65)).append(",").append(LS);
-    //    sb.append(insertAsm(5, now.minusMonths(4), 55)).append(",").append(LS);
-    //    sb.append(insertAsm(5, now.minusMonths(5), 50));
+    sb.append(insertAsm(2, now.minusHours(1), 180)).append(",").append(LS);
+    sb.append(insertAsm(2, now.minusMonths(2), 110)).append(",").append(LS);
+    sb.append(insertAsm(2, now.minusMonths(3), 65)).append(",").append(LS);
+    sb.append(insertAsm(2, now.minusMonths(4), 55)).append(",").append(LS);
+    sb.append(insertAsm(2, now.minusMonths(5), 50)).append(",").append(LS);
+
+    sb.append(insertAsm(3, now.minusHours(1), 180)).append(",").append(LS);
+    sb.append(insertAsm(3, now.minusYears(2), 110)).append(",").append(LS);
+    sb.append(insertAsm(3, now.minusYears(2), 105)).append(",").append(LS);
+
+    sb.append(insertAsm(4, now.minusHours(1), 180)).append(",").append(LS);
+    sb.append(insertAsm(4, now.minusDays(2), 170)).append(",").append(LS);
+    sb.append(insertAsm(4, now.minusDays(3), 169)).append(",").append(LS);
+    sb.append(insertAsm(4, now.minusMonths(2), 168)).append(",").append(LS);
+    sb.append(insertAsm(4, now.minusMonths(3), 167)).append(",").append(LS);
+    sb.append(insertAsm(4, now.minusMonths(4), 166)).append(",").append(LS);
+    sb.append(insertAsm(4, now.minusMonths(5), 165)).append(",").append(LS);
+
+    sb.append(insertAsm(5, now.minusHours(1), 180)).append(",").append(LS);
+    sb.append(insertAsm(5, now.minusDays(2), 100)).append(",").append(LS);
+    sb.append(insertAsm(5, now.minusDays(3), 90)).append(",").append(LS);
+    sb.append(insertAsm(5, now.minusMonths(2), 110)).append(",").append(LS);
+    sb.append(insertAsm(5, now.minusMonths(3), 65)).append(",").append(LS);
+    sb.append(insertAsm(5, now.minusMonths(4), 55)).append(",").append(LS);
+    sb.append(insertAsm(5, now.minusMonths(5), 50)).append(",");
+
+    sb.append(insertAsm(6, now.minusHours(1), 180)).append(",").append(LS);
+    sb.append(insertAsm(6, now.minusDays(1), 170)).append(",").append(LS);
+    sb.append(insertAsm(6, now.minusDays(3), 169)).append(",").append(LS);
+
+    sb.append(insertAsm(7, now.minusHours(1), 180)).append(",").append(LS);
+    sb.append(insertAsm(7, now.minusDays(1), 150)).append(",").append(LS);
+    sb.append(insertAsm(7, now.minusDays(3), 169)).append(",").append(LS);
+
+    sb.append(insertAsm(8, now.minusHours(1), 355)).append(",").append(LS);
+    sb.append(insertAsm(8, now.minusDays(2), 150)).append(",").append(LS);
+    sb.append(insertAsm(8, now.minusDays(3), 169)).append(",").append(LS);
+
+    sb.append(insertAsm(9, now.minusHours(1), 373)).append(",").append(LS);
+    sb.append(insertAsm(9, now.minusDays(2), 150)).append(",").append(LS);
+    sb.append(insertAsm(9, now.minusDays(3), 169)).append(",").append(LS);
+
+    sb.append(insertAsm(10, now.minusHours(1), 372)).append(",").append(LS);
+    sb.append(insertAsm(10, now.minusDays(2), 150)).append(",").append(LS);
+    sb.append(insertAsm(10, now.minusDays(3), 169)).append(LS);
 
     return sb.toString();
   }
