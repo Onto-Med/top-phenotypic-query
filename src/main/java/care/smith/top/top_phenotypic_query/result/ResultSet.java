@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.ucum.UCUM;
 import care.smith.top.top_phenotypic_query.util.Entities;
@@ -110,6 +111,19 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
   //    SubjectPhenotypes phes = getPhenotypes(sbjId);
   //    if (phes != null && phes.isEmpty()) removeSubject(sbjId);
   //  }
+
+  public ResultSet clean(List<ProjectionEntry> pro) {
+    if (pro == null || pro.isEmpty()) return this;
+    for (SubjectPhenotypes sbjPhens : getPhenotypes()) {
+      SubjectPhenotypes newSbjPhens = new SubjectPhenotypes(sbjPhens.getSubjectId());
+      for (ProjectionEntry pe : pro) {
+        List<Value> newVals = sbjPhens.getValues(pe.getSubjectId(), pe.getDateTimeRestriction());
+        newSbjPhens.setValues(pe.getSubjectId(), pe.getDateTimeRestriction(), newVals);
+      }
+      setPhenotypes(newSbjPhens);
+    }
+    return this;
+  }
 
   public void addSubject(String subjectId) {
     if (!getSubjectIds().contains(subjectId)) put(subjectId, new SubjectPhenotypes(subjectId));

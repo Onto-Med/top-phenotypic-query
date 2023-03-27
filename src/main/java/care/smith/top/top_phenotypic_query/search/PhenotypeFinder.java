@@ -31,7 +31,7 @@ public class PhenotypeFinder {
   }
 
   public ResultSet execute() {
-    return executeCompositeSearches(executeSingleSearches());
+    return executeCompositeSearches(executeSingleSearches()).clean(query.getProjection());
   }
 
   private ResultSet executeCompositeSearches(ResultSet rs) {

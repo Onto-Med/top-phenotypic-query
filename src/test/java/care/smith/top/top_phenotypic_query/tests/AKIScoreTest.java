@@ -269,6 +269,9 @@ public class AKIScoreTest {
     ResultSet rs =
         new Que(CONFIG, entities)
             .pro(scoreAKI, dtr)
+            .pro(age)
+            .pro(sex)
+            .pro(crea)
             .executeSql(
                 DROP_SBJ, DROP_ASM, CREATE_SBJ, CREATE_ASM, insertSubjects(), insertAssesments())
             .execute();
