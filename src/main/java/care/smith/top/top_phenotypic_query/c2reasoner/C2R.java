@@ -21,20 +21,29 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.ConstantEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.E;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.False;
+import care.smith.top.top_phenotypic_query.c2reasoner.constants.GeC;
+import care.smith.top.top_phenotypic_query.c2reasoner.constants.GtC;
+import care.smith.top.top_phenotypic_query.c2reasoner.constants.LeC;
+import care.smith.top.top_phenotypic_query.c2reasoner.constants.LtC;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.Now;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.Pi;
+import care.smith.top.top_phenotypic_query.c2reasoner.constants.Today;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.True;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Empty;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Filter;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Li;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Restrict;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Count;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutFirst;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutLast;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Last;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Median;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Min;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Add;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
@@ -93,6 +102,11 @@ public class C2R {
     addConstant(True.get());
     addConstant(False.get());
     addConstant(Now.get());
+    addConstant(Today.get());
+    addConstant(GtC.get());
+    addConstant(GeC.get());
+    addConstant(LtC.get());
+    addConstant(LeC.get());
     addFunction(Add.get());
     addFunction(Subtract.get());
     addFunction(Multiply.get());
@@ -102,7 +116,9 @@ public class C2R {
     addFunction(Avg.get());
     addFunction(Count.get());
     addFunction(First.get());
+    addFunction(CutFirst.get());
     addFunction(Last.get());
+    addFunction(CutLast.get());
     addFunction(Min.get());
     addFunction(Max.get());
     addFunction(Date.get());
@@ -125,8 +141,10 @@ public class C2R {
     addFunction(In.get());
     addFunction(Empty.get());
     addFunction(Switch.get());
-    addFunction(Restrict.get());
+    addFunction(Filter.get());
     addFunction(Li.get());
+    addFunction(If.get());
+    addFunction(Median.get());
   }
 
   public MathContext getMathContext() {
@@ -170,7 +188,7 @@ public class C2R {
   }
 
   public C2R defaultAggregateFunction(FunctionEntity defaultAggregateFunction) {
-    this.defaultAggregateFunction = defaultAggregateFunction;
+    if (defaultAggregateFunction != null) this.defaultAggregateFunction = defaultAggregateFunction;
     return this;
   }
 

@@ -1,8 +1,18 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.ProjectionEntry;
+import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
@@ -16,6 +26,8 @@ public class Que {
   private DataAdapterConfig config;
   private Query query = new Query();
   private Entity[] entities;
+
+  private Logger log = LoggerFactory.getLogger(Que.class);
 
   public Que(String configFilePath, Entity... entities) throws InstantiationException {
     this.config = getConfig(configFilePath);
@@ -80,10 +92,36 @@ public class Que {
   }
 
   private Que cri(boolean inc, Phenotype p, DateTimeRestriction dtr, String defAggFunc) {
-    QueryCriterion cri = new QueryCriterion().inclusion(inc).subjectId(p.getId());
-    if (defAggFunc != null) cri.defaultAggregationFunctionId(defAggFunc);
-    if (dtr != null) cri.dateTimeRestriction(dtr);
-    query.addCriteriaItem(cri);
+    query.addCriteriaItem(
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(inc)
+                .subjectId(p.getId())
+                .dateTimeRestriction(dtr)
+                .defaultAggregationFunctionId(defAggFunc)
+                .type(TypeEnum.QUERYCRITERION));
+    return this;
+  }
+
+  public Que pro(Phenotype p) {
+    return pro(p, null, null);
+  }
+
+  public Que pro(Phenotype p, DateTimeRestriction dtr) {
+    return pro(p, dtr, null);
+  }
+
+  public Que pro(Phenotype p, String defAggFunc) {
+    return pro(p, null, defAggFunc);
+  }
+
+  private Que pro(Phenotype p, DateTimeRestriction dtr, String defAggFunc) {
+    query.addProjectionItem(
+        new ProjectionEntry()
+            .subjectId(p.getId())
+            .dateTimeRestriction(dtr)
+            .defaultAggregationFunctionId(defAggFunc)
+            .type(TypeEnum.PROJECTIONENTRY));
     return this;
   }
 
@@ -96,5 +134,25 @@ public class Que {
     ResultSet rs = pf.execute();
     adapter.close();
     return rs;
+  }
+
+  public Que executeSql(String... statements) {
+    try {
+      Connection con =
+          DriverManager.getConnection(
+              config.getConnectionAttribute("url"),
+              config.getConnectionAttribute("user"),
+              config.getConnectionAttribute("password"));
+      for (String sql : statements) {
+        log.debug("execute sql statement:{}{}", System.lineSeparator(), sql);
+        Statement stmt = con.createStatement();
+        stmt.execute(sql);
+        stmt.close();
+      }
+      con.close();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return this;
   }
 }

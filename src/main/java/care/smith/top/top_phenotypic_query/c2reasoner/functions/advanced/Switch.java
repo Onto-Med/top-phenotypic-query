@@ -5,6 +5,7 @@ import java.util.List;
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
@@ -32,6 +33,10 @@ public class Switch extends FunctionEntity {
     return of(List.of(args));
   }
 
+  public static Expression of(Phenotype... args) {
+    return of(Exp.toList(args));
+  }
+
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
@@ -46,7 +51,10 @@ public class Switch extends FunctionEntity {
       Exceptions.checkArgumentType(getFunction(), DataType.BOOLEAN, cond);
       if (Expressions.getBooleanValue(cond)) return c2r.calculate(args.get(i + 1));
     }
-    if (defaultValue != null) return defaultValue;
+    if (defaultValue != null) {
+      defaultValue = c2r.calculate(defaultValue);
+      if (defaultValue != null) return defaultValue;
+    }
     throw new ArithmeticException("No default value defined for the function 'switch'!");
   }
 }

@@ -71,12 +71,13 @@ public class SqlAdapterTest extends AbstractTest {
     assertNotNull(tall);
 
     QueryCriterion cri =
-        new QueryCriterion()
-            .inclusion(true)
-            .defaultAggregationFunctionId("last")
-            .subjectId(tall.getId());
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(true)
+                .defaultAggregationFunctionId("last")
+                .subjectId(tall.getId());
 
-    SingleSearch search = new SingleSearch(null, cri, tall, adapter, true);
+    SingleSearch search = new SingleSearch(null, cri, tall, adapter);
     assertNotNull(search);
 
     ResultSet rs = search.execute();
@@ -100,10 +101,11 @@ public class SqlAdapterTest extends AbstractTest {
             "'); TRUNCATE TABLE assessment1; SELECT NULL FROM assessment1 WHERE '' IN ('");
 
     QueryCriterion cri =
-        new QueryCriterion()
-            .inclusion(true)
-            .defaultAggregationFunctionId("last")
-            .subjectId(corrupted.getId());
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(true)
+                .defaultAggregationFunctionId("last")
+                .subjectId(corrupted.getId());
 
     Query query = new Query().addCriteriaItem(cri);
 

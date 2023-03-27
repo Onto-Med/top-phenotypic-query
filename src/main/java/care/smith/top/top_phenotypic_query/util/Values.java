@@ -31,7 +31,20 @@ public class Values {
         }
       };
 
+  public static Comparator<Expression> VALUE_COMPARATOR =
+      new Comparator<Expression>() {
+        @Override
+        public int compare(Expression e1, Expression e2) {
+          if (!Expressions.hasValues(e1) || !Expressions.hasValues(e2)) return 0;
+          BigDecimal v1 = Expressions.getNumberValue(e1);
+          BigDecimal v2 = Expressions.getNumberValue(e2);
+          if (v1 == null || v2 == null) return 0;
+          return v1.compareTo(v2);
+        }
+      };
+
   public static BigDecimal toDecimal(Number num) {
+    if (num == null) return null;
     return new BigDecimal(num.toString());
   }
 
@@ -76,18 +89,22 @@ public class Values {
   }
 
   public static String getStringValue(Value val) {
+    if (val == null) return null;
     return ((StringValue) val).getValue();
   }
 
   public static BigDecimal getNumberValue(Value val) {
+    if (val == null) return null;
     return ((NumberValue) val).getValue();
   }
 
   public static LocalDateTime getDateTimeValue(Value val) {
+    if (val == null) return null;
     return ((DateTimeValue) val).getValue();
   }
 
   public static Boolean getBooleanValue(Value val) {
+    if (val == null) return null;
     return ((BooleanValue) val).isValue();
   }
 

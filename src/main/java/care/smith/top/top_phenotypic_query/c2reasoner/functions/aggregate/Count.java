@@ -4,6 +4,7 @@ import java.util.List;
 
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
@@ -29,12 +30,15 @@ public class Count extends FunctionEntity {
     return of(List.of(args));
   }
 
+  public static Expression of(Phenotype... args) {
+    return of(Exp.toList(args));
+  }
+
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     Expression arg = c2r.calculate(args.get(0));
-    if (arg == null) return null;
-    Exceptions.checkArgumentHasValues(getFunction(), arg);
+    if (arg == null || arg.getValues() == null) return Exp.of(0);
     return Exp.of(arg.getValues().size());
   }
 }

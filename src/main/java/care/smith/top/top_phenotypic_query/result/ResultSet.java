@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.result;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.ucum.UCUM;
 import care.smith.top.top_phenotypic_query.util.Entities;
@@ -65,34 +68,25 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
       addValue(subjectId, Phenotypes.getUnrestrictedPhenotypeId(phenotype), dateRange, val);
   }
 
-  public void addValue(
-      String subjectId,
-      Phenotype phenotype,
-      DateTimeRestriction dateRange,
-      Value val,
-      String sourceUnit,
-      String modelUnit) {
+  private Value convert(Value val, String sourceUnit, String modelUnit) {
     if (sourceUnit != null && modelUnit != null && Values.hasNumberType(val))
-      val =
-          Val.of(
-              UCUM.convert(Values.getNumberValue(val), sourceUnit, modelUnit), val.getDateTime());
-
-    addValue(subjectId, phenotype, dateRange, val);
+      return Val.of(
+          UCUM.convert(Values.getNumberValue(val), sourceUnit, modelUnit), val.getDateTime());
+    return val;
   }
 
   private void addRestriction(
       String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
-    if (val != null) {
+    if (Phenotypes.isRestriction(phenotype) && val != null) {
       List<Value> vals = getValues(subjectId, phenotype.getId(), dateRange);
       if (vals == null || vals.isEmpty())
         addValue(subjectId, phenotype.getId(), dateRange, Val.ofTrue());
     }
   }
 
-  public void addValueWithRestriction(
-      String subjectId, Phenotype phenotype, DateTimeRestriction dateRange, Value val) {
-    addValue(subjectId, phenotype, dateRange, val);
-    addRestriction(subjectId, phenotype, dateRange, val);
+  public void addValueWithRestriction(String subjectId, Phenotype phenotype, Value val) {
+    addValue(subjectId, phenotype, null, val);
+    addRestriction(subjectId, phenotype, null, val);
   }
 
   public void addValueWithRestriction(
@@ -102,8 +96,14 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
       Value val,
       String sourceUnit,
       String modelUnit) {
-    addValue(subjectId, phenotype, dateRange, val, sourceUnit, modelUnit);
+    addValue(subjectId, phenotype, dateRange, convert(val, sourceUnit, modelUnit));
     addRestriction(subjectId, phenotype, dateRange, val);
+  }
+
+  public void replacePhenotype(String sbjId, String oldPheName, String newPheName) {
+    SubjectPhenotypes phes = getPhenotypes(sbjId);
+    PhenotypeValues vals = phes.remove(oldPheName).phenotypeName(newPheName);
+    phes.setValues(vals);
   }
 
   //  public void removeValues(String sbjId, String pheName, DateTimeRestriction dateRange) {
@@ -111,6 +111,19 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
   //    SubjectPhenotypes phes = getPhenotypes(sbjId);
   //    if (phes != null && phes.isEmpty()) removeSubject(sbjId);
   //  }
+
+  public ResultSet clean(List<ProjectionEntry> pro) {
+    if (pro == null || pro.isEmpty()) return this;
+    for (SubjectPhenotypes sbjPhens : getPhenotypes()) {
+      SubjectPhenotypes newSbjPhens = new SubjectPhenotypes(sbjPhens.getSubjectId());
+      for (ProjectionEntry pe : pro) {
+        List<Value> newVals = sbjPhens.getValues(pe.getSubjectId(), pe.getDateTimeRestriction());
+        newSbjPhens.setValues(pe.getSubjectId(), pe.getDateTimeRestriction(), newVals);
+      }
+      setPhenotypes(newSbjPhens);
+    }
+    return this;
+  }
 
   public void addSubject(String subjectId) {
     if (!getSubjectIds().contains(subjectId)) put(subjectId, new SubjectPhenotypes(subjectId));
@@ -127,6 +140,48 @@ public class ResultSet extends HashMap<String, SubjectPhenotypes> {
     PhenotypeValues values = getValues(subjectId, phenotypeName);
     if (values == null) return null;
     return values.getValues(dateRange);
+  }
+
+  public List<BigDecimal> getNumberValues(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
+    List<Value> vals = getValues(subjectId, phenotypeName, dateRange);
+    if (vals == null || vals.isEmpty()) return new ArrayList<>();
+    return Values.getNumberValues(vals);
+  }
+
+  public List<Boolean> getBooleanValues(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
+    List<Value> vals = getValues(subjectId, phenotypeName, dateRange);
+    if (vals == null || vals.isEmpty()) return new ArrayList<>();
+    return Values.getBooleanValues(vals);
+  }
+
+  public List<String> getStringValues(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
+    List<Value> vals = getValues(subjectId, phenotypeName, dateRange);
+    if (vals == null || vals.isEmpty()) return new ArrayList<>();
+    return Values.getStringValues(vals);
+  }
+
+  public BigDecimal getNumberValue(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
+    List<BigDecimal> vals = getNumberValues(subjectId, phenotypeName, dateRange);
+    if (vals.isEmpty()) return null;
+    return vals.get(0);
+  }
+
+  public Boolean getBooleanValue(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
+    List<Boolean> vals = getBooleanValues(subjectId, phenotypeName, dateRange);
+    if (vals.isEmpty()) return null;
+    return vals.get(0);
+  }
+
+  public String getStringValue(
+      String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
+    List<String> vals = getStringValues(subjectId, phenotypeName, dateRange);
+    if (vals.isEmpty()) return null;
+    return vals.get(0);
   }
 
   public ResultSet intersect(ResultSet rs2) {

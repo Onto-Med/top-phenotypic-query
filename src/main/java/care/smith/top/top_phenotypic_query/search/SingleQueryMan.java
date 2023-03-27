@@ -43,9 +43,12 @@ public class SingleQueryMan {
     return variables;
   }
 
-  public void addCriterion(SingleSearch criterion) {
-    if (criterion.isInclusion()) inclusions.add(criterion);
-    else if (criterion.isExclusion()) exclusions.add(criterion);
+  public void addInclusion(SingleSearch criterion) {
+    inclusions.add(criterion);
+  }
+
+  public void addExclusion(SingleSearch criterion) {
+    exclusions.add(criterion);
   }
 
   public void addVariable(SingleSearch variable) {

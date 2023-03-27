@@ -3,6 +3,7 @@ package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
@@ -12,16 +13,16 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
-public class Last extends FunctionEntity {
+public class Median extends FunctionEntity {
 
-  private static final Last INSTANCE = new Last();
+  private static final Median INSTANCE = new Median();
 
-  private Last() {
-    super("last", NotationEnum.PREFIX);
+  private Median() {
+    super("median", NotationEnum.PREFIX);
     minArgumentNumber(1);
   }
 
-  public static Last get() {
+  public static Median get() {
     return INSTANCE;
   }
 
@@ -42,8 +43,13 @@ public class Last extends FunctionEntity {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = c2r.calculate(args);
     if (args == null) return null;
+    Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
     args = Aggregator.aggregateIfMultiple(args, c2r);
-    args = args.stream().sorted(Values.VALUE_DATE_COMPARATOR).collect(Collectors.toList());
-    return args.get(args.size() - 1);
+    args = args.stream().sorted(Values.VALUE_COMPARATOR).collect(Collectors.toList());
+
+    int size = args.size();
+    if (size % 2 == 0)
+      return Avg.get().calculate(List.of(args.get(size / 2 - 1), args.get(size / 2)), c2r);
+    else return args.get(size / 2);
   }
 }

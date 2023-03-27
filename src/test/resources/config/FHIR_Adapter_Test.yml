@@ -52,9 +52,6 @@ birthdateMapping:
   code: http://loinc.org|21112-8
 ageMapping:
   code: http://loinc.org|30525-0
-  restrictionMappings:
-    - model: [ ">=", 18, "<", 34 ]
-      source: [ ">=", 19, "<", 34 ]
 sexMapping:
   code: http://loinc.org|46098-0
   restrictionMappings:

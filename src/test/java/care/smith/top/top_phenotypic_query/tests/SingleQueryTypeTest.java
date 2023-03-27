@@ -148,7 +148,8 @@ public class SingleQueryTypeTest {
         if (config.isAge(phe)) sbjMan.setAgeCriterion(cri, phe);
         else if (config.isBirthdate(phe)) sbjMan.setBirthdateCriterion(cri, phe);
         else if (config.isSex(phe)) sbjMan.setSexCriterion(cri, phe);
-        else man.addCriterion(new SingleSearch(query, cri, phe, adapter, true));
+        else if (cri.isInclusion()) man.addInclusion(new SingleSearch(query, cri, phe, adapter));
+        else man.addExclusion(new SingleSearch(query, cri, phe, adapter));
       }
     }
 
@@ -161,7 +162,7 @@ public class SingleQueryTypeTest {
             if (config.isAge(varPhe)) sbjMan.addAgeVariable(varPhe);
             else if (config.isBirthdate(varPhe)) sbjMan.addBirthdateVariable(varPhe);
             else if (config.isSex(varPhe)) sbjMan.addSexVariable(varPhe);
-            else man.addVariable(new SingleSearch(query, cri, varPhe, adapter, false));
+            else man.addVariable(new SingleSearch(query, cri, varPhe, adapter));
           }
         }
       }
