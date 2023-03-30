@@ -49,13 +49,16 @@ public class Entities {
   public Entities deriveAdditionalProperties(DataAdapterConfig config) {
     for (Phenotype p : getPhenotypes()) {
       Phenotype supP = p.getSuperPhenotype();
+      if (supP != null) {
+        supP = getPhenotype(supP.getId());
+        p.setSuperPhenotype(supP);
+      }
       if (Phenotypes.isRestriction(p)) {
         if (Phenotypes.isSingle(p) && p.getRestriction() == null) p.setRestriction(Res.ofCodes(p));
         if (config == null
             || Phenotypes.isCompositePhenotype(supP)
             || !setInExpression(config, supP, p)) p.setExpression(Exp.inRestriction(p));
       }
-      if (supP != null) p.setSuperPhenotype(getPhenotype(supP.getId()));
     }
     return this;
   }
