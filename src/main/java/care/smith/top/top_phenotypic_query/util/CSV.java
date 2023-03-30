@@ -13,6 +13,19 @@ import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 
 public class CSV {
 
+  public static void write(Entities phenotypes, OutputStream out, String delimiter, Charset cs) {
+    OutputStreamWriter osw = new OutputStreamWriter(out, cs);
+    write(delimiter, osw, "phenotype", "type", "datatype", "unit", "annotations", "codes");
+
+    // TODO
+
+    try {
+      osw.flush();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   public static void write(ResultSet rs, OutputStream out, String delimiter, Charset cs) {
     OutputStreamWriter osw = new OutputStreamWriter(out, cs);
     write(
