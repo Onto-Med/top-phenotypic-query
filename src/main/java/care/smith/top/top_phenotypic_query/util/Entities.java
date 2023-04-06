@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -186,6 +187,27 @@ public class Entities {
 
   public static String getFirstTitle(Entity e) {
     return e.getTitles().get(0).getText();
+  }
+
+  public static List<String> getTitles(Entity e) {
+    return getAnnotations(e.getTitles());
+  }
+
+  public static List<String> getSynonyms(Entity e) {
+    return getAnnotations(e.getSynonyms());
+  }
+
+  public static List<String> getDescriptions(Entity e) {
+    return getAnnotations(e.getDescriptions());
+  }
+
+  private static List<String> getAnnotations(List<LocalisableText> texts) {
+    if (texts == null) return new ArrayList<>();
+    return texts.stream().map(t -> toString(t)).collect(Collectors.toList());
+  }
+
+  private static String toString(LocalisableText txt) {
+    return (txt.getLang() == null) ? txt.getText() : txt.getText() + PROP_VAL_SEP + txt.getLang();
   }
 
   public static String getTitle(Entity e, String lang) {

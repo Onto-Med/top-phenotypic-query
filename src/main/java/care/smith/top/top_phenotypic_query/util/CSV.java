@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.List;
 
+import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
@@ -13,17 +14,46 @@ import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 
 public class CSV {
 
-  public static void write(Entities phenotypes, OutputStream out, String delimiter, Charset cs) {
+  public static void write(
+      Entities phenotypes,
+      OutputStream out,
+      String delimiter,
+      String internalDelimiter,
+      Charset cs) {
     OutputStreamWriter osw = new OutputStreamWriter(out, cs);
-    write(delimiter, osw, "phenotype", "type", "datatype", "unit", "annotations", "codes");
+    write(
+        delimiter,
+        osw,
+        "phenotype",
+        "parent",
+        "type",
+        "datatype",
+        "unit",
+        "titles",
+        "synonyms",
+        "descriptions",
+        "codes");
 
-    // TODO
+    for (Phenotype phe : phenotypes.getPhenotypes()) write(phe, delimiter, internalDelimiter, osw);
 
     try {
       osw.flush();
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  private static void write(Phenotype phe, String del, String intDel, OutputStreamWriter osw) {
+    String phenotype = phe.getId();
+    String parent = (phe.getSuperPhenotype() == null) ? "" : phe.getSuperPhenotype().getId();
+    String type = (phe.getEntityType() == null) ? "" : phe.getEntityType().getValue();
+    String datatype = phe.getDataType().getValue();
+    String unit = (phe.getUnit() == null) ? "" : phe.getUnit();
+    String titles = String.join(intDel, Entities.getTitles(phe));
+    String synonyms = String.join(intDel, Entities.getSynonyms(phe));
+    String descriptions = String.join(intDel, Entities.getDescriptions(phe));
+    String codes = String.join(intDel, Phenotypes.getCodeUris(phe));
+    write(del, osw, phenotype, parent, type, datatype, unit, titles, synonyms, descriptions, codes);
   }
 
   public static void write(ResultSet rs, OutputStream out, String delimiter, Charset cs) {
