@@ -159,14 +159,14 @@ public class Entities {
     return getEntities().stream()
         .filter(e -> e.getEntityType() != EntityType.CATEGORY)
         .map(Phenotype.class::cast)
-        .collect(Collectors.toSet());
+        .collect(Collectors.toList());
   }
 
   public Collection<Phenotype> getPhenotypes(EntityType type) {
     return getEntities().stream()
         .filter(e -> e.getEntityType() == type)
         .map(Phenotype.class::cast)
-        .collect(Collectors.toSet());
+        .collect(Collectors.toList());
   }
 
   public Collection<Phenotype> getSinglePhenotypes() {
@@ -230,8 +230,8 @@ public class Entities {
         .orElse(null);
   }
 
-  private static final String ANN_SEP = "|";
-  private static final String PROP_VAL_SEP = "::";
+  private static final String ANN_SEP = "::";
+  private static final String PROP_VAL_SEP = "|";
 
   public static String getAnnotations(Entity e) {
     String txt = toString("title", e.getTitles());
@@ -253,9 +253,7 @@ public class Entities {
   }
 
   private static String toString(String prop, LocalisableText txt) {
-    return (txt.getLang() == null)
-        ? prop + PROP_VAL_SEP + txt.getText()
-        : prop + PROP_VAL_SEP + txt.getText() + PROP_VAL_SEP + txt.getLang();
+    return prop + PROP_VAL_SEP + toString(txt);
   }
 
   private static void add(Entity e, String[] vals) {

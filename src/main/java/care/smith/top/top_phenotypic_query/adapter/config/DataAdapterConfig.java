@@ -18,6 +18,7 @@ public class DataAdapterConfig {
   private String id;
   private String adapter;
   private Map<String, String> connection;
+  private CSVSettings csvSettings;
   private SubjectQuery subjectQuery;
   private Map<String, PhenotypeQuery> phenotypeQueries = new HashMap<>();
   private CodeMapping birthdateMapping;
@@ -62,6 +63,14 @@ public class DataAdapterConfig {
 
   public void setConnection(Map<String, String> connection) {
     this.connection = connection;
+  }
+
+  public CSVSettings getCsvSettings() {
+    return csvSettings;
+  }
+
+  public void setCsvSettings(CSVSettings csvSettings) {
+    this.csvSettings = csvSettings;
   }
 
   public SubjectQuery getSubjectQuery() {
@@ -161,6 +170,8 @@ public class DataAdapterConfig {
         + adapter
         + ", connection="
         + connection
+        + ", csvSettings="
+        + csvSettings
         + ", subjectQuery="
         + subjectQuery
         + ", phenotypeQueries="
