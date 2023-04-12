@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -75,6 +76,7 @@ public class Phenotypes {
   }
 
   public static List<String> getCodeUris(Phenotype p) {
+    if (p.getCodes() == null) return new ArrayList<>();
     return p.getCodes().stream().map(c -> getCodeUri(c)).collect(Collectors.toList());
   }
 

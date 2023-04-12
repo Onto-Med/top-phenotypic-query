@@ -3,7 +3,7 @@ package care.smith.top.top_phenotypic_query.result;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +20,7 @@ import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 
-public class ResultSet extends HashMap<String, SubjectPhenotypes> {
+public class ResultSet extends LinkedHashMap<String, SubjectPhenotypes> {
 
   private static final long serialVersionUID = 1L;
 

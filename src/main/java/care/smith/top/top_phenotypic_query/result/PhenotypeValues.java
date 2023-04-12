@@ -1,7 +1,7 @@
 package care.smith.top.top_phenotypic_query.result;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -11,7 +11,7 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
 
-public class PhenotypeValues extends HashMap<DateTimeRestriction, List<Value>> {
+public class PhenotypeValues extends LinkedHashMap<DateTimeRestriction, List<Value>> {
 
   private static final long serialVersionUID = 1L;
   private String phenotypeName;
@@ -82,7 +82,7 @@ public class PhenotypeValues extends HashMap<DateTimeRestriction, List<Value>> {
             .append(phenotypeName)
             .append("':")
             .append(System.lineSeparator());
-    for (Entry<DateTimeRestriction, List<Value>> entry : entrySet())
+    for (java.util.Map.Entry<DateTimeRestriction, List<Value>> entry : entrySet())
       sb.append("    ")
           .append(Restrictions.toString(entry.getKey()))
           .append("::")

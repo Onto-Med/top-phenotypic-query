@@ -1,6 +1,6 @@
 package care.smith.top.top_phenotypic_query.result;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -12,7 +12,7 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
 
-public class SubjectPhenotypes extends HashMap<String, PhenotypeValues> {
+public class SubjectPhenotypes extends LinkedHashMap<String, PhenotypeValues> {
 
   private static final long serialVersionUID = 1L;
   private String subjectId;

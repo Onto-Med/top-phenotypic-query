@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -158,14 +159,14 @@ public class Entities {
     return getEntities().stream()
         .filter(e -> e.getEntityType() != EntityType.CATEGORY)
         .map(Phenotype.class::cast)
-        .collect(Collectors.toSet());
+        .collect(Collectors.toList());
   }
 
   public Collection<Phenotype> getPhenotypes(EntityType type) {
     return getEntities().stream()
         .filter(e -> e.getEntityType() == type)
         .map(Phenotype.class::cast)
-        .collect(Collectors.toSet());
+        .collect(Collectors.toList());
   }
 
   public Collection<Phenotype> getSinglePhenotypes() {
@@ -188,6 +189,27 @@ public class Entities {
     return e.getTitles().get(0).getText();
   }
 
+  public static List<String> getTitles(Entity e) {
+    return getAnnotations(e.getTitles());
+  }
+
+  public static List<String> getSynonyms(Entity e) {
+    return getAnnotations(e.getSynonyms());
+  }
+
+  public static List<String> getDescriptions(Entity e) {
+    return getAnnotations(e.getDescriptions());
+  }
+
+  private static List<String> getAnnotations(List<LocalisableText> texts) {
+    if (texts == null) return new ArrayList<>();
+    return texts.stream().map(t -> toString(t)).collect(Collectors.toList());
+  }
+
+  private static String toString(LocalisableText txt) {
+    return (txt.getLang() == null) ? txt.getText() : txt.getText() + PROP_VAL_SEP + txt.getLang();
+  }
+
   public static String getTitle(Entity e, String lang) {
     return getText(e.getTitles(), lang);
   }
@@ -208,8 +230,8 @@ public class Entities {
         .orElse(null);
   }
 
-  private static final String ANN_SEP = "|";
-  private static final String PROP_VAL_SEP = "::";
+  private static final String ANN_SEP = "::";
+  private static final String PROP_VAL_SEP = "|";
 
   public static String getAnnotations(Entity e) {
     String txt = toString("title", e.getTitles());
@@ -231,9 +253,7 @@ public class Entities {
   }
 
   private static String toString(String prop, LocalisableText txt) {
-    return (txt.getLang() == null)
-        ? prop + PROP_VAL_SEP + txt.getText()
-        : prop + PROP_VAL_SEP + txt.getText() + PROP_VAL_SEP + txt.getLang();
+    return prop + PROP_VAL_SEP + toString(txt);
   }
 
   private static void add(Entity e, String[] vals) {
