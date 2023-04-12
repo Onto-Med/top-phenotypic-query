@@ -21,20 +21,21 @@ public class CSV {
   private String entriesDelimiter = ";";
   private String entryPartsDelimiter = ",";
 
-  public CSV config(DataAdapterConfig config) {
-    if (config == null || config.getCsvSettings() == null) return this;
+  public CSV() {}
 
-    String charset = config.getCsvSettings().getCharset();
-    if (charset != null && !charset.isBlank()) charset(charset);
+  public CSV(DataAdapterConfig config) {
+    if (config != null && config.getCsvSettings() != null) {
+      String charset = config.getCsvSettings().getCharset();
+      if (charset != null && !charset.isBlank()) charset(charset);
 
-    String entriesDelimiter = config.getCsvSettings().getEntriesDelimiter();
-    if (entriesDelimiter != null && !entriesDelimiter.isBlank()) entriesDelimiter(entriesDelimiter);
+      String entriesDelimiter = config.getCsvSettings().getEntriesDelimiter();
+      if (entriesDelimiter != null && !entriesDelimiter.isBlank())
+        entriesDelimiter(entriesDelimiter);
 
-    String entryPartsDelimiter = config.getCsvSettings().getEntryPartsDelimiter();
-    if (entryPartsDelimiter != null && !entryPartsDelimiter.isBlank())
-      entryPartsDelimiter(entryPartsDelimiter);
-
-    return this;
+      String entryPartsDelimiter = config.getCsvSettings().getEntryPartsDelimiter();
+      if (entryPartsDelimiter != null && !entryPartsDelimiter.isBlank())
+        entryPartsDelimiter(entryPartsDelimiter);
+    }
   }
 
   public CSV charset(Charset charset) {
