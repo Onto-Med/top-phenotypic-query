@@ -92,15 +92,14 @@ public class SONG {
   public Expression generate(Category con) {
     log.debug("start generating query for concept: {} ...", con.getId());
 
-    // if single concept
+    Expression res;
     if (con.getExpression() == null) {
-      Expression res = getTermsExpression(con, EXPRESSION_TYPE_TERMS_INITIAL, false);
-      log.debug("end generating query for concept: {} = {}", con.getId(), toString(res));
-      return res;
+      // if single concept
+      res = getTermsExpression(con, EXPRESSION_TYPE_TERMS_INITIAL, false);
+    } else {
+      // else composite concept
+      res = generate(con.getExpression());
     }
-
-    // else composite concept
-    Expression res = generate(con.getExpression());
     log.debug("end generating query for concept : {} = {}", con.getId(), toString(res));
     return res;
   }
