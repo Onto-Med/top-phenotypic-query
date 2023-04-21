@@ -1,19 +1,27 @@
 package care.smith.top.top_phenotypic_query.song.adapter.lucene;
 
 import care.smith.top.model.ConceptQuery;
-import care.smith.top.top_phenotypic_query.song.adapter.Documents;
+import care.smith.top.top_phenotypic_query.song.adapter.Document;
 import care.smith.top.top_phenotypic_query.song.adapter.TextAdapter;
 import care.smith.top.top_phenotypic_query.song.adapter.TextAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 //ToDo: rename this with ElasticsearchAdapter to be more precise
 public class LuceneAdapter extends TextAdapter {
@@ -31,11 +39,27 @@ public class LuceneAdapter extends TextAdapter {
     }
 
     private void initConnection() {
-        RestClient restClient = RestClient.builder(
-                new HttpHost(
-                        config.getConnectionAttribute("url"),
-                        Integer.parseInt(config.getConnectionAttribute("port"))
-                )).build();
+        String protocol = "http";
+        String host = "";
+
+        try {
+            URL url = new URL(config.getConnectionAttribute("url"));
+            protocol = url.getProtocol();
+            host = url.getHost();
+        } catch (MalformedURLException e) {
+            host = config.getConnectionAttribute("url");
+        }
+
+        RestClient restClient = null;
+        if (Objects.equals(protocol, "http")) {
+            restClient = RestClient.builder(
+                    new HttpHost(
+                            host,
+                            Integer.parseInt(config.getConnectionAttribute("port"))
+                    )).build();
+        } else {
+            throw new NotImplementedException("only http supported at the moment");
+        }
 
         ElasticsearchTransport transport = new RestClientTransport(
                 restClient, new JacksonJsonpMapper());
@@ -44,23 +68,28 @@ public class LuceneAdapter extends TextAdapter {
     }
 
     @Override
-    public Documents execute(ConceptQuery query) {
+    public List<Document> execute(ConceptQuery query) {
         String queryString = Expressions.getStringValue(LuceneSong.get().generate(query.getEntityId()));
-        // execute query
+        // execute query and return resulting documents
+        return execute(queryString);
+    }
+
+    @Override
+    public List<Document> execute(String queryString) {
+        SearchResponse<Document> searchResponse;
         try {
-            SearchResponse<Documents> search = esClient.search(
+            searchResponse = esClient.search(
                     s -> s
-                            .index(config.getConnectionAttribute("index"))
+                            .index(Arrays.asList(config.getIndex()))
                             .query(q -> q
                                     .queryString(qs -> qs
                                             .query(queryString))),
-                    Documents.class);
+                    Document.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        // return resulting documents
-        return null;
+        return searchResponse.hits().hits().stream().map(
+                Hit::source).collect(Collectors.toList());
     }
 }
 

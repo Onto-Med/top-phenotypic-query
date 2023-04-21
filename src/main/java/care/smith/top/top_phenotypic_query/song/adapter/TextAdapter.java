@@ -1,9 +1,9 @@
 package care.smith.top.top_phenotypic_query.song.adapter;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import care.smith.top.model.ConceptQuery;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 
 public abstract class TextAdapter {
 
@@ -22,7 +22,7 @@ public abstract class TextAdapter {
     try {
       Class<?> adapterClass = Class.forName(config.getAdapter());
       adapter =
-          (TextAdapter) adapterClass.getConstructor(DataAdapterConfig.class).newInstance(config);
+          (TextAdapter) adapterClass.getConstructor(TextAdapterConfig.class).newInstance(config);
     } catch (ClassNotFoundException
         | InvocationTargetException
         | IllegalAccessException
@@ -43,5 +43,7 @@ public abstract class TextAdapter {
   }
 
   // generate and execute query
-  public abstract Documents execute(ConceptQuery query);
+  public abstract List<Document> execute(ConceptQuery query);
+
+  public abstract List<Document> execute(String queryString);
 }
