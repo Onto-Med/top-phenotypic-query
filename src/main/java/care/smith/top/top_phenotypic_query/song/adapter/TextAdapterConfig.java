@@ -2,6 +2,7 @@ package care.smith.top.top_phenotypic_query.song.adapter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,7 @@ public class TextAdapterConfig {
   private String adapter;
   private Map<String, String> connection;
   private String dateField;
+  private String[] index;
 
   public static TextAdapterConfig getInstance(String yamlFilePath) {
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
@@ -59,6 +61,14 @@ public class TextAdapterConfig {
 
   public void setDateField(String dateField) {
     this.dateField = dateField;
+  }
+
+  public String[] getIndex() {
+    return index;
+  }
+
+  public void setIndex(String[] index) {
+    this.index = index;
   }
 
   @Override
