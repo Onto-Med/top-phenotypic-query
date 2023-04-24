@@ -104,7 +104,9 @@ public abstract class DataAdapter {
 
   private void replacePhenotype(String sbjId, SingleSearch search, ResultSet rs) {
     rs.replacePhenotype(
-        sbjId, search.getSuperPhenotype().getId(), search.getPhenotype().getId() + "_values");
+        sbjId,
+        search.getSuperPhenotype().getId(),
+        search.getSuperPhenotype().getId() + "_values_" + search.getPhenotype().getId());
   }
 
   private void replacePhenotypes(SingleSearch search, ResultSet rs) {

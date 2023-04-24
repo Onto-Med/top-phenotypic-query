@@ -117,12 +117,27 @@ public class ResultSet extends LinkedHashMap<String, SubjectPhenotypes> {
     for (SubjectPhenotypes sbjPhens : getPhenotypes()) {
       SubjectPhenotypes newSbjPhens = new SubjectPhenotypes(sbjPhens.getSubjectId());
       for (ProjectionEntry pe : pro) {
-        List<Value> newVals = sbjPhens.getValues(pe.getSubjectId(), pe.getDateTimeRestriction());
-        newSbjPhens.setValues(pe.getSubjectId(), pe.getDateTimeRestriction(), newVals);
+        if (!addProjection(sbjPhens, newSbjPhens, pe.getSubjectId(), pe.getDateTimeRestriction())) {
+          for (String pheName : sbjPhens.getPhenotypeNames()) {
+            if (pheName.startsWith(pe.getSubjectId() + "_values_"))
+              addProjection(sbjPhens, newSbjPhens, pheName, pe.getDateTimeRestriction());
+          }
+        }
       }
       setPhenotypes(newSbjPhens);
     }
     return this;
+  }
+
+  private boolean addProjection(
+      SubjectPhenotypes sbjPhens,
+      SubjectPhenotypes newSbjPhens,
+      String pheName,
+      DateTimeRestriction dtr) {
+    List<Value> newVals = sbjPhens.getValues(pheName, dtr);
+    if (newVals == null) return false;
+    newSbjPhens.setValues(pheName, dtr, newVals);
+    return true;
   }
 
   public void addSubject(String subjectId) {
