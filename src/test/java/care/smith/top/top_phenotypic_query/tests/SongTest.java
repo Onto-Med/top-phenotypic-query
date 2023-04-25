@@ -15,10 +15,14 @@ import care.smith.top.top_phenotypic_query.song.functions.SubTree;
 import care.smith.top.top_phenotypic_query.song.functions.XProd;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.builder.Cat;
+import care.smith.top.top_phenotypic_query.util.builder.nlp.Cat;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SongTest {
+
+  private Logger log = LoggerFactory.getLogger(SongTest.class);
 
   Category a =
       new Cat("a")
@@ -86,6 +90,7 @@ public class SongTest {
 
   @Test
   public void test1() {
+    log.debug("===== Test 1 =====");
     Expression exp = And.of(Or.of(a, b), Not.of(c));
     String query =
         Expressions.getStringValue(LuceneSong.get().concepts(concepts).lang("de").generate(exp));
@@ -96,6 +101,7 @@ public class SongTest {
 
   @Test
   public void test2() {
+    log.debug("===== Test 2 =====");
     Expression exp = And.of(Or.of(a, b), Not.of(SubTree.of(c)));
     String query =
         Expressions.getStringValue(LuceneSong.get().concepts(concepts).lang("de").generate(exp));
@@ -106,6 +112,7 @@ public class SongTest {
 
   @Test
   public void test3() {
+    log.debug("===== Test 3 =====");
     Expression exp = And.of(Or.of(Dist.of(a, 5), Exp.of(b)), Not.of(c));
     String query =
         Expressions.getStringValue(LuceneSong.get().concepts(concepts).lang("de").generate(exp));
@@ -116,6 +123,7 @@ public class SongTest {
 
   @Test
   public void test4() {
+    log.debug("===== Test 4 =====");
     Expression exp = And.of(XProd.of(a, b), Not.of(c));
     String query =
         Expressions.getStringValue(LuceneSong.get().concepts(concepts).lang("de").generate(exp));
@@ -126,6 +134,7 @@ public class SongTest {
 
   @Test
   public void test5() {
+    log.debug("===== Test 5 =====");
     Expression exp = And.of(Dist.of(XProd.of(a, b), 2), Not.of(c));
     String query =
         Expressions.getStringValue(LuceneSong.get().concepts(concepts).lang("de").generate(exp));
@@ -136,6 +145,7 @@ public class SongTest {
 
   @Test
   public void test6() {
+    log.debug("===== Test 6 =====");
     Expression exp = And.of(Or.of(a, b), Not.of(And.of(c, f)));
     String query =
         Expressions.getStringValue(LuceneSong.get().concepts(concepts).lang("de").generate(exp));
