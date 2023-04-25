@@ -12,9 +12,12 @@ public class TextFinder {
   private Entities entities;
   private TextAdapter adapter;
 
+  private TextAdapterConfig config;
+
   public TextFinder(ConceptQuery query, Entity[] entities, TextAdapter adapter) {
     this.query = query;
     this.adapter = adapter;
+    this.config = adapter.getConfig();
     this.entities = Entities.of(entities);
   }
 

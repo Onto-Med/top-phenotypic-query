@@ -38,9 +38,10 @@ public class LuceneAdapter extends TextAdapter {
         initConnection();
     }
 
+    //ToDo: implement https protocol possibilities
     private void initConnection() {
         String protocol = "http";
-        String host = "";
+        String host;
 
         try {
             URL url = new URL(config.getConnectionAttribute("url"));
@@ -50,7 +51,7 @@ public class LuceneAdapter extends TextAdapter {
             host = config.getConnectionAttribute("url");
         }
 
-        RestClient restClient = null;
+        RestClient restClient;
         if (Objects.equals(protocol, "http")) {
             restClient = RestClient.builder(
                     new HttpHost(
@@ -83,7 +84,8 @@ public class LuceneAdapter extends TextAdapter {
                             .index(Arrays.asList(config.getIndex()))
                             .query(q -> q
                                     .queryString(qs -> qs
-                                            .query(queryString))),
+                                            .query(queryString)
+                                            .fields(Arrays.asList(config.getField())))),
                     Document.class);
         } catch (IOException e) {
             throw new RuntimeException(e);

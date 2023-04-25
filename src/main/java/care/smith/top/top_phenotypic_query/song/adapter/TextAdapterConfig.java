@@ -15,6 +15,7 @@ public class TextAdapterConfig {
   private Map<String, String> connection;
   private String dateField;
   private String[] index;
+  private String[] field;
 
   public static TextAdapterConfig getInstance(String yamlFilePath) {
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
@@ -71,6 +72,13 @@ public class TextAdapterConfig {
     this.index = index;
   }
 
+  public String[] getField() {
+    return field;
+  }
+
+  public void setField(String[] field) {
+    this.field = field;
+  }
   @Override
   public String toString() {
     return "TextAdapterConfig [id="
