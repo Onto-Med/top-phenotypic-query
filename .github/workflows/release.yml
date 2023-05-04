@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v3
       with:
         java-version: 11
         distribution: 'adopt'
@@ -23,7 +23,7 @@ jobs:
         server-id: github
         settings-path: ${{ github.workspace }}
     - name: Build with Maven
-      run: mvn -B package -s .mvn-ci.xml --file pom.xml
+      run: mvn -B --no-transfer-progress package -s .mvn-ci.xml --file pom.xml
       env:
         GH_MAVEN_PKG_AUTH_TOKEN: ${{ secrets.GH_MAVEN_PKG_AUTH_TOKEN }}
         GH_MAVEN_PKG_USER: ${{ secrets.GH_MAVEN_PKG_USER }}
