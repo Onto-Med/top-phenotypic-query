@@ -38,6 +38,11 @@ public class DataAdapterConfig {
     return config;
   }
 
+  public static DataAdapterConfig getInstanceFromResource(String yamlFilePath) {
+    return getInstance(
+        Thread.currentThread().getContextClassLoader().getResource(yamlFilePath).getPath());
+  }
+
   public String getAdapter() {
     return adapter;
   }
@@ -167,7 +172,7 @@ public class DataAdapterConfig {
     return new ArrayList<>(codeMappings.values());
   }
 
-  public void merge(DataAdapterConfig other) {
+  public DataAdapterConfig merge(DataAdapterConfig other) {
     setId(other.getId());
     setAdapter(other.getAdapter());
     setConnection(other.getConnection());
@@ -178,6 +183,7 @@ public class DataAdapterConfig {
     if (other.getAgeMapping() != null) setAgeMapping(other.getAgeMapping());
     if (other.getSexMapping() != null) setSexMapping(other.getSexMapping());
     setCodeMappings(other.getCodeMappings());
+    return this;
   }
 
   @Override

@@ -28,8 +28,10 @@ public abstract class DataAdapter {
     this.config = config;
   }
 
-  protected DataAdapter(String configFile) {
-    this(DataAdapterConfig.getInstance(configFile));
+  protected static DataAdapterConfig mergeDefault(DataAdapterConfig config, String defConfResName) {
+    return DataAdapterConfig.getInstanceFromResource(
+            "default_adapter_configuration/" + defConfResName + ".yml")
+        .merge(config);
   }
 
   public static DataAdapter getInstance(DataAdapterConfig config) throws InstantiationException {
@@ -51,6 +53,11 @@ public abstract class DataAdapter {
 
   public static DataAdapter getInstance(String configFile) throws InstantiationException {
     return getInstance(DataAdapterConfig.getInstance(configFile));
+  }
+
+  public static DataAdapter getInstanceFromResource(String configFile)
+      throws InstantiationException {
+    return getInstance(DataAdapterConfig.getInstanceFromResource(configFile));
   }
 
   public DataAdapterConfig getConfig() {

@@ -86,11 +86,8 @@ public class SqlAdapterTest extends AbstractTest {
   }
 
   @Test
-  void testCorruptedPhenotype() throws SQLException {
-    URL configFile =
-        Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test1.yml");
-    assertNotNull(configFile);
-    SQLAdapter adapter = new SQLAdapter(configFile.getPath());
+  void testCorruptedPhenotype() throws InstantiationException, SQLException {
+    DataAdapter adapter = DataAdapter.getInstanceFromResource("config/SQL_Adapter_Test1.yml");
 
     Phenotype stringPhenotype = getPhenotype("Sex", "http://loinc.org", "46098-0", DataType.STRING);
 
@@ -109,7 +106,8 @@ public class SqlAdapterTest extends AbstractTest {
 
     Query query = new Query().addCriteriaItem(cri);
 
-    try (java.sql.ResultSet rs = adapter.executeQuery("SELECT count(*) FROM assessment1")) {
+    try (java.sql.ResultSet rs =
+        ((SQLAdapter) adapter).executeQuery("SELECT count(*) FROM assessment1")) {
       rs.next();
       assertEquals(4, rs.getInt(1));
     }
@@ -118,7 +116,8 @@ public class SqlAdapterTest extends AbstractTest {
         new PhenotypeFinder(query, new Entity[] {stringPhenotype, corrupted}, adapter);
     finder.execute();
 
-    try (java.sql.ResultSet rs = adapter.executeQuery("SELECT count(*) FROM assessment1")) {
+    try (java.sql.ResultSet rs =
+        ((SQLAdapter) adapter).executeQuery("SELECT count(*) FROM assessment1")) {
       rs.next();
       assertEquals(4, rs.getInt(1));
     }

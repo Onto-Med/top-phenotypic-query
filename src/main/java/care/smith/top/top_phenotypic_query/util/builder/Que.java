@@ -30,21 +30,9 @@ public class Que {
   private Logger log = LoggerFactory.getLogger(Que.class);
 
   public Que(String configFilePath, Entity... entities) throws InstantiationException {
-    this.config = getConfig(configFilePath);
+    this.config = DataAdapterConfig.getInstanceFromResource(configFilePath);
     this.adapter = DataAdapter.getInstance(config);
     this.entities = entities;
-  }
-
-  public static DataAdapter getAdapter(String configFilePath) throws InstantiationException {
-    return DataAdapter.getInstance(getConfig(configFilePath));
-  }
-
-  public static DataAdapterConfig getConfig(String configFilePath) {
-    return DataAdapterConfig.getInstance(getPath(configFilePath));
-  }
-
-  private static String getPath(String configFilePath) {
-    return Thread.currentThread().getContextClassLoader().getResource(configFilePath).getPath();
   }
 
   public DataAdapter getAdapter() {
