@@ -30,8 +30,8 @@ public class Que {
   private Logger log = LoggerFactory.getLogger(Que.class);
 
   public Que(String configFilePath, Entity... entities) throws InstantiationException {
-    this.config = DataAdapterConfig.getInstanceFromResource(configFilePath);
-    this.adapter = DataAdapter.getInstance(config);
+    this.adapter = DataAdapter.getInstanceFromResource(configFilePath);
+    this.config = adapter.getConfig();
     this.entities = entities;
   }
 
