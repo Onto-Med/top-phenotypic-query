@@ -16,13 +16,8 @@ public class FHIRAdapter extends DataAdapter {
   private static final Logger log = LoggerFactory.getLogger(FHIRAdapter.class);
 
   public FHIRAdapter(DataAdapterConfig config) {
-    super(config);
-    this.client = new FHIRClient(config);
-  }
-
-  public FHIRAdapter(String configFilePath) {
-    super(configFilePath);
-    this.client = new FHIRClient(config);
+    super(mergeDefault(config, "Default_FHIR_Adapter"));
+    this.client = new FHIRClient(this.config);
   }
 
   @Override

@@ -3,7 +3,6 @@ package care.smith.top.top_phenotypic_query.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.net.URL;
 import java.sql.SQLException;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -11,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import care.smith.top.model.QueryCriterion;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapterSettings;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
@@ -19,14 +19,11 @@ import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PreparedStatementTest extends AbstractTest {
 
-  private SQLAdapter adapter;
+  private DataAdapter adapter;
 
   @BeforeAll
-  void setup() throws SQLException {
-    URL configFile =
-        Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test6.yml");
-    assertNotNull(configFile);
-    adapter = new SQLAdapter(configFile.getPath());
+  void setup() throws InstantiationException {
+    adapter = DataAdapter.getInstanceFromResource("config/SQL_Adapter_Test6.yml");
     assertNotNull(adapter);
   }
 
@@ -49,7 +46,9 @@ public class PreparedStatementTest extends AbstractTest {
             + "AND sex IN (?,?)\n"
             + "AND birth_date >= ? {1: 'female', 2: 'male', 3: TIMESTAMP '2000-01-01 00:00:00'}";
     String psActual =
-        settings.getSubjectPreparedStatement(pqActual, adapter.getConnection(), search).toString();
+        settings
+            .getSubjectPreparedStatement(pqActual, ((SQLAdapter) adapter).getConnection(), search)
+            .toString();
     assertEquals(psExpected, psActual.substring(psActual.indexOf("SELECT")));
   }
 
@@ -77,7 +76,9 @@ public class PreparedStatementTest extends AbstractTest {
             + "AND created_at >= ?\n"
             + "AND created_at < ? {1: CAST(100 AS NUMERIC(3)), 2: CAST(500 AS NUMERIC(3)), 3: TIMESTAMP '2000-01-01 00:00:00', 4: TIMESTAMP '2001-01-01 00:00:00'}";
     String psActual =
-        settings.getSinglePreparedStatement(pqActual, adapter.getConnection(), search).toString();
+        settings
+            .getSinglePreparedStatement(pqActual, ((SQLAdapter) adapter).getConnection(), search)
+            .toString();
     assertEquals(psExpected, psActual.substring(psActual.indexOf("SELECT")));
   }
 }

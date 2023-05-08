@@ -2,6 +2,7 @@ package care.smith.top.top_phenotypic_query.adapter.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,11 @@ public class DataAdapterConfig {
       e.printStackTrace();
     }
     return config;
+  }
+
+  public static DataAdapterConfig getInstanceFromResource(String yamlFilePath) {
+    return getInstance(
+        Thread.currentThread().getContextClassLoader().getResource(yamlFilePath).getPath());
   }
 
   public String getAdapter() {
@@ -160,6 +166,24 @@ public class DataAdapterConfig {
   public void setCodeMappings(List<CodeMapping> codeMappings) {
     if (codeMappings != null)
       for (CodeMapping cm : codeMappings) this.codeMappings.put(cm.getCode(), cm);
+  }
+
+  public List<CodeMapping> getCodeMappings() {
+    return new ArrayList<>(codeMappings.values());
+  }
+
+  public DataAdapterConfig merge(DataAdapterConfig other) {
+    setId(other.getId());
+    setAdapter(other.getAdapter());
+    setConnection(other.getConnection());
+    if (other.getCsvSettings() != null) setCsvSettings(other.getCsvSettings());
+    if (other.getSubjectQuery() != null) setSubjectQuery(other.getSubjectQuery());
+    phenotypeQueries.putAll(other.getPhenotypeQueries());
+    if (other.getBirthdateMapping() != null) setBirthdateMapping(other.getBirthdateMapping());
+    if (other.getAgeMapping() != null) setAgeMapping(other.getAgeMapping());
+    if (other.getSexMapping() != null) setSexMapping(other.getSexMapping());
+    setCodeMappings(other.getCodeMappings());
+    return this;
   }
 
   @Override

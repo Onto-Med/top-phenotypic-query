@@ -42,12 +42,7 @@ public class SQLAdapter extends DataAdapter {
   private static final Logger log = LoggerFactory.getLogger(SQLAdapter.class);
 
   public SQLAdapter(DataAdapterConfig config) throws SQLException {
-    super(config);
-    initConnection();
-  }
-
-  public SQLAdapter(String configFilePath) throws SQLException {
-    super(configFilePath);
+    super(mergeDefault(config, "Default_SQL_Adapter"));
     initConnection();
   }
 

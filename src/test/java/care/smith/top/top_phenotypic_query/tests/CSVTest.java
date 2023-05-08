@@ -14,7 +14,6 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
-import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 
@@ -163,7 +162,7 @@ public class CSVTest {
             + "overweight,bmi,composite_restriction,observation,boolean,,,,,,|MIN|1|> 25|,"
             + System.lineSeparator();
 
-    DataAdapterConfig config = Que.getConfig("config/CSV_Adapter.yml");
+    DataAdapterConfig config = DataAdapterConfig.getInstanceFromResource("config/CSV_Adapter.yml");
 
     assertEquals("UTF-16", config.getCsvSettings().getCharset());
     assertEquals(",", config.getCsvSettings().getEntriesDelimiter());
