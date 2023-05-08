@@ -6,14 +6,14 @@ subjectQuery:
     sex: gender.value
     birthdate: birthDate
 phenotypeQueries:
-  Condition:
+  condition:
     baseQuery: "Condition?code={codes}"
     dateTimeIntervalPart: "&recorded-date{operator}{value}"
     subjectsPart: "&subject={values}"
     output:
       subject: subject.reference.value
       dateTime: recordedDate
-  Observation:
+  observation:
     baseQuery: "Observation?code={codes}"
     numberValueIntervalPart: "&value-quantity{operator}{value}"
     numberValueListPart: "&value-quantity={values}"
@@ -29,7 +29,7 @@ phenotypeQueries:
       conceptValue: value.coding.select(system.value + '|' + code)
       dateTimeValue: value
       dateTime: effective
-  ObservationComponent:
+  observation_component:
     baseQuery: "Observation?component-code={codes}"
     numberValueIntervalPart: "&component-value-quantity{operator}{value}"
     numberValueListPart: "&component-value-quantity={values}"
@@ -41,6 +41,18 @@ phenotypeQueries:
       numberValue: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.value
       conceptValue: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.coding.select(system.value + '|' + code)
       dateTime: effective
+  medication_administration:
+    baseQuery: "MedicationAdministration?code={codes}"
+    dateTimeIntervalPart: "&effective-time{operator}{value}"
+    output:
+      subject: subject.reference.value
+      dateTime: effective
+  procedure:
+    baseQuery: "Procedure?code={codes}"
+    dateTimeIntervalPart: "&date{operator}{value}"
+    output:
+      subject: subject.reference.value
+      dateTime: performed
 birthdateMapping:
   code: http://loinc.org|21112-8
 ageMapping:
