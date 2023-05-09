@@ -1,0 +1,70 @@
+package care.smith.top.top_phenotypic_query.tests.nlp;
+
+import care.smith.top.top_phenotypic_query.song.adapter.Document;
+import care.smith.top.top_phenotypic_query.song.adapter.TextAdapter;
+import care.smith.top.top_phenotypic_query.song.adapter.lucene.LuceneAdapter;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.json.jackson.JacksonJsonpMapper;
+import co.elastic.clients.transport.ElasticsearchTransport;
+import co.elastic.clients.transport.rest_client.RestClientTransport;
+import org.apache.http.HttpHost;
+import org.elasticsearch.client.RestClient;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+public abstract class AbstractElasticTest {
+    protected static final String ELASTIC_URL = "localhost";
+    protected static final String ELASTIC_PORT = "9200";
+    protected static final String[] ELASTIC_INDEX = new String[]{"test_documents"};
+    protected static final String[] ELASTIC_FIELD = new String[]{"text"};
+    protected static ElasticsearchClient esClient;
+
+    protected static TextAdapter adapter;
+
+    /**
+     * The ES index "test_documents" should be populated with the following three documents:
+     * <ul>
+     *     <li>_id: 01, _source: {name: test01, text: What do we have here? A test document. With an entity. Nice.},</li>
+     *     <li>_id: 02, _source: {name: test02, text: Another document is here. It has two entities.},</li>
+     *     <li>_id: 03, _source: {name: test03, text: And a third document; but this one features nothing.}</li>
+     * </ul>
+     */
+    protected static void setUpESIndex() {
+        RestClient restClient = RestClient.builder(
+                new HttpHost(ELASTIC_URL, Integer.parseInt(ELASTIC_PORT))).build();
+
+        ElasticsearchTransport transport = new RestClientTransport(
+                restClient, new JacksonJsonpMapper());
+
+        esClient = new ElasticsearchClient(transport);
+        assertNotNull(esClient);
+
+        try {
+            SearchResponse<Document> search = esClient.search(
+                    s -> s
+                            .index(Arrays.asList(ELASTIC_INDEX))
+                            .query(q -> q
+                                    .matchAll(v -> v
+                                            .queryName("matchAll"))),
+                    Document.class);
+            assertEquals(3, search.hits().hits().size());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected static void initAdaper() throws InstantiationException {
+        URL configFile =
+                Thread.currentThread().getContextClassLoader().getResource("config/Elastic_Adapter_Test.yml");
+        assertNotNull(configFile);
+
+        adapter = LuceneAdapter.getInstance(configFile.getPath());
+        assertNotNull(adapter);
+    }
+}
