@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import care.smith.top.model.QueryCriterion;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
-import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapterSettings;
+import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.data_adapter.sql.SQLAdapter;
+import care.smith.top.top_phenotypic_query.data_adapter.sql.SQLAdapterSettings;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 

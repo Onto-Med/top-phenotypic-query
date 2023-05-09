@@ -239,15 +239,15 @@ public class Entities {
   private static final String PROP_VAL_SEP = "|";
 
   public static Set<String> getTitlesAndSynonyms(Entity e, String lang) {
-    Set<String> anns = new LinkedHashSet<>();
-    anns.addAll(getAnnotations(e.getTitles(), lang));
+    Set<String> terms = new LinkedHashSet<>();
+    terms.addAll(getAnnotations(e.getTitles(), lang));
     if (e.getSynonyms() != null && !e.getSynonyms().isEmpty())
       terms.addAll(getAnnotations(e.getSynonyms(), lang));
     return terms;
   }
 
   public static Set<String> getTerms(Entity e, String lang, boolean includeSubTree) {
-    Set<String> terms = getTerms(e, lang);
+    Set<String> terms = getTerms(e, lang, includeSubTree);
     if (!includeSubTree) return terms;
     Category c = (Category) e;
     if (c.getSubCategories() == null) return terms;

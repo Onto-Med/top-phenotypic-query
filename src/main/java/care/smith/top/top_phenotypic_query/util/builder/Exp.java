@@ -63,10 +63,6 @@ public class Exp {
     return of(Val.of(val));
   }
 
-  public static Expression of(String val) {
-    return of(Val.of(val));
-  }
-
   public static Expression of(LocalDateTime val) {
     return of(Val.of(val));
   }

@@ -9,7 +9,7 @@ import java.util.List;
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;

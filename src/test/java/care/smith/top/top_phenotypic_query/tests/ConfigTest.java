@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 
 public class ConfigTest {
   DataAdapterConfig conf;

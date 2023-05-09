@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
 import care.smith.top.top_phenotypic_query.converter.csv.CSV;

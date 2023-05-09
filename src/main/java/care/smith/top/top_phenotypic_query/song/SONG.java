@@ -7,15 +7,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import care.smith.top.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import care.smith.top.model.Category;
-import care.smith.top.model.Entity;
-import care.smith.top.model.Expression;
-import care.smith.top.model.ExpressionFunction;
-import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.song.functions.And;
 import care.smith.top.top_phenotypic_query.song.functions.Dist;
 import care.smith.top.top_phenotypic_query.song.functions.Not;
@@ -93,12 +89,11 @@ public class SONG {
     log.debug("start generating query for concept: {} ...", con.getId());
 
     // if single concept
-    if (con.getExpression() == null) {
+    if (con.getEntityType() == EntityType.SINGLE_CONCEPT) {
       Expression res = getTermsExpression(con, EXPRESSION_TYPE_TERMS_INITIAL, false);
       log.debug("end generating query for concept: {} = {}", con.getId(), toString(res));
       return res;
     }
-
     // else composite concept
     Expression res = generate(con.getExpression());
     log.debug("end generating query for concept : {} = {}", con.getId(), toString(res));

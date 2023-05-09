@@ -10,7 +10,7 @@ import org.hl7.fhir.r4.model.Patient;
 import care.smith.top.model.Entity;
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
-import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRClient;
+import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRClient;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.MinTrue;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;

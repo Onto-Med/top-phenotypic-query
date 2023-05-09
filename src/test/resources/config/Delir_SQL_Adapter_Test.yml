@@ -1,5 +1,5 @@
 id: Generic_SQL_Adapter
-adapter: care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter
+adapter: care.smith.top.top_phenotypic_query.data_adapter.sql.SQLAdapter
 connection:
   url: jdbc:h2:mem:delir_db;INIT=RUNSCRIPT FROM 'classpath:delir.sql'
   user: user
