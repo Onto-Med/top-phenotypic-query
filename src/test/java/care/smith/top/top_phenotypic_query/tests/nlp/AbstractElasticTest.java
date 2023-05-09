@@ -1,6 +1,8 @@
 package care.smith.top.top_phenotypic_query.tests.nlp;
 
 import care.smith.top.top_phenotypic_query.song.adapter.Document;
+import care.smith.top.top_phenotypic_query.song.adapter.TextAdapter;
+import care.smith.top.top_phenotypic_query.song.adapter.lucene.LuceneAdapter;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
@@ -10,6 +12,7 @@ import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,6 +24,8 @@ public abstract class AbstractElasticTest {
     protected static final String[] ELASTIC_INDEX = new String[]{"test_documents"};
     protected static final String[] ELASTIC_FIELD = new String[]{"text"};
     protected static ElasticsearchClient esClient;
+
+    protected static TextAdapter adapter;
 
     /**
      * The ES index "test_documents" should be populated with the following three documents:
@@ -52,5 +57,14 @@ public abstract class AbstractElasticTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected static void initAdaper() throws InstantiationException {
+        URL configFile =
+                Thread.currentThread().getContextClassLoader().getResource("config/Elastic_Adapter_Test.yml");
+        assertNotNull(configFile);
+
+        adapter = LuceneAdapter.getInstance(configFile.getPath());
+        assertNotNull(adapter);
     }
 }

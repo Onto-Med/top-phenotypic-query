@@ -38,12 +38,7 @@ class LuceneAdapterTest extends AbstractElasticTest {
 
     @Test
     void testAdapterConnection() throws InstantiationException {
-        URL configFile =
-                Thread.currentThread().getContextClassLoader().getResource("config/Elastic_Adapter_Test.yml");
-        assertNotNull(configFile);
-
-        TextAdapter adapter = LuceneAdapter.getInstance(configFile.getPath());
-        assertNotNull(adapter);
+        initAdaper();
     }
 
     @Test
@@ -56,11 +51,7 @@ class LuceneAdapterTest extends AbstractElasticTest {
         int correctDocumentCount = 2; // "test01": has "document" & "entity"; "test02": "document" & "entities"
                                       // not "test03": has "document" but neither "entity" nor "entities" ((see setUp))
 
-        URL configFile =
-                Thread.currentThread().getContextClassLoader().getResource("config/Elastic_Adapter_Test.yml");
-        assertNotNull(configFile);
-
-        TextAdapter adapter = LuceneAdapter.getInstance(configFile.getPath());
+        initAdaper();
         assertNotNull(adapter);
 
         List<Document> documents = adapter.execute(queryString);
