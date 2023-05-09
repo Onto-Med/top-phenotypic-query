@@ -89,7 +89,7 @@ public class SONG {
     log.debug("start generating query for concept: {} ...", con.getId());
 
     // if single concept
-    if (con.getEntityType() == EntityType.SINGLE_CONCEPT) {
+    if (con.getExpression() == null) {
       Expression res = getTermsExpression(con, EXPRESSION_TYPE_TERMS_INITIAL, false);
       log.debug("end generating query for concept: {} = {}", con.getId(), toString(res));
       return res;

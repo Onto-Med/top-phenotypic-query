@@ -1,7 +1,7 @@
 package care.smith.top.top_phenotypic_query.song.adapter.lucene;
 
 import care.smith.top.model.Query;
-import care.smith.top.top_phenotypic_query.song.adapter.Documents;
+import care.smith.top.top_phenotypic_query.song.adapter.Document;
 import care.smith.top.top_phenotypic_query.song.adapter.TextAdapter;
 import care.smith.top.top_phenotypic_query.song.adapter.TextAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.Expressions;
@@ -70,7 +70,7 @@ public class LuceneAdapter extends TextAdapter {
 
     @Override
     public List<Document> execute(Query query) {
-        String queryString = Expressions.getStringValue(LuceneSong.get().generate(query.getEntityId()));
+        String queryString = Expressions.getStringValue(LuceneSong.get().generate(String.valueOf(query.getId())));
         // execute query and return resulting documents
         return execute(queryString);
     }

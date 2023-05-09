@@ -4,14 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,8 +50,8 @@ public class Entities {
       if (Phenotypes.isRestriction(p)) {
         if (Phenotypes.isSingle(p) && p.getRestriction() == null) p.setRestriction(Res.ofCodes(p));
         if (config == null
-            || Phenotypes.isCompositePhenotype(supP)
-            || !setInExpression(config, supP, p)) p.setExpression(Exp.inRestriction(p));
+                || Phenotypes.isCompositePhenotype(supP)
+                || !setInExpression(config, supP, p)) p.setExpression(Exp.inRestriction(p));
       }
     }
     return this;
@@ -89,17 +82,17 @@ public class Entities {
   }
 
   public static Entity[] readEntities(String repoUrl, String user, String password)
-      throws IOException {
+          throws IOException {
     return read(repoUrl + "/entity", user, password, Entity[].class);
   }
 
   public static Repository readRepository(String repoUrl, String user, String password)
-      throws IOException {
+          throws IOException {
     return read(repoUrl, user, password, Repository.class);
   }
 
   private static <T> T read(String url, String user, String password, Class<T> cls)
-      throws IOException {
+          throws IOException {
     URLConnection uc = new URL(url).openConnection();
     String userpass = user + ":" + password;
     String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
@@ -150,9 +143,9 @@ public class Entities {
 
   public Collection<Category> getCategories() {
     return getEntities().stream()
-        .filter(e -> e.getEntityType() == EntityType.CATEGORY)
-        .map(Category.class::cast)
-        .collect(Collectors.toSet());
+            .filter(e -> e.getEntityType() == EntityType.CATEGORY)
+            .map(Category.class::cast)
+            .collect(Collectors.toSet());
   }
 
   public Set<String> getPhenotypeIds() {
@@ -161,16 +154,16 @@ public class Entities {
 
   public Collection<Phenotype> getPhenotypes() {
     return getEntities().stream()
-        .filter(e -> e.getEntityType() != EntityType.CATEGORY)
-        .map(Phenotype.class::cast)
-        .collect(Collectors.toList());
+            .filter(e -> e.getEntityType() != EntityType.CATEGORY)
+            .map(Phenotype.class::cast)
+            .collect(Collectors.toList());
   }
 
   public Collection<Phenotype> getPhenotypes(EntityType type) {
     return getEntities().stream()
-        .filter(e -> e.getEntityType() == type)
-        .map(Phenotype.class::cast)
-        .collect(Collectors.toList());
+            .filter(e -> e.getEntityType() == type)
+            .map(Phenotype.class::cast)
+            .collect(Collectors.toList());
   }
 
   public Collection<Phenotype> getSinglePhenotypes() {
@@ -228,10 +221,10 @@ public class Entities {
 
   private static String getText(List<LocalisableText> texts, String lang) {
     return texts.stream()
-        .filter(t -> Objects.equals(t.getLang(), lang))
-        .map(t -> t.getText())
-        .findFirst()
-        .orElse(null);
+            .filter(t -> Objects.equals(t.getLang(), lang))
+            .map(t -> t.getText())
+            .findFirst()
+            .orElse(null);
   }
 
   private static final String ANN_SEP = "::";
@@ -246,7 +239,7 @@ public class Entities {
   }
 
   public static Set<String> getTerms(Entity e, String lang, boolean includeSubTree) {
-    Set<String> terms = getTerms(e, lang, includeSubTree);
+    Set<String> terms = getTitlesAndSynonyms(e, lang);
     if (!includeSubTree) return terms;
     Category c = (Category) e;
     if (c.getSubCategories() == null) return terms;
@@ -256,9 +249,9 @@ public class Entities {
 
   private static List<String> getAnnotations(List<LocalisableText> txts, String lang) {
     return txts.stream()
-        .filter(t -> lang.trim().equals(t.getLang().trim()) && !t.getText().isBlank())
-        .map(t -> t.getText().trim())
-        .collect(Collectors.toList());
+            .filter(t -> lang.trim().equals(t.getLang().trim()) && !t.getText().isBlank())
+            .map(t -> t.getText().trim())
+            .collect(Collectors.toList());
   }
 
   public static String getAnnotations(Entity e) {
