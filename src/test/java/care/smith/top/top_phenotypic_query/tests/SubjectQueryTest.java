@@ -9,13 +9,9 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import care.smith.top.model.*;
 import org.junit.jupiter.api.Test;
 
-import care.smith.top.model.DataType;
-import care.smith.top.model.Entity;
-import care.smith.top.model.Phenotype;
-import care.smith.top.model.Query;
-import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
@@ -33,8 +29,8 @@ public class SubjectQueryTest extends AbstractTest {
 
   @Test
   public void test1() throws InstantiationException {
-    Query query =
-        new Query()
+    PhenotypeQuery query =
+        new PhenotypeQuery()
             .addCriteriaItem(
                 (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId()))
             .addCriteriaItem(
@@ -62,8 +58,8 @@ public class SubjectQueryTest extends AbstractTest {
 
   @Test
   public void test2() throws InstantiationException {
-    Query query =
-        new Query()
+    PhenotypeQuery query =
+        new PhenotypeQuery()
             .addCriteriaItem(
                 (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId()))
             .addCriteriaItem(
@@ -86,8 +82,8 @@ public class SubjectQueryTest extends AbstractTest {
 
   @Test
   public void test3() throws InstantiationException {
-    Query query =
-        new Query()
+    PhenotypeQuery query =
+        new PhenotypeQuery()
             .addCriteriaItem(
                 (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(female.getId()))
             .addCriteriaItem(
@@ -113,8 +109,8 @@ public class SubjectQueryTest extends AbstractTest {
 
   @Test
   public void test4() throws InstantiationException {
-    Query query =
-        new Query()
+    PhenotypeQuery query =
+        new PhenotypeQuery()
             .addCriteriaItem(
                 (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(female.getId()))
             .addCriteriaItem(

@@ -3,6 +3,7 @@ package care.smith.top.top_phenotypic_query.search;
 import java.util.HashSet;
 import java.util.Set;
 
+import care.smith.top.model.PhenotypeQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,11 +23,11 @@ public class SingleQueryMan {
   private Set<SingleSearch> exclusions = new HashSet<>();
   private Set<SingleSearch> variables = new HashSet<>();
   private SubjectQueryMan sbjQueryMan;
-  private Query query;
+  private PhenotypeQuery query;
   private Entities phenotypes;
 
   public SingleQueryMan(
-      SubjectQueryMan subjectQueryMan, Query query, Entities phenotypes) {
+      SubjectQueryMan subjectQueryMan, PhenotypeQuery query, Entities phenotypes) {
     this.sbjQueryMan = subjectQueryMan;
     this.query = query;
     this.phenotypes = phenotypes;

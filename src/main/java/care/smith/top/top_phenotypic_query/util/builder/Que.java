@@ -5,16 +5,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import care.smith.top.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import care.smith.top.model.DateTimeRestriction;
-import care.smith.top.model.Entity;
-import care.smith.top.model.Phenotype;
-import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.ProjectionEntry.TypeEnum;
-import care.smith.top.model.Query;
-import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
@@ -24,7 +19,7 @@ public class Que {
 
   private DataAdapter adapter;
   private DataAdapterConfig config;
-  private Query query = new Query();
+  private PhenotypeQuery query = new PhenotypeQuery();
   private Entity[] entities;
 
   private Logger log = LoggerFactory.getLogger(Que.class);
@@ -43,7 +38,7 @@ public class Que {
     return config;
   }
 
-  public Query getQuery() {
+  public PhenotypeQuery getQuery() {
     return query;
   }
 
