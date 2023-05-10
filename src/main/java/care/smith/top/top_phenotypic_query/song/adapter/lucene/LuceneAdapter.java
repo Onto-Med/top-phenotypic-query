@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.song.adapter.lucene;
 
+import care.smith.top.model.ConceptQuery;
 import care.smith.top.model.Query;
 import care.smith.top.top_phenotypic_query.song.adapter.Document;
 import care.smith.top.top_phenotypic_query.song.adapter.TextAdapter;
@@ -69,8 +70,12 @@ public class LuceneAdapter extends TextAdapter {
     }
 
     @Override
-    public List<Document> execute(Query query) {
-        String queryString = Expressions.getStringValue(LuceneSong.get().generate(String.valueOf(query.getId())));
+    public List<Document> execute(ConceptQuery query) {
+        String queryString = Expressions.getStringValue(
+                LuceneSong.get()
+//                        .concepts() //ToDo: this needs to be added; how do I get the Concept Entities
+                        .generate(String.valueOf(query.getId()))
+        );
         // execute query and return resulting documents
         return execute(queryString);
     }

@@ -30,6 +30,6 @@ class TextFinderTest extends AbstractElasticTest{
     void execute() throws InstantiationException {
         initAdaper();
         TextFinder tf = new Con(adapter, adapter.getConfig(), entities.getCategories().toArray(new Category[0])).getFinder();
-//        List<Document> documents = tf.execute();
+        List<Document> documents = tf.execute();
     }
 }
