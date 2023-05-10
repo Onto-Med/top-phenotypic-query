@@ -10,10 +10,13 @@ import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Condition;
 import org.hl7.fhir.r4.model.Enumerations;
 import org.hl7.fhir.r4.model.MedicationAdministration;
+import org.hl7.fhir.r4.model.MedicationAdministration.MedicationAdministrationDosageComponent;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Procedure;
 import org.hl7.fhir.r4.model.Quantity;
+import org.hl7.fhir.r4.model.Ratio;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
 import org.junit.jupiter.api.Test;
@@ -128,7 +131,7 @@ public class FHIRPathTest {
   }
 
   @Test
-  void testMedicationAdministration() {
+  void testMedicationAdministration1() {
     MedicationAdministration med =
         new MedicationAdministration()
             .setSubject(new Reference("Patient/1"))
@@ -136,6 +139,117 @@ public class FHIRPathTest {
 
     assertEquals("Patient/1", path.getString(med, "subject.reference.value"));
     assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(med, "effective"));
+  }
+
+  @Test
+  void testMedicationAdministration2() {
+    MedicationAdministration med =
+        new MedicationAdministration()
+            .setSubject(new Reference("Patient/1"))
+            .setEffective(
+                new Period()
+                    .setStartElement(FHIRUtil.parse("2001-02-03T04:05"))
+                    .setEndElement(FHIRUtil.parse("2005-06-07T08:09")));
+
+    assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(med, "effective.start"));
+    assertEquals(LocalDateTime.of(2005, 6, 7, 8, 9), path.getDateTime(med, "effective.end"));
+  }
+
+  @Test
+  void testMedicationAdministration3() {
+    MedicationAdministration med =
+        new MedicationAdministration()
+            .setSubject(new Reference("Patient/1"))
+            .setDosage(
+                new MedicationAdministrationDosageComponent()
+                    .setDose(
+                        new Quantity()
+                            .setValue(4.5)
+                            .setUnit("g")
+                            .setSystem("http://unitsofmeasure.org")
+                            .setCode("g"))
+                    .setRate(
+                        new Ratio()
+                            .setNumerator(
+                                new Quantity()
+                                    .setValue(8)
+                                    .setUnit("ml")
+                                    .setSystem("http://unitsofmeasure.org")
+                                    .setCode("ml"))
+                            .setDenominator(
+                                new Quantity()
+                                    .setValue(1)
+                                    .setUnit("min")
+                                    .setSystem("http://unitsofmeasure.org")
+                                    .setCode("min"))));
+
+    assertEquals(BigDecimal.valueOf(4.5), path.getNumber(med, "dosage.dose.value"));
+    assertEquals(BigDecimal.valueOf(8), path.getNumber(med, "dosage.rate.numerator"));
+    assertEquals(BigDecimal.valueOf(1), path.getNumber(med, "dosage.rate.denominator"));
+  }
+
+  @Test
+  void testMedicationAdministration4() {
+    MedicationAdministration med =
+        new MedicationAdministration()
+            .setSubject(new Reference("Patient/1"))
+            .setDosage(
+                new MedicationAdministrationDosageComponent()
+                    .setDose(
+                        new Quantity()
+                            .setValue(4.5)
+                            .setUnit("g")
+                            .setSystem("http://unitsofmeasure.org")
+                            .setCode("g"))
+                    .setRate(
+                        new Quantity()
+                            .setValue(8)
+                            .setUnit("ml")
+                            .setSystem("http://unitsofmeasure.org")
+                            .setCode("ml")));
+
+    assertEquals(BigDecimal.valueOf(4.5), path.getNumber(med, "dosage.dose.value"));
+    assertEquals(BigDecimal.valueOf(8), path.getNumber(med, "dosage.rate.value"));
+  }
+
+  @Test
+  void testMedicationAdministration5() {
+    MedicationAdministration med =
+        new MedicationAdministration()
+            .setSubject(new Reference("Patient/1"))
+            .setDosage(
+                new MedicationAdministrationDosageComponent()
+                    .setDose(
+                        new Quantity()
+                            .setValue(2)
+                            .setUnit("TAB")
+                            .setSystem("http://terminology.hl7.org/CodeSystem/v3-orderableDrugForm")
+                            .setCode("TAB"))
+                    .setRoute(
+                        new CodeableConcept(
+                            new Coding()
+                                .setSystem("http://snomed.info/sct")
+                                .setCode("26643006")
+                                .setDisplay("Oral Route")))
+                    .setMethod(
+                        new CodeableConcept(
+                            new Coding()
+                                .setSystem("http://snomed.info/sct")
+                                .setCode("421521009")
+                                .setDisplay(
+                                    "Swallow - dosing instruction imperative (qualifier value)"))));
+
+    assertEquals(BigDecimal.valueOf(2), path.getNumber(med, "dosage.dose.value"));
+    assertEquals(
+        "http://snomed.info/sct|26643006",
+        path.getString(med, "dosage.route.coding.select(system.value + '|' + code)"));
+    assertEquals("Oral Route", path.getString(med, "dosage.route.coding.display"));
+    assertEquals(
+        "http://snomed.info/sct|421521009",
+        path.getString(med, "dosage.method.coding.select(system.value + '|' + code)"));
+    assertEquals(
+        "Swallow - dosing instruction imperative (qualifier value)",
+        path.getString(med, "dosage.method.coding.display"));
   }
 
   @Test
