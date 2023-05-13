@@ -1,21 +1,24 @@
 package care.smith.top.top_phenotypic_query.util.builder.nlp;
 
+import care.smith.top.model.Category;
 import care.smith.top.model.ConceptQuery;
 import care.smith.top.model.Entity;
 import care.smith.top.top_phenotypic_query.song.adapter.TextAdapter;
 import care.smith.top.top_phenotypic_query.song.adapter.TextAdapterConfig;
 import care.smith.top.top_phenotypic_query.song.adapter.TextFinder;
+import care.smith.top.top_phenotypic_query.util.Entities;
 
 public class Con {
 
     private TextAdapter adapter;
     private TextAdapterConfig config;
-    private ConceptQuery query = new ConceptQuery();
+    private ConceptQuery query;
     private Entity[] entities;
 
-    public Con(TextAdapter adapter, TextAdapterConfig config, Entity[] entities) {
+    public Con(TextAdapter adapter, TextAdapterConfig config, Entity[] entities, String parentCatId) {
         this.adapter = adapter;
         this.config = config;
+        this.query = new ConceptQuery().entityId(parentCatId);
         this.entities = entities;
     }
 

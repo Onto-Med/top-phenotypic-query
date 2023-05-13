@@ -3,7 +3,11 @@ package care.smith.top.top_phenotypic_query.tests.nlp;
 import care.smith.top.model.Category;
 import care.smith.top.top_phenotypic_query.song.adapter.Document;
 import care.smith.top.top_phenotypic_query.song.adapter.TextFinder;
+import care.smith.top.top_phenotypic_query.song.functions.And;
+import care.smith.top.top_phenotypic_query.song.functions.Dist;
 import care.smith.top.top_phenotypic_query.util.Entities;
+import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.nlp.Cat;
 import care.smith.top.top_phenotypic_query.util.builder.nlp.Con;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,11 +16,21 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 class TextFinderTest extends AbstractElasticTest{
+    final String PARENT_CAT_ID = "phrase_search_cat";
     Category phrase1 =
             new Cat("phrase1")
                     .titleEn("\"a document\"")
                     .get();
-    Entities entities = Entities.of(phrase1);
+    Category phrase2 =
+            new Cat("phrase2")
+                    .titleEn("entity")
+                    .get();
+    Category parentCat =
+            new Cat(PARENT_CAT_ID)
+                    .titleEn("phrase_search_cat")
+                    .expression(And.of(Dist.of(phrase1, 1), Exp.of(phrase2)))
+                    .get();
+    Entities entities = Entities.of(parentCat, phrase1, phrase2);
 
     @BeforeAll
     static void setUp() {
@@ -29,7 +43,15 @@ class TextFinderTest extends AbstractElasticTest{
     @Test
     void execute() throws InstantiationException {
         initAdaper();
-        TextFinder tf = new Con(adapter, adapter.getConfig(), entities.getCategories().toArray(new Category[0])).getFinder();
+        TextFinder tf = new Con(
+                adapter,
+                adapter.getConfig(),
+                entities.getCategories().toArray(new Category[0]),
+                PARENT_CAT_ID
+        ).getFinder();
         List<Document> documents = tf.execute();
+
+        assertEquals
+        System.out.println("a");
     }
 }

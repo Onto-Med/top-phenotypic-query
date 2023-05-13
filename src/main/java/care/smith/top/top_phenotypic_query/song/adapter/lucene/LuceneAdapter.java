@@ -5,6 +5,7 @@ import care.smith.top.model.Query;
 import care.smith.top.top_phenotypic_query.song.adapter.Document;
 import care.smith.top.top_phenotypic_query.song.adapter.TextAdapter;
 import care.smith.top.top_phenotypic_query.song.adapter.TextAdapterConfig;
+import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
@@ -70,11 +71,13 @@ public class LuceneAdapter extends TextAdapter {
     }
 
     @Override
-    public List<Document> execute(ConceptQuery query) {
+    public List<Document> execute(ConceptQuery query, Entities entities) {
+
         String queryString = Expressions.getStringValue(
                 LuceneSong.get()
-//                        .concepts() //ToDo: this needs to be added; how do I get the Concept Entities
-                        .generate(String.valueOf(query.getId()))
+                        .concepts(entities) //ToDo: this needs to be added; how do I get the Concept Entities
+                        .lang("en") //ToDo: do I get this from query?
+                        .generate(query.getEntityId())
         );
         // execute query and return resulting documents
         return execute(queryString);

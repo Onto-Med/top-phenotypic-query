@@ -4,8 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import care.smith.top.model.ConceptQuery;
+import care.smith.top.model.Entity;
 import care.smith.top.model.Query;
 import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.util.Entities;
 
 public abstract class TextAdapter {
 
@@ -45,7 +47,7 @@ public abstract class TextAdapter {
   }
 
   // generate and execute query
-  public abstract List<Document> execute(ConceptQuery query);
+  public abstract List<Document> execute(ConceptQuery query, Entities entities);
 
   public abstract List<Document> execute(String queryString);
 }
