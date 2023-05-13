@@ -50,8 +50,5 @@ class TextFinderTest extends AbstractElasticTest{
                 PARENT_CAT_ID
         ).getFinder();
         List<Document> documents = tf.execute();
-
-        assertEquals
-        System.out.println("a");
     }
 }
