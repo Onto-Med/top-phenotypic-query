@@ -108,8 +108,7 @@
       "required": [
         "baseQuery",
         "dateTimeIntervalPart",
-        "output",
-        "subjectsPart"
+        "output"
       ]
     }
   },
