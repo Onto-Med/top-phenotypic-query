@@ -1,6 +1,7 @@
-package care.smith.top.top_phenotypic_query.tests;
+package care.smith.top.top_phenotypic_query.tests.intern;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -8,9 +9,12 @@ import java.time.LocalDateTime;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Condition;
+import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.Enumerations;
 import org.hl7.fhir.r4.model.MedicationAdministration;
 import org.hl7.fhir.r4.model.MedicationAdministration.MedicationAdministrationDosageComponent;
+import org.hl7.fhir.r4.model.MedicationRequest;
+import org.hl7.fhir.r4.model.MedicationStatement;
 import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Period;
@@ -26,7 +30,7 @@ import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRPath;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRUtil;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 
-public class FHIRPathTest {
+public class FHIRPathTestIntern {
 
   FHIRPath path = new FHIRPath(FhirContext.forR4());
 
@@ -87,6 +91,21 @@ public class FHIRPathTest {
   }
 
   @Test
+  void testObservation5() {
+    Observation obs =
+        new Observation()
+            .setSubject(new Reference("Patient/1"))
+            .setEffective(
+                new Period()
+                    .setStartElement(FHIRUtil.parse("2001-02-03T04:05"))
+                    .setEndElement(FHIRUtil.parse("2005-06-07T08:09")));
+
+    assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(obs, "effective.start"));
+    assertEquals(LocalDateTime.of(2005, 6, 7, 8, 9), path.getDateTime(obs, "effective.end"));
+    assertNull(path.getDateTime(obs, "effective"));
+  }
+
+  @Test
   void testObservationComponent() {
     Observation obs =
         new Observation()
@@ -120,14 +139,32 @@ public class FHIRPathTest {
   }
 
   @Test
-  void testCondition() {
+  void testCondition1() {
     Condition cond =
         new Condition()
             .setSubject(new Reference("Patient/1"))
-            .setRecordedDate(DateUtil.parseToDate("2001-02-03T04:05"));
+            .setOnset(new DateTimeType("2001-02-03T04:05:00"));
 
     assertEquals("Patient/1", path.getString(cond, "subject.reference.value"));
-    assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(cond, "recordedDate"));
+    assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(cond, "onset"));
+    assertNull(path.getDateTime(cond, "onset.start"));
+    assertNull(path.getDateTime(cond, "onset.end"));
+  }
+
+  @Test
+  void testCondition2() {
+    Condition cond =
+        new Condition()
+            .setSubject(new Reference("Patient/1"))
+            .setOnset(
+                new Period()
+                    .setStartElement(FHIRUtil.parse("2001-02-03T04:05"))
+                    .setEndElement(FHIRUtil.parse("2005-06-07T08:09")));
+
+    assertEquals("Patient/1", path.getString(cond, "subject.reference.value"));
+    assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(cond, "onset.start"));
+    assertEquals(LocalDateTime.of(2005, 6, 7, 8, 9), path.getDateTime(cond, "onset.end"));
+    assertNull(path.getDateTime(cond, "onset"));
   }
 
   @Test
@@ -139,6 +176,8 @@ public class FHIRPathTest {
 
     assertEquals("Patient/1", path.getString(med, "subject.reference.value"));
     assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(med, "effective"));
+    assertNull(path.getDateTime(med, "effective.start"));
+    assertNull(path.getDateTime(med, "effective.end"));
   }
 
   @Test
@@ -153,6 +192,7 @@ public class FHIRPathTest {
 
     assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(med, "effective.start"));
     assertEquals(LocalDateTime.of(2005, 6, 7, 8, 9), path.getDateTime(med, "effective.end"));
+    assertNull(path.getDateTime(med, "effective"));
   }
 
   @Test
@@ -253,7 +293,46 @@ public class FHIRPathTest {
   }
 
   @Test
-  void testProcedure() {
+  void testMedicationRequest() {
+    MedicationRequest med =
+        new MedicationRequest()
+            .setSubject(new Reference("Patient/1"))
+            .setAuthoredOnElement(FHIRUtil.parse("2001-02-03T04:05"));
+
+    assertEquals("Patient/1", path.getString(med, "subject.reference.value"));
+    assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(med, "authoredOn"));
+  }
+
+  @Test
+  void testMedicationStatement1() {
+    MedicationStatement med =
+        new MedicationStatement()
+            .setSubject(new Reference("Patient/1"))
+            .setEffective(FHIRUtil.parse("2001-02-03T04:05"));
+
+    assertEquals("Patient/1", path.getString(med, "subject.reference.value"));
+    assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(med, "effective"));
+    assertNull(path.getDateTime(med, "effective.start"));
+    assertNull(path.getDateTime(med, "effective.end"));
+  }
+
+  @Test
+  void testMedicationStatement2() {
+    MedicationStatement med =
+        new MedicationStatement()
+            .setSubject(new Reference("Patient/1"))
+            .setEffective(
+                new Period()
+                    .setStartElement(FHIRUtil.parse("2001-02-03T04:05"))
+                    .setEndElement(FHIRUtil.parse("2005-06-07T08:09")));
+
+    assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(med, "effective.start"));
+    assertEquals(LocalDateTime.of(2005, 6, 7, 8, 9), path.getDateTime(med, "effective.end"));
+    assertNull(path.getDateTime(med, "effective"));
+  }
+
+  @Test
+  void testProcedure1() {
     Procedure proc =
         new Procedure()
             .setSubject(new Reference("Patient/1"))
@@ -261,5 +340,20 @@ public class FHIRPathTest {
 
     assertEquals("Patient/1", path.getString(proc, "subject.reference.value"));
     assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(proc, "performed"));
+  }
+
+  @Test
+  void testProcedure2() {
+    Procedure proc =
+        new Procedure()
+            .setSubject(new Reference("Patient/1"))
+            .setPerformed(
+                new Period()
+                    .setStartElement(FHIRUtil.parse("2001-02-03T04:05"))
+                    .setEndElement(FHIRUtil.parse("2005-06-07T08:09")));
+
+    assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(proc, "performed.start"));
+    assertEquals(LocalDateTime.of(2005, 6, 7, 8, 9), path.getDateTime(proc, "performed.end"));
+    assertNull(path.getDateTime(proc, "performed"));
   }
 }

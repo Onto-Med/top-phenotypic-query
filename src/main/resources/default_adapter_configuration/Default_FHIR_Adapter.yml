@@ -12,7 +12,7 @@ phenotypeQueries:
     subjectsPart: "&subject={values}"
     output:
       subject: subject.reference.value
-      dateTime: recordedDate
+      dateTime: onset
   observation:
     baseQuery: "Observation?code={codes}"
     numberValueIntervalPart: "&value-quantity{operator}{value}"
@@ -42,11 +42,25 @@ phenotypeQueries:
       conceptValue: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.coding.select(system.value + '|' + code)
       dateTime: effective
   medication_administration:
-    baseQuery: "MedicationAdministration?code={codes}"
+    baseQuery: "MedicationAdministration?_include=MedicationAdministration:medication&medication.code={codes}"
     dateTimeIntervalPart: "&effective-time{operator}{value}"
     output:
       subject: subject.reference.value
       dateTime: effective
+  medication_statement:
+    baseQuery: "MedicationStatement?_include=MedicationStatement:medication&medication.code={codes}"
+    dateTimeIntervalPart: "&effective-time{operator}{value}"
+    output:
+      subject: subject.reference.value
+      dateTime: effective
+  medication_request:
+    baseQuery: "MedicationRequest?_include=MedicationRequest:medication&medication.code={codes}"
+    dateTimeIntervalPart: "&authoredon{operator}{value}"
+    output:
+      subject: subject.reference.value
+      dateTime: authoredOn
+  medication:
+    union: [ medication_administration, medication_statement, medication_request ]
   procedure:
     baseQuery: "Procedure?code={codes}"
     dateTimeIntervalPart: "&date{operator}{value}"
