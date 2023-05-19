@@ -145,6 +145,10 @@ public class PhenotypeQuery {
     this.union = union;
   }
 
+  public boolean hasUnion() {
+    return !union.isEmpty();
+  }
+
   public PhenotypeQueryBuilder getQueryBuilder(Map<String, String> mappings) {
     return new PhenotypeQueryBuilder(this, mappings);
   }

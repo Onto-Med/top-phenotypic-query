@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import care.smith.top.model.DateTimeRestriction;
+import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.Query;
@@ -111,7 +112,27 @@ public class SingleSearch extends PhenotypeSearch {
 
   @Override
   public ResultSet execute() {
+    String itemType = Phenotypes.getItemType(phenotype).getValue();
+    PhenotypeQuery query = config.getPhenotypeQuery(itemType);
+    if (query != null && query.hasUnion()) {
+      ResultSet union = new ResultSet();
+      query.getUnion().stream().map(i -> getUnionPart(i).execute()).forEach(rs -> union.unite(rs));
+      return union;
+    }
     return adapter.execute(this);
+  }
+
+  private SingleSearch getUnionPart(String itemType) {
+    Phenotype unionPartPhe = null;
+    if (hasRestriction()) {
+      Phenotype supP = clone(phenotype.getSuperPhenotype(), itemType);
+      unionPartPhe = Phenotypes.clone(phenotype).superPhenotype(supP);
+    } else unionPartPhe = Phenotypes.clone(phenotype).itemType(ItemType.fromValue(itemType));
+    return new SingleSearch(getQuery(), entry, unionPartPhe, adapter);
+  }
+
+  private Phenotype clone(Phenotype p, String itemType) {
+    return Phenotypes.clone(p).itemType(ItemType.fromValue(itemType));
   }
 
   @Override
