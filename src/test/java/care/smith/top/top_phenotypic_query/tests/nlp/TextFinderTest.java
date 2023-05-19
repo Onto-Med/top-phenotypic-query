@@ -6,10 +6,9 @@ import care.smith.top.top_phenotypic_query.song.adapter.TextFinder;
 import care.smith.top.top_phenotypic_query.song.functions.And;
 import care.smith.top.top_phenotypic_query.song.functions.Dist;
 import care.smith.top.top_phenotypic_query.util.Entities;
-import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.nlp.Cat;
-import care.smith.top.top_phenotypic_query.util.builder.nlp.Con;
+import care.smith.top.top_phenotypic_query.util.builder.nlp.CQue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -43,7 +42,7 @@ class TextFinderTest extends AbstractElasticTest{
     @Test
     void execute() throws InstantiationException {
         initAdaper();
-        TextFinder tf = new Con(
+        TextFinder tf = new CQue(
                 adapter,
                 adapter.getConfig(),
                 entities.getCategories().toArray(new Category[0]),
