@@ -116,7 +116,8 @@ public class SingleSearch extends PhenotypeSearch {
     PhenotypeQuery query = config.getPhenotypeQuery(itemType);
     if (query != null && query.hasUnion()) {
       ResultSet union = new ResultSet();
-      query.getUnion().stream().map(i -> getUnionPart(i).execute()).forEach(rs -> union.unite(rs));
+      for (String partItemType : query.getUnion())
+        union = union.unite(getUnionPart(partItemType).execute());
       return union;
     }
     return adapter.execute(this);
@@ -127,7 +128,7 @@ public class SingleSearch extends PhenotypeSearch {
     if (hasRestriction()) {
       Phenotype supP = clone(phenotype.getSuperPhenotype(), itemType);
       unionPartPhe = Phenotypes.clone(phenotype).superPhenotype(supP);
-    } else unionPartPhe = Phenotypes.clone(phenotype).itemType(ItemType.fromValue(itemType));
+    } else unionPartPhe = clone(phenotype, itemType);
     return new SingleSearch(getQuery(), entry, unionPartPhe, adapter);
   }
 

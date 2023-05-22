@@ -119,6 +119,7 @@ public class FHIRClient {
     deleteAllResourcesOfType("MedicationRequest", system);
     deleteAllResourcesOfType("MedicationAdministration", system);
     deleteAllResourcesOfType("MedicationStatement", system);
+    deleteAllResourcesOfType("Medication", system);
     deleteAllResourcesOfType("ClinicalImpression", system);
     deleteAllResourcesOfType("Observation", system);
     deleteAllResourcesOfType("AllergyIntolerance", system);

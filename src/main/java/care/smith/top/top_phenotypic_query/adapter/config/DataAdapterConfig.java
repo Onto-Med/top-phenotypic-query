@@ -18,7 +18,7 @@ public class DataAdapterConfig {
 
   private String id;
   private String adapter;
-  private Map<String, String> connection;
+  private Map<String, String> connection = new HashMap<>();
   private CSVSettings csvSettings;
   private SubjectQuery subjectQuery;
   private Map<String, PhenotypeQuery> phenotypeQueries = new HashMap<>();
@@ -69,6 +69,10 @@ public class DataAdapterConfig {
 
   public void setConnection(Map<String, String> connection) {
     this.connection = connection;
+  }
+
+  public void setConnectionAttribute(String name, String value) {
+    connection.put(name, value);
   }
 
   public CSVSettings getCsvSettings() {

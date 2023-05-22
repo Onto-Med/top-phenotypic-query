@@ -42,19 +42,19 @@ phenotypeQueries:
       conceptValue: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.coding.select(system.value + '|' + code)
       dateTime: effective
   medication_administration:
-    baseQuery: "MedicationAdministration?_include=MedicationAdministration:medication&medication.code={codes}"
+    baseQuery: "MedicationAdministration?medication.code={codes}"
     dateTimeIntervalPart: "&effective-time{operator}{value}"
     output:
       subject: subject.reference.value
       dateTime: effective
   medication_statement:
-    baseQuery: "MedicationStatement?_include=MedicationStatement:medication&medication.code={codes}"
+    baseQuery: "MedicationStatement?medication.code={codes}"
     dateTimeIntervalPart: "&effective-time{operator}{value}"
     output:
       subject: subject.reference.value
       dateTime: effective
   medication_request:
-    baseQuery: "MedicationRequest?_include=MedicationRequest:medication&medication.code={codes}"
+    baseQuery: "MedicationRequest?medication.code={codes}"
     dateTimeIntervalPart: "&authoredon{operator}{value}"
     output:
       subject: subject.reference.value
