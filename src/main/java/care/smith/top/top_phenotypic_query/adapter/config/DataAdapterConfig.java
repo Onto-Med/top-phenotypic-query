@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import care.smith.top.model.Code;
+import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
@@ -112,6 +113,8 @@ public class DataAdapterConfig {
   }
 
   public boolean isBirthdate(Phenotype p) {
+    if (Phenotypes.getItemType(p) == ItemType.SUBJECT_BIRTH_DATE) return true;
+    if (Phenotypes.getUnrestrictedPhenotypeCodes(p) == null) return false;
     for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(p)) {
       if (birthdateMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
@@ -127,6 +130,8 @@ public class DataAdapterConfig {
   }
 
   public boolean isAge(Phenotype p) {
+    if (Phenotypes.getItemType(p) == ItemType.SUBJECT_AGE) return true;
+    if (Phenotypes.getUnrestrictedPhenotypeCodes(p) == null) return false;
     for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(p)) {
       if (ageMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
@@ -142,6 +147,8 @@ public class DataAdapterConfig {
   }
 
   public boolean isSex(Phenotype p) {
+    if (Phenotypes.getItemType(p) == ItemType.SUBJECT_SEX) return true;
+    if (Phenotypes.getUnrestrictedPhenotypeCodes(p) == null) return false;
     for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(p)) {
       if (sexMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
@@ -153,6 +160,7 @@ public class DataAdapterConfig {
   }
 
   public CodeMapping getCodeMapping(Phenotype p) {
+    if (Phenotypes.getUnrestrictedPhenotypeCodes(p) == null) return null;
     for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(p)) {
       CodeMapping map = getCodeMapping(Phenotypes.getCodeUri(code));
       if (map != null) return map;

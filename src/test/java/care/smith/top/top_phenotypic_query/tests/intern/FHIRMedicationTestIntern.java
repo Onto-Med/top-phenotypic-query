@@ -25,6 +25,8 @@ public class FHIRMedicationTestIntern {
 
   private static Client client = new Client();
 
+  private static Phenotype sex = new Phe("sex").itemType(ItemType.SUBJECT_SEX).string().get();
+  private static Phenotype male = new Phe("male").restriction(sex, Res.of("male")).get();
   private static Phenotype med =
       new Phe("med", "http://www.whocc.no/atc", "atc1").itemType(ItemType.MEDICATION).bool().get();
 
@@ -53,10 +55,11 @@ public class FHIRMedicationTestIntern {
 
     try {
       ResultSet rs =
-          new Que("config/Default_FHIR_Adapter_Test.yml", med)
+          new Que("config/Default_FHIR_Adapter_Test.yml", med, sex, male)
               .inc(med, Res.ge(DateUtil.parse("2020-01-02")))
+              .inc(male)
               .execute();
-      assertEquals(Set.of(pat2.getReference(), pat3.getReference()), rs.getSubjectIds());
+      assertEquals(Set.of(pat3.getReference()), rs.getSubjectIds());
     } catch (InstantiationException e) {
       e.printStackTrace();
     }
