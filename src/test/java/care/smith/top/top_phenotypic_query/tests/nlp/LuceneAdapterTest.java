@@ -1,31 +1,27 @@
 package care.smith.top.top_phenotypic_query.tests.nlp;
 
-import care.smith.top.model.Category;
+import static org.junit.jupiter.api.Assertions.*;
+
+import care.smith.top.model.Concept;
 import care.smith.top.top_phenotypic_query.song.adapter.Document;
-import care.smith.top.top_phenotypic_query.song.adapter.TextAdapter;
-import care.smith.top.top_phenotypic_query.song.adapter.lucene.LuceneAdapter;
 import care.smith.top.top_phenotypic_query.song.adapter.lucene.LuceneSong;
 import care.smith.top.top_phenotypic_query.song.functions.And;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.nlp.Cat;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 class LuceneAdapterTest extends AbstractElasticTest {
-    Category documentEntity =
+    Concept documentEntity =
             new Cat("document")
                     .titleEn("document")
                     .get();
-    Category entityEntity =
+    Concept entityEntity   =
             new Cat("entity")
                     .titleEn("entity")
                     .synonymEn("entities")
