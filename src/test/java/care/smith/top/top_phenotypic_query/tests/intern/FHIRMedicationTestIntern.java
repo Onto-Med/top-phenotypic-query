@@ -16,8 +16,10 @@ import care.smith.top.top_phenotypic_query.tests.intern.fhir.MedAdm;
 import care.smith.top.top_phenotypic_query.tests.intern.fhir.MedReq;
 import care.smith.top.top_phenotypic_query.tests.intern.fhir.MedSta;
 import care.smith.top.top_phenotypic_query.tests.intern.fhir.Pat;
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
+import care.smith.top.top_phenotypic_query.util.builder.Res;
 
 public class FHIRMedicationTestIntern {
 
@@ -50,10 +52,11 @@ public class FHIRMedicationTestIntern {
     client.add(new MedAdm("p4m2a", pat4, med2).date("2020-01-04"));
 
     try {
-      ResultSet rs = new Que("config/Default_FHIR_Adapter_Test.yml", med).inc(med).execute();
-      assertEquals(
-          Set.of(pat1.getReference(), pat2.getReference(), pat3.getReference()),
-          rs.getSubjectIds());
+      ResultSet rs =
+          new Que("config/Default_FHIR_Adapter_Test.yml", med)
+              .inc(med, Res.ge(DateUtil.parse("2020-01-02")))
+              .execute();
+      assertEquals(Set.of(pat2.getReference(), pat3.getReference()), rs.getSubjectIds());
     } catch (InstantiationException e) {
       e.printStackTrace();
     }

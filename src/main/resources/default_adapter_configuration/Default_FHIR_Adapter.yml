@@ -49,7 +49,7 @@ phenotypeQueries:
       dateTime: effective
   medication_statement:
     baseQuery: "MedicationStatement?medication.code={codes}"
-    dateTimeIntervalPart: "&effective-time{operator}{value}"
+    dateTimeIntervalPart: "&effective{operator}{value}"
     output:
       subject: subject.reference.value
       dateTime: effective
