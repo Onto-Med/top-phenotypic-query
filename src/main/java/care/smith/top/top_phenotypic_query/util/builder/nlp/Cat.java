@@ -11,13 +11,17 @@ public class Cat {
   private final Logger log = LoggerFactory.getLogger(getClass());
   private final Concept c;
 
-  public Cat(String id, String codeSystemUri, String... codes) {
-    this(id);
+  public Cat(String id, String codeSystemUri, boolean composite, String... codes) {
+    this(id, composite);
     codes(codeSystemUri, codes);
   }
 
-  public Cat(String id) {
-    c = (Concept) new SingleConcept().entityType(EntityType.SINGLE_CONCEPT).id(id);
+  public Cat(String id, boolean composite) {
+    if (composite) {
+      c = (Concept) new CompositeConcept().entityType(EntityType.COMPOSITE_CONCEPT).id(id);
+    } else {
+      c = (Concept) new SingleConcept().entityType(EntityType.SINGLE_CONCEPT).id(id);
+    }
   }
 
   public static Code getCode(String codeSystemUri, String code) {
@@ -126,10 +130,7 @@ public class Cat {
   public Cat subCategories(Concept... subConcepts) {
     if (c instanceof SingleConcept) {
       for (Concept subConcept : subConcepts) {
-        if (subConcept instanceof SingleConcept)
-          ((SingleConcept) c).addSingleConceptsItem((SingleConcept) subConcept);
-        if (subConcept instanceof CompositeConcept)
-          ((SingleConcept) c).addCompositeConceptsItem((CompositeConcept) subConcept);
+          ((SingleConcept) c).addSubConceptsItem(subConcept);
       }
     } else {
       log.warn("Tried to add sub concepts to composite concept '{}'.", c.getId());

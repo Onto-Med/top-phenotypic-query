@@ -25,7 +25,7 @@ public class SongTest {
   private final Logger log = LoggerFactory.getLogger(SongTest.class);
 
   Concept a =
-      new Cat("a")
+      new Cat("a", false)
           .titleDe("a- de")
           .titleEn("a- en")
           .synonymDe("a1- de")
@@ -35,7 +35,7 @@ public class SongTest {
           .get();
 
   Concept b =
-      new Cat("b")
+      new Cat("b", false)
           .titleDe("b-de")
           .titleEn("b-en")
           .synonymDe("b1-de")
@@ -45,7 +45,7 @@ public class SongTest {
           .get();
 
   Concept e =
-      new Cat("e")
+      new Cat("e", false)
           .titleDe("e-de")
           .titleEn("e-en")
           .synonymDe("e1-de")
@@ -55,7 +55,7 @@ public class SongTest {
           .get();
 
   Concept d =
-      new Cat("d")
+      new Cat("d", false)
           .titleDe("d-de")
           .titleEn("d-en")
           .synonymDe("d1-de")
@@ -66,7 +66,7 @@ public class SongTest {
           .get();
 
   Concept c =
-      new Cat("c")
+      new Cat("c", false)
           .titleDe("c-de")
           .titleEn("c-en")
           .synonymDe("c1-de")
@@ -77,7 +77,7 @@ public class SongTest {
           .get();
 
   Concept f =
-      new Cat("f")
+      new Cat("f", false)
           .titleDe("f-de")
           .titleEn("f-en")
           .synonymDe("f1-de")

@@ -14,18 +14,20 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class TextFinderTest extends AbstractElasticTest{
     final String PARENT_CAT_ID = "phrase_search_cat";
     Concept phrase1 =
-            new Cat("phrase1")
+            new Cat("phrase1", false)
                     .titleEn("\"a document\"")
                     .get();
     Concept phrase2 =
-            new Cat("phrase2")
+            new Cat("phrase2", false)
                     .titleEn("entity")
                     .get();
     Concept parentCat =
-            new Cat(PARENT_CAT_ID)
+            new Cat(PARENT_CAT_ID, true)
                     .titleEn("phrase_search_cat")
                     .expression(And.of(Dist.of(phrase1, 1), Exp.of(phrase2)))
                     .get();
@@ -49,5 +51,6 @@ class TextFinderTest extends AbstractElasticTest{
                 PARENT_CAT_ID
         ).getFinder();
         List<Document> documents = tf.execute();
+        assertEquals(1, documents.size());
     }
 }

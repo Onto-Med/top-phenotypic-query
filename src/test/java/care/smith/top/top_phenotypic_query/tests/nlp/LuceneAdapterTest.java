@@ -13,16 +13,17 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class LuceneAdapterTest extends AbstractElasticTest {
     Concept documentEntity =
-            new Cat("document")
+            new Cat("document", false)
                     .titleEn("document")
                     .get();
     Concept entityEntity   =
-            new Cat("entity")
+            new Cat("entity", false)
                     .titleEn("entity")
                     .synonymEn("entities")
                     .get();

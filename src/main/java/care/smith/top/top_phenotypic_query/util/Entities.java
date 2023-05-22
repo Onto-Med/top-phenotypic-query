@@ -250,12 +250,11 @@ public class Entities {
     if (!(e instanceof SingleConcept)) return terms;
 
     SingleConcept c = (SingleConcept) e;
-    if (c.getSingleConcepts() != null)
-      for (SingleConcept child : c.getSingleConcepts())
-        terms.addAll(getTerms(child, lang, includeSubTree));
-    if (c.getCompositeConcepts() != null)
-      for (CompositeConcept child : c.getCompositeConcepts())
-        terms.addAll(getTerms(child, lang, includeSubTree));
+    if (c.getSubConcepts() != null) {
+      for (Concept child : c.getSubConcepts()) {
+          terms.addAll(getTerms(child, lang, includeSubTree));
+      }
+    }
 
     return terms;
   }
