@@ -7,25 +7,19 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import care.smith.top.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import care.smith.top.model.Category;
-import care.smith.top.model.Entity;
-import care.smith.top.model.EntityType;
-import care.smith.top.model.LocalisableText;
-import care.smith.top.model.Phenotype;
-import care.smith.top.model.Repository;
-import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.data_adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 
 public class Entities {
+  private final Map<String, Entity> entities = new LinkedHashMap<>();
 
-  private Map<String, Entity> entities = new LinkedHashMap<>();
   private Repository repo;
 
   private Entities(Entity... entities) {
@@ -59,6 +53,11 @@ public class Entities {
 
   public Entities deriveAdditionalProperties() {
     return deriveAdditionalProperties(null);
+  }
+
+  public Concept getConcept(String conceptId) {
+    Entity entity = entities.get(conceptId);
+    return entity instanceof Concept ? (Concept) entity : null;
   }
 
   private boolean setInExpression(DataAdapterConfig config, Phenotype supP, Phenotype p) {
@@ -146,6 +145,13 @@ public class Entities {
             .filter(e -> e.getEntityType() == EntityType.CATEGORY)
             .map(Category.class::cast)
             .collect(Collectors.toSet());
+  }
+
+  public Collection<Concept> getConcepts() {
+    return getEntities().stream()
+      .filter(e -> Arrays.asList(EntityType.SINGLE_CONCEPT, EntityType.COMPOSITE_CONCEPT).contains(e.getEntityType()))
+      .map(Concept.class::cast)
+      .collect(Collectors.toSet());
   }
 
   public Set<String> getPhenotypeIds() {
@@ -241,9 +247,16 @@ public class Entities {
   public static Set<String> getTerms(Entity e, String lang, boolean includeSubTree) {
     Set<String> terms = getTitlesAndSynonyms(e, lang);
     if (!includeSubTree) return terms;
-    Category c = (Category) e;
-    if (c.getSubCategories() == null) return terms;
-    for (Category child : c.getSubCategories()) terms.addAll(getTerms(child, lang, includeSubTree));
+    if (!(e instanceof SingleConcept)) return terms;
+
+    SingleConcept c = (SingleConcept) e;
+    if (c.getSingleConcepts() != null)
+      for (SingleConcept child : c.getSingleConcepts())
+        terms.addAll(getTerms(child, lang, includeSubTree));
+    if (c.getCompositeConcepts() != null)
+      for (CompositeConcept child : c.getCompositeConcepts())
+        terms.addAll(getTerms(child, lang, includeSubTree));
+
     return terms;
   }
 

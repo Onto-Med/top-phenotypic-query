@@ -2,9 +2,9 @@ package care.smith.top.top_phenotypic_query.tests.nlp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import care.smith.top.model.Concept;
 import org.junit.jupiter.api.Test;
 
-import care.smith.top.model.Category;
 import care.smith.top.model.Expression;
 import care.smith.top.top_phenotypic_query.song.adapter.lucene.LuceneSong;
 import care.smith.top.top_phenotypic_query.song.functions.And;
@@ -22,9 +22,9 @@ import org.slf4j.LoggerFactory;
 
 public class SongTest {
 
-  private Logger log = LoggerFactory.getLogger(SongTest.class);
+  private final Logger log = LoggerFactory.getLogger(SongTest.class);
 
-  Category a =
+  Concept a =
       new Cat("a")
           .titleDe("a- de")
           .titleEn("a- en")
@@ -34,7 +34,7 @@ public class SongTest {
           .synonymEn("a2- en")
           .get();
 
-  Category b =
+  Concept b =
       new Cat("b")
           .titleDe("b-de")
           .titleEn("b-en")
@@ -44,7 +44,7 @@ public class SongTest {
           .synonymEn("b2-en")
           .get();
 
-  Category e =
+  Concept e =
       new Cat("e")
           .titleDe("e-de")
           .titleEn("e-en")
@@ -54,7 +54,7 @@ public class SongTest {
           .synonymEn("e2-en")
           .get();
 
-  Category d =
+  Concept d =
       new Cat("d")
           .titleDe("d-de")
           .titleEn("d-en")
@@ -65,7 +65,7 @@ public class SongTest {
           .subCategories(e)
           .get();
 
-  Category c =
+  Concept c =
       new Cat("c")
           .titleDe("c-de")
           .titleEn("c-en")
@@ -76,7 +76,7 @@ public class SongTest {
           .subCategories(d)
           .get();
 
-  Category f =
+  Concept f =
       new Cat("f")
           .titleDe("f-de")
           .titleEn("f-en")

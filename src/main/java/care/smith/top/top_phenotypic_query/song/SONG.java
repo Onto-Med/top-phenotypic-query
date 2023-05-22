@@ -27,12 +27,11 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 
 public class SONG {
+  private final Logger log = LoggerFactory.getLogger(SONG.class);
+  private final Map<String, TextFunction> functions = new HashMap<>();
 
   private Entities concepts;
-  private Map<String, TextFunction> functions = new HashMap<>();
   private String lang;
-
-  private Logger log = LoggerFactory.getLogger(SONG.class);
 
   public static final String EXPRESSION_TYPE_QUERY = "query";
   public static final String EXPRESSION_TYPE_TERMS_INITIAL = "terms_initial";
@@ -51,8 +50,8 @@ public class SONG {
     return concepts;
   }
 
-  public Category getConcept(String id) {
-    return concepts.getCategory(id);
+  public Concept getConcept(String id) {
+    return concepts.getConcept(id);
   }
 
   public void setConcepts(Entities concepts) {
@@ -85,18 +84,17 @@ public class SONG {
     this.lang = lang;
   }
 
-  public Expression generate(Category con) {
+  public Expression generate(Concept con) {
     log.debug("start generating query for concept: {} ...", con.getId());
 
-    // if single concept
-    if (con.getExpression() == null) {
-      Expression res = getTermsExpression(con, EXPRESSION_TYPE_TERMS_INITIAL, false);
-      log.debug("end generating query for concept: {} = {}", con.getId(), toString(res));
+    if (con instanceof CompositeConcept) {
+      Expression res = generate(((CompositeConcept) con).getExpression());
+      log.debug("end generating query for concept : {} = {}", con.getId(), toString(res));
       return res;
     }
-    // else composite concept
-    Expression res = generate(con.getExpression());
-    log.debug("end generating query for concept : {} = {}", con.getId(), toString(res));
+
+    Expression res = getTermsExpression(con, EXPRESSION_TYPE_TERMS_INITIAL, false);
+    log.debug("end generating query for concept: {} = {}", con.getId(), toString(res));
     return res;
   }
 
@@ -125,7 +123,7 @@ public class SONG {
 
   public List<Expression> generate(List<Expression> args) {
     return args.stream()
-        .map(a -> generate(a))
+        .map(this::generate)
         .filter(a -> !Expressions.isEmpty(a))
         .collect(Collectors.toList());
   }
@@ -142,11 +140,11 @@ public class SONG {
   public Expression getTermsExpression(Entity con, String type, boolean includeSubTree) {
     Set<String> terms = Entities.getTerms(con, lang, includeSubTree);
     if (terms.isEmpty()) return new Expression();
-    return Exp.of(terms.stream().map(t -> Val.of(t)).collect(Collectors.toList())).type(type);
+    return Exp.of(terms.stream().map(Val::of).collect(Collectors.toList())).type(type);
   }
 
   public Expression getTermsQueryExpression(List<String> terms) {
-    List<Expression> args = terms.stream().map(t -> Exp.of(t)).collect(Collectors.toList());
+    List<Expression> args = terms.stream().map(Exp::of).collect(Collectors.toList());
     return getFunction(Or.ID).generate(args, this);
   }
 
@@ -178,7 +176,7 @@ public class SONG {
 
   private String operatorToString(Expression exp) {
     List<String> args =
-        exp.getArguments().stream().map(e -> toString(e)).collect(Collectors.toList());
+        exp.getArguments().stream().map(this::toString).collect(Collectors.toList());
     return getFunction(exp.getFunctionId()).toString(args);
   }
 }

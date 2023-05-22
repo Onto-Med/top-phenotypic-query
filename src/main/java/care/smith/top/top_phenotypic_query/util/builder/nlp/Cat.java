@@ -2,17 +2,14 @@ package care.smith.top.top_phenotypic_query.util.builder.nlp;
 
 import java.net.URI;
 
-import care.smith.top.model.Category;
-import care.smith.top.model.Code;
-import care.smith.top.model.CodeSystem;
-import care.smith.top.model.EntityType;
-import care.smith.top.model.Expression;
-import care.smith.top.model.LocalisableText;
+import care.smith.top.model.*;
 import care.smith.top.top_phenotypic_query.util.Entities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Cat {
-
-  private Category c;
+  private final Logger log = LoggerFactory.getLogger(getClass());
+  private final Concept c;
 
   public Cat(String id, String codeSystemUri, String... codes) {
     this(id);
@@ -20,7 +17,7 @@ public class Cat {
   }
 
   public Cat(String id) {
-    c = (Category) new Category().entityType(EntityType.CATEGORY).id(id);
+    c = (Concept) new SingleConcept().entityType(EntityType.SINGLE_CONCEPT).id(id);
   }
 
   public static Code getCode(String codeSystemUri, String code) {
@@ -108,7 +105,11 @@ public class Cat {
   }
 
   public Cat expression(Expression exp) {
-    c.setExpression(exp);
+    if (c instanceof CompositeConcept) {
+      ((CompositeConcept) c).setExpression(exp);
+    } else {
+      log.warn("Tried to set expression for single concept '{}'.", c.getId());
+    }
     return this;
   }
 
@@ -122,12 +123,21 @@ public class Cat {
     return this;
   }
 
-  public Cat subCategories(Category... cats) {
-    for (Category cat : cats) c.addSubCategoriesItem(cat);
+  public Cat subCategories(Concept... subConcepts) {
+    if (c instanceof SingleConcept) {
+      for (Concept subConcept : subConcepts) {
+        if (subConcept instanceof SingleConcept)
+          ((SingleConcept) c).addSingleConceptsItem((SingleConcept) subConcept);
+        if (subConcept instanceof CompositeConcept)
+          ((SingleConcept) c).addCompositeConceptsItem((CompositeConcept) subConcept);
+      }
+    } else {
+      log.warn("Tried to add sub concepts to composite concept '{}'.", c.getId());
+    }
     return this;
   }
 
-  public Category get() {
+  public Concept get() {
     return c;
   }
 }
