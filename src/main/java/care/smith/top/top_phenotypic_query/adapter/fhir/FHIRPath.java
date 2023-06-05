@@ -8,7 +8,6 @@ import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext;
 import org.hl7.fhir.r4.model.Base;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.utils.FHIRPathEngine;
-import org.springframework.util.CollectionUtils;
 
 import ca.uhn.fhir.context.FhirContext;
 
@@ -41,7 +40,7 @@ public class FHIRPath {
   }
 
   private Base getValue(List<Base> values) {
-    if (CollectionUtils.isEmpty(values)) return null;
+    if (values == null || values.isEmpty()) return null;
     return values.get(0);
   }
 }
