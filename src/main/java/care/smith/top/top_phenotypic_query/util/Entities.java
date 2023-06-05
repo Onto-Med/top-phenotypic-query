@@ -242,18 +242,16 @@ public class Entities {
     return txt;
   }
 
+  private static String toString(String prop, List<LocalisableText> txts) {
+    return txts.stream()
+        .map(t -> prop + PROP_VAL_SEP + toString(t))
+        .collect(Collectors.joining(ANN_SEP));
+  }
+
   public static void addAnnotations(Entity e, String props) {
     if (props == null || props.isBlank()) return;
-    String[] anns = props.split("\\s*\\" + ANN_SEP + "\\s*");
-    for (String ann : anns) add(e, ann.split("\\s*" + PROP_VAL_SEP + "\\s*"));
-  }
-
-  private static String toString(String prop, List<LocalisableText> txts) {
-    return txts.stream().map(t -> toString(prop, t)).collect(Collectors.joining("|"));
-  }
-
-  private static String toString(String prop, LocalisableText txt) {
-    return prop + PROP_VAL_SEP + toString(txt);
+    String[] anns = props.split("\\s*" + ANN_SEP + "\\s*");
+    for (String ann : anns) add(e, ann.split("\\s*\\" + PROP_VAL_SEP + "\\s*"));
   }
 
   private static void add(Entity e, String[] vals) {
