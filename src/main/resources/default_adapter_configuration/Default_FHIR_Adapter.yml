@@ -47,18 +47,24 @@ phenotypeQueries:
     output:
       subject: subject.reference.value
       dateTime: effective
+      startDateTime: effective.start
+      endDateTime: effective.end
   medication_statement:
     baseQuery: "MedicationStatement?medication.code={codes}"
     dateTimeIntervalPart: "&effective{operator}{value}"
     output:
       subject: subject.reference.value
       dateTime: effective
+      startDateTime: effective.start
+      endDateTime: effective.end
   medication_request:
     baseQuery: "MedicationRequest?medication.code={codes}"
     dateTimeIntervalPart: "&authoredon{operator}{value}"
     output:
       subject: subject.reference.value
       dateTime: authoredOn
+      startDateTime: dosageInstruction.timing.repeat.bounds.start
+      endDateTime: dosageInstruction.timing.repeat.bounds.end
   medication:
     union: [ medication_administration, medication_statement, medication_request ]
   procedure:

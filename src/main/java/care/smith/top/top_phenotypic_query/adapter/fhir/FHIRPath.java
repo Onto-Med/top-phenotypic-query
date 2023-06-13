@@ -41,6 +41,7 @@ public class FHIRPath {
   }
 
   public Base getValue(Resource res, String path) {
+    if (path == null) return null;
     List<Base> values = evaluate(res, path);
     if (CollectionUtils.isEmpty(values)) return null;
     return values.get(0);
