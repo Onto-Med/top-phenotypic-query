@@ -10,6 +10,7 @@ import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Condition;
 import org.hl7.fhir.r4.model.DateTimeType;
+import org.hl7.fhir.r4.model.Dosage;
 import org.hl7.fhir.r4.model.Enumerations;
 import org.hl7.fhir.r4.model.MedicationAdministration;
 import org.hl7.fhir.r4.model.MedicationAdministration.MedicationAdministrationDosageComponent;
@@ -23,6 +24,8 @@ import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Ratio;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.Timing;
+import org.hl7.fhir.r4.model.Timing.TimingRepeatComponent;
 import org.junit.jupiter.api.Test;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -297,10 +300,26 @@ public class FHIRPathTestIntern {
     MedicationRequest med =
         new MedicationRequest()
             .setSubject(new Reference("Patient/1"))
-            .setAuthoredOnElement(FHIRUtil.parse("2001-02-03T04:05"));
+            .setAuthoredOnElement(FHIRUtil.parse("2001-02-03T04:05"))
+            .addDosageInstruction(
+                new Dosage()
+                    .setTiming(
+                        new Timing()
+                            .setRepeat(
+                                new TimingRepeatComponent()
+                                    .setBounds(
+                                        new Period()
+                                            .setStartElement(FHIRUtil.parse("2001-02-03T04:05"))
+                                            .setEndElement(FHIRUtil.parse("2005-06-07T08:09"))))));
 
     assertEquals("Patient/1", path.getString(med, "subject.reference.value"));
     assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(med, "authoredOn"));
+    assertEquals(
+        LocalDateTime.of(2001, 2, 3, 4, 5),
+        path.getDateTime(med, "dosageInstruction.timing.repeat.bounds.start"));
+    assertEquals(
+        LocalDateTime.of(2005, 6, 7, 8, 9),
+        path.getDateTime(med, "dosageInstruction.timing.repeat.bounds.end"));
   }
 
   @Test
