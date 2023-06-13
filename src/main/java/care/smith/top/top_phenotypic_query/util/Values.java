@@ -181,4 +181,14 @@ public class Values {
   public static boolean hasDateTimeType(Value v) {
     return v.getDataType() == DataType.DATE_TIME;
   }
+
+  public static LocalDateTime getStartDateTime(Value v) {
+    if (v.getStartDateTime() != null) return v.getStartDateTime();
+    return v.getDateTime();
+  }
+
+  public static LocalDateTime getEndDateTime(Value v) {
+    if (v.getEndDateTime() != null) return v.getEndDateTime();
+    return v.getDateTime();
+  }
 }
