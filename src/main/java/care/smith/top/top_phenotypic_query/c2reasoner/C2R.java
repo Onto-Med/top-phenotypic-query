@@ -36,6 +36,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Li;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.TimeDistance;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Count;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutFirst;
@@ -153,6 +154,7 @@ public class C2R {
     addFunction(Overlap2.get());
     addFunction(StartsBefore.get());
     addFunction(EndsBefore.get());
+    addFunction(TimeDistance.get());
   }
 
   public MathContext getMathContext() {

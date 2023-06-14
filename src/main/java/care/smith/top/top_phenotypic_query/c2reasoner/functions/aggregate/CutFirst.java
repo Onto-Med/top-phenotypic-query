@@ -47,7 +47,7 @@ public class CutFirst extends FunctionEntity {
     args = Aggregator.aggregateIfMultiple(args, c2r);
     List<Value> vals =
         args.stream()
-            .sorted(Values.VALUE_DATE_COMPARATOR)
+            .sorted(Values.EXP_DATE_COMPARATOR)
             .skip(1)
             .map(e -> Expressions.getValue(e))
             .collect(Collectors.toList());

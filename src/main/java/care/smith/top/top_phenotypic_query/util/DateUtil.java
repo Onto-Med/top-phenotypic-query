@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -156,5 +157,10 @@ public class DateUtil {
 
   public static BigDecimal getPeriodInDays(LocalDateTime start, LocalDateTime end) {
     return BigDecimal.valueOf(ChronoUnit.DAYS.between(start, end));
+  }
+
+  public static BigDecimal getPeriodInHours(LocalDateTime start, LocalDateTime end) {
+    return BigDecimal.valueOf(Duration.between(start, end).toMillis())
+        .divide(BigDecimal.valueOf(3600000));
   }
 }

@@ -43,7 +43,7 @@ public class Last extends FunctionEntity {
     args = c2r.calculate(args);
     if (args == null) return null;
     args = Aggregator.aggregateIfMultiple(args, c2r);
-    args = args.stream().sorted(Values.VALUE_DATE_COMPARATOR).collect(Collectors.toList());
+    args = args.stream().sorted(Values.EXP_DATE_COMPARATOR).collect(Collectors.toList());
     return args.get(args.size() - 1);
   }
 }
