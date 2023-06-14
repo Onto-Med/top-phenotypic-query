@@ -209,4 +209,12 @@ public class Values {
       LocalDateTime v1Start, LocalDateTime v1End, LocalDateTime v2Start, int maxDistance) {
     return !v1Start.isAfter(v2Start) && !v1End.plusHours(maxDistance).isBefore(v2Start);
   }
+
+  public static boolean startsBefore(Value v1, Value v2) {
+    return getStartDateTime(v1).isBefore(getStartDateTime(v2));
+  }
+
+  public static boolean endsBefore(Value v1, Value v2) {
+    return getEndDateTime(v1).isBefore(getEndDateTime(v2));
+  }
 }

@@ -65,11 +65,13 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.Date;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.DiffDays;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.DiffMonths;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.DiffYears;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.EndsBefore;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.Overlap1;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.Overlap2;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusDays;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusMonths;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYears;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.StartsBefore;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
@@ -149,6 +151,8 @@ public class C2R {
     addFunction(Median.get());
     addFunction(Overlap1.get());
     addFunction(Overlap2.get());
+    addFunction(StartsBefore.get());
+    addFunction(EndsBefore.get());
   }
 
   public MathContext getMathContext() {

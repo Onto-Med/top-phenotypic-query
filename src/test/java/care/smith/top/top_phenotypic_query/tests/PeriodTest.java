@@ -6,8 +6,10 @@ import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.EndsBefore;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.Overlap1;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.Overlap2;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.StartsBefore;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
@@ -111,5 +113,45 @@ public class PeriodTest {
         Exp.ofTrue(), new C2R().calculate(Overlap2.of(Exp.of(v1), Exp.of(v2), Exp.of(48))));
     assertEquals(
         Exp.ofTrue(), new C2R().calculate(Overlap2.of(Exp.of(v1), Exp.of(v2), Exp.of(148))));
+  }
+
+  @Test
+  public void test11() {
+    Value v1 = Val.of(3, DateUtil.parse("2001-01-03"));
+    Value v2 = Val.of(5, DateUtil.parse("2001-01-01"));
+    assertEquals(Exp.ofFalse(), new C2R().calculate(StartsBefore.of(Exp.of(v1), Exp.of(v2))));
+    assertEquals(Exp.ofTrue(), new C2R().calculate(StartsBefore.of(Exp.of(v2), Exp.of(v1))));
+    assertEquals(Exp.ofFalse(), new C2R().calculate(EndsBefore.of(Exp.of(v1), Exp.of(v2))));
+    assertEquals(Exp.ofTrue(), new C2R().calculate(EndsBefore.of(Exp.of(v2), Exp.of(v1))));
+  }
+
+  @Test
+  public void test12() {
+    Value v1 = Val.of(3, DateUtil.parse("2001-01-03"), DateUtil.parse("2001-01-04"));
+    Value v2 = Val.of(5, DateUtil.parse("2001-01-01"), DateUtil.parse("2001-01-02"));
+    assertEquals(Exp.ofFalse(), new C2R().calculate(StartsBefore.of(Exp.of(v1), Exp.of(v2))));
+    assertEquals(Exp.ofTrue(), new C2R().calculate(StartsBefore.of(Exp.of(v2), Exp.of(v1))));
+    assertEquals(Exp.ofFalse(), new C2R().calculate(EndsBefore.of(Exp.of(v1), Exp.of(v2))));
+    assertEquals(Exp.ofTrue(), new C2R().calculate(EndsBefore.of(Exp.of(v2), Exp.of(v1))));
+  }
+
+  @Test
+  public void test13() {
+    Value v1 = Val.of(3, DateUtil.parse("2001-01-02"), DateUtil.parse("2001-01-03"));
+    Value v2 = Val.of(5, DateUtil.parse("2001-01-01"), DateUtil.parse("2001-01-04"));
+    assertEquals(Exp.ofFalse(), new C2R().calculate(StartsBefore.of(Exp.of(v1), Exp.of(v2))));
+    assertEquals(Exp.ofTrue(), new C2R().calculate(StartsBefore.of(Exp.of(v2), Exp.of(v1))));
+    assertEquals(Exp.ofTrue(), new C2R().calculate(EndsBefore.of(Exp.of(v1), Exp.of(v2))));
+    assertEquals(Exp.ofFalse(), new C2R().calculate(EndsBefore.of(Exp.of(v2), Exp.of(v1))));
+  }
+
+  @Test
+  public void test14() {
+    Value v1 = Val.of(3, DateUtil.parse("2001-01-01"), DateUtil.parse("2001-01-02"));
+    Value v2 = Val.of(5, DateUtil.parse("2001-01-01"), DateUtil.parse("2001-01-02"));
+    assertEquals(Exp.ofFalse(), new C2R().calculate(StartsBefore.of(Exp.of(v1), Exp.of(v2))));
+    assertEquals(Exp.ofFalse(), new C2R().calculate(StartsBefore.of(Exp.of(v2), Exp.of(v1))));
+    assertEquals(Exp.ofFalse(), new C2R().calculate(EndsBefore.of(Exp.of(v1), Exp.of(v2))));
+    assertEquals(Exp.ofFalse(), new C2R().calculate(EndsBefore.of(Exp.of(v2), Exp.of(v1))));
   }
 }
