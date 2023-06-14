@@ -109,5 +109,7 @@ public class PeriodTest {
         Exp.ofFalse(), new C2R().calculate(Overlap2.of(Exp.of(v1), Exp.of(v2), Exp.of(47))));
     assertEquals(
         Exp.ofTrue(), new C2R().calculate(Overlap2.of(Exp.of(v1), Exp.of(v2), Exp.of(48))));
+    assertEquals(
+        Exp.ofTrue(), new C2R().calculate(Overlap2.of(Exp.of(v1), Exp.of(v2), Exp.of(148))));
   }
 }

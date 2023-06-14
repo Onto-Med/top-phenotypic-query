@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import care.smith.top.model.DataType;
@@ -42,12 +41,9 @@ public class Overlap1 extends FunctionEntity {
     if (arg1 == null) return null;
     Expression arg2 = c2r.calculate(args.get(1));
     if (arg2 == null) return null;
+
     Value v1 = Expressions.getValue(Aggregator.aggregate(arg1, c2r));
     Value v2 = Expressions.getValue(Aggregator.aggregate(arg2, c2r));
-
-    LocalDateTime v1Start = Values.getStartDateTime(v1);
-    LocalDateTime v1End = Values.getEndDateTime(v1);
-    LocalDateTime v2Start = Values.getStartDateTime(v2);
 
     int distance = 0;
     if (args.size() > 2) {
@@ -56,6 +52,6 @@ public class Overlap1 extends FunctionEntity {
       distance = Expressions.getNumberValue(arg3).intValue();
     }
 
-    return Exp.of(!v1Start.isAfter(v2Start) && !v1End.plusHours(distance).isBefore(v2Start));
+    return Exp.of(Values.overlaps1(v1, v2, distance));
   }
 }

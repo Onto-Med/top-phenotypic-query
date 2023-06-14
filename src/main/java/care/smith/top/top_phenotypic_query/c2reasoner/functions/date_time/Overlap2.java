@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import care.smith.top.model.DataType;
@@ -42,32 +41,23 @@ public class Overlap2 extends FunctionEntity {
     if (arg1 == null) return null;
     Expression arg2 = c2r.calculate(args.get(1));
     if (arg2 == null) return null;
+
     Value v1 = Expressions.getValue(Aggregator.aggregate(arg1, c2r));
     Value v2 = Expressions.getValue(Aggregator.aggregate(arg2, c2r));
 
-    LocalDateTime v1Start = Values.getStartDateTime(v1);
-    LocalDateTime v1End = Values.getEndDateTime(v1);
-    LocalDateTime v2Start = Values.getStartDateTime(v2);
-    LocalDateTime v2End = Values.getEndDateTime(v2);
-
     int distance1 = 0;
     int distance2 = 0;
-
     if (args.size() > 2) {
       Expression arg3 = c2r.calculate(args.get(2));
       Exceptions.checkArgumentType(getFunction(), DataType.NUMBER, arg3);
       distance1 = Expressions.getNumberValue(arg3).intValue();
-      distance2 = distance1;
+      if (args.size() > 3) {
+        Expression arg4 = c2r.calculate(args.get(3));
+        Exceptions.checkArgumentType(getFunction(), DataType.NUMBER, arg4);
+        distance2 = Expressions.getNumberValue(arg4).intValue();
+      } else distance2 = distance1;
     }
 
-    if (args.size() > 3) {
-      Expression arg4 = c2r.calculate(args.get(3));
-      Exceptions.checkArgumentType(getFunction(), DataType.NUMBER, arg4);
-      distance2 = Expressions.getNumberValue(arg4).intValue();
-    }
-
-    return Exp.of(
-        (!v1Start.isAfter(v2Start) && !v1End.plusHours(distance1).isBefore(v2Start))
-            || (!v2Start.isAfter(v1Start) && !v2End.plusHours(distance2).isBefore(v1Start)));
+    return Exp.of(Values.overlaps2(v1, v2, distance1, distance2));
   }
 }
