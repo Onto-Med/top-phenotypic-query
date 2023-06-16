@@ -31,6 +31,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.constants.Today;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.True;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Empty;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Exists;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
@@ -155,6 +156,7 @@ public class C2R {
     addFunction(StartsBefore.get());
     addFunction(EndsBefore.get());
     addFunction(TimeDistance.get());
+    addFunction(Exists.get());
   }
 
   public MathContext getMathContext() {

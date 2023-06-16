@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import care.smith.top.model.Expression;
+import care.smith.top.model.ProjectionEntry.TypeEnum;
+import care.smith.top.model.QueryCriterion;
 import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
@@ -110,6 +112,9 @@ public abstract class DataAdapter {
   }
 
   private void replacePhenotype(String sbjId, SingleSearch search, ResultSet rs) {
+    if (search.getEntry().getType() == TypeEnum.QUERYCRITERION
+        && ((QueryCriterion) (search.getEntry())).isInclusion()) return;
+
     rs.replacePhenotype(
         sbjId,
         search.getSuperPhenotype().getId(),
