@@ -1,18 +1,15 @@
 package care.smith.top.top_phenotypic_query.adapter.config;
 
-import java.io.File;
-import java.io.IOException;
+import care.smith.top.model.Code;
+import care.smith.top.model.Phenotype;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
-import care.smith.top.model.Code;
-import care.smith.top.model.Phenotype;
-import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class DataAdapterConfig {
 
@@ -28,19 +25,28 @@ public class DataAdapterConfig {
   private Map<String, CodeMapping> codeMappings = new HashMap<>();
 
   public static DataAdapterConfig getInstance(String yamlFilePath) {
-    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-    DataAdapterConfig config = null;
     try {
-      config = mapper.readValue(new File(yamlFilePath), DataAdapterConfig.class);
+      return getInstanceFromStream(new FileInputStream(yamlFilePath));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public static DataAdapterConfig getInstanceFromResource(String resourceName) {
+    InputStream inputStream =
+        DataAdapterConfig.class.getClassLoader().getResourceAsStream(resourceName);
+    return getInstanceFromStream(inputStream);
+  }
+
+  public static DataAdapterConfig getInstanceFromStream(InputStream inputStream) {
+    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+    try {
+      return mapper.readValue(inputStream, DataAdapterConfig.class);
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return config;
-  }
-
-  public static DataAdapterConfig getInstanceFromResource(String yamlFilePath) {
-    return getInstance(
-        Thread.currentThread().getContextClassLoader().getResource(yamlFilePath).getPath());
+    return null;
   }
 
   public String getAdapter() {
