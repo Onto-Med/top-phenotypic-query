@@ -1,7 +1,9 @@
 package care.smith.top.top_phenotypic_query.adapter.config;
 
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,19 +31,27 @@ public class DataAdapterConfig {
   private Map<String, CodeMapping> codeMappings = new HashMap<>();
 
   public static DataAdapterConfig getInstance(String yamlFilePath) {
-    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-    DataAdapterConfig config = null;
     try {
-      config = mapper.readValue(new File(yamlFilePath), DataAdapterConfig.class);
+      return getInstanceFromStream(new FileInputStream(yamlFilePath));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public static DataAdapterConfig getInstanceFromResource(String resourceName) {
+    return getInstanceFromStream(
+        DataAdapterConfig.class.getClassLoader().getResourceAsStream(resourceName));
+  }
+
+  public static DataAdapterConfig getInstanceFromStream(InputStream inputStream) {
+    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+    try {
+      return mapper.readValue(inputStream, DataAdapterConfig.class);
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return config;
-  }
-
-  public static DataAdapterConfig getInstanceFromResource(String yamlFilePath) {
-    return getInstance(
-        Thread.currentThread().getContextClassLoader().getResource(yamlFilePath).getPath());
+    return null;
   }
 
   public String getAdapter() {
