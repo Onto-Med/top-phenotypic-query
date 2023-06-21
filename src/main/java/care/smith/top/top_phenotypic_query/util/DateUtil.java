@@ -161,6 +161,6 @@ public class DateUtil {
 
   public static BigDecimal getPeriodInHours(LocalDateTime start, LocalDateTime end) {
     return BigDecimal.valueOf(Duration.between(start, end).toMillis())
-        .divide(BigDecimal.valueOf(3600000));
+        .divide(BigDecimal.valueOf(3600000), MathContext.DECIMAL32);
   }
 }

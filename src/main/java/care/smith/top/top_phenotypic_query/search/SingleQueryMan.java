@@ -1,6 +1,7 @@
 package care.smith.top.top_phenotypic_query.search;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -59,7 +60,9 @@ public class SingleQueryMan {
       for (SingleSearch inc : inclusions) {
         Phenotype incPhe = inc.getPhenotype();
         if (Phenotypes.isSingleRestriction(incPhe)
-            && incPhe.getSuperPhenotype().getId().equals(varPhe.getId())) return;
+            && incPhe.getSuperPhenotype().getId().equals(varPhe.getId())
+            && Objects.equals(inc.getDateTimeRestriction(), variable.getDateTimeRestriction()))
+          return;
       }
     }
 

@@ -76,7 +76,8 @@ public class FHIRHyperglycemiaTestIntern {
     Reference pat2 = client.add(new Pat("p2").birthDate("2001-01-01").gender("female"));
     Reference pat3 = client.add(new Pat("p3").birthDate("1951-01-01").gender("male"));
     Reference pat4 = client.add(new Pat("p4").birthDate("1951-01-01").gender("female"));
-    Reference pat5 = client.add(new Pat("p5").birthDate("1951-01-01").gender("male"));
+    Reference pat6 = client.add(new Pat("p6").birthDate("1951-01-01").gender("male"));
+    Reference pat7 = client.add(new Pat("p6").birthDate("1951-01-01").gender("male"));
 
     client.add(
         new Obs("p1a", pat1)
@@ -109,13 +110,40 @@ public class FHIRHyperglycemiaTestIntern {
         new Obs("p3c", pat3)
             .code("http://loinc.org", "15074-8")
             .value(11.4, "mmol/L")
-            .date("2020-01-03T19:00"));
+            .date("2020-01-04T19:00"));
 
     client.add(
         new Obs("p4a", pat4)
             .code("http://loinc.org", "15074-8")
             .value(16.7, "mmol/L")
             .date("2020-01-03T19:00"));
+
+    client.add(
+        new Obs("p6a", pat6)
+            .code("http://loinc.org", "15074-8")
+            .value(14.1, "mmol/L")
+            .date("2020-01-01T12:00"));
+    client.add(
+        new Obs("p6b", pat6)
+            .code("http://loinc.org", "15074-8")
+            .value(14.2, "mmol/L")
+            .date("2020-01-01T18:00"));
+
+    client.add(
+        new Obs("p7a", pat7)
+            .code("http://loinc.org", "15074-8")
+            .value(11.2, "mmol/L")
+            .date("2020-01-01T12:00"));
+    client.add(
+        new Obs("p7b", pat7)
+            .code("http://loinc.org", "15074-8")
+            .value(11.3, "mmol/L")
+            .date("2020-01-01T19:00"));
+    client.add(
+        new Obs("p7c", pat7)
+            .code("http://loinc.org", "15074-8")
+            .value(11.4, "mmol/L")
+            .date("2020-01-04T19:01"));
 
     try {
       ResultSet rs =
@@ -127,9 +155,9 @@ public class FHIRHyperglycemiaTestIntern {
                   check2,
                   check3,
                   hyperGlu)
-              .inc(gluRange)
               .inc(hyperGlu)
               .execute();
+      System.out.println(rs);
       assertEquals(
           Set.of(pat1.getReference(), pat2.getReference(), pat3.getReference()),
           rs.getSubjectIds());
