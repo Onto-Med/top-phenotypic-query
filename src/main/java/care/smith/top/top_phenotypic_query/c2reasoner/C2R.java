@@ -37,7 +37,6 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Li;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.TimeDistance;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Count;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutFirst;
@@ -74,6 +73,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusDa
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusMonths;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYears;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.StartsBefore;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.TimeDistance;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;

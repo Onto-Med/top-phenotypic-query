@@ -53,7 +53,9 @@ public class SingleQueryMan {
   }
 
   public void addVariable(SingleSearch variable) {
-    if (inclusions.contains(variable) || exclusions.contains(variable)) return;
+    if (inclusions.contains(variable)
+        || exclusions.contains(variable)
+        || variables.contains(variable)) return;
 
     Phenotype varPhe = variable.getPhenotype();
     if (Phenotypes.isSinglePhenotype(varPhe)) {

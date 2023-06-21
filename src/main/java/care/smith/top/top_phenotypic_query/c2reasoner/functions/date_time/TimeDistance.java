@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time;
 
 import java.math.BigDecimal;
 import java.util.List;
