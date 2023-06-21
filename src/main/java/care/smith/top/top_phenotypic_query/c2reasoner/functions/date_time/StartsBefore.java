@@ -1,27 +1,28 @@
-package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
-public class First extends FunctionEntity {
+public class StartsBefore extends FunctionEntity {
 
-  private static final First INSTANCE = new First();
+  private static StartsBefore INSTANCE = new StartsBefore();
 
-  private First() {
-    super("first", NotationEnum.PREFIX);
-    minArgumentNumber(1);
+  private StartsBefore() {
+    super("startsBefore", NotationEnum.PREFIX, 2, 2);
   }
 
-  public static First get() {
+  public static StartsBefore get() {
     return INSTANCE;
   }
 
@@ -40,10 +41,14 @@ public class First extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args);
-    if (args == null) return null;
-    args = Aggregator.aggregateIfMultiple(args, c2r);
-    args = args.stream().sorted(Values.EXP_DATE_COMPARATOR).collect(Collectors.toList());
-    return args.get(0);
+    Expression arg1 = c2r.calculate(args.get(0));
+    if (arg1 == null) return null;
+    Expression arg2 = c2r.calculate(args.get(1));
+    if (arg2 == null) return null;
+
+    Value v1 = Expressions.getValue(Aggregator.aggregate(arg1, c2r));
+    Value v2 = Expressions.getValue(Aggregator.aggregate(arg2, c2r));
+
+    return Exp.of(Values.startsBefore(v1, v2));
   }
 }

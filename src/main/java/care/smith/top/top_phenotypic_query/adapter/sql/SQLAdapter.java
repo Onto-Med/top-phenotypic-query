@@ -62,6 +62,11 @@ public class SQLAdapter extends DataAdapter {
     return con;
   }
 
+  private LocalDateTime getDate(String dateCol, java.sql.ResultSet sqlRS) throws SQLException {
+    if (dateCol == null) return null;
+    return sqlRS.getTimestamp(dateCol).toLocalDateTime();
+  }
+
   @Override
   public ResultSet execute(SingleSearch search) {
     ResultSet rs = new ResultSet();
@@ -76,20 +81,26 @@ public class SQLAdapter extends DataAdapter {
       String sbjCol = out.getSubject();
       String pheCol = out.getValue(Phenotypes.getDataType(phe));
       String dateCol = out.getDateTime();
+      String startDateCol = out.getStartDateTime();
+      String endDateCol = out.getEndDateTime();
 
       while (sqlRS.next()) {
         String sbj = sqlRS.getString(sbjCol);
-        LocalDateTime date = sqlRS.getTimestamp(dateCol).toLocalDateTime();
+        LocalDateTime date = getDate(dateCol, sqlRS);
+        LocalDateTime startDate = getDate(startDateCol, sqlRS);
+        LocalDateTime endDate = getDate(endDateCol, sqlRS);
         Value val = null;
         if (Phenotypes.hasBooleanType(phe)) {
           if (pheCol == null) {
-            rs.addValue(sbj, phe, search.getDateTimeRestriction(), Val.ofTrue());
+            rs.addValue(
+                sbj, phe, search.getDateTimeRestriction(), Val.ofTrue(date, startDate, endDate));
             continue;
-          } else val = Val.of(sqlRS.getBoolean(pheCol), date);
+          } else val = Val.of(sqlRS.getBoolean(pheCol), date, startDate, endDate);
         } else if (Phenotypes.hasDateTimeType(phe))
-          val = Val.of(sqlRS.getTimestamp(pheCol).toLocalDateTime(), date);
-        else if (Phenotypes.hasNumberType(phe)) val = Val.of(sqlRS.getBigDecimal(pheCol), date);
-        else val = Val.of(sqlRS.getString(pheCol), date);
+          val = Val.of(sqlRS.getTimestamp(pheCol).toLocalDateTime(), date, startDate, endDate);
+        else if (Phenotypes.hasNumberType(phe))
+          val = Val.of(sqlRS.getBigDecimal(pheCol), date, startDate, endDate);
+        else val = Val.of(sqlRS.getString(pheCol), date, startDate, endDate);
         if (val != null)
           rs.addValueWithRestriction(
               sbj,

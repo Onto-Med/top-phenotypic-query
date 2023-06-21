@@ -1,7 +1,9 @@
 package care.smith.top.top_phenotypic_query.adapter.config;
 
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import care.smith.top.model.Code;
+import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
@@ -18,7 +21,7 @@ public class DataAdapterConfig {
 
   private String id;
   private String adapter;
-  private Map<String, String> connection;
+  private Map<String, String> connection = new HashMap<>();
   private CSVSettings csvSettings;
   private SubjectQuery subjectQuery;
   private Map<String, PhenotypeQuery> phenotypeQueries = new HashMap<>();
@@ -28,19 +31,27 @@ public class DataAdapterConfig {
   private Map<String, CodeMapping> codeMappings = new HashMap<>();
 
   public static DataAdapterConfig getInstance(String yamlFilePath) {
-    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-    DataAdapterConfig config = null;
     try {
-      config = mapper.readValue(new File(yamlFilePath), DataAdapterConfig.class);
+      return getInstanceFromStream(new FileInputStream(yamlFilePath));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public static DataAdapterConfig getInstanceFromResource(String resourceName) {
+    return getInstanceFromStream(
+        DataAdapterConfig.class.getClassLoader().getResourceAsStream(resourceName));
+  }
+
+  public static DataAdapterConfig getInstanceFromStream(InputStream inputStream) {
+    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+    try {
+      return mapper.readValue(inputStream, DataAdapterConfig.class);
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return config;
-  }
-
-  public static DataAdapterConfig getInstanceFromResource(String yamlFilePath) {
-    return getInstance(
-        Thread.currentThread().getContextClassLoader().getResource(yamlFilePath).getPath());
+    return null;
   }
 
   public String getAdapter() {
@@ -69,6 +80,10 @@ public class DataAdapterConfig {
 
   public void setConnection(Map<String, String> connection) {
     this.connection = connection;
+  }
+
+  public void setConnectionAttribute(String name, String value) {
+    connection.put(name, value);
   }
 
   public CSVSettings getCsvSettings() {
@@ -108,6 +123,8 @@ public class DataAdapterConfig {
   }
 
   public boolean isBirthdate(Phenotype p) {
+    if (Phenotypes.getItemType(p) == ItemType.SUBJECT_BIRTH_DATE) return true;
+    if (Phenotypes.getUnrestrictedPhenotypeCodes(p) == null) return false;
     for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(p)) {
       if (birthdateMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
@@ -123,6 +140,8 @@ public class DataAdapterConfig {
   }
 
   public boolean isAge(Phenotype p) {
+    if (Phenotypes.getItemType(p) == ItemType.SUBJECT_AGE) return true;
+    if (Phenotypes.getUnrestrictedPhenotypeCodes(p) == null) return false;
     for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(p)) {
       if (ageMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
@@ -138,6 +157,8 @@ public class DataAdapterConfig {
   }
 
   public boolean isSex(Phenotype p) {
+    if (Phenotypes.getItemType(p) == ItemType.SUBJECT_SEX) return true;
+    if (Phenotypes.getUnrestrictedPhenotypeCodes(p) == null) return false;
     for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(p)) {
       if (sexMapping.getCode().equals(Phenotypes.getCodeUri(code))) return true;
     }
@@ -149,6 +170,7 @@ public class DataAdapterConfig {
   }
 
   public CodeMapping getCodeMapping(Phenotype p) {
+    if (Phenotypes.getUnrestrictedPhenotypeCodes(p) == null) return null;
     for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(p)) {
       CodeMapping map = getCodeMapping(Phenotypes.getCodeUri(code));
       if (map != null) return map;

@@ -56,12 +56,89 @@ public class Val {
     return of(val).dateTime(dateTime);
   }
 
+  public static Value of(Boolean val, LocalDateTime starDateTime, LocalDateTime endDateTime) {
+    return of(val).startDateTime(starDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value of(Number val, LocalDateTime starDateTime, LocalDateTime endDateTime) {
+    return of(val).startDateTime(starDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value of(BigDecimal val, LocalDateTime starDateTime, LocalDateTime endDateTime) {
+    return of(val).startDateTime(starDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value of(String val, LocalDateTime starDateTime, LocalDateTime endDateTime) {
+    return of(val).startDateTime(starDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value of(LocalDateTime val, LocalDateTime starDateTime, LocalDateTime endDateTime) {
+    return of(val).startDateTime(starDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value of(
+      Boolean val, LocalDateTime dateTime, LocalDateTime starDateTime, LocalDateTime endDateTime) {
+    return of(val).dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value of(
+      Number val, LocalDateTime dateTime, LocalDateTime starDateTime, LocalDateTime endDateTime) {
+    return of(val).dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value of(
+      BigDecimal val,
+      LocalDateTime dateTime,
+      LocalDateTime starDateTime,
+      LocalDateTime endDateTime) {
+    return of(val).dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value of(
+      String val, LocalDateTime dateTime, LocalDateTime starDateTime, LocalDateTime endDateTime) {
+    return of(val).dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value of(
+      LocalDateTime val,
+      LocalDateTime dateTime,
+      LocalDateTime starDateTime,
+      LocalDateTime endDateTime) {
+    return of(val).dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
+  }
+
   public static Value ofTrue() {
     return of(true);
   }
 
   public static Value ofFalse() {
     return of(false);
+  }
+
+  public static Value ofTrue(LocalDateTime dateTime) {
+    return ofTrue().dateTime(dateTime);
+  }
+
+  public static Value ofFalse(LocalDateTime dateTime) {
+    return ofFalse().dateTime(dateTime);
+  }
+
+  public static Value ofTrue(LocalDateTime starDateTime, LocalDateTime endDateTime) {
+    return ofTrue().startDateTime(starDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value ofFalse(LocalDateTime starDateTime, LocalDateTime endDateTime) {
+    return ofFalse().startDateTime(starDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value ofTrue(
+      LocalDateTime dateTime, LocalDateTime starDateTime, LocalDateTime endDateTime) {
+    return ofTrue().dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value ofFalse(
+      LocalDateTime dateTime, LocalDateTime starDateTime, LocalDateTime endDateTime) {
+    return ofFalse().dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
   }
 
   public static List<Value> ofBoolean(List<Boolean> vals) {

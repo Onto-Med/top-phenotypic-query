@@ -1,7 +1,6 @@
-package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
@@ -9,19 +8,18 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
-import care.smith.top.top_phenotypic_query.util.Values;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
-public class First extends FunctionEntity {
+public class Exists extends FunctionEntity {
 
-  private static final First INSTANCE = new First();
+  private static Exists INSTANCE = new Exists();
 
-  private First() {
-    super("first", NotationEnum.PREFIX);
-    minArgumentNumber(1);
+  private Exists() {
+    super("exists", NotationEnum.PREFIX, 1, 1);
   }
 
-  public static First get() {
+  public static Exists get() {
     return INSTANCE;
   }
 
@@ -40,10 +38,7 @@ public class First extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args);
-    if (args == null) return null;
-    args = Aggregator.aggregateIfMultiple(args, c2r);
-    args = args.stream().sorted(Values.EXP_DATE_COMPARATOR).collect(Collectors.toList());
-    return args.get(0);
+    Expression arg = c2r.calculate(args.get(0));
+    return Exp.of(arg != null && Expressions.hasValues(arg));
   }
 }
