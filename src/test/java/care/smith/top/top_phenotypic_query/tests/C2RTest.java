@@ -47,6 +47,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYe
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Li;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Union;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Entities;
@@ -59,7 +60,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Val;
 public class C2RTest {
 
   @Test
-  public void testList() {
+  public void testList1() {
     assertEquals(Exp.of(5, 6, 7), new C2R().calculate(Li.of(Exp.of(5), Exp.of(6), Exp.of(7))));
 
     Value v1 = Val.of(3, DateUtil.parse("2001-01-01"));
@@ -70,6 +71,61 @@ public class C2RTest {
 
     assertEquals(Exp.of(v1, v3), new C2R().calculate(li));
     assertEquals(Exp.of(4, 8), new C2R().defaultAggregateFunction(Avg.get()).calculate(li));
+  }
+
+  @Test
+  public void testList2() {
+    Phenotype x = new Phe("x").number().get();
+    Phenotype y = new Phe("y").number().get();
+    Phenotype c = new Phe("c").expression(Li.of(x, y)).get();
+
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("x", null, Val.of(3));
+    vals.addValue("x", null, Val.of(5));
+    vals.addValue("y", null, Val.of(7));
+    vals.addValue("y", null, Val.of(9));
+
+    Entities phens = Entities.of(x, y, c);
+
+    C2R c2r = new C2R().phenotypes(phens).values(vals).defaultAggregateFunction(Avg.get());
+
+    assertEquals(Exp.of(4, 8), c2r.calculate(c));
+  }
+
+  @Test
+  public void testUnion1() {
+    Phenotype x = new Phe("x").number().get();
+    Phenotype y = new Phe("y").number().get();
+    Phenotype c = new Phe("c").expression(Union.of(x, y)).get();
+
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("x", null, Val.of(3));
+    vals.addValue("x", null, Val.of(5));
+    vals.addValue("y", null, Val.of(7));
+    vals.addValue("y", null, Val.of(9));
+
+    Entities phens = Entities.of(x, y, c);
+
+    C2R c2r = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(Exp.of(3, 5, 7, 9), c2r.calculate(c));
+  }
+
+  @Test
+  public void testUnion2() {
+    Phenotype x = new Phe("x").number().get();
+    Phenotype y = new Phe("y").number().get();
+    Phenotype c = new Phe("c").expression(Union.of(x, y)).get();
+
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("x", null, Val.of(3));
+    vals.addValue("x", null, Val.of(5));
+
+    Entities phens = Entities.of(x, y, c);
+
+    C2R c2r = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(Exp.of(3, 5), c2r.calculate(c));
   }
 
   @Test
