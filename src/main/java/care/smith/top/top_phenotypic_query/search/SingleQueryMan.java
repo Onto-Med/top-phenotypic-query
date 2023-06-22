@@ -1,17 +1,14 @@
 package care.smith.top.top_phenotypic_query.search;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import care.smith.top.model.Phenotype;
 import care.smith.top.model.Query;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Entities;
-import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Queries;
 import care.smith.top.top_phenotypic_query.util.Queries.QueryType;
 
@@ -56,18 +53,6 @@ public class SingleQueryMan {
     if (inclusions.contains(variable)
         || exclusions.contains(variable)
         || variables.contains(variable)) return;
-
-    Phenotype varPhe = variable.getPhenotype();
-    if (Phenotypes.isSinglePhenotype(varPhe)) {
-      for (SingleSearch inc : inclusions) {
-        Phenotype incPhe = inc.getPhenotype();
-        if (Phenotypes.isSingleRestriction(incPhe)
-            && incPhe.getSuperPhenotype().getId().equals(varPhe.getId())
-            && Objects.equals(inc.getDateTimeRestriction(), variable.getDateTimeRestriction()))
-          return;
-      }
-    }
-
     variables.add(variable);
   }
 
@@ -75,25 +60,6 @@ public class SingleQueryMan {
     return !inclusions.isEmpty();
   }
 
-  //  public ResultSet execute() {
-  //    QueryType queryType = Queries.getType(query, phenotypes, subjectQueryMan, this);
-  //    ResultSet main = null;
-  //    if (queryType == QueryType.TYPE_1) {
-  //      log.debug("TYPE 1 Single Query");
-  //      main = executeStandardSearch(new ResultSet(), true);
-  //    } else if (queryType == QueryType.TYPE_2) {
-  //      log.debug("TYPE 2 Single Query");
-  //      main = subjectQueryMan.executeVariables(queryType);
-  //      for (SingleSearch var : variables) main = unite(main, var.execute());
-  //      main = executeStandardSearch(main, false);
-  //    } else if (queryType == QueryType.TYPE_3) {
-  //      log.debug("TYPE 3 Single Query");
-  //      main = executeStandardSearch(subjectQueryMan.executeAllSubjectsQuery(), true);
-  //    }
-  //    log.debug(main.toString());
-  //
-  //    return main;
-  //  }
   public ResultSet execute() {
     QueryType queryType = Queries.getType(query, phenotypes, sbjQueryMan, this);
     ResultSet main = null;
