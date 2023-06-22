@@ -132,4 +132,12 @@ public class Phenotypes {
             .titles(p.getTitles())
             .version(p.getVersion());
   }
+
+  public static String getRestrictedValuesKey(Phenotype singleRestriction) {
+    return singleRestriction.getSuperPhenotype().getId() + "_values_" + singleRestriction.getId();
+  }
+
+  public static boolean isRestrictedValuesKeyOfPhenotype(String key, String singlePhenotypeId) {
+    return key.startsWith(singlePhenotypeId + "_values_");
+  }
 }

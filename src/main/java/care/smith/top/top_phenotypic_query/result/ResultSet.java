@@ -119,7 +119,7 @@ public class ResultSet extends LinkedHashMap<String, SubjectPhenotypes> {
       for (ProjectionEntry pe : pro) {
         if (!addProjection(sbjPhens, newSbjPhens, pe.getSubjectId(), pe.getDateTimeRestriction())) {
           for (String pheName : sbjPhens.getPhenotypeNames()) {
-            if (pheName.startsWith(pe.getSubjectId() + "_values_"))
+            if (Phenotypes.isRestrictedValuesKeyOfPhenotype(pheName, pe.getSubjectId()))
               addProjection(sbjPhens, newSbjPhens, pheName, pe.getDateTimeRestriction());
           }
         }

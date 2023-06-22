@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.set;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import care.smith.top.model.Expression;
@@ -39,12 +40,11 @@ public class Union extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    Expression res = new Expression();
+    List<Value> vals = new ArrayList<>();
     for (Expression arg : args) {
       arg = c2r.calculate(arg);
-      if (arg != null && arg.getValues() != null)
-        for (Value val : arg.getValues()) res.addValuesItem(val);
+      if (arg != null && arg.getValues() != null) vals.addAll(arg.getValues());
     }
-    return res;
+    return Exp.of(vals);
   }
 }

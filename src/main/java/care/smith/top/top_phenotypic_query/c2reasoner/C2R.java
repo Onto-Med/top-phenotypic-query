@@ -75,6 +75,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Li;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Union;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Vals;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
@@ -159,6 +160,7 @@ public class C2R {
     addFunction(TimeDistance.get());
     addFunction(Exists.get());
     addFunction(Union.get());
+    addFunction(Vals.get());
   }
 
   public MathContext getMathContext() {
@@ -316,5 +318,14 @@ public class C2R {
     List<String> args =
         exp.getArguments().stream().map(e -> toString(e)).collect(Collectors.toList());
     return getFunction(exp.getFunctionId()).toString(args);
+  }
+
+  public List<Value> getValues(String pheId) {
+    Phenotype p = phenotypes.getPhenotype(pheId);
+    if (p == null) return null;
+    if (Phenotypes.isSinglePhenotype(p)) return values.getValues(pheId, dateTimeRestriction);
+    if (Phenotypes.isSingleRestriction(p))
+      return values.getValues(Phenotypes.getRestrictedValuesKey(p), dateTimeRestriction);
+    return null;
   }
 }
