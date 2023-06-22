@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.set;
 
 import java.util.List;
 
@@ -11,15 +11,15 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
-public class Empty extends FunctionEntity {
+public class Exists extends FunctionEntity {
 
-  private static Empty INSTANCE = new Empty();
+  private static Exists INSTANCE = new Exists();
 
-  private Empty() {
-    super("empty", NotationEnum.PREFIX, 1, 1);
+  private Exists() {
+    super("exists", NotationEnum.PREFIX, 1, 1);
   }
 
-  public static Empty get() {
+  public static Exists get() {
     return INSTANCE;
   }
 
@@ -39,6 +39,6 @@ public class Empty extends FunctionEntity {
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     Expression arg = c2r.calculate(args.get(0));
-    return Exp.of(arg == null || !Expressions.hasValues(arg));
+    return Exp.of(arg != null && Expressions.hasValues(arg));
   }
 }
