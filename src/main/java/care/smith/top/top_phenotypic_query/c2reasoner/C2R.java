@@ -269,6 +269,7 @@ public class C2R {
   }
 
   public Expression calculate(Expression exp) {
+    if (exp == null) return null;
     if (exp.getConstantId() != null) return calculateConstant(exp.getConstantId());
     if (exp.getEntityId() != null) return calculateVariable(exp.getEntityId());
     if (exp.getFunctionId() != null) return calculateFunction(exp);
