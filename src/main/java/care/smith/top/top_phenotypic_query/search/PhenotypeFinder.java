@@ -22,7 +22,7 @@ public class PhenotypeFinder {
     this.phenotypes = Entities.of(entities).deriveAdditionalProperties(config);
   }
 
-  public PhenotypeFinder(Query query, Entities entities, DataAdapter adapter) {
+  public PhenotypeFinder(PhenotypeQuery query, Entities entities, DataAdapter adapter) {
     this.query = query;
     this.adapter = adapter;
     this.config = adapter.getConfig();
