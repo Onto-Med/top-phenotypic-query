@@ -1,6 +1,7 @@
 package care.smith.top.top_phenotypic_query.adapter;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.HashSet;
 
 import org.slf4j.Logger;
@@ -69,9 +70,9 @@ public abstract class DataAdapter {
   // fetch id attributes, column/table names
   // build atomic queries using DataAdapterConfig
   // execute queries and normalize/return ResultSet
-  public abstract ResultSet execute(SubjectSearch search);
+  public abstract ResultSet execute(SubjectSearch search) throws SQLException;
 
-  public abstract ResultSet execute(SingleSearch search);
+  public abstract ResultSet execute(SingleSearch search) throws SQLException;
 
   public abstract DataAdapterSettings getSettings();
 
