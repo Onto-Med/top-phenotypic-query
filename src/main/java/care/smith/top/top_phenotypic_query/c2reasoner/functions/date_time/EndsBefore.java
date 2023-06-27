@@ -1,25 +1,28 @@
-package care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time;
 
 import java.util.List;
 
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
-public class Empty extends FunctionEntity {
+public class EndsBefore extends FunctionEntity {
 
-  private static Empty INSTANCE = new Empty();
+  private static EndsBefore INSTANCE = new EndsBefore();
 
-  private Empty() {
-    super("empty", NotationEnum.PREFIX, 1, 1);
+  private EndsBefore() {
+    super("endsBefore", NotationEnum.PREFIX, 2, 2);
   }
 
-  public static Empty get() {
+  public static EndsBefore get() {
     return INSTANCE;
   }
 
@@ -38,7 +41,14 @@ public class Empty extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    Expression arg = c2r.calculate(args.get(0));
-    return Exp.of(arg == null || !Expressions.hasValues(arg));
+    Expression arg1 = c2r.calculate(args.get(0));
+    if (arg1 == null) return null;
+    Expression arg2 = c2r.calculate(args.get(1));
+    if (arg2 == null) return null;
+
+    Value v1 = Expressions.getValue(Aggregator.aggregate(arg1, c2r));
+    Value v2 = Expressions.getValue(Aggregator.aggregate(arg2, c2r));
+
+    return Exp.of(Values.endsBefore(v1, v2));
   }
 }

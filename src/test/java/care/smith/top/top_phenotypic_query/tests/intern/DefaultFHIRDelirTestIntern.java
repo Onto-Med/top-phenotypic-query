@@ -6,7 +6,7 @@ import care.smith.top.top_phenotypic_query.tests.DelirTest;
 
 public class DefaultFHIRDelirTestIntern extends DelirTest {
 
-  private static final String CONFIG = "config/Default_Delir_FHIR_Adapter_Test.yml";
+  private static final String CONFIG = "config/Default_FHIR_Adapter_Test.yml";
 
   @Test
   public void testFHIRAlgA() throws InstantiationException {

@@ -19,13 +19,24 @@ import care.smith.top.model.Value;
 
 public class Values {
 
-  public static Comparator<Expression> VALUE_DATE_COMPARATOR =
+  public static Comparator<Expression> EXP_DATE_COMPARATOR =
       new Comparator<Expression>() {
         @Override
         public int compare(Expression e1, Expression e2) {
           if (!Expressions.hasValues(e1) || !Expressions.hasValues(e2)) return 0;
-          LocalDateTime d1 = Expressions.getValue(e1).getDateTime();
-          LocalDateTime d2 = Expressions.getValue(e2).getDateTime();
+          LocalDateTime d1 = getDateTime(Expressions.getValue(e1));
+          LocalDateTime d2 = getDateTime(Expressions.getValue(e2));
+          if (d1 == null || d2 == null) return 0;
+          return d1.compareTo(d2);
+        }
+      };
+
+  public static Comparator<Value> VALUE_DATE_COMPARATOR =
+      new Comparator<Value>() {
+        @Override
+        public int compare(Value v1, Value v2) {
+          LocalDateTime d1 = getDateTime(v1);
+          LocalDateTime d2 = getDateTime(v2);
           if (d1 == null || d2 == null) return 0;
           return d1.compareTo(d2);
         }
@@ -180,5 +191,41 @@ public class Values {
 
   public static boolean hasDateTimeType(Value v) {
     return v.getDataType() == DataType.DATE_TIME;
+  }
+
+  public static LocalDateTime getStartDateTime(Value v) {
+    if (v.getStartDateTime() != null) return v.getStartDateTime();
+    return v.getDateTime();
+  }
+
+  public static LocalDateTime getEndDateTime(Value v) {
+    if (v.getEndDateTime() != null) return v.getEndDateTime();
+    return v.getDateTime();
+  }
+
+  public static LocalDateTime getDateTime(Value v) {
+    if (v.getDateTime() != null) return v.getDateTime();
+    return v.getStartDateTime();
+  }
+
+  public static boolean overlaps1(Value v1, Value v2, int maxDistance) {
+    return overlaps1(getStartDateTime(v1), getEndDateTime(v1), getStartDateTime(v2), maxDistance);
+  }
+
+  public static boolean overlaps2(Value v1, Value v2, int maxDistance1, int maxDistance2) {
+    return overlaps1(v1, v2, maxDistance1) || overlaps1(v2, v1, maxDistance2);
+  }
+
+  private static boolean overlaps1(
+      LocalDateTime v1Start, LocalDateTime v1End, LocalDateTime v2Start, int maxDistance) {
+    return !v1Start.isAfter(v2Start) && !v1End.plusHours(maxDistance).isBefore(v2Start);
+  }
+
+  public static boolean startsBefore(Value v1, Value v2) {
+    return getStartDateTime(v1).isBefore(getStartDateTime(v2));
+  }
+
+  public static boolean endsBefore(Value v1, Value v2) {
+    return getEndDateTime(v1).isBefore(getEndDateTime(v2));
   }
 }

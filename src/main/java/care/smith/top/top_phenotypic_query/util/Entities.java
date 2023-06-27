@@ -1,6 +1,13 @@
 package care.smith.top.top_phenotypic_query.util;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -24,6 +31,10 @@ public class Entities {
 
   private Entities(Entity... entities) {
     add(entities);
+  }
+
+  private Entities(List<Entity> entities) {
+    for (Entity e : entities) add(e);
   }
 
   public void add(Entity e) {
@@ -72,33 +83,22 @@ public class Entities {
     return new Entities(entities);
   }
 
+  public static Entities of(List<Entity> entities) {
+    return new Entities(entities);
+  }
+
   public static Entities of(Repository repo, Entity... entities) {
     return new Entities(entities).repository(repo);
   }
 
-  public static Entities read(String repoUrl, String user, String password) throws IOException {
-    return of(readRepository(repoUrl, user, password), readEntities(repoUrl, user, password));
+  public static Entities of(Repository repo, List<Entity> entities) {
+    return new Entities(entities).repository(repo);
   }
 
-  public static Entity[] readEntities(String repoUrl, String user, String password)
-          throws IOException {
-    return read(repoUrl + "/entity", user, password, Entity[].class);
-  }
-
-  public static Repository readRepository(String repoUrl, String user, String password)
-          throws IOException {
-    return read(repoUrl, user, password, Repository.class);
-  }
-
-  private static <T> T read(String url, String user, String password, Class<T> cls)
-          throws IOException {
-    URLConnection uc = new URL(url).openConnection();
-    String userpass = user + ":" + password;
-    String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
-    uc.setRequestProperty("Authorization", basicAuth);
-    String text = new String(uc.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-    ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
-    return mapper.readValue(text, cls);
+  public static Entities of(String repoUrl, String user, String password)
+      throws IOException, InterruptedException {
+    String token = HTTP.getToken(user, password);
+    return of(HTTP.readRepository(repoUrl, token), HTTP.readEntities(repoUrl, token));
   }
 
   public Entities repository(Repository repo) {
@@ -138,6 +138,10 @@ public class Entities {
 
   public Collection<Entity> getEntities() {
     return entities.values();
+  }
+
+  public Entity[] getEntitiesArray() {
+    return getEntities().toArray(new Entity[0]);
   }
 
   public Collection<Category> getCategories() {
@@ -275,18 +279,16 @@ public class Entities {
     return txt;
   }
 
+  private static String toString(String prop, List<LocalisableText> txts) {
+    return txts.stream()
+        .map(t -> prop + PROP_VAL_SEP + toString(t))
+        .collect(Collectors.joining(ANN_SEP));
+  }
+
   public static void addAnnotations(Entity e, String props) {
     if (props == null || props.isBlank()) return;
-    String[] anns = props.split("\\s*\\" + ANN_SEP + "\\s*");
-    for (String ann : anns) add(e, ann.split("\\s*" + PROP_VAL_SEP + "\\s*"));
-  }
-
-  private static String toString(String prop, List<LocalisableText> txts) {
-    return txts.stream().map(t -> toString(prop, t)).collect(Collectors.joining("|"));
-  }
-
-  private static String toString(String prop, LocalisableText txt) {
-    return prop + PROP_VAL_SEP + toString(txt);
+    String[] anns = props.split("\\s*" + ANN_SEP + "\\s*");
+    for (String ann : anns) add(e, ann.split("\\s*\\" + PROP_VAL_SEP + "\\s*"));
   }
 
   private static void add(Entity e, String[] vals) {

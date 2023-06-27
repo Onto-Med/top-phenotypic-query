@@ -25,22 +25,24 @@ public class FHIRPath {
   }
 
   public String getString(Resource res, String path) {
-    return FHIRUtil.getString(getValue(evaluate(res, path)));
+    return FHIRUtil.getString(getValue(res, path));
   }
 
   public BigDecimal getNumber(Resource res, String path) {
-    return FHIRUtil.getNumber(getValue(evaluate(res, path)));
+    return FHIRUtil.getNumber(getValue(res, path));
   }
 
   public LocalDateTime getDateTime(Resource res, String path) {
-    return FHIRUtil.getDateTime(getValue(evaluate(res, path)));
+    return FHIRUtil.getDateTime(getValue(res, path));
   }
 
   public Boolean getBoolean(Resource res, String path) {
-    return FHIRUtil.getBoolean(getValue(evaluate(res, path)));
+    return FHIRUtil.getBoolean(getValue(res, path));
   }
 
-  private Base getValue(List<Base> values) {
+  public Base getValue(Resource res, String path) {
+    if (path == null) return null;
+    List<Base> values = evaluate(res, path);
     if (CollectionUtils.isEmpty(values)) return null;
     return values.get(0);
   }

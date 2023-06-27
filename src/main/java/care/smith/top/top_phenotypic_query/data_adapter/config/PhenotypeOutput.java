@@ -8,6 +8,8 @@ public class PhenotypeOutput {
 
   private String subject;
   private String dateTime;
+  private String startDateTime;
+  private String endDateTime;
   private String value;
   private String textValue;
   private String numberValue;
@@ -31,12 +33,30 @@ public class PhenotypeOutput {
   }
 
   public String getDateTime() {
-    if (mapping == null) return dateTime;
+    if (dateTime == null || mapping == null) return dateTime;
     return QueryBuilder.replace(dateTime, mapping);
   }
 
   public void setDateTime(String dateTime) {
     this.dateTime = dateTime;
+  }
+
+  public String getStartDateTime() {
+    if (startDateTime == null || mapping == null) return startDateTime;
+    return QueryBuilder.replace(startDateTime, mapping);
+  }
+
+  public void setStartDateTime(String startDateTime) {
+    this.startDateTime = startDateTime;
+  }
+
+  public String getEndDateTime() {
+    if (endDateTime == null || mapping == null) return endDateTime;
+    return QueryBuilder.replace(endDateTime, mapping);
+  }
+
+  public void setEndDateTime(String endDateTime) {
+    this.endDateTime = endDateTime;
   }
 
   public String getValue(DataType dt) {
@@ -115,6 +135,10 @@ public class PhenotypeOutput {
         + subject
         + ", dateTime="
         + dateTime
+        + ", startDateTime="
+        + startDateTime
+        + ", endDateTime="
+        + endDateTime
         + ", value="
         + value
         + ", textValue="
@@ -127,8 +151,6 @@ public class PhenotypeOutput {
         + booleanValue
         + ", conceptValue="
         + conceptValue
-        + ", mapping="
-        + mapping
         + "]";
   }
 }

@@ -1,9 +1,10 @@
-package care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.set;
 
 import java.util.List;
 
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
@@ -32,6 +33,10 @@ public class Li extends FunctionEntity {
     return of(List.of(args));
   }
 
+  public static Expression of(Phenotype... args) {
+    return of(Exp.toList(args));
+  }
+
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
@@ -40,7 +45,7 @@ public class Li extends FunctionEntity {
     args = Aggregator.aggregateIfNumber(args, c2r);
     Expression res = new Expression();
     for (Expression arg : args) {
-      for (Value val : arg.getValues()) res.addValuesItem(val);
+      if (arg.getValues() != null) for (Value val : arg.getValues()) res.addValuesItem(val);
     }
     return res;
   }

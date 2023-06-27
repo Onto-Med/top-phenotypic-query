@@ -38,7 +38,7 @@ public class FHIRClient {
     FhirContext ctx = FhirContext.forR4();
     ctx.getRestfulClientFactory().setConnectTimeout(2 * 60 * 60 * 1000);
     ctx.getRestfulClientFactory().setSocketTimeout(2 * 60 * 60 * 1000);
-    this.client = ctx.newRestfulGenericClient(config.getConnectionAttribute("endpoint"));
+    this.client = ctx.newRestfulGenericClient(config.getConnectionAttribute("url"));
 
     String user = config.getConnectionAttribute("user");
     String password = config.getConnectionAttribute("password");
@@ -119,6 +119,7 @@ public class FHIRClient {
     deleteAllResourcesOfType("MedicationRequest", system);
     deleteAllResourcesOfType("MedicationAdministration", system);
     deleteAllResourcesOfType("MedicationStatement", system);
+    deleteAllResourcesOfType("Medication", system);
     deleteAllResourcesOfType("ClinicalImpression", system);
     deleteAllResourcesOfType("Observation", system);
     deleteAllResourcesOfType("AllergyIntolerance", system);

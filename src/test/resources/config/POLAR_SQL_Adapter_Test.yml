@@ -74,4 +74,4 @@ codeMappings:
   - code: http://fhir.de/CodeSystem/bfarm/icd-10-gm|F05.0
     type: Condition
     phenotypeMappings:
-      codes: 'http://fhir.de/CodeSystem/bfarm/icd-10-gm|F05.0','http://fhir.de/CodeSystem/bfarm/icd-10-gm|F05.1', ... 
+      codes: "'http://fhir.de/CodeSystem/bfarm/icd-10-gm|F05.0','http://fhir.de/CodeSystem/bfarm/icd-10-gm|F05.1'"

@@ -16,6 +16,7 @@ import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 
 public abstract class DataAdapter {
@@ -104,8 +105,8 @@ public abstract class DataAdapter {
           Restrictions.toString(r),
           isOK);
 
-      if (!isOK) rs.removeSubject(sbjId);
-      else replacePhenotype(sbjId, search, rs);
+      if (isOK) replacePhenotype(sbjId, search, rs);
+      else rs.removeSubject(sbjId);
     }
   }
 
@@ -113,7 +114,7 @@ public abstract class DataAdapter {
     rs.replacePhenotype(
         sbjId,
         search.getSuperPhenotype().getId(),
-        search.getSuperPhenotype().getId() + "_values_" + search.getPhenotype().getId());
+        Phenotypes.getRestrictedValuesKey(search.getPhenotype()));
   }
 
   private void replacePhenotypes(SingleSearch search, ResultSet rs) {

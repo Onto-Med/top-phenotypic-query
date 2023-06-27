@@ -34,17 +34,21 @@ public class FHIRPhenotypeFinder extends FHIRPathResourceFinder {
   protected void addResource(Resource res) {
     String sbj = path.getString(res, out.getSubject());
     LocalDateTime date = path.getDateTime(res, out.getDateTime());
+    LocalDateTime startDate = path.getDateTime(res, out.getStartDateTime());
+    LocalDateTime endDate = path.getDateTime(res, out.getEndDateTime());
 
     if (Phenotypes.hasBooleanType(phe)) {
-      rs.addValue(sbj, phe, search.getDateTimeRestriction(), Val.ofTrue());
+      rs.addValue(sbj, phe, search.getDateTimeRestriction(), Val.ofTrue(date, startDate, endDate));
       return;
     }
 
     Value val = null;
 
-    if (Phenotypes.hasDateTimeType(phe)) val = Val.of(path.getDateTime(res, phePathExp), date);
-    else if (Phenotypes.hasNumberType(phe)) val = Val.of(path.getNumber(res, phePathExp), date);
-    else val = Val.of(path.getString(res, phePathExp), date);
+    if (Phenotypes.hasDateTimeType(phe))
+      val = Val.of(path.getDateTime(res, phePathExp), date, startDate, endDate);
+    else if (Phenotypes.hasNumberType(phe))
+      val = Val.of(path.getNumber(res, phePathExp), date, startDate, endDate);
+    else val = Val.of(path.getString(res, phePathExp), date, startDate, endDate);
     if (val != null)
       rs.addValueWithRestriction(
           sbj,

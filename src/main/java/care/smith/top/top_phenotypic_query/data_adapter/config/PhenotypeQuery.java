@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.data_adapter.config;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class PhenotypeQuery {
@@ -16,8 +18,8 @@ public class PhenotypeQuery {
   private String textValueListPart;
   private String booleanValueListPart;
   private String conceptValueListPart;
-
   private PhenotypeOutput output;
+  private List<String> union = new ArrayList<>();
 
   public String getBaseQuery() {
     return baseQuery;
@@ -135,6 +137,18 @@ public class PhenotypeQuery {
     this.output = output;
   }
 
+  public List<String> getUnion() {
+    return union;
+  }
+
+  public void setUnion(List<String> union) {
+    this.union = union;
+  }
+
+  public boolean hasUnion() {
+    return !union.isEmpty();
+  }
+
   public PhenotypeQueryBuilder getQueryBuilder(Map<String, String> mappings) {
     return new PhenotypeQueryBuilder(this, mappings);
   }
@@ -167,6 +181,8 @@ public class PhenotypeQuery {
         + conceptValueListPart
         + ", output="
         + output
+        + ", union="
+        + union
         + "]";
   }
 }
