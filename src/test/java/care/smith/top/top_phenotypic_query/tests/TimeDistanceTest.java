@@ -2,8 +2,6 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Test;
-
 import care.smith.top.model.Expression;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
@@ -11,6 +9,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.TimeDi
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
+import org.junit.jupiter.api.Test;
 
 public class TimeDistanceTest {
 

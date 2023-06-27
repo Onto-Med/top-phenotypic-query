@@ -1,18 +1,17 @@
 package care.smith.top.top_phenotypic_query.util;
 
+import care.smith.top.model.DataType;
+import care.smith.top.model.Expression;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
+import care.smith.top.top_phenotypic_query.song.SONG;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import care.smith.top.model.DataType;
-import care.smith.top.model.Expression;
-import care.smith.top.model.Phenotype;
-import care.smith.top.model.Value;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
-import care.smith.top.top_phenotypic_query.song.SONG;
 
 public class Expressions {
 

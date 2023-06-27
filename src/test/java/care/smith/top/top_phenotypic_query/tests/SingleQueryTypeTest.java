@@ -3,13 +3,11 @@ package care.smith.top.top_phenotypic_query.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import care.smith.top.model.*;
-import org.junit.jupiter.api.Test;
-
-import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Gt;
+import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.search.SingleQueryMan;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectQueryMan;
@@ -23,6 +21,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
+import org.junit.jupiter.api.Test;
 
 public class SingleQueryTypeTest {
 

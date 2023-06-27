@@ -3,18 +3,16 @@ package care.smith.top.top_phenotypic_query.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.sql.SQLException;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.data_adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.data_adapter.sql.SQLAdapterSettings;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
+import java.sql.SQLException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PreparedStatementTest extends AbstractTest {
@@ -74,7 +72,8 @@ public class PreparedStatementTest extends AbstractTest {
             + "AND weight >= ?\n"
             + "AND weight < ?\n"
             + "AND created_at >= ?\n"
-            + "AND created_at < ? {1: CAST(100 AS NUMERIC(3)), 2: CAST(500 AS NUMERIC(3)), 3: TIMESTAMP '2000-01-01 00:00:00', 4: TIMESTAMP '2001-01-01 00:00:00'}";
+            + "AND created_at < ? {1: CAST(100 AS NUMERIC(3)), 2: CAST(500 AS NUMERIC(3)), 3:"
+            + " TIMESTAMP '2000-01-01 00:00:00', 4: TIMESTAMP '2001-01-01 00:00:00'}";
     String psActual =
         settings
             .getSinglePreparedStatement(pqActual, ((SQLAdapter) adapter).getConnection(), search)

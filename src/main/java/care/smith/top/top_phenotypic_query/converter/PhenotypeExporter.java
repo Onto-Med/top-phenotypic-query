@@ -1,10 +1,9 @@
 package care.smith.top.top_phenotypic_query.converter;
 
-import java.io.File;
-import java.io.OutputStream;
-
 import care.smith.top.model.Entity;
 import care.smith.top.model.Repository;
+import java.io.File;
+import java.io.OutputStream;
 
 /**
  * Implementations of this interface are used to convert a list of phenotypes to a specific format.

@@ -8,7 +8,7 @@ import care.smith.top.top_phenotypic_query.search.SubjectQueryMan;
 public class Queries {
 
   public static QueryType getType(
-          PhenotypeQuery query, Entities phenotypes, SubjectQueryMan sbjMan, SingleQueryMan sinMan) {
+      PhenotypeQuery query, Entities phenotypes, SubjectQueryMan sbjMan, SingleQueryMan sinMan) {
     boolean criExist = false;
     boolean sic = false;
     boolean cicWithoutNegation = false;

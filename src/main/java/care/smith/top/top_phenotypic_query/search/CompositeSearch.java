@@ -1,10 +1,5 @@
 package care.smith.top.top_phenotypic_query.search;
 
-import java.util.HashSet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.ProjectionEntry;
@@ -15,6 +10,9 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Queries;
+import java.util.HashSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CompositeSearch extends PhenotypeSearch {
 
@@ -37,7 +35,8 @@ public class CompositeSearch extends PhenotypeSearch {
     if (phe.getExpression() == null)
       throw new IllegalArgumentException(
           String.format(
-              "A query criterion phenotype must have an expression! The phenotype '%s' has no expression.",
+              "A query criterion phenotype must have an expression! The phenotype '%s' has no"
+                  + " expression.",
               phe.getId()));
     for (String sbjId : new HashSet<>(rs.getSubjectIds())) executeForSubject(phe, sbjId);
     return rs;

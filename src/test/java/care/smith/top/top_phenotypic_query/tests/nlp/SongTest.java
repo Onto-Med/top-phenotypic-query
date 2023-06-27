@@ -3,8 +3,6 @@ package care.smith.top.top_phenotypic_query.tests.nlp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import care.smith.top.model.Concept;
-import org.junit.jupiter.api.Test;
-
 import care.smith.top.model.Expression;
 import care.smith.top.top_phenotypic_query.song.adapter.lucene.LuceneSong;
 import care.smith.top.top_phenotypic_query.song.functions.And;
@@ -15,8 +13,9 @@ import care.smith.top.top_phenotypic_query.song.functions.SubTree;
 import care.smith.top.top_phenotypic_query.song.functions.XProd;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.builder.nlp.Cat;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import care.smith.top.top_phenotypic_query.util.builder.nlp.Cat;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +94,8 @@ public class SongTest {
     String query =
         Expressions.getStringValue(LuceneSong.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
-        "(((\"a- de\" OR \"a1- de\" OR \"a2- de\") OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR c1-de OR c2-de))",
+        "(((\"a- de\" OR \"a1- de\" OR \"a2- de\") OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR"
+            + " c1-de OR c2-de))",
         query);
   }
 
@@ -106,7 +106,8 @@ public class SongTest {
     String query =
         Expressions.getStringValue(LuceneSong.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
-        "(((\"a- de\" OR \"a1- de\" OR \"a2- de\") OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR c1-de OR c2-de OR d-de OR d1-de OR d2-de OR e-de OR e1-de OR \"e2- de\"))",
+        "(((\"a- de\" OR \"a1- de\" OR \"a2- de\") OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR"
+            + " c1-de OR c2-de OR d-de OR d1-de OR d2-de OR e-de OR e1-de OR \"e2- de\"))",
         query);
   }
 
@@ -117,7 +118,8 @@ public class SongTest {
     String query =
         Expressions.getStringValue(LuceneSong.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
-        "(((\"a- de\"~5 OR \"a1- de\"~5 OR \"a2- de\"~5) OR (b-de OR b1-de OR b2-de)) AND NOT (c-de OR c1-de OR c2-de))",
+        "(((\"a- de\"~5 OR \"a1- de\"~5 OR \"a2- de\"~5) OR (b-de OR b1-de OR b2-de)) AND NOT (c-de"
+            + " OR c1-de OR c2-de))",
         query);
   }
 
@@ -128,7 +130,9 @@ public class SongTest {
     String query =
         Expressions.getStringValue(LuceneSong.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
-        "((\"a- de b-de\" OR \"a- de b1-de\" OR \"a- de b2-de\" OR \"a1- de b-de\" OR \"a1- de b1-de\" OR \"a1- de b2-de\" OR \"a2- de b-de\" OR \"a2- de b1-de\" OR \"a2- de b2-de\") AND NOT (c-de OR c1-de OR c2-de))",
+        "((\"a- de b-de\" OR \"a- de b1-de\" OR \"a- de b2-de\" OR \"a1- de b-de\" OR \"a1- de"
+            + " b1-de\" OR \"a1- de b2-de\" OR \"a2- de b-de\" OR \"a2- de b1-de\" OR \"a2- de"
+            + " b2-de\") AND NOT (c-de OR c1-de OR c2-de))",
         query);
   }
 
@@ -139,7 +143,9 @@ public class SongTest {
     String query =
         Expressions.getStringValue(LuceneSong.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
-        "((\"a- de b-de\"~2 OR \"a- de b1-de\"~2 OR \"a- de b2-de\"~2 OR \"a1- de b-de\"~2 OR \"a1- de b1-de\"~2 OR \"a1- de b2-de\"~2 OR \"a2- de b-de\"~2 OR \"a2- de b1-de\"~2 OR \"a2- de b2-de\"~2) AND NOT (c-de OR c1-de OR c2-de))",
+        "((\"a- de b-de\"~2 OR \"a- de b1-de\"~2 OR \"a- de b2-de\"~2 OR \"a1- de b-de\"~2 OR \"a1-"
+            + " de b1-de\"~2 OR \"a1- de b2-de\"~2 OR \"a2- de b-de\"~2 OR \"a2- de b1-de\"~2 OR"
+            + " \"a2- de b2-de\"~2) AND NOT (c-de OR c1-de OR c2-de))",
         query);
   }
 
@@ -150,7 +156,8 @@ public class SongTest {
     String query =
         Expressions.getStringValue(LuceneSong.get().concepts(concepts).lang("de").generate(exp));
     assertEquals(
-        "(((\"a- de\" OR \"a1- de\" OR \"a2- de\") OR (b-de OR b1-de OR b2-de)) AND NOT ((c-de OR c1-de OR c2-de) AND (f-de OR f1-de OR \"f2- de\")))",
+        "(((\"a- de\" OR \"a1- de\" OR \"a2- de\") OR (b-de OR b1-de OR b2-de)) AND NOT ((c-de OR"
+            + " c1-de OR c2-de) AND (f-de OR f1-de OR \"f2- de\")))",
         query);
   }
 }

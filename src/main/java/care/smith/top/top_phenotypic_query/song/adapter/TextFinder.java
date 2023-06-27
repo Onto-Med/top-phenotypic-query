@@ -3,7 +3,6 @@ package care.smith.top.top_phenotypic_query.song.adapter;
 import care.smith.top.model.ConceptQuery;
 import care.smith.top.model.Entity;
 import care.smith.top.top_phenotypic_query.util.Entities;
-
 import java.util.List;
 
 public class TextFinder {

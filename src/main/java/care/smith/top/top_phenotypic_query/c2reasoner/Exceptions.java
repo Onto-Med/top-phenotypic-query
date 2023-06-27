@@ -1,14 +1,13 @@
 package care.smith.top.top_phenotypic_query.c2reasoner;
 
-import java.util.List;
-import java.util.Map;
-
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.ConstantEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import java.util.List;
+import java.util.Map;
 
 public class Exceptions {
 

@@ -1,9 +1,5 @@
 package care.smith.top.top_phenotypic_query.search;
 
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.Objects;
-
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
@@ -19,6 +15,9 @@ import care.smith.top.top_phenotypic_query.data_adapter.config.Props;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.Objects;
 
 public class SingleSearch extends PhenotypeSearch {
 

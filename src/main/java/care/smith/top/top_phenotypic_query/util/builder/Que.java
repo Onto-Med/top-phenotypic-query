@@ -1,19 +1,17 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import care.smith.top.model.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Que {
 

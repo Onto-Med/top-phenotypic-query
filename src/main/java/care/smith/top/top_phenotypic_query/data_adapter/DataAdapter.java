@@ -1,12 +1,5 @@
 package care.smith.top.top_phenotypic_query.data_adapter;
 
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
-import java.util.HashSet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import care.smith.top.model.Expression;
 import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
@@ -19,6 +12,11 @@ import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
+import java.util.HashSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class DataAdapter {
 

@@ -2,20 +2,19 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Test;
-
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
-import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
 import care.smith.top.top_phenotypic_query.converter.csv.CSV;
+import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
+import org.junit.jupiter.api.Test;
 
 public class CSVTest {
 
@@ -78,11 +77,15 @@ public class CSVTest {
             + System.lineSeparator()
             + "male;sex;single_restriction;observation;boolean;;;;;;|MIN|1|[male]|;"
             + System.lineSeparator()
-            + "weight;;single_phenotype;observation;number;kg;Gewicht|de,Weight|en;Gewicht Synonym 1|de,Gewicht Synonym 2|de,Weight Synonym 1|en,Weight Synonym 2|en;Gewicht Description 1|de,Gewicht Description 2|de,Weight Description 1|en,Weight Description 2|en;http://loinc.org|3141-9,http://snomed.info/sct|27113001;;"
+            + "weight;;single_phenotype;observation;number;kg;Gewicht|de,Weight|en;Gewicht Synonym"
+            + " 1|de,Gewicht Synonym 2|de,Weight Synonym 1|en,Weight Synonym 2|en;Gewicht"
+            + " Description 1|de,Gewicht Description 2|de,Weight Description 1|en,Weight"
+            + " Description 2|en;http://loinc.org|3141-9,http://snomed.info/sct|27113001;;"
             + System.lineSeparator()
             + "height;;single_phenotype;observation;number;m;;;;http://loinc.org|3137-7,http://snomed.info/sct|1153637007;;"
             + System.lineSeparator()
-            + "bmi;;composite_phenotype;observation;number;;;;;http://loinc.org|39156-5;;(weight / (height ^ [2]))"
+            + "bmi;;composite_phenotype;observation;number;;;;;http://loinc.org|39156-5;;(weight /"
+            + " (height ^ [2]))"
             + System.lineSeparator()
             + "overweight;bmi;composite_restriction;observation;boolean;;;;;;|MIN|1|> 25|;"
             + System.lineSeparator();
@@ -117,11 +120,15 @@ public class CSVTest {
             + System.lineSeparator()
             + "male,sex,single_restriction,observation,boolean,,,,,,|MIN|1|[male]|,"
             + System.lineSeparator()
-            + "weight,,single_phenotype,observation,number,kg,Gewicht|de::Weight|en,Gewicht Synonym 1|de::Gewicht Synonym 2|de::Weight Synonym 1|en::Weight Synonym 2|en,Gewicht Description 1|de::Gewicht Description 2|de::Weight Description 1|en::Weight Description 2|en,http://loinc.org|3141-9::http://snomed.info/sct|27113001,,"
+            + "weight,,single_phenotype,observation,number,kg,Gewicht|de::Weight|en,Gewicht Synonym"
+            + " 1|de::Gewicht Synonym 2|de::Weight Synonym 1|en::Weight Synonym 2|en,Gewicht"
+            + " Description 1|de::Gewicht Description 2|de::Weight Description 1|en::Weight"
+            + " Description 2|en,http://loinc.org|3141-9::http://snomed.info/sct|27113001,,"
             + System.lineSeparator()
             + "height,,single_phenotype,observation,number,m,,,,http://loinc.org|3137-7::http://snomed.info/sct|1153637007,,"
             + System.lineSeparator()
-            + "bmi,,composite_phenotype,observation,number,,,,,http://loinc.org|39156-5,,(weight / (height ^ [2]))"
+            + "bmi,,composite_phenotype,observation,number,,,,,http://loinc.org|39156-5,,(weight /"
+            + " (height ^ [2]))"
             + System.lineSeparator()
             + "overweight,bmi,composite_restriction,observation,boolean,,,,,,|MIN|1|> 25|,"
             + System.lineSeparator();
@@ -153,11 +160,15 @@ public class CSVTest {
             + System.lineSeparator()
             + "male,sex,single_restriction,observation,boolean,,,,,,|MIN|1|[male]|,"
             + System.lineSeparator()
-            + "weight,,single_phenotype,observation,number,kg,Gewicht|de::Weight|en,Gewicht Synonym 1|de::Gewicht Synonym 2|de::Weight Synonym 1|en::Weight Synonym 2|en,Gewicht Description 1|de::Gewicht Description 2|de::Weight Description 1|en::Weight Description 2|en,http://loinc.org|3141-9::http://snomed.info/sct|27113001,,"
+            + "weight,,single_phenotype,observation,number,kg,Gewicht|de::Weight|en,Gewicht Synonym"
+            + " 1|de::Gewicht Synonym 2|de::Weight Synonym 1|en::Weight Synonym 2|en,Gewicht"
+            + " Description 1|de::Gewicht Description 2|de::Weight Description 1|en::Weight"
+            + " Description 2|en,http://loinc.org|3141-9::http://snomed.info/sct|27113001,,"
             + System.lineSeparator()
             + "height,,single_phenotype,observation,number,m,,,,http://loinc.org|3137-7::http://snomed.info/sct|1153637007,,"
             + System.lineSeparator()
-            + "bmi,,composite_phenotype,observation,number,,,,,http://loinc.org|39156-5,,(weight / (height ^ [2]))"
+            + "bmi,,composite_phenotype,observation,number,,,,,http://loinc.org|39156-5,,(weight /"
+            + " (height ^ [2]))"
             + System.lineSeparator()
             + "overweight,bmi,composite_restriction,observation,boolean,,,,,,|MIN|1|> 25|,"
             + System.lineSeparator();

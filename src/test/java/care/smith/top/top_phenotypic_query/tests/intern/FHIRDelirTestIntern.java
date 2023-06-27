@@ -1,8 +1,7 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
-import org.junit.jupiter.api.Test;
-
 import care.smith.top.top_phenotypic_query.tests.DelirTest;
+import org.junit.jupiter.api.Test;
 
 public class FHIRDelirTestIntern extends DelirTest {
 

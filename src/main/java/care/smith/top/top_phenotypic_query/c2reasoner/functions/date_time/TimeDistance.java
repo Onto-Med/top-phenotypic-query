@@ -1,9 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
@@ -18,6 +14,9 @@ import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.NumberRange;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TimeDistance extends FunctionEntity {
 

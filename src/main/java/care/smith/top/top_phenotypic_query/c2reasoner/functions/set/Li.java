@@ -1,7 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.set;
 
-import java.util.List;
-
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
@@ -11,6 +9,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import java.util.List;
 
 public class Li extends FunctionEntity {
 

@@ -1,10 +1,9 @@
 package care.smith.top.top_phenotypic_query.tests.intern.fhir;
 
-import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.Resource;
-
 import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRClient;
+import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.Resource;
 
 public class Client {
 

@@ -1,13 +1,12 @@
 package care.smith.top.top_phenotypic_query.song.functions;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.song.SONG;
 import care.smith.top.top_phenotypic_query.util.Values;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class TextFunction {
 

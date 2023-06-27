@@ -1,15 +1,14 @@
 package care.smith.top.top_phenotypic_query.result;
 
+import care.smith.top.model.DateTimeRestriction;
+import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.util.Restrictions;
+import care.smith.top.top_phenotypic_query.util.Values;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
-import care.smith.top.model.DateTimeRestriction;
-import care.smith.top.model.Value;
-import care.smith.top.top_phenotypic_query.util.Restrictions;
-import care.smith.top.top_phenotypic_query.util.Values;
 
 public class PhenotypeValues extends LinkedHashMap<DateTimeRestriction, List<Value>> {
 

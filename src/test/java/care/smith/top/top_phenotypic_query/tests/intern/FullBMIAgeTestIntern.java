@@ -1,19 +1,7 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import care.smith.top.model.PhenotypeQuery;
-import org.hl7.fhir.r4.model.Patient;
-
 import care.smith.top.model.ProjectionEntry.TypeEnum;
-import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
@@ -23,6 +11,15 @@ import care.smith.top.top_phenotypic_query.data_adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.tests.AbstractTest;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import org.hl7.fhir.r4.model.Patient;
 
 public class FullBMIAgeTestIntern extends AbstractTest {
 
@@ -66,7 +63,8 @@ public class FullBMIAgeTestIntern extends AbstractTest {
                 .inclusion(true)
                 .subjectId(old.getId())
                 .type(TypeEnum.QUERYCRITERION);
-    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2).addCriteriaItem(cri3);
+    PhenotypeQuery query =
+        new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2).addCriteriaItem(cri3);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
@@ -126,7 +124,16 @@ public class FullBMIAgeTestIntern extends AbstractTest {
     java.sql.ResultSet rs =
         getSQLAdapter()
             .executeQuery(
-                "SELECT s.subject_id, birth_date, sex, assessment_id, created_at, height, weight, DATE_PART('year', AGE(CURRENT_DATE, birth_date)) years, (weight/((height/100)^2)) bmi FROM subject s, (select distinct on (subject_id) subject_id, assessment_id, created_at, height, weight from assessment1 where height is not null and weight is not null and created_at >= '2000-01-01'::date and created_at < '2001-01-01'::date order by subject_id, created_at desc) a WHERE s.subject_id = a.subject_id AND sex = 'female' AND DATE_PART('year', AGE(CURRENT_DATE, birth_date)) > 18 AND (weight/((height/100)^2)) >= 27 AND (weight/((height/100)^2)) < 30 ORDER BY s.subject_id");
+                "SELECT s.subject_id, birth_date, sex, assessment_id, created_at, height, weight,"
+                    + " DATE_PART('year', AGE(CURRENT_DATE, birth_date)) years,"
+                    + " (weight/((height/100)^2)) bmi FROM subject s, (select distinct on"
+                    + " (subject_id) subject_id, assessment_id, created_at, height, weight from"
+                    + " assessment1 where height is not null and weight is not null and created_at"
+                    + " >= '2000-01-01'::date and created_at < '2001-01-01'::date order by"
+                    + " subject_id, created_at desc) a WHERE s.subject_id = a.subject_id AND sex ="
+                    + " 'female' AND DATE_PART('year', AGE(CURRENT_DATE, birth_date)) > 18 AND"
+                    + " (weight/((height/100)^2)) >= 27 AND (weight/((height/100)^2)) < 30 ORDER BY"
+                    + " s.subject_id");
     //    SQLAdapter.print(rs);
 
     List<String> ids = new ArrayList<>();

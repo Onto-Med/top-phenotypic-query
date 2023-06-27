@@ -1,6 +1,12 @@
 package care.smith.top.top_phenotypic_query.util;
 
+import care.smith.top.model.*;
+import care.smith.top.top_phenotypic_query.data_adapter.config.CodeMapping;
+import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import care.smith.top.top_phenotypic_query.util.builder.Res;
 import java.io.IOException;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -8,21 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
 import java.util.stream.Collectors;
-
-import care.smith.top.model.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import care.smith.top.top_phenotypic_query.data_adapter.config.CodeMapping;
-import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.util.builder.Exp;
-import care.smith.top.top_phenotypic_query.util.builder.Res;
 
 public class Entities {
   private final Map<String, Entity> entities = new LinkedHashMap<>();
@@ -55,8 +47,8 @@ public class Entities {
       if (Phenotypes.isRestriction(p)) {
         if (Phenotypes.isSingle(p) && p.getRestriction() == null) p.setRestriction(Res.ofCodes(p));
         if (config == null
-                || Phenotypes.isCompositePhenotype(supP)
-                || !setInExpression(config, supP, p)) p.setExpression(Exp.inRestriction(p));
+            || Phenotypes.isCompositePhenotype(supP)
+            || !setInExpression(config, supP, p)) p.setExpression(Exp.inRestriction(p));
       }
     }
     return this;
@@ -146,16 +138,19 @@ public class Entities {
 
   public Collection<Category> getCategories() {
     return getEntities().stream()
-            .filter(e -> e.getEntityType() == EntityType.CATEGORY)
-            .map(Category.class::cast)
-            .collect(Collectors.toSet());
+        .filter(e -> e.getEntityType() == EntityType.CATEGORY)
+        .map(Category.class::cast)
+        .collect(Collectors.toSet());
   }
 
   public Collection<Concept> getConcepts() {
     return getEntities().stream()
-      .filter(e -> Arrays.asList(EntityType.SINGLE_CONCEPT, EntityType.COMPOSITE_CONCEPT).contains(e.getEntityType()))
-      .map(Concept.class::cast)
-      .collect(Collectors.toSet());
+        .filter(
+            e ->
+                Arrays.asList(EntityType.SINGLE_CONCEPT, EntityType.COMPOSITE_CONCEPT)
+                    .contains(e.getEntityType()))
+        .map(Concept.class::cast)
+        .collect(Collectors.toSet());
   }
 
   public Set<String> getPhenotypeIds() {
@@ -164,16 +159,16 @@ public class Entities {
 
   public Collection<Phenotype> getPhenotypes() {
     return getEntities().stream()
-            .filter(e -> e.getEntityType() != EntityType.CATEGORY)
-            .map(Phenotype.class::cast)
-            .collect(Collectors.toList());
+        .filter(e -> e.getEntityType() != EntityType.CATEGORY)
+        .map(Phenotype.class::cast)
+        .collect(Collectors.toList());
   }
 
   public Collection<Phenotype> getPhenotypes(EntityType type) {
     return getEntities().stream()
-            .filter(e -> e.getEntityType() == type)
-            .map(Phenotype.class::cast)
-            .collect(Collectors.toList());
+        .filter(e -> e.getEntityType() == type)
+        .map(Phenotype.class::cast)
+        .collect(Collectors.toList());
   }
 
   public Collection<Phenotype> getSinglePhenotypes() {
@@ -231,10 +226,10 @@ public class Entities {
 
   private static String getText(List<LocalisableText> texts, String lang) {
     return texts.stream()
-            .filter(t -> Objects.equals(t.getLang(), lang))
-            .map(t -> t.getText())
-            .findFirst()
-            .orElse(null);
+        .filter(t -> Objects.equals(t.getLang(), lang))
+        .map(t -> t.getText())
+        .findFirst()
+        .orElse(null);
   }
 
   private static final String ANN_SEP = "::";
@@ -256,7 +251,7 @@ public class Entities {
     SingleConcept c = (SingleConcept) e;
     if (c.getSubConcepts() != null) {
       for (Concept child : c.getSubConcepts()) {
-          terms.addAll(getTerms(child, lang, includeSubTree));
+        terms.addAll(getTerms(child, lang, includeSubTree));
       }
     }
 
@@ -265,9 +260,9 @@ public class Entities {
 
   private static List<String> getAnnotations(List<LocalisableText> txts, String lang) {
     return txts.stream()
-            .filter(t -> lang.trim().equals(t.getLang().trim()) && !t.getText().isBlank())
-            .map(t -> t.getText().trim())
-            .collect(Collectors.toList());
+        .filter(t -> lang.trim().equals(t.getLang().trim()) && !t.getText().isBlank())
+        .map(t -> t.getText().trim())
+        .collect(Collectors.toList());
   }
 
   public static String getAnnotations(Entity e) {

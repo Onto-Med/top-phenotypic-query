@@ -1,8 +1,7 @@
 package care.smith.top.top_phenotypic_query.data_adapter.config;
 
-import java.util.Map;
-
 import care.smith.top.model.DataType;
+import java.util.Map;
 
 public class PhenotypeOutput {
 

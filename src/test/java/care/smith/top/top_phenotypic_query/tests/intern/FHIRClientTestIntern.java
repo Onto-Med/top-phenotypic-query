@@ -1,5 +1,8 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
+import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRClient;
+import care.smith.top.top_phenotypic_query.data_adapter.sql.SQLAdapter;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -8,7 +11,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DateTimeType;
@@ -17,10 +19,6 @@ import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Reference;
-
-import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRClient;
-import care.smith.top.top_phenotypic_query.data_adapter.sql.SQLAdapter;
 
 public class FHIRClientTestIntern {
 
@@ -72,7 +70,8 @@ public class FHIRClientTestIntern {
     SQLAdapter sqlAdapter = new SQLAdapter(sqlConfig);
     ResultSet rs =
         sqlAdapter.executeQuery(
-            "SELECT s.subject_id, birth_date, sex, assessment_id, created_at, height, weight FROM subject s, assessment1 a WHERE s.subject_id = a.subject_id");
+            "SELECT s.subject_id, birth_date, sex, assessment_id, created_at, height, weight FROM"
+                + " subject s, assessment1 a WHERE s.subject_id = a.subject_id");
 
     Map<String, String> patIds = new HashMap<>();
 

@@ -2,9 +2,12 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import ca.uhn.fhir.context.FhirContext;
+import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRPath;
+import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRUtil;
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Condition;
@@ -17,11 +20,6 @@ import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
 import org.junit.jupiter.api.Test;
-
-import ca.uhn.fhir.context.FhirContext;
-import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRPath;
-import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRUtil;
-import care.smith.top.top_phenotypic_query.util.DateUtil;
 
 public class FHIRPathTest {
 
@@ -107,13 +105,15 @@ public class FHIRPathTest {
         BigDecimal.valueOf(111),
         path.getNumber(
             obs,
-            "component.where(code.coding.system.value + '|' + code.coding.code = 'http://system.com|xxx').value.value"));
+            "component.where(code.coding.system.value + '|' + code.coding.code ="
+                + " 'http://system.com|xxx').value.value"));
 
     assertEquals(
         "http://value.system.com|ccc",
         path.getString(
             obs,
-            "component.where(code.coding.system.value + '|' + code.coding.code = 'http://system2.com|bbb').value.coding.select(system.value + '|' + code)"));
+            "component.where(code.coding.system.value + '|' + code.coding.code ="
+                + " 'http://system2.com|bbb').value.coding.select(system.value + '|' + code)"));
   }
 
   @Test

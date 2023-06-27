@@ -1,9 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.set;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
@@ -19,6 +15,9 @@ import care.smith.top.top_phenotypic_query.util.builder.DateTimeRange;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.NumberRange;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Filter extends FunctionEntity {
 

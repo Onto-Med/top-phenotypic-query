@@ -1,12 +1,11 @@
 package care.smith.top.top_phenotypic_query.song.adapter.lucene;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import care.smith.top.model.Expression;
 import care.smith.top.top_phenotypic_query.song.SONG;
 import care.smith.top.top_phenotypic_query.song.functions.And;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class LuceneAnd extends And {
 

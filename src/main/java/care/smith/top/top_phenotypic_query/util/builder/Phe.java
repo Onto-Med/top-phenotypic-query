@@ -1,7 +1,5 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
-import java.net.URI;
-
 import care.smith.top.model.Code;
 import care.smith.top.model.CodeSystem;
 import care.smith.top.model.DataType;
@@ -13,6 +11,7 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import java.net.URI;
 
 public class Phe {
 

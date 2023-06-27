@@ -1,12 +1,11 @@
 package care.smith.top.top_phenotypic_query.song.functions;
 
-import java.util.List;
-
 import care.smith.top.model.Entity;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import java.util.List;
 
 public abstract class And extends TextFunction {
 

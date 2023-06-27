@@ -1,11 +1,10 @@
 package care.smith.top.top_phenotypic_query.song.adapter.lucene;
 
-import java.util.List;
-
 import care.smith.top.model.Expression;
 import care.smith.top.top_phenotypic_query.song.SONG;
 import care.smith.top.top_phenotypic_query.song.functions.Not;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import java.util.List;
 
 public class LuceneNot extends Not {
 

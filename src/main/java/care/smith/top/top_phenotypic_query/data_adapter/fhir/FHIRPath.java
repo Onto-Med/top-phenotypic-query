@@ -1,16 +1,14 @@
 package care.smith.top.top_phenotypic_query.data_adapter.fhir;
 
+import ca.uhn.fhir.context.FhirContext;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext;
 import org.hl7.fhir.r4.model.Base;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.utils.FHIRPathEngine;
 import org.springframework.util.CollectionUtils;
-
-import ca.uhn.fhir.context.FhirContext;
 
 public class FHIRPath {
 

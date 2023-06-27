@@ -2,10 +2,6 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Set;
-
-import org.junit.jupiter.api.Test;
-
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
@@ -15,6 +11,8 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 public class QuantifierTest {
 

@@ -1,7 +1,5 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
-import java.math.BigDecimal;
-
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.NumberRestriction;
@@ -9,6 +7,7 @@ import care.smith.top.model.Quantifier;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Values;
+import java.math.BigDecimal;
 
 public class NumberRange extends Range {
 

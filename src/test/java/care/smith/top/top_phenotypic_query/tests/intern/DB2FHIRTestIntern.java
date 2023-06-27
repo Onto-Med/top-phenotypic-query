@@ -1,5 +1,8 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
+import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRClient;
+import care.smith.top.top_phenotypic_query.data_adapter.sql.SQLAdapter;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -9,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Condition;
@@ -21,10 +23,6 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Procedure;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Reference;
-
-import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRClient;
-import care.smith.top.top_phenotypic_query.data_adapter.sql.SQLAdapter;
 
 public class DB2FHIRTestIntern {
 
@@ -67,7 +65,8 @@ public class DB2FHIRTestIntern {
 
     ResultSet observations =
         sqlAdapter.executeQuery(
-            "SELECT phenotype_id, subject_id, created_at, code_system, code, unit, number_value FROM observation");
+            "SELECT phenotype_id, subject_id, created_at, code_system, code, unit, number_value"
+                + " FROM observation");
     while (observations.next()) {
       Phenotype p = new Phenotype(observations, patIds, true);
       if (p.getValue() != null) createObservation(p);

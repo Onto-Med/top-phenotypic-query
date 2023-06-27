@@ -1,10 +1,5 @@
 package care.smith.top.top_phenotypic_query.song.adapter.lucene;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-
 import care.smith.top.model.Expression;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.song.SONG;
@@ -13,6 +8,9 @@ import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 
 public class LuceneDist extends Dist {
 

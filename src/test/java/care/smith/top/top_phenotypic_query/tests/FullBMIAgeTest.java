@@ -5,23 +5,20 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.math.BigDecimal;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
-
 import care.smith.top.model.PhenotypeQuery;
-import org.junit.jupiter.api.Test;
-
 import care.smith.top.model.ProjectionEntry.TypeEnum;
-import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.util.Values;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 public class FullBMIAgeTest extends AbstractTest {
 

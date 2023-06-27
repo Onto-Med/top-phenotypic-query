@@ -1,9 +1,8 @@
 package care.smith.top.top_phenotypic_query.util.builder.nlp;
 
-import java.net.URI;
-
 import care.smith.top.model.*;
 import care.smith.top.top_phenotypic_query.util.Entities;
+import java.net.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,7 +129,7 @@ public class Cat {
   public Cat subCategories(Concept... subConcepts) {
     if (c instanceof SingleConcept) {
       for (Concept subConcept : subConcepts) {
-          ((SingleConcept) c).addSubConceptsItem(subConcept);
+        ((SingleConcept) c).addSubConceptsItem(subConcept);
       }
     } else {
       log.warn("Tried to add sub concepts to composite concept '{}'.", c.getId());

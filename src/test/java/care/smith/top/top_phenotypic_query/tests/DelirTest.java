@@ -2,25 +2,23 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.hl7.fhir.r4.model.Patient;
-
 import care.smith.top.model.Entity;
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
-import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRClient;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.MinTrue;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Or;
+import care.smith.top.top_phenotypic_query.data_adapter.fhir.FHIRClient;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
+import java.util.HashSet;
+import java.util.Set;
+import org.hl7.fhir.r4.model.Patient;
 
 public class DelirTest {
 
@@ -103,7 +101,8 @@ public class DelirTest {
           .titleDe("2/3 Faktoren")
           .titleEn("2/3 factors")
           .descriptionDe(
-              "Dies ist ein Hilfsphänotyp zur Überprüfung, ob mindestens 2 von 3 Kriterien erfüllt sind.")
+              "Dies ist ein Hilfsphänotyp zur Überprüfung, ob mindestens 2 von 3 Kriterien erfüllt"
+                  + " sind.")
           .descriptionEn(
               "This is a helper phenotype to check whether at least 2 of 3 criteria are fulfilled.")
           .expression(
@@ -117,9 +116,13 @@ public class DelirTest {
           .synonymDe("Delir Basisalgorithmus A")
           .synonymEn("Delirium basic algorithm A")
           .descriptionDe(
-              "Algorithmus zur Identifikation von Delir. Der Algorithmus basiert ausschließlich auf ICD-10-Codes. Es ist zu beachten, dass die Sensitivität gemäß Literatur nur zwischen 18% bis 30% liegt - bei guter Spezifität.")
+              "Algorithmus zur Identifikation von Delir. Der Algorithmus basiert ausschließlich auf"
+                  + " ICD-10-Codes. Es ist zu beachten, dass die Sensitivität gemäß Literatur nur"
+                  + " zwischen 18% bis 30% liegt - bei guter Spezifität.")
           .descriptionEn(
-              "Algorithm for the identification of delirium. The algorithm is based exclusively on ICD-10 codes. It should be noted that the sensitivity according to literature is only between 18% to 30% - with good specificity.")
+              "Algorithm for the identification of delirium. The algorithm is based exclusively on"
+                  + " ICD-10 codes. It should be noted that the sensitivity according to literature"
+                  + " is only between 18% to 30% - with good specificity.")
           .expression(Exp.of(expIcd))
           .get();
   private static Phenotype algB =
@@ -129,9 +132,15 @@ public class DelirTest {
           .synonymDe("Delir Basisalgorithmus B")
           .synonymEn("Delirium basic algorithm B")
           .descriptionDe(
-              "Delir Algorithmus ausschließlich basierend auf ICD-10-Codes, wobei explizite und implizite ICD-10-Codes nach Kim et al. zum Einsatz kommen. Zu beachten ist, dass die Sensitivität gemäß Literatur nur zwischen 18% bis 30% liegt - bei guter Spezifität.")
+              "Delir Algorithmus ausschließlich basierend auf ICD-10-Codes, wobei explizite und"
+                  + " implizite ICD-10-Codes nach Kim et al. zum Einsatz kommen. Zu beachten ist,"
+                  + " dass die Sensitivität gemäß Literatur nur zwischen 18% bis 30% liegt - bei"
+                  + " guter Spezifität.")
           .descriptionEn(
-              "Delirium algorithm based solely on ICD-10 codes, using explicit and implicit ICD-10 codes according to Kim et al. It should be noted that the sensitivity according to the literature is only between 18% and 30% - with good specificity.")
+              "Delirium algorithm based solely on ICD-10 codes, using explicit and implicit ICD-10"
+                  + " codes according to Kim et al. It should be noted that the sensitivity"
+                  + " according to the literature is only between 18% and 30% - with good"
+                  + " specificity.")
           .expression(Or.of(Exp.of(expIcd), Exp.of(impIcd)))
           .get();
   private static Phenotype extAlg =
@@ -141,9 +150,15 @@ public class DelirTest {
           .synonymDe("Delir erweiterter Algorithmus")
           .synonymEn("Delirium extended algorithm")
           .descriptionDe(
-              "Komplexer Delir Algorithmus, der verschiedenste Datenkategorien beinhaltet. Durch Hinzunahme weiterer ICD-10-Codes für kognitive Beeinträchtigung, sowie Einbezug weiterer NICE-Risiko-Score Datenpunkte, soll die Sensitivität erhöht werden.")
+              "Komplexer Delir Algorithmus, der verschiedenste Datenkategorien beinhaltet. Durch"
+                  + " Hinzunahme weiterer ICD-10-Codes für kognitive Beeinträchtigung, sowie"
+                  + " Einbezug weiterer NICE-Risiko-Score Datenpunkte, soll die Sensitivität erhöht"
+                  + " werden.")
           .descriptionEn(
-              "Complex delirium algorithm that includes a wide range of data categories. The addition of further ICD-10 codes for cognitive impairment, as well as the inclusion of further NICE risk score data points, should increase the sensitivity.")
+              "Complex delirium algorithm that includes a wide range of data categories. The"
+                  + " addition of further ICD-10 codes for cognitive impairment, as well as the"
+                  + " inclusion of further NICE risk score data points, should increase the"
+                  + " sensitivity.")
           .expression(
               Or.of(
                   Exp.of(expIcd),

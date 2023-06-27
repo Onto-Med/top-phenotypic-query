@@ -1,17 +1,5 @@
 package care.smith.top.top_phenotypic_query.util;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.apache.commons.lang3.math.NumberUtils;
-
 import care.smith.top.model.BooleanRestriction;
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
@@ -24,6 +12,16 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.data_adapter.DataAdapterSettings;
 import care.smith.top.top_phenotypic_query.ucum.UCUM;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class Restrictions {
 

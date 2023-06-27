@@ -1,16 +1,14 @@
 package care.smith.top.top_phenotypic_query.result;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SubjectPhenotypes extends LinkedHashMap<String, PhenotypeValues> {
 

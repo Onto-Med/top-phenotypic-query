@@ -1,11 +1,9 @@
 package care.smith.top.top_phenotypic_query.search;
 
-import java.sql.SQLException;
-
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.PhenotypeQuery;
+import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
@@ -13,6 +11,7 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import java.sql.SQLException;
 
 public class PhenotypeFinder {
 
