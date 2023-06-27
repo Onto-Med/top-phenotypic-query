@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
@@ -52,7 +53,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   }
 
   @Test
-  public void test1() {
+  public void test1() throws SQLException {
     QueryCriterion cri1 =
         (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(h.getId());
     QueryCriterion cri2 =
@@ -66,7 +67,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   }
 
   @Test
-  public void test2() {
+  public void test2() throws SQLException {
     QueryCriterion cri1 =
         (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(h.getId());
     QueryCriterion cri2 =
@@ -80,7 +81,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   }
 
   @Test
-  public void test3() {
+  public void test3() throws SQLException {
     Expression exp = And.of(Exp.ofEntity("Weight"), Not.of(Exp.ofEntity("Height")));
     Phenotype composite =
         (Phenotype)
@@ -103,7 +104,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   }
 
   @Test
-  public void test4() {
+  public void test4() throws SQLException {
     Expression exp = And.of(Exp.ofEntity("Height"), Not.of(Exp.ofEntity("Weight")));
     Phenotype composite =
         (Phenotype)
@@ -126,7 +127,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   }
 
   @Test
-  public void test5() {
+  public void test5() throws SQLException {
     Expression exp = And.of(Exp.ofEntity("Weight"), Not.of(Exp.ofEntity("Height")));
     Phenotype composite =
         (Phenotype)
@@ -149,7 +150,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   }
 
   @Test
-  public void test6() {
+  public void test6() throws SQLException {
     Expression exp = And.of(Exp.ofEntity("Height"), Not.of(Exp.ofEntity("Weight")));
     Phenotype composite =
         (Phenotype)

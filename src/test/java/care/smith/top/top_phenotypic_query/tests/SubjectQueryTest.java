@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -32,7 +33,7 @@ public class SubjectQueryTest extends AbstractTest {
   static Entity[] phenotypes = {age, young, sex, female};
 
   @Test
-  public void test1() throws InstantiationException {
+  public void test1() throws InstantiationException, SQLException {
     Query query =
         new Query()
             .addCriteriaItem(
@@ -61,7 +62,7 @@ public class SubjectQueryTest extends AbstractTest {
   }
 
   @Test
-  public void test2() throws InstantiationException {
+  public void test2() throws InstantiationException, SQLException {
     Query query =
         new Query()
             .addCriteriaItem(
@@ -85,7 +86,7 @@ public class SubjectQueryTest extends AbstractTest {
   }
 
   @Test
-  public void test3() throws InstantiationException {
+  public void test3() throws InstantiationException, SQLException {
     Query query =
         new Query()
             .addCriteriaItem(
@@ -112,7 +113,7 @@ public class SubjectQueryTest extends AbstractTest {
   }
 
   @Test
-  public void test4() throws InstantiationException {
+  public void test4() throws InstantiationException, SQLException {
     Query query =
         new Query()
             .addCriteriaItem(
