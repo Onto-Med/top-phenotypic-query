@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.search;
 
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -76,7 +77,7 @@ public class SubjectQueryMan {
     }
   }
 
-  public ResultSet executeInclusion() {
+  public ResultSet executeInclusion() throws SQLException {
     if (!hasInclusion()) return null;
     Phenotype sex = getInclusion(sexInclusion, sexExclusion, sexPhenotypeVariable);
     Phenotype bd = getInclusion(birthdateInclusion, birthdateExclusion, birthdatePhenotypeVariable);
@@ -90,29 +91,29 @@ public class SubjectQueryMan {
     return var;
   }
 
-  public ResultSet executeSexExclusion() {
+  public ResultSet executeSexExclusion() throws SQLException {
     if (sexExclusion == null) return null;
     return adapter.execute(new SubjectSearch(null, sexExclusion, null, null, adapter));
   }
 
-  public ResultSet executeBirthdateExclusion() {
+  public ResultSet executeBirthdateExclusion() throws SQLException {
     if (birthdateExclusion == null) return null;
     return adapter.execute(new SubjectSearch(null, null, birthdateExclusion, null, adapter));
   }
 
-  public ResultSet executeAgeExclusion() {
+  public ResultSet executeAgeExclusion() throws SQLException {
     if (ageExclusion == null) return null;
     return adapter.execute(
         new SubjectSearch(null, null, getBirthdateParameter(), ageExclusion, adapter));
   }
 
-  public ResultSet executeAllSubjectsQuery() {
+  public ResultSet executeAllSubjectsQuery() throws SQLException {
     return adapter.execute(
         new SubjectSearch(
             null, getSexParameter(), getBirthdateParameter(), getAgeParameter(), adapter));
   }
 
-  public ResultSet executeBirthdateRestrictionVariable() {
+  public ResultSet executeBirthdateRestrictionVariable() throws SQLException {
     if (!hasBirthdateRestrictionVariable()) return new ResultSet();
     Phenotype bd = birthdateRestrictionVariables.iterator().next();
     if (hasBirthdateExclusion() && bd.getId().equals(birthdateExclusion.getId()))
@@ -120,7 +121,7 @@ public class SubjectQueryMan {
     return adapter.execute(new SubjectSearch(null, null, bd, null, adapter));
   }
 
-  public ResultSet executeAgeRestrictionVariable() {
+  public ResultSet executeAgeRestrictionVariable() throws SQLException {
     if (!hasAgeRestrictionVariable()) return new ResultSet();
     Phenotype age = ageRestrictionVariables.iterator().next();
     if (hasAgeExclusion() && age.getId().equals(ageExclusion.getId())) return new ResultSet();
@@ -128,7 +129,7 @@ public class SubjectQueryMan {
     return adapter.execute(new SubjectSearch(null, null, bd, age, adapter));
   }
 
-  public ResultSet executeSexRestrictionVariable() {
+  public ResultSet executeSexRestrictionVariable() throws SQLException {
     if (!hasSexRestrictionVariable()) return new ResultSet();
     Phenotype sex = sexRestrictionVariables.iterator().next();
     if (hasSexExclusion() && sex.getId().equals(sexExclusion.getId())) return new ResultSet();

@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.search;
 
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -62,7 +63,7 @@ public class SingleQueryMan {
     return !inclusions.isEmpty();
   }
 
-  public ResultSet execute() {
+  public ResultSet execute() throws SQLException {
     QueryType queryType = Queries.getType(query, phenotypes, sbjQueryMan, this);
     ResultSet main = null;
 
@@ -74,7 +75,7 @@ public class SingleQueryMan {
     return main;
   }
 
-  private ResultSet executeType1Query() {
+  private ResultSet executeType1Query() throws SQLException {
     log.debug("TYPE 1 Single Query");
 
     ResultSet main = sbjQueryMan.executeAllSubjectsQuery();
@@ -96,7 +97,7 @@ public class SingleQueryMan {
     return main;
   }
 
-  private ResultSet executeType2Query() {
+  private ResultSet executeType2Query() throws SQLException {
     log.debug("TYPE 2 Single Query");
 
     ResultSet main = sbjQueryMan.executeInclusion();
@@ -118,7 +119,7 @@ public class SingleQueryMan {
     return main;
   }
 
-  private ResultSet executeType3Query() {
+  private ResultSet executeType3Query() throws SQLException {
     log.debug("TYPE 3 Single Query");
 
     ResultSet main = executeSingleInclusions(new ResultSet());
@@ -139,7 +140,7 @@ public class SingleQueryMan {
     return main;
   }
 
-  private ResultSet executeType4Query() {
+  private ResultSet executeType4Query() throws SQLException {
     log.debug("TYPE 4 Single Query");
 
     ResultSet main = executeSingleVariables(new ResultSet(), false);
@@ -157,7 +158,7 @@ public class SingleQueryMan {
     return main;
   }
 
-  private ResultSet executeSingleInclusions(ResultSet main) {
+  private ResultSet executeSingleInclusions(ResultSet main) throws SQLException {
     for (SingleSearch inc : inclusions) {
       if (main.isEmpty()) {
         main = inc.execute();
@@ -169,7 +170,7 @@ public class SingleQueryMan {
     return main;
   }
 
-  private ResultSet executeSingleExclusions(ResultSet main) {
+  private ResultSet executeSingleExclusions(ResultSet main) throws SQLException {
     for (SingleSearch exc : exclusions) {
       main = subtract(main, exc.execute());
       if (main.isEmpty()) return main;
@@ -177,7 +178,7 @@ public class SingleQueryMan {
     return main;
   }
 
-  private ResultSet executeSubjectExclusions(ResultSet main) {
+  private ResultSet executeSubjectExclusions(ResultSet main) throws SQLException {
     if (sbjQueryMan.hasSexExclusion()) {
       main = subtract(main, sbjQueryMan.executeSexExclusion());
       if (main.isEmpty()) return main;
@@ -194,13 +195,13 @@ public class SingleQueryMan {
     return main;
   }
 
-  private ResultSet executeSingleVariables(ResultSet main, boolean insert) {
+  private ResultSet executeSingleVariables(ResultSet main, boolean insert) throws SQLException {
     if (insert) for (SingleSearch var : variables) main = insert(main, var.execute());
     else for (SingleSearch var : variables) main = unite(main, var.execute());
     return main;
   }
 
-  private ResultSet executeSubjectVariables(ResultSet main, boolean insert) {
+  private ResultSet executeSubjectVariables(ResultSet main, boolean insert) throws SQLException {
     if (sbjQueryMan.hasSexRestrictionVariable()) {
       ResultSet rs = sbjQueryMan.executeSexRestrictionVariable();
       if (insert) main = insert(main, rs);

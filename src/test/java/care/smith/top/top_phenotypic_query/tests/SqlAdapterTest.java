@@ -59,7 +59,7 @@ public class SqlAdapterTest extends AbstractTest {
   }
 
   @Test
-  void testAdapterConnection() throws InstantiationException {
+  void testAdapterConnection() throws InstantiationException, SQLException {
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test.yml");
     assertNotNull(configFile);

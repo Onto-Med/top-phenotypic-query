@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.search;
 
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.Objects;
 
@@ -111,7 +112,7 @@ public class SingleSearch extends PhenotypeSearch {
   }
 
   @Override
-  public ResultSet execute() {
+  public ResultSet execute() throws SQLException {
     String itemType = Phenotypes.getItemType(phenotype).getValue();
     PhenotypeQuery query = config.getPhenotypeQuery(itemType);
     if (query != null && query.hasUnion()) {

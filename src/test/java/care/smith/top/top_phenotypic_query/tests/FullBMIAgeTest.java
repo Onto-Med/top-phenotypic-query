@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ import care.smith.top.top_phenotypic_query.util.Values;
 public class FullBMIAgeTest extends AbstractTest {
 
   @Test
-  public void test() throws InstantiationException {
+  public void test() throws InstantiationException, SQLException {
     QueryCriterion cri1 =
         (QueryCriterion)
             new QueryCriterion()

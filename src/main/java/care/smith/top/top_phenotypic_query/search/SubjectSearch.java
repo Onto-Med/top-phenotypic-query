@@ -1,6 +1,7 @@
 package care.smith.top.top_phenotypic_query.search;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -144,7 +145,7 @@ public class SubjectSearch extends PhenotypeSearch {
   }
 
   @Override
-  public ResultSet execute() {
+  public ResultSet execute() throws SQLException {
     return adapter.execute(this);
   }
 

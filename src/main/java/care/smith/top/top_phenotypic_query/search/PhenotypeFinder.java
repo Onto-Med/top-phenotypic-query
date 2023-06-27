@@ -1,6 +1,12 @@
 package care.smith.top.top_phenotypic_query.search;
 
-import care.smith.top.model.*;
+import java.sql.SQLException;
+
+import care.smith.top.model.Entity;
+import care.smith.top.model.Phenotype;
+import care.smith.top.model.ProjectionEntry;
+import care.smith.top.model.PhenotypeQuery;
+import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.data_adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
@@ -33,7 +39,7 @@ public class PhenotypeFinder {
     return phenotypes;
   }
 
-  public ResultSet execute() {
+  public ResultSet execute() throws SQLException {
     return executeCompositeSearches(executeSingleSearches()).clean(query.getProjection());
   }
 
@@ -52,7 +58,7 @@ public class PhenotypeFinder {
     if (Phenotypes.isComposite(phe)) new CompositeSearch(query, pro, rs, phenotypes).execute();
   }
 
-  private ResultSet executeSingleSearches() {
+  private ResultSet executeSingleSearches() throws SQLException {
     SubjectQueryMan sbjMan = new SubjectQueryMan(adapter);
     SingleQueryMan man = new SingleQueryMan(sbjMan, query, phenotypes);
 

@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.search;
 
+import java.sql.SQLException;
+
 import care.smith.top.model.Query;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 
@@ -15,5 +17,5 @@ public abstract class PhenotypeSearch {
     return query;
   }
 
-  public abstract ResultSet execute();
+  public abstract ResultSet execute() throws SQLException;
 }

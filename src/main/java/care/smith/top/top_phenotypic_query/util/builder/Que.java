@@ -114,8 +114,14 @@ public class Que {
 
   public ResultSet execute() {
     PhenotypeFinder pf = getFinder();
-    ResultSet rs = pf.execute();
-    adapter.close();
+    ResultSet rs = null;
+    try {
+      rs = pf.execute();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      adapter.close();
+    }
     return rs;
   }
 
