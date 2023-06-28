@@ -23,7 +23,6 @@ public abstract class AbstractElasticTest {
   protected static final String[] ELASTIC_INDEX = new String[] {"test_documents"};
   protected static final String[] ELASTIC_FIELD = new String[] {"text"};
   protected static ElasticsearchClient esClient;
-
   protected static TextAdapter adapter;
 
   /**
@@ -54,7 +53,33 @@ public abstract class AbstractElasticTest {
                   s.index(Arrays.asList(ELASTIC_INDEX))
                       .query(q -> q.matchAll(v -> v.queryName("matchAll"))),
               Document.class);
-      assertEquals(3, search.hits().hits().size());
+
+      if (search.hits().hits().size() == 0) {
+        esClient.index(i -> i
+                .id("01")
+                .index(ELASTIC_INDEX[0])
+                .document(
+                        new TextDocument(
+                                "test01",
+                                "What do we have here? A test document. With an entity. Nice."))
+        );
+        esClient.index(i -> i
+                .id("02")
+                .index(ELASTIC_INDEX[0])
+                .document(
+                        new TextDocument(
+                                "test02",
+                                "Another document is here. It has two entities."))
+        );
+        esClient.index(
+                i ->
+                        i.id("03")
+                                .index(ELASTIC_INDEX[0])
+                                .document(
+                                        new TextDocument(
+                                                "test03",
+                                                "And a third document; but this one features nothing")));
+      } else {assertEquals(3, search.hits().hits().size());}
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -69,5 +94,14 @@ public abstract class AbstractElasticTest {
 
     adapter = LuceneAdapter.getInstance(configFile.getPath());
     assertNotNull(adapter);
+  }
+
+  static class TextDocument {
+    public String name;
+    public String text;
+    public TextDocument(String name, String text) {
+      this.name = name;
+      this.text = text;
+    }
   }
 }
