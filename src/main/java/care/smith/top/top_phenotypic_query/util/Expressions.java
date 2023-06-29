@@ -6,7 +6,6 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
-import care.smith.top.top_phenotypic_query.song.SONG;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -152,17 +151,5 @@ public class Expressions {
         && exp.getFunctionId() == null
         && exp.getRestriction() == null
         && !hasValues(exp);
-  }
-
-  public static boolean hasTermsInitial(Expression exp) {
-    return SONG.EXPRESSION_TYPE_TERMS_INITIAL.equals(exp.getType());
-  }
-
-  public static boolean hasTermsProcessed(Expression exp) {
-    return SONG.EXPRESSION_TYPE_TERMS_PROCESSED.equals(exp.getType());
-  }
-
-  public static boolean hasQuery(Expression exp) {
-    return SONG.EXPRESSION_TYPE_QUERY.equals(exp.getType());
   }
 }

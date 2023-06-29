@@ -6,7 +6,6 @@ import care.smith.top.top_phenotypic_query.data_adapter.config.DataAdapterConfig
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import java.io.IOException;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -143,16 +142,6 @@ public class Entities {
         .collect(Collectors.toSet());
   }
 
-  public Collection<Concept> getConcepts() {
-    return getEntities().stream()
-        .filter(
-            e ->
-                Arrays.asList(EntityType.SINGLE_CONCEPT, EntityType.COMPOSITE_CONCEPT)
-                    .contains(e.getEntityType()))
-        .map(Concept.class::cast)
-        .collect(Collectors.toSet());
-  }
-
   public Set<String> getPhenotypeIds() {
     return getPhenotypes().stream().map(e -> e.getId()).collect(Collectors.toSet());
   }
@@ -234,29 +223,6 @@ public class Entities {
 
   private static final String ANN_SEP = "::";
   private static final String PROP_VAL_SEP = "|";
-
-  public static Set<String> getTitlesAndSynonyms(Entity e, String lang) {
-    Set<String> terms = new LinkedHashSet<>();
-    terms.addAll(getAnnotations(e.getTitles(), lang));
-    if (e.getSynonyms() != null && !e.getSynonyms().isEmpty())
-      terms.addAll(getAnnotations(e.getSynonyms(), lang));
-    return terms;
-  }
-
-  public static Set<String> getTerms(Entity e, String lang, boolean includeSubTree) {
-    Set<String> terms = getTitlesAndSynonyms(e, lang);
-    if (!includeSubTree) return terms;
-    if (!(e instanceof SingleConcept)) return terms;
-
-    SingleConcept c = (SingleConcept) e;
-    if (c.getSubConcepts() != null) {
-      for (Concept child : c.getSubConcepts()) {
-        terms.addAll(getTerms(child, lang, includeSubTree));
-      }
-    }
-
-    return terms;
-  }
 
   private static List<String> getAnnotations(List<LocalisableText> txts, String lang) {
     return txts.stream()
