@@ -34,6 +34,7 @@ public class DateUtil {
   }
 
   public static LocalDateTime ofDate(Date date) {
+    if (date == null) return null;
     return ofMilli(date.getTime());
   }
 

@@ -1,0 +1,4 @@
+id: Hapi_Adapter
+adapter: care.smith.top.top_phenotypic_query.adapter.fhir.FHIRAdapter
+connection:
+  url: https://hapi.fhir.org/baseR4

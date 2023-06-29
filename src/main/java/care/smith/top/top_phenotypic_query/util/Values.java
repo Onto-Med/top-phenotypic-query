@@ -64,6 +64,7 @@ public class Values {
   }
 
   public static String toString(Value val) {
+    if (val == null) return null;
     return addDateTime(toStringWithoutDateTime(val), val.getDateTime());
   }
 
@@ -88,14 +89,17 @@ public class Values {
   }
 
   public static String toStringWithoutDateTime(BooleanValue val) {
+    if (val.isValue() == null) return null;
     return val.isValue().toString();
   }
 
   public static String toStringWithoutDateTime(NumberValue val) {
+    if (val.getValue() == null) return null;
     return val.getValue().toPlainString();
   }
 
   public static String toStringWithoutDateTime(DateTimeValue val) {
+    if (val.getValue() == null) return null;
     return DateUtil.format(val.getValue());
   }
 

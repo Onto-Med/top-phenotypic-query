@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hl7.fhir.r4.model.Resource;
@@ -44,11 +45,16 @@ public class FHIRPhenotypeFinder extends FHIRPathResourceFinder {
 
     Value val = null;
 
-    if (Phenotypes.hasDateTimeType(phe))
-      val = Val.of(path.getDateTime(res, phePathExp), date, startDate, endDate);
-    else if (Phenotypes.hasNumberType(phe))
-      val = Val.of(path.getNumber(res, phePathExp), date, startDate, endDate);
-    else val = Val.of(path.getString(res, phePathExp), date, startDate, endDate);
+    if (Phenotypes.hasDateTimeType(phe)) {
+      LocalDateTime pathVal = path.getDateTime(res, phePathExp);
+      if (pathVal != null) val = Val.of(pathVal, date, startDate, endDate);
+    } else if (Phenotypes.hasNumberType(phe)) {
+      BigDecimal pathVal = path.getNumber(res, phePathExp);
+      if (pathVal != null) val = Val.of(pathVal, date, startDate, endDate);
+    } else {
+      String pathVal = path.getString(res, phePathExp);
+      if (pathVal != null) val = Val.of(pathVal, date, startDate, endDate);
+    }
     if (val != null)
       rs.addValueWithRestriction(
           sbj,
