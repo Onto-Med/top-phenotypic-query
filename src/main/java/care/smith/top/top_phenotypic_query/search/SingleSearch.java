@@ -77,7 +77,7 @@ public class SingleSearch extends PhenotypeSearch {
     if (getCodeMapping() != null && getCodeMapping().getType() != null)
       return getCodeMapping().getType();
     if (config.getPhenotypeQuery(Phenotypes.getItemType(phenotype).getValue()) != null)
-      return phenotype.getItemType().getValue();
+      return Phenotypes.getItemType(phenotype).getValue();
     return Props.DEFAULT_ITEM_TYPE;
   }
 
