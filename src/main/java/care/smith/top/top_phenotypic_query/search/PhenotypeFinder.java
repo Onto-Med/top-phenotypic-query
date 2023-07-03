@@ -4,8 +4,8 @@ import java.sql.SQLException;
 
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.ProjectionEntry;
-import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
@@ -16,19 +16,19 @@ import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class PhenotypeFinder {
 
-  private Query query;
+  private PhenotypeQuery query;
   private Entities phenotypes;
   private DataAdapter adapter;
   private DataAdapterConfig config;
 
-  public PhenotypeFinder(Query query, Entity[] entities, DataAdapter adapter) {
+  public PhenotypeFinder(PhenotypeQuery query, Entity[] entities, DataAdapter adapter) {
     this.query = query;
     this.adapter = adapter;
     this.config = adapter.getConfig();
     this.phenotypes = Entities.of(entities).deriveAdditionalProperties(config);
   }
 
-  public PhenotypeFinder(Query query, Entities entities, DataAdapter adapter) {
+  public PhenotypeFinder(PhenotypeQuery query, Entities entities, DataAdapter adapter) {
     this.query = query;
     this.adapter = adapter;
     this.config = adapter.getConfig();

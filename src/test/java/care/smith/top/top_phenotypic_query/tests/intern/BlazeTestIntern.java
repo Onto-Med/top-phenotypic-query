@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.ProjectionEntry.TypeEnum;
-import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
@@ -38,7 +38,7 @@ public class BlazeTestIntern {
                 .inclusion(true)
                 .subjectId(hemoglobinOver14_5.getId())
                 .type(TypeEnum.QUERYCRITERION);
-    Query query = new Query().addCriteriaItem(cri);
+    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri);
 
     URL configFile = Thread.currentThread().getContextClassLoader().getResource(CONFIG);
     assertNotNull(configFile);
