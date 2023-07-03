@@ -6,6 +6,15 @@ subjectQuery:
     sex: gender.value
     birthdate: birthDate
 phenotypeQueries:
+  encounter:
+    baseQuery: "Encounter?_format=json"
+    textValueListPart: "&class={values}"
+    dateTimeIntervalPart: "&date{operator}{value}"
+    output:
+      subject: subject.reference.value
+      textValue: class.code
+      startDateTime: period.start
+      endDateTime: period.end
   condition:
     baseQuery: "Condition?code={codes}"
     dateTimeIntervalPart: "&recorded-date{operator}{value}"

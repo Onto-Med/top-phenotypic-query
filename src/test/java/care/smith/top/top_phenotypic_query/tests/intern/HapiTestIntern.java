@@ -7,6 +7,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.Entity;
+import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
@@ -79,5 +80,17 @@ public class HapiTestIntern {
             "Patient/7046218",
             "Patient/7046869"),
         rs.getSubjectIds());
+  }
+
+  @Test
+  public void test2() throws InstantiationException {
+    Phenotype enc = new Phe("encounter").itemType(ItemType.ENCOUNTER).string().get();
+    Phenotype amb = new Phe("AMB").restriction(enc, Res.of("AMB")).get();
+    Entity[] entities = {enc, amb};
+
+    ResultSet rs = new Que(CONFIG, entities).inc(amb).execute();
+
+    System.out.println(rs.getSubjectIds());
+    System.out.println(rs.getSubjectIds().size());
   }
 }

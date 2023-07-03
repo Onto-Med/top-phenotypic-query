@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import org.hl7.fhir.r4.model.Resource;
 
+import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
@@ -33,6 +34,13 @@ public class FHIRPhenotypeFinder extends FHIRPathResourceFinder {
 
   @Override
   protected void addResource(Resource res) {
+
+    System.out.println(
+        "!!!!!!!!!!! "
+            + new FHIRPath(FhirContext.forR4())
+                .getValue(
+                    res, "id.substring(indexOf('Encounter')).replaceMatches('/_history.*', '')"));
+
     String sbj = path.getString(res, out.getSubject());
     LocalDateTime date = path.getDateTime(res, out.getDateTime());
     LocalDateTime startDate = path.getDateTime(res, out.getStartDateTime());
