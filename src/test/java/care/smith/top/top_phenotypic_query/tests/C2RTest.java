@@ -30,6 +30,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Median
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Min;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Add;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Ln;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Multiply;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
@@ -58,6 +59,37 @@ import care.smith.top.top_phenotypic_query.util.builder.Res;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 
 public class C2RTest {
+
+  @Test
+  public void testLn() {
+    Phenotype x = new Phe("x").number().get();
+
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("x", null, Val.of(10, DateUtil.parse("2001-01-01")));
+    vals.addValue("x", null, Val.of(Math.E, DateUtil.parse("2002-01-01")));
+
+    Entities phens = Entities.of(x);
+
+    Expression ln = Ln.of(x);
+
+    C2R c2r = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(1, Expressions.getNumberValue(c2r.calculate(ln)).doubleValue());
+
+    x = new Phe("x").number().get();
+
+    vals = new SubjectPhenotypes("2");
+    vals.addValue("x", null, Val.of(10, DateUtil.parse("2003-01-01")));
+    vals.addValue("x", null, Val.of(Math.E, DateUtil.parse("2002-01-01")));
+
+    phens = Entities.of(x);
+
+    ln = Ln.of(x);
+
+    c2r = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(2.302585092994046, Expressions.getNumberValue(c2r.calculate(ln)).doubleValue());
+  }
 
   @Test
   public void testList1() {

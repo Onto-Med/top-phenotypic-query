@@ -43,6 +43,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Median
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Min;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Add;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Ln;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Multiply;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Subtract;
@@ -161,6 +162,7 @@ public class C2R {
     addFunction(Exists.get());
     addFunction(Union.get());
     addFunction(Vals.get());
+    addFunction(Ln.get());
   }
 
   public MathContext getMathContext() {
