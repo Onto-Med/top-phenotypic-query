@@ -2,10 +2,10 @@ package care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import org.hl7.fhir.r4.model.Resource;
 
-import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
@@ -34,20 +34,15 @@ public class FHIRPhenotypeFinder extends FHIRPathResourceFinder {
 
   @Override
   protected void addResource(Resource res) {
-
-    System.out.println(
-        "!!!!!!!!!!! "
-            + new FHIRPath(FhirContext.forR4())
-                .getValue(
-                    res, "id.substring(indexOf('Encounter')).replaceMatches('/_history.*', '')"));
-
     String sbj = path.getString(res, out.getSubject());
     LocalDateTime date = path.getDateTime(res, out.getDateTime());
     LocalDateTime startDate = path.getDateTime(res, out.getStartDateTime());
     LocalDateTime endDate = path.getDateTime(res, out.getEndDateTime());
 
     if (Phenotypes.hasBooleanType(phe)) {
-      rs.addValue(sbj, phe, search.getDateTimeRestriction(), Val.ofTrue(date, startDate, endDate));
+      Value val = Val.ofTrue(date, startDate, endDate);
+      addFields(val, res, out.getFields());
+      rs.addValue(sbj, phe, search.getDateTimeRestriction(), val);
       return;
     }
 
@@ -63,7 +58,8 @@ public class FHIRPhenotypeFinder extends FHIRPathResourceFinder {
       String pathVal = path.getString(res, phePathExp);
       if (pathVal != null) val = Val.of(pathVal, date, startDate, endDate);
     }
-    if (val != null)
+    if (val != null) {
+      addFields(val, res, out.getFields());
       rs.addValueWithRestriction(
           sbj,
           phe,
@@ -71,5 +67,14 @@ public class FHIRPhenotypeFinder extends FHIRPathResourceFinder {
           val,
           search.getSourceUnit(),
           search.getModelUnit());
+    }
+  }
+
+  private void addFields(Value val, Resource res, Map<String, String> fields) {
+    if (fields == null) return;
+    for (String fieldName : fields.keySet()) {
+      String v = path.getString(res, fields.get(fieldName));
+      if (v != null) val.putFieldsItem(fieldName, Val.of(v));
+    }
   }
 }
