@@ -70,6 +70,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusMo
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYears;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.StartsBefore;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.TimeDistance;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncType;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Empty;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
@@ -163,6 +164,7 @@ public class C2R {
     addFunction(Union.get());
     addFunction(Vals.get());
     addFunction(Ln.get());
+    addFunction(EncType.get());
   }
 
   public MathContext getMathContext() {
@@ -172,6 +174,10 @@ public class C2R {
   public C2R mathContext(MathContext mc) {
     this.mc = mc;
     return this;
+  }
+
+  public Phenotype getPhenotype(String id) {
+    return phenotypes.getPhenotype(id);
   }
 
   public Entities getPhenotypes() {

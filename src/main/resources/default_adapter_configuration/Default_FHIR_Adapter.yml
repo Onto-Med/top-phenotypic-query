@@ -23,7 +23,7 @@ phenotypeQueries:
     subjectsPart: "&subject={values}"
     output:
       subject: subject.reference.value
-      dateTime: onset
+      dateTime: recordedDate
       fields:
         encounterId: encounter.reference.value
   observation:
@@ -67,7 +67,7 @@ phenotypeQueries:
       startDateTime: effective.start
       endDateTime: effective.end
       fields:
-        encounterId: encounter.reference.value
+        encounterId: context.reference.value
   medication_statement:
     baseQuery: "MedicationStatement?medication.code={codes}"
     dateTimeIntervalPart: "&effective{operator}{value}"
@@ -77,7 +77,7 @@ phenotypeQueries:
       startDateTime: effective.start
       endDateTime: effective.end
       fields:
-        encounterId: encounter.reference.value
+        encounterId: context.reference.value
   medication_request:
     baseQuery: "MedicationRequest?medication.code={codes}"
     dateTimeIntervalPart: "&authoredon{operator}{value}"

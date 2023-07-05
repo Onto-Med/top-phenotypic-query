@@ -65,7 +65,17 @@ public class Values {
 
   public static String toString(Value val) {
     if (val == null) return null;
-    return addDateTime(toStringWithoutDateTime(val), val.getDateTime());
+    return addFields(addDateTime(toStringWithoutDateTime(val), val.getDateTime()), val.getFields());
+  }
+
+  private static String addFields(String str, Map<String, Value> fields) {
+    return (fields == null || fields.isEmpty()) ? str : str + fieldsToString(fields);
+  }
+
+  private static String fieldsToString(Map<String, Value> fields) {
+    String str = "";
+    for (String name : fields.keySet()) str += "|" + name + "=" + getStringValue(fields.get(name));
+    return str;
   }
 
   private static String addDateTime(String str, LocalDateTime dateTime) {

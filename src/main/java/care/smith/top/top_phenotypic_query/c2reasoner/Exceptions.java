@@ -6,9 +6,11 @@ import java.util.Map;
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
+import care.smith.top.model.ItemType;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.ConstantEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class Exceptions {
 
@@ -96,5 +98,14 @@ public class Exceptions {
     String msg = "Function '%s' does not exists!";
     if (!functions.containsKey(exp.getFunctionId()))
       throw new ArithmeticException(String.format(msg, exp.getFunctionId()));
+  }
+
+  public static void checkArgumentItemType(
+      ExpressionFunction f, ItemType it, Expression arg, int argNum, C2R c2r) {
+    String msg = "The %s. argument of the function '%s' must have the item type '%s'!";
+    if (arg == null
+        || arg.getEntityId() == null
+        || it != Phenotypes.getUnrestrictedPhenotypeItemType(c2r.getPhenotype(arg.getEntityId())))
+      throw new ArithmeticException(String.format(msg, argNum, f.getId(), it));
   }
 }

@@ -25,6 +25,11 @@ public class Obs extends Observation {
     setCode(cc);
   }
 
+  public Obs enc(Reference encRef) {
+    setEncounter(encRef);
+    return this;
+  }
+
   public Obs code(String system, String code) {
     cc.addCoding(new Coding().setSystem(system).setCode(code));
     return this;
