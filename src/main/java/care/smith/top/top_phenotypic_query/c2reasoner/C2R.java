@@ -70,6 +70,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusMo
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYears;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.StartsBefore;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.TimeDistance;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncType;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Empty;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
@@ -165,6 +166,7 @@ public class C2R {
     addFunction(Vals.get());
     addFunction(Ln.get());
     addFunction(EncType.get());
+    addFunction(EncAge.get());
   }
 
   public MathContext getMathContext() {

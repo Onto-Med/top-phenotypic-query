@@ -2,9 +2,6 @@ package care.smith.top.top_phenotypic_query.search;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 import care.smith.top.model.DataType;
@@ -21,6 +18,7 @@ import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectQuery;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 
@@ -70,7 +68,7 @@ public class SubjectSearch extends PhenotypeSearch {
     BigDecimal ageMax = Restrictions.getMaxIntervalValue(ageR);
 
     if (ageMax != null) {
-      bdR.addValuesItem(ageToBirthdate(ageMax.longValue()));
+      bdR.addValuesItem(DateUtil.ageToBirthdate(ageMax.longValue()));
       if (ageR.getMaxOperator() == RestrictionOperator.LESS_THAN)
         bdR.setMinOperator(RestrictionOperator.GREATER_THAN);
       else if (ageR.getMaxOperator() == RestrictionOperator.LESS_THAN_OR_EQUAL_TO)
@@ -79,7 +77,7 @@ public class SubjectSearch extends PhenotypeSearch {
 
     if (ageMin != null) {
       if (ageMax == null) bdR.addValuesItem(null);
-      bdR.addValuesItem(ageToBirthdate(ageMin.longValue()));
+      bdR.addValuesItem(DateUtil.ageToBirthdate(ageMin.longValue()));
       if (ageR.getMinOperator() == RestrictionOperator.GREATER_THAN)
         bdR.setMaxOperator(RestrictionOperator.LESS_THAN);
       else if (ageR.getMinOperator() == RestrictionOperator.GREATER_THAN_OR_EQUAL_TO)
@@ -147,14 +145,6 @@ public class SubjectSearch extends PhenotypeSearch {
   @Override
   public ResultSet execute() throws SQLException {
     return adapter.execute(this);
-  }
-
-  private LocalDateTime ageToBirthdate(long years) {
-    return LocalDate.now().minusYears(years).atStartOfDay();
-  }
-
-  public static long birthdateToAge(LocalDateTime birthdate) {
-    return ChronoUnit.YEARS.between(birthdate.toLocalDate(), LocalDate.now());
   }
 
   @Override

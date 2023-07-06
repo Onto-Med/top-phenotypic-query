@@ -33,6 +33,7 @@ import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 
@@ -145,7 +146,7 @@ public class SQLAdapter extends DataAdapter {
           if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, val);
           else rs.addValue(sbj, bd, null, val);
           if (age != null) {
-            Value ageVal = Val.of(SubjectSearch.birthdateToAge(bdSqlVal.toLocalDateTime()));
+            Value ageVal = Val.of(DateUtil.birthdateToAge(bdSqlVal.toLocalDateTime()));
             rs.addValueWithRestriction(sbj, age, ageVal);
           }
         }

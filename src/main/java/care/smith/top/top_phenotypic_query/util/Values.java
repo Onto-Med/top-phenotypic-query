@@ -16,6 +16,7 @@ import care.smith.top.model.NumberValue;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringValue;
 import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.util.builder.Val;
 
 public class Values {
 
@@ -241,5 +242,10 @@ public class Values {
 
   public static boolean endsBefore(Value v1, Value v2) {
     return getEndDateTime(v1).isBefore(getEndDateTime(v2));
+  }
+
+  public static Value addFields(Value v, String... fields) {
+    for (int i = 0; i < fields.length; i += 2) v.putFieldsItem(fields[i], Val.of(fields[i + 1]));
+    return v;
   }
 }

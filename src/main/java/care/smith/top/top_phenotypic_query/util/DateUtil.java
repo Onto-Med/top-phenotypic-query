@@ -164,4 +164,12 @@ public class DateUtil {
     return BigDecimal.valueOf(Duration.between(start, end).toMillis())
         .divide(BigDecimal.valueOf(3600000), MathContext.DECIMAL32);
   }
+
+  public static long birthdateToAge(LocalDateTime birthdate) {
+    return ChronoUnit.YEARS.between(birthdate.toLocalDate(), LocalDate.now());
+  }
+
+  public static LocalDateTime ageToBirthdate(long years) {
+    return LocalDate.now().minusYears(years).atStartOfDay();
+  }
 }
