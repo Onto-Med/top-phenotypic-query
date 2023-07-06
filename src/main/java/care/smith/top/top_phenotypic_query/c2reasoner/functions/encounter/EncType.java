@@ -61,11 +61,13 @@ public class EncType extends FunctionEntity {
   }
 
   private boolean check(Value pheVal, Value encTypeVal) {
+    if (pheVal.getFields() == null) return false;
     Value pheEncIdVal = pheVal.getFields().get("encounterId");
     if (pheEncIdVal == null) return false;
     String pheEncId = Values.getStringValue(pheEncIdVal);
     if (pheEncId == null) return false;
 
+    if (encTypeVal.getFields() == null) return false;
     Value encIdVal = encTypeVal.getFields().get("id");
     if (encIdVal == null) return false;
     String encId = Values.getStringValue(encIdVal);
