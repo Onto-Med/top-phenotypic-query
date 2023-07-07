@@ -338,6 +338,7 @@ public abstract class AbstractTest {
         new Phenotype()
             .superPhenotype(parent)
             .restriction(restr)
+            .dataType(DataType.BOOLEAN)
             //            .expression(exp)
             .entityType(getRestrictionType(parent))
             .id(name);
