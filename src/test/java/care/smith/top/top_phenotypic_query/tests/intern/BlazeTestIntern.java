@@ -16,6 +16,7 @@ import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
@@ -93,5 +94,19 @@ public class BlazeTestIntern {
 
     System.out.println(rs.getSubjectIds());
     System.out.println(rs.getSubjectIds().size());
+  }
+
+  @Test
+  public void testEncAge() throws InstantiationException {
+    Phenotype bd = new Phe("birthdate").dateTime().itemType(ItemType.SUBJECT_BIRTH_DATE).get();
+    Phenotype enc = new Phe("encounter").string().itemType(ItemType.ENCOUNTER).get();
+    Phenotype age = new Phe("age").expression(EncAge.of(bd, enc)).get();
+    Phenotype old = new Phe("old").restriction(age, Res.ge(83)).get();
+
+    ResultSet rs = new Que(CONFIG, bd, enc, age, old).inc(old).execute();
+
+    System.out.println(rs);
+
+    assertEquals(Set.of("Patient/UKFAU4", "Patient/uksh201"), rs.getSubjectIds());
   }
 }

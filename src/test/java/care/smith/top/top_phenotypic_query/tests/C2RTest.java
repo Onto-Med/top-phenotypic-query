@@ -78,6 +78,11 @@ public class C2RTest {
         null,
         Values.addFields(
             Val.of("IMP", DateUtil.parse("2021-01-01"), DateUtil.parse("2021-01-21")), "id", "e1"));
+    vals.addValue(
+        "encounter",
+        null,
+        Values.addFields(
+            Val.of("AMB", DateUtil.parse("2018-01-01"), DateUtil.parse("2018-01-21")), "id", "e2"));
 
     Entities phens = Entities.of(bd, enc);
 

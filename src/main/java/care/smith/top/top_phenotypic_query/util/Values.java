@@ -66,7 +66,7 @@ public class Values {
 
   public static String toString(Value val) {
     if (val == null) return null;
-    return addFields(addDateTime(toStringWithoutDateTime(val), val.getDateTime()), val.getFields());
+    return addFields(addDateTime(toStringWithoutDateTime(val), getDateTime(val)), val.getFields());
   }
 
   private static String addFields(String str, Map<String, Value> fields) {

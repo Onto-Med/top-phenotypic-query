@@ -23,7 +23,7 @@ public class EncAge extends FunctionEntity {
   private static EncAge INSTANCE = new EncAge();
 
   private EncAge() {
-    super("encAge", NotationEnum.PREFIX, 2, 3);
+    super("encAge", NotationEnum.PREFIX, 2, 2);
   }
 
   public static EncAge get() {
