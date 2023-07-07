@@ -14,6 +14,30 @@ There are multiple functionalities covered by this package:
 * classify individual data into phenotype classes
 * export query results to CSV
 
+## Getting Started
+
+Download one of our [JAR releases](https://github.com/Onto-Med/top-phenotypic-query/releases/latest) and use it as
+follows:
+
+```sh
+# show help message
+java -jar top-phenotypic-query-x.x.x.jar query --help
+
+# execute phenotypic queries based on a phenotype model, results are written to ZIP
+java -jar top-phenotypic-query-x.x.x.jar query <query config> <phenotype model> \
+  <adapter config> <ZIP output path>
+```
+
+Input parameters:
+
+* JSON containing a TOP query (i.e., `care.smith.top.model.Query`)
+* JSON containing a phenotype model
+* YAML adapter configuration
+* output destination of the ZIP file that contains the result set
+
+The next sections provide information on how to add `top-phenotypic-query` as Maven dependency to your Java project and
+how to call it programmatically.
+
 ## Installation
 
 Add the following Maven dependency to your project's `pom.xml` file. Because the package is hosted on
@@ -63,6 +87,7 @@ ResultSet rs; // some resultset
 File zipFile = Files.createFile("export.zip").toFile();
 ZipOutputStream zipStream = new ZipOutputStream(new FileOutputStream(zipFile));
 
+CSV csvConverter = new CSV();
 zipStream.putNextEntry(new ZipEntry("data.csv"));
 csvConverter.write(rs, zipStream);
 
