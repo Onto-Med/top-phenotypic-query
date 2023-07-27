@@ -43,6 +43,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Median
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Min;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Add;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Ln;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Multiply;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Subtract;
@@ -69,6 +70,8 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusMo
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYears;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.StartsBefore;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.TimeDistance;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncType;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Empty;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
@@ -161,6 +164,9 @@ public class C2R {
     addFunction(Exists.get());
     addFunction(Union.get());
     addFunction(Vals.get());
+    addFunction(Ln.get());
+    addFunction(EncType.get());
+    addFunction(EncAge.get());
   }
 
   public MathContext getMathContext() {
@@ -170,6 +176,10 @@ public class C2R {
   public C2R mathContext(MathContext mc) {
     this.mc = mc;
     return this;
+  }
+
+  public Phenotype getPhenotype(String id) {
+    return phenotypes.getPhenotype(id);
   }
 
   public Entities getPhenotypes() {

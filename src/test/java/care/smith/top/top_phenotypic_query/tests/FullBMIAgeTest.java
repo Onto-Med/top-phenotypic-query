@@ -13,8 +13,8 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.ProjectionEntry.TypeEnum;
-import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
@@ -36,7 +36,7 @@ public class FullBMIAgeTest extends AbstractTest {
                 .type(TypeEnum.QUERYCRITERION);
     QueryCriterion cri2 =
         (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId());
-    Query query = new Query().addCriteriaItem(cri1).addCriteriaItem(cri2);
+    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2);
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test3.yml");
     assertNotNull(configFile);

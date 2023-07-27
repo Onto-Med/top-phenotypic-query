@@ -138,9 +138,31 @@ public class DateUtil {
   }
 
   public static BigDecimal getPeriodInYears(LocalDateTime start, LocalDateTime end) {
-    return getPeriodInDays(start, end)
-        .divide(new BigDecimal("365.25"), MathContext.DECIMAL32)
-        .setScale(2, RoundingMode.HALF_UP);
+    return getPeriodInYears(start.toLocalDate(), end.toLocalDate());
+  }
+
+  public static BigDecimal getPeriodInYears(LocalDate start, LocalDate end) {
+    long years = ChronoUnit.YEARS.between(start, end);
+    return BigDecimal.valueOf(years)
+        .add(getYearDecimalPart(start.plusYears(years), end))
+        .setScale(3, RoundingMode.HALF_UP);
+
+    //    return getPeriodInDays(start, end)
+    //        .divide(new BigDecimal("365.25"), MathContext.DECIMAL32)
+    //        .setScale(2, RoundingMode.HALF_UP);
+  }
+
+  private static BigDecimal getYearDecimalPart(LocalDate start, LocalDate end) {
+    if (start.getYear() == end.getYear()) return getOneYearDecimalPart(start, end);
+    LocalDate startOfYear = LocalDate.of(end.getYear(), 1, 1);
+    return getOneYearDecimalPart(start, startOfYear)
+        .add(getOneYearDecimalPart(startOfYear, end), MathContext.DECIMAL32);
+  }
+
+  private static BigDecimal getOneYearDecimalPart(LocalDate start, LocalDate end) {
+    long days = ChronoUnit.DAYS.between(start, end);
+    int daysInYear = (start.isLeapYear()) ? 366 : 365;
+    return BigDecimal.valueOf(days).divide(BigDecimal.valueOf(daysInYear), MathContext.DECIMAL32);
   }
 
   public static BigDecimal getPeriodInYears(LocalDateTime start) {
@@ -163,5 +185,13 @@ public class DateUtil {
   public static BigDecimal getPeriodInHours(LocalDateTime start, LocalDateTime end) {
     return BigDecimal.valueOf(Duration.between(start, end).toMillis())
         .divide(BigDecimal.valueOf(3600000), MathContext.DECIMAL32);
+  }
+
+  public static long birthdateToAge(LocalDateTime birthdate) {
+    return ChronoUnit.YEARS.between(birthdate.toLocalDate(), LocalDate.now());
+  }
+
+  public static LocalDateTime ageToBirthdate(long years) {
+    return LocalDate.now().minusYears(years).atStartOfDay();
   }
 }

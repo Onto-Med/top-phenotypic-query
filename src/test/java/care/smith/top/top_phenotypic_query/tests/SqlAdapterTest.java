@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import care.smith.top.model.DataType;
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.Query;
+import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
@@ -104,7 +104,7 @@ public class SqlAdapterTest extends AbstractTest {
                 .defaultAggregationFunctionId("last")
                 .subjectId(corrupted.getId());
 
-    Query query = new Query().addCriteriaItem(cri);
+    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri);
 
     try (java.sql.ResultSet rs =
         ((SQLAdapter) adapter).executeQuery("SELECT count(*) FROM assessment1")) {

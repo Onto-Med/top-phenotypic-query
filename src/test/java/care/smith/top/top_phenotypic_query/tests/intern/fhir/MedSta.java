@@ -20,6 +20,11 @@ public class MedSta extends MedicationStatement {
     setMedication(medRef);
   }
 
+  public MedSta enc(Reference encRef) {
+    setContext(encRef);
+    return this;
+  }
+
   public MedSta date(LocalDateTime date) {
     setEffective(new DateTimeType(DateUtil.toDate(date)));
     return this;

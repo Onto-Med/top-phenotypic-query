@@ -16,6 +16,7 @@ public class PhenotypeOutput {
   private String dateTimeValue;
   private String booleanValue;
   private String conceptValue;
+  private Map<String, String> fields;
 
   private Map<String, String> mapping;
 
@@ -129,6 +130,14 @@ public class PhenotypeOutput {
     this.conceptValue = conceptValue;
   }
 
+  public Map<String, String> getFields() {
+    return fields;
+  }
+
+  public void setFields(Map<String, String> fields) {
+    this.fields = fields;
+  }
+
   @Override
   public String toString() {
     return "PhenotypeOutput [subject="
@@ -151,6 +160,8 @@ public class PhenotypeOutput {
         + booleanValue
         + ", conceptValue="
         + conceptValue
+        + ", fields="
+        + fields
         + "]";
   }
 }

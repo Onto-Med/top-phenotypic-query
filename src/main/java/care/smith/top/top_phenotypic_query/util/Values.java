@@ -16,6 +16,7 @@ import care.smith.top.model.NumberValue;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringValue;
 import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.util.builder.Val;
 
 public class Values {
 
@@ -65,7 +66,17 @@ public class Values {
 
   public static String toString(Value val) {
     if (val == null) return null;
-    return addDateTime(toStringWithoutDateTime(val), val.getDateTime());
+    return addFields(addDateTime(toStringWithoutDateTime(val), getDateTime(val)), val.getFields());
+  }
+
+  private static String addFields(String str, Map<String, Value> fields) {
+    return (fields == null || fields.isEmpty()) ? str : str + fieldsToString(fields);
+  }
+
+  private static String fieldsToString(Map<String, Value> fields) {
+    String str = "";
+    for (String name : fields.keySet()) str += "|" + name + "=" + getStringValue(fields.get(name));
+    return str;
   }
 
   private static String addDateTime(String str, LocalDateTime dateTime) {
@@ -231,5 +242,10 @@ public class Values {
 
   public static boolean endsBefore(Value v1, Value v2) {
     return getEndDateTime(v1).isBefore(getEndDateTime(v2));
+  }
+
+  public static Value addFields(Value v, String... fields) {
+    for (int i = 0; i < fields.length; i += 2) v.putFieldsItem(fields[i], Val.of(fields[i + 1]));
+    return v;
   }
 }

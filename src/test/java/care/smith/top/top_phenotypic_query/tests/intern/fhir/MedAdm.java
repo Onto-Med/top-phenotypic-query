@@ -20,6 +20,11 @@ public class MedAdm extends MedicationAdministration {
     setMedication(medRef);
   }
 
+  public MedAdm enc(Reference encRef) {
+    setContext(encRef);
+    return this;
+  }
+
   public MedAdm date(LocalDateTime date) {
     setEffective(new DateTimeType(DateUtil.toDate(date)));
     return this;

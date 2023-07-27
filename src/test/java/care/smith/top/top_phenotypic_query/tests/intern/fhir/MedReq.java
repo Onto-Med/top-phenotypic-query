@@ -20,6 +20,11 @@ public class MedReq extends MedicationRequest {
     setMedication(medRef);
   }
 
+  public MedReq enc(Reference encRef) {
+    setEncounter(encRef);
+    return this;
+  }
+
   public MedReq date(LocalDateTime date) {
     setAuthoredOnElement(new DateTimeType(DateUtil.toDate(date)));
     return this;

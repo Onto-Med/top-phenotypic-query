@@ -123,6 +123,7 @@ public class FHIRClient {
     deleteAllResourcesOfType("ClinicalImpression", system);
     deleteAllResourcesOfType("Observation", system);
     deleteAllResourcesOfType("AllergyIntolerance", system);
+    deleteAllResourcesOfType("Encounter", system);
     deleteAllResourcesOfType("Patient", system);
   }
 

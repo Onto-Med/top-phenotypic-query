@@ -13,6 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.Expression;
+import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.RestrictionOperator;
@@ -30,6 +31,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Median
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Min;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Add;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Ln;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Multiply;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
@@ -44,6 +46,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Lt;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Ne;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.DiffYears;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYears;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Li;
@@ -52,12 +55,74 @@ import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 
 public class C2RTest {
+
+  @Test
+  public void testEncAge() {
+    Phenotype bd = new Phe("birthdate").dateTime().itemType(ItemType.SUBJECT_BIRTH_DATE).get();
+    Phenotype enc = new Phe("encounter").string().itemType(ItemType.ENCOUNTER).get();
+
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue(
+        "birthdate",
+        null,
+        Values.addFields(Val.of(DateUtil.parse("2001-01-01")), "encounterId", "e1"));
+    vals.addValue(
+        "encounter",
+        null,
+        Values.addFields(
+            Val.of("IMP", DateUtil.parse("2021-01-01"), DateUtil.parse("2021-01-21")), "id", "e1"));
+    vals.addValue(
+        "encounter",
+        null,
+        Values.addFields(
+            Val.of("AMB", DateUtil.parse("2018-01-01"), DateUtil.parse("2018-01-21")), "id", "e2"));
+
+    Entities phens = Entities.of(bd, enc);
+
+    Expression age = EncAge.of(bd, enc);
+
+    C2R c2r = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(20, Expressions.getNumberValue(c2r.calculate(age)).doubleValue());
+  }
+
+  @Test
+  public void testLn() {
+    Phenotype x = new Phe("x").number().get();
+
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("x", null, Val.of(10, DateUtil.parse("2001-01-01")));
+    vals.addValue("x", null, Val.of(Math.E, DateUtil.parse("2002-01-01")));
+
+    Entities phens = Entities.of(x);
+
+    Expression ln = Ln.of(x);
+
+    C2R c2r = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(1, Expressions.getNumberValue(c2r.calculate(ln)).doubleValue());
+
+    x = new Phe("x").number().get();
+
+    vals = new SubjectPhenotypes("2");
+    vals.addValue("x", null, Val.of(10, DateUtil.parse("2003-01-01")));
+    vals.addValue("x", null, Val.of(Math.E, DateUtil.parse("2002-01-01")));
+
+    phens = Entities.of(x);
+
+    ln = Ln.of(x);
+
+    c2r = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(2.302585092994046, Expressions.getNumberValue(c2r.calculate(ln)).doubleValue());
+  }
 
   @Test
   public void testList1() {

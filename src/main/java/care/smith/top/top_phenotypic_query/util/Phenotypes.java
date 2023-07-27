@@ -56,6 +56,10 @@ public class Phenotypes {
     return (isRestriction(p)) ? p.getSuperPhenotype().getId() : p.getId();
   }
 
+  public static ItemType getUnrestrictedPhenotypeItemType(Phenotype p) {
+    return (isRestriction(p)) ? p.getSuperPhenotype().getItemType() : p.getItemType();
+  }
+
   public static String getCodeUri(Code code) {
     return code.getCodeSystem().getUri().toString() + "|" + code.getCode();
   }

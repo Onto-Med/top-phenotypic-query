@@ -6,13 +6,26 @@ subjectQuery:
     sex: gender.value
     birthdate: birthDate
 phenotypeQueries:
+  encounter:
+    baseQuery: "Encounter?_format=json"
+    textValueListPart: "&class={values}"
+    dateTimeIntervalPart: "&date{operator}{value}"
+    output:
+      subject: subject.reference.value
+      textValue: class.code
+      startDateTime: period.start
+      endDateTime: period.end
+      fields:
+        id: id.substring(indexOf('Encounter')).replaceMatches('/_history.*', '')
   condition:
     baseQuery: "Condition?code={codes}"
     dateTimeIntervalPart: "&recorded-date{operator}{value}"
     subjectsPart: "&subject={values}"
     output:
       subject: subject.reference.value
-      dateTime: onset
+      dateTime: recordedDate
+      fields:
+        encounterId: encounter.reference.value
   observation:
     baseQuery: "Observation?code={codes}"
     numberValueIntervalPart: "&value-quantity{operator}{value}"
@@ -29,6 +42,8 @@ phenotypeQueries:
       conceptValue: value.coding.select(system.value + '|' + code)
       dateTimeValue: value
       dateTime: effective
+      fields:
+        encounterId: encounter.reference.value
   observation_component:
     baseQuery: "Observation?component-code={codes}"
     numberValueIntervalPart: "&component-value-quantity{operator}{value}"
@@ -41,6 +56,8 @@ phenotypeQueries:
       numberValue: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.value
       conceptValue: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.coding.select(system.value + '|' + code)
       dateTime: effective
+      fields:
+        encounterId: encounter.reference.value
   medication_administration:
     baseQuery: "MedicationAdministration?medication.code={codes}"
     dateTimeIntervalPart: "&effective-time{operator}{value}"
@@ -49,6 +66,8 @@ phenotypeQueries:
       dateTime: effective
       startDateTime: effective.start
       endDateTime: effective.end
+      fields:
+        encounterId: context.reference.value
   medication_statement:
     baseQuery: "MedicationStatement?medication.code={codes}"
     dateTimeIntervalPart: "&effective{operator}{value}"
@@ -57,6 +76,8 @@ phenotypeQueries:
       dateTime: effective
       startDateTime: effective.start
       endDateTime: effective.end
+      fields:
+        encounterId: context.reference.value
   medication_request:
     baseQuery: "MedicationRequest?medication.code={codes}"
     dateTimeIntervalPart: "&authoredon{operator}{value}"
@@ -65,6 +86,8 @@ phenotypeQueries:
       dateTime: authoredOn
       startDateTime: dosageInstruction.timing.repeat.bounds.start
       endDateTime: dosageInstruction.timing.repeat.bounds.end
+      fields:
+        encounterId: encounter.reference.value
   medication:
     union: [ medication_administration, medication_statement, medication_request ]
   procedure:
@@ -73,6 +96,8 @@ phenotypeQueries:
     output:
       subject: subject.reference.value
       dateTime: performed
+      fields:
+        encounterId: encounter.reference.value
 birthdateMapping:
   code: http://loinc.org|21112-8
 ageMapping:

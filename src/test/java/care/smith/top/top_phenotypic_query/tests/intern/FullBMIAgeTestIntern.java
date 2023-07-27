@@ -11,8 +11,8 @@ import java.util.Set;
 
 import org.hl7.fhir.r4.model.Patient;
 
+import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.ProjectionEntry.TypeEnum;
-import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
@@ -65,7 +65,8 @@ public class FullBMIAgeTestIntern extends AbstractTest {
                 .inclusion(true)
                 .subjectId(old.getId())
                 .type(TypeEnum.QUERYCRITERION);
-    Query query = new Query().addCriteriaItem(cri1).addCriteriaItem(cri2).addCriteriaItem(cri3);
+    PhenotypeQuery query =
+        new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2).addCriteriaItem(cri3);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
