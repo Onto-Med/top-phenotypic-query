@@ -113,6 +113,14 @@ PhenotypeExporter exporter;
 exporter.write(phenotypes, repository, uri, outputStream);
 ```
 
+## Development
+
+The code in this repository, and in contributions provided via pull requests, should conform to
+[Google Java Style](https://google.github.io/styleguide/javaguide.html).
+
+We use the flag `--skip-reflowing-long-strings` for [google-java-format](https://github.com/google/google-java-format),
+as it is currently not supported by all IDEs.
+
 ## License
 
 The code in this repository and the package `care.smith.top:top-phenotypic-query` are licensed under [GPL-3.0](LICENSE).
