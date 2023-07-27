@@ -1,22 +1,28 @@
 package care.smith.top.top_phenotypic_query.tests;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import care.smith.top.model.Entity;
-import care.smith.top.model.ProjectionEntry;
-import care.smith.top.model.Query;
-import care.smith.top.model.QueryCriterion;
-import care.smith.top.top_phenotypic_query.Cli;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.zip.ZipFile;
+
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import care.smith.top.model.Entity;
+import care.smith.top.model.PhenotypeQuery;
+import care.smith.top.model.ProjectionEntry;
+import care.smith.top.model.QueryCriterion;
+import care.smith.top.top_phenotypic_query.Cli;
 import picocli.CommandLine;
 
 class CliTest extends AbstractTest {
@@ -67,7 +73,7 @@ class CliTest extends AbstractTest {
                 .subjectId(young.getId())
                 .type(ProjectionEntry.TypeEnum.QUERYCRITERION);
 
-    MAPPER.writeValue(queryConfig.toFile(), new Query().addCriteriaItem(criterion));
+    MAPPER.writeValue(queryConfig.toFile(), new PhenotypeQuery().addCriteriaItem(criterion));
     return queryConfig;
   }
 

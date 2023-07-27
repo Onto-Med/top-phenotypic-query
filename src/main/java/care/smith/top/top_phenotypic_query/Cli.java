@@ -1,13 +1,10 @@
 package care.smith.top.top_phenotypic_query;
 
-import care.smith.top.model.Entity;
-import care.smith.top.model.Query;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.converter.csv.CSV;
-import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.concurrent.Callable;
 import java.util.zip.ZipEntry;
@@ -16,6 +13,14 @@ import java.util.zip.ZipOutputStream;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import care.smith.top.model.Entity;
+import care.smith.top.model.PhenotypeQuery;
+import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.converter.csv.CSV;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -71,7 +76,7 @@ public class Cli implements Callable<Integer> {
               description = "Location where resulting ZIP file will be stored.")
           File outputFile) {
     try {
-      Query query = MAPPER.readValue(queryConfigFile, Query.class);
+      PhenotypeQuery query = MAPPER.readValue(queryConfigFile, PhenotypeQuery.class);
       Entity[] entities = MAPPER.readValue(modelFile, Entity[].class);
 
       DataAdapterConfig config =
