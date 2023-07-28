@@ -1,6 +1,9 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import org.hl7.fhir.r4.model.Reference;
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,8 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.tests.intern.fhir.Client;
+import care.smith.top.top_phenotypic_query.tests.intern.fhir.Med;
+import care.smith.top.top_phenotypic_query.tests.intern.fhir.MedAdm;
 import care.smith.top.top_phenotypic_query.tests.intern.fhir.Obs;
 import care.smith.top.top_phenotypic_query.tests.intern.fhir.Pat;
 import care.smith.top.top_phenotypic_query.tests.intern.fhir.Proc;
@@ -111,12 +116,13 @@ public class MELDTestIntern {
                   Exp.of(6.43)))
           .get();
 
+  private static Phenotype meld0 = new Phe("meld0").restriction(meld, Res.lt(7.5)).get();
   private static Phenotype meld1 = new Phe("meld1").restriction(meld, Res.geLt(7.5, 10)).get();
   private static Phenotype meld2 = new Phe("meld2").restriction(meld, Res.geLt(10, 15)).get();
   private static Phenotype meld3 = new Phe("meld3").restriction(meld, Res.ge(15)).get();
 
   @Test
-  void test() {
+  void test() throws InstantiationException {
     client.clean();
 
     Reference pat0 = client.add(new Pat("p0").birthDate("2001-01-01").gender("male"));
@@ -129,10 +135,15 @@ public class MELDTestIntern {
     Reference pat7 = client.add(new Pat("p7").birthDate("1951-01-01").gender("male"));
 
     client.add(
-        new Obs("p0crea", pat0)
+        new Obs("p0crea1", pat0)
             .code("http://loinc.org", "2160-0")
             .value(0.1, "mg/dL")
             .date("2020-01-01"));
+    client.add(
+        new Obs("p0crea2", pat0)
+            .code("http://loinc.org", "2160-0")
+            .value(2.1, "mg/dL")
+            .date("2019-01-02"));
 
     client.add(
         new Obs("p0bili", pat0)
@@ -187,6 +198,9 @@ public class MELDTestIntern {
 
     client.add(
         new Obs("p3inr", pat3).code("http://loinc.org", "6301-6").value(3.3).date("2020-01-01"));
+
+    Reference m = client.add(new Med("m", "B01AA"));
+    client.add(new MedAdm("p3med", pat3, m).date("2020-01-01"));
 
     client.add(
         new Obs("p4crea", pat4)
@@ -244,59 +258,63 @@ public class MELDTestIntern {
 
     print();
 
-    //    try {
-    //      ResultSet rs =
-    //          new Que(
-    //                  "config/Default_FHIR_Adapter_Test.yml",
-    //                  crea,
-    //                  bili,
-    //                  inr,
-    //                  creaClean,
-    //                  biliClean,
-    //                  inrClean,
-    //                  dia,
-    //                  existDia0_7,
-    //                  med,
-    //                  meld,
-    //                  meld1,
-    //                  meld2,
-    //                  meld3)
-    //              .inc(meld3)
-    //              .exc(med)
-    //              .execute();
-    //      System.out.println(rs);
-    //      assertEquals(
-    //          Set.of(pat1.getReference(), pat2.getReference(), pat3.getReference()),
-    //          rs.getSubjectIds());
-    //    } catch (InstantiationException e) {
-    //      e.printStackTrace();
-    //    }
+    assertEquals(Set.of(pat0.getReference()), search(meld0, null));
+    assertEquals(Set.of(pat1.getReference()), search(meld2, null));
+    assertEquals(
+        Set.of(pat2.getReference(), pat3.getReference(), pat4.getReference()), search(meld3, null));
+    assertEquals(Set.of(pat2.getReference(), pat4.getReference()), search(meld3, med));
   }
 
-  private void print() {
-    try {
-      ResultSet rs =
-          new Que(
-                  "config/Default_FHIR_Adapter_Test.yml",
-                  crea,
-                  bili,
-                  inr,
-                  creaClean,
-                  biliClean,
-                  inrClean,
-                  dia,
-                  existDia0_7,
-                  med,
-                  meld,
-                  meld1,
-                  meld2,
-                  meld3)
-              .pro(meld)
-              .pro(dia)
-              .execute();
-      System.out.println(rs);
-    } catch (InstantiationException e) {
-      e.printStackTrace();
-    }
+  private Set<String> search(Phenotype inc, Phenotype exc) throws InstantiationException {
+    Que q =
+        new Que(
+                "config/Default_FHIR_Adapter_Test.yml",
+                crea,
+                bili,
+                inr,
+                creaClean,
+                biliClean,
+                inrClean,
+                dia,
+                existDia0_7,
+                med,
+                meld,
+                meld0,
+                meld1,
+                meld2,
+                meld3)
+            .inc(inc);
+
+    if (exc != null) q.exc(exc);
+
+    return q.execute().getSubjectIds();
+  }
+
+  private void print() throws InstantiationException {
+    ResultSet rs =
+        new Que(
+                "config/Default_FHIR_Adapter_Test.yml",
+                crea,
+                bili,
+                inr,
+                creaClean,
+                biliClean,
+                inrClean,
+                dia,
+                existDia0_7,
+                med,
+                meld,
+                meld0,
+                meld1,
+                meld2,
+                meld3)
+            .pro(crea)
+            .pro(bili)
+            .pro(inr)
+            .pro(dia)
+            .pro(med)
+            .pro(meld)
+            .execute();
+    System.out.println(rs);
   }
 }

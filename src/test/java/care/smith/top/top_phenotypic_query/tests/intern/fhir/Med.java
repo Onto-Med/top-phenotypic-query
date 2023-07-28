@@ -14,6 +14,7 @@ public class Med extends Medication {
     addIdentifier().setSystem(Client.SYSTEM).setValue(identifier);
     setCode(
         new CodeableConcept()
-            .addCoding(new Coding().setSystem("http://www.whocc.no/atc").setCode(atcCode)));
+            .addCoding(
+                new Coding().setSystem("http://fhir.de/CodeSystem/bfarm/atc").setCode(atcCode)));
   }
 }
