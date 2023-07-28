@@ -2,7 +2,7 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
@@ -551,13 +551,7 @@ public class C2RTest {
 
     Expression res1 = Switch.of(e1, s1, e3, s3);
 
-    Exception exception =
-        assertThrows(
-            ArithmeticException.class,
-            () -> {
-              c.calculate(res1);
-            });
-    assertEquals("No default value defined for the function 'switch'!", exception.getMessage());
+    assertNull(c.calculate(res1));
   }
 
   @Test

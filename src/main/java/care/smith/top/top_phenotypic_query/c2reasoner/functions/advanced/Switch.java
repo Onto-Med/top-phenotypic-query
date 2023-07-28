@@ -48,6 +48,7 @@ public class Switch extends FunctionEntity {
       List<Expression> args, int lastValueNum, Expression defaultValue, C2R c2r) {
     for (int i = 0; i < lastValueNum; i += 2) {
       Expression cond = c2r.calculate(args.get(i));
+      if (cond == null) continue;
       Exceptions.checkArgumentType(getFunction(), DataType.BOOLEAN, cond);
       if (Expressions.getBooleanValue(cond)) return c2r.calculate(args.get(i + 1));
     }
@@ -55,6 +56,6 @@ public class Switch extends FunctionEntity {
       defaultValue = c2r.calculate(defaultValue);
       if (defaultValue != null) return defaultValue;
     }
-    throw new ArithmeticException("No default value defined for the function 'switch'!");
+    return null;
   }
 }

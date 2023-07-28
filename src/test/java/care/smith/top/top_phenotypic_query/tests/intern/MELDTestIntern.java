@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Ln;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Multiply;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Sum;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Or;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Gt;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Lt;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusDays;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
@@ -72,9 +72,6 @@ public class MELDTestIntern {
           .bool()
           .get();
 
-  private static Phenotype creaClean1 =
-      new Phe("creaClean1").expression(Max.of(Exp.of(crea), Exp.of(1))).get();
-
   private static Phenotype biliClean =
       new Phe("biliClean").expression(Max.of(Exp.of(bili), Exp.of(1))).get();
 
@@ -88,18 +85,20 @@ public class MELDTestIntern {
                   Filter.of(
                       Exp.of(dia),
                       Exp.ofConstant("ge"),
-                      PlusDays.of(Exp.ofConstant("now"), Exp.of(-7)),
-                      Exp.ofConstant("le"),
-                      Exp.ofConstant("now"))))
+                      PlusDays.of(Exp.ofConstant("now"), Exp.of(-7)))))
           .get();
 
   private static Phenotype creaClean =
       new Phe("creaClean")
           .expression(
-              If.of(
-                  Or.of(Gt.of(Exp.of(creaClean1), Exp.of(3)), Exp.of(existDia0_7)),
+              Switch.of(
+                  Gt.of(Exp.of(crea), Exp.of(3)),
                   Exp.of(3),
-                  Exp.of(creaClean1)))
+                  Exp.of(existDia0_7),
+                  Exp.of(3),
+                  Lt.of(Exp.of(crea), Exp.of(1)),
+                  Exp.of(1),
+                  Exp.of(crea)))
           .get();
 
   private static Phenotype meld =
@@ -205,7 +204,11 @@ public class MELDTestIntern {
         new Obs("p4inr", pat4).code("http://loinc.org", "6301-6").value(0.3).date("2020-01-01"));
 
     client.add(
-        new Proc("p4dia", pat4)
+        new Proc("p4dia1", pat4)
+            .code("http://fhir.de/CodeSystem/bfarm/ops", "8-853")
+            .date(LocalDateTime.now().minusDays(8)));
+    client.add(
+        new Proc("p4dia2", pat4)
             .code("http://fhir.de/CodeSystem/bfarm/ops", "8-853")
             .date(LocalDateTime.now().minusDays(5)));
 
@@ -278,7 +281,6 @@ public class MELDTestIntern {
                   crea,
                   bili,
                   inr,
-                  creaClean1,
                   creaClean,
                   biliClean,
                   inrClean,
@@ -290,6 +292,7 @@ public class MELDTestIntern {
                   meld2,
                   meld3)
               .pro(meld)
+              .pro(dia)
               .execute();
       System.out.println(rs);
     } catch (InstantiationException e) {
