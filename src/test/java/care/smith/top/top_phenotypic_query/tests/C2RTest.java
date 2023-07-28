@@ -470,6 +470,31 @@ public class C2RTest {
   }
 
   @Test
+  public void testFilter4() {
+    Value v1 = Val.of(5, LocalDateTime.now().minusDays(6));
+    Value v2 = Val.of(10, LocalDateTime.now().minusDays(15));
+    Value v3 = Val.of(15, LocalDateTime.now().minusDays(3));
+    Value v4 = Val.of(8, LocalDateTime.now().minusDays(8));
+
+    Phenotype a = new Phe("a").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, v1);
+    vals.addValue("a", null, v2);
+    vals.addValue("a", null, v3);
+    vals.addValue("a", null, v4);
+
+    Phenotype p = new Phe("p").expression(Filter.of(Exp.of(a), Exp.of(7))).get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(5), BigDecimal.valueOf(15)),
+        Expressions.getNumberValues(c.calculate(p)));
+  }
+
+  @Test
   public void testNot() {
     Expression v1 = Exp.ofFalse();
     Expression v2 = Exp.ofTrue();

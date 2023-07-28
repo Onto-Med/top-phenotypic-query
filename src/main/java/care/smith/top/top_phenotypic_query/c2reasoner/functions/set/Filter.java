@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.set;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class Filter extends FunctionEntity {
   private static Filter INSTANCE = new Filter();
 
   private Filter() {
-    super("filter", NotationEnum.PREFIX, 3, 9);
+    super("filter", NotationEnum.PREFIX, 2, 9);
   }
 
   public static Filter get() {
@@ -46,6 +47,20 @@ public class Filter extends FunctionEntity {
     args = c2r.calculate(args);
     if (args == null) return null;
 
+    Expression phe = args.get(0);
+
+    if (args.size() == 2) {
+      Expression daysExp = args.get(1);
+      Exceptions.checkArgumentTypes(getFunction(), daysExp, DataType.NUMBER);
+      int days = Expressions.getNumberValue(daysExp).intValue();
+      DateTimeRange dr =
+          new DateTimeRange()
+              .limit(
+                  RestrictionOperator.GREATER_THAN_OR_EQUAL_TO,
+                  LocalDateTime.now().minusDays(days));
+      return Exp.of(filterDate(phe.getValues(), Restrictions.getInterval(dr.get())));
+    }
+
     for (int i = 1; i < args.size(); i++) {
       if (i % 2 == 0)
         Exceptions.checkArgumentTypes(
@@ -63,9 +78,9 @@ public class Filter extends FunctionEntity {
       if (Expressions.hasDateTimeType(val)) dr.limit(oper, val);
     }
 
-    List<Value> vals = args.get(0).getValues();
+    List<Value> vals = phe.getValues();
 
-    if (Expressions.hasDateTimeType(args.get(0))) {
+    if (Expressions.hasDateTimeType(phe)) {
       if (dr.isPresent()) vals = filterValue(vals, Restrictions.getInterval(dr.get()));
     } else {
       if (nr.isPresent()) vals = filterValue(vals, Restrictions.getInterval(nr.get()));

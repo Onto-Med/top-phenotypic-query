@@ -17,7 +17,6 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Multi
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Sum;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Gt;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Lt;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusDays;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
@@ -84,14 +83,7 @@ public class MELDTestIntern {
       new Phe("inrClean").expression(Max.of(Exp.of(inr), Exp.of(1))).get();
 
   private static Phenotype existDia0_7 =
-      new Phe("existDia0_7")
-          .expression(
-              Exists.of(
-                  Filter.of(
-                      Exp.of(dia),
-                      Exp.ofConstant("ge"),
-                      PlusDays.of(Exp.ofConstant("now"), Exp.of(-7)))))
-          .get();
+      new Phe("existDia0_7").expression(Exists.of(Filter.of(Exp.of(dia), Exp.of(7)))).get();
 
   private static Phenotype creaClean =
       new Phe("creaClean")
@@ -224,7 +216,7 @@ public class MELDTestIntern {
     client.add(
         new Proc("p4dia2", pat4)
             .code("http://fhir.de/CodeSystem/bfarm/ops", "8-853")
-            .date(LocalDateTime.now().minusDays(5)));
+            .date(LocalDateTime.now().minusDays(6)));
 
     client.add(
         new Obs("p5crea", pat5)
