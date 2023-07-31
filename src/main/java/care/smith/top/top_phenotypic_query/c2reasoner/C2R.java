@@ -77,6 +77,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Li;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.RefValues;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Union;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Vals;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
@@ -167,6 +168,7 @@ public class C2R {
     addFunction(Ln.get());
     addFunction(EncType.get());
     addFunction(EncAge.get());
+    addFunction(RefValues.get());
   }
 
   public MathContext getMathContext() {

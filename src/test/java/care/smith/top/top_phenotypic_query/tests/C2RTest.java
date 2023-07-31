@@ -50,6 +50,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Li;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.RefValues;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Union;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
@@ -471,10 +472,11 @@ public class C2RTest {
 
   @Test
   public void testFilter4() {
-    Value v1 = Val.of(5, LocalDateTime.now().minusDays(6));
-    Value v2 = Val.of(10, LocalDateTime.now().minusDays(15));
-    Value v3 = Val.of(15, LocalDateTime.now().minusDays(3));
-    Value v4 = Val.of(8, LocalDateTime.now().minusDays(8));
+    LocalDateTime now = LocalDateTime.now();
+    Value v1 = Val.of(5, now.minusDays(6));
+    Value v2 = Val.of(10, now.minusDays(15));
+    Value v3 = Val.of(15, now.minusDays(3));
+    Value v4 = Val.of(8, now.minusDays(8));
 
     Phenotype a = new Phe("a").get();
     SubjectPhenotypes vals = new SubjectPhenotypes("1");
@@ -491,6 +493,113 @@ public class C2RTest {
 
     assertEquals(
         List.of(BigDecimal.valueOf(5), BigDecimal.valueOf(15)),
+        Expressions.getNumberValues(c.calculate(p)));
+  }
+
+  @Test
+  public void testRefValues1() {
+    Phenotype a = new Phe("a").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    LocalDateTime now = LocalDateTime.now();
+    vals.addValue("a", null, Val.of(106, now.minusDays(6)));
+    vals.addValue("a", null, Val.of(115, now.minusDays(15)));
+    vals.addValue("a", null, Val.of(109, now.minusDays(9)));
+    vals.addValue("a", null, Val.of(103, now.minusDays(3)));
+    vals.addValue("a", null, Val.of(108, now.minusDays(8)));
+    vals.addValue("a", null, Val.of(101, now.minusDays(1)));
+
+    Phenotype p = new Phe("p").expression(RefValues.of(Exp.of(a), Exp.of(7))).get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(106), BigDecimal.valueOf(103), BigDecimal.valueOf(108)),
+        Expressions.getNumberValues(c.calculate(p)));
+  }
+
+  @Test
+  public void testRefValues2() {
+    Phenotype a = new Phe("a").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    LocalDateTime now = LocalDateTime.now();
+    vals.addValue("a", null, Val.of(106, now.minusDays(6)));
+    vals.addValue("a", null, Val.of(116, now.minusDays(16)));
+    vals.addValue("a", null, Val.of(117, now.minusDays(17)));
+    vals.addValue("a", null, Val.of(109, now.minusDays(9)));
+    vals.addValue("a", null, Val.of(103, now.minusDays(3)));
+    vals.addValue("a", null, Val.of(108, now.minusDays(8)));
+    vals.addValue("a", null, Val.of(101, now.minusDays(1)));
+
+    Phenotype p = new Phe("p").expression(RefValues.of(Exp.of(a), Exp.of(15), Exp.of(7))).get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(116), BigDecimal.valueOf(109)),
+        Expressions.getNumberValues(c.calculate(p)));
+  }
+
+  @Test
+  public void testRefValues3() {
+    Phenotype a = new Phe("a").number().get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    LocalDateTime now = LocalDateTime.now();
+    Value ind = Val.of(103, now.minusDays(3));
+    vals.addValue("a", null, Val.of(106, now.minusDays(6)));
+    vals.addValue("a", null, Val.of(111, now.minusDays(11)));
+    vals.addValue("a", null, Val.of(118, now.minusDays(18)));
+    vals.addValue("a", null, Val.of(119, now.minusDays(19)));
+    vals.addValue("a", null, Val.of(110, now.minusDays(10)));
+    vals.addValue("a", null, ind);
+    vals.addValue("a", null, Val.of(108, now.minusDays(8)));
+    vals.addValue("a", null, Val.of(101, now.minusDays(1)));
+
+    Phenotype p =
+        new Phe("p")
+            .expression(
+                RefValues.of(
+                    Exp.of(ind.putFieldsItem("entityId", Val.of("a"))), Exp.of(15), Exp.of(7)))
+            .get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(111), BigDecimal.valueOf(118)),
+        Expressions.getNumberValues(c.calculate(p)));
+  }
+
+  @Test
+  public void testRefValues4() {
+    Phenotype a = new Phe("a").number().get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    LocalDateTime now = LocalDateTime.now();
+    Value ind = Val.of(103, now.minusDays(3));
+    vals.addValue("a", null, Val.of(106, now.minusDays(6)));
+    vals.addValue("a", null, Val.of(111, now.minusDays(11)));
+    vals.addValue("a", null, Val.of(118, now.minusDays(18)));
+    vals.addValue("a", null, Val.of(119, now.minusDays(19)));
+    vals.addValue("a", null, Val.of(110, now.minusDays(10)));
+    vals.addValue("a", null, ind);
+    vals.addValue("a", null, Val.of(108, now.minusDays(8)));
+    vals.addValue("a", null, Val.of(1031, now.minusDays(3)));
+
+    Phenotype p =
+        new Phe("p")
+            .expression(RefValues.of(Exp.of(ind.putFieldsItem("entityId", Val.of("a"))), Exp.of(7)))
+            .get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(106), BigDecimal.valueOf(110), BigDecimal.valueOf(108)),
         Expressions.getNumberValues(c.calculate(p)));
   }
 

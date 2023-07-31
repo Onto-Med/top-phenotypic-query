@@ -248,4 +248,10 @@ public class Values {
     for (int i = 0; i < fields.length; i += 2) v.putFieldsItem(fields[i], Val.of(fields[i + 1]));
     return v;
   }
+
+  public static Value getField(Value v, String fieldName) {
+    Map<String, Value> fields = v.getFields();
+    if (fields == null) return null;
+    return fields.get(fieldName);
+  }
 }

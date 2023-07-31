@@ -94,7 +94,7 @@ public class Filter extends FunctionEntity {
     return vals.stream().filter(v -> Values.contains(inter, v)).collect(Collectors.toList());
   }
 
-  private List<Value> filterDate(List<Value> vals, Map<RestrictionOperator, Value> inter) {
+  public static List<Value> filterDate(List<Value> vals, Map<RestrictionOperator, Value> inter) {
     return vals.stream()
         .filter(
             v ->
