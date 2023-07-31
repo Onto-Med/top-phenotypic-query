@@ -30,7 +30,10 @@ public class FHIRMedicationTestIntern {
   private static Phenotype age = new Phe("age").itemType(ItemType.SUBJECT_AGE).number().get();
   private static Phenotype old = new Phe("old").restriction(age, Res.ge(60)).get();
   private static Phenotype med =
-      new Phe("med", "http://www.whocc.no/atc", "atc1").itemType(ItemType.MEDICATION).bool().get();
+      new Phe("med", "http://fhir.de/CodeSystem/bfarm/atc", "atc1")
+          .itemType(ItemType.MEDICATION)
+          .bool()
+          .get();
 
   @Test
   void test() {
