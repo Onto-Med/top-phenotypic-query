@@ -125,6 +125,7 @@ public class MELDTestIntern {
     Reference pat5 = client.add(new Pat("p5").birthDate("1951-01-01").gender("male"));
     Reference pat6 = client.add(new Pat("p6").birthDate("1951-01-01").gender("male"));
     Reference pat7 = client.add(new Pat("p7").birthDate("1951-01-01").gender("male"));
+    Reference pat8 = client.add(new Pat("p8").birthDate("1951-01-01").gender("male"));
 
     client.add(
         new Obs("p0crea1", pat0)
@@ -248,13 +249,29 @@ public class MELDTestIntern {
     client.add(
         new Obs("p7inr", pat7).code("http://loinc.org", "6301-6").value(2.3).date("2020-01-01"));
 
+    client.add(
+        new Obs("p8bili", pat8)
+            .code("http://loinc.org", "42719-5")
+            .value(3.2, "mg/dL")
+            .date("2020-01-01"));
+
+    client.add(
+        new Obs("p8inr", pat8).code("http://loinc.org", "6301-6").value(3.3).date("2020-01-01"));
+
+    client.add(
+        new Proc("p8dia", pat8)
+            .code("http://fhir.de/CodeSystem/bfarm/ops", "8-853")
+            .date(LocalDateTime.now().minusDays(6)));
+
     print();
 
     assertEquals(Set.of(pat0.getReference()), search(meld0, null));
     assertEquals(Set.of(pat1.getReference()), search(meld2, null));
     assertEquals(
-        Set.of(pat2.getReference(), pat3.getReference(), pat4.getReference()), search(meld3, null));
-    assertEquals(Set.of(pat2.getReference(), pat4.getReference()), search(meld3, med));
+        Set.of(pat2.getReference(), pat3.getReference(), pat4.getReference(), pat8.getReference()),
+        search(meld3, null));
+    assertEquals(
+        Set.of(pat2.getReference(), pat4.getReference(), pat8.getReference()), search(meld3, med));
   }
 
   private Set<String> search(Phenotype inc, Phenotype exc) throws InstantiationException {
