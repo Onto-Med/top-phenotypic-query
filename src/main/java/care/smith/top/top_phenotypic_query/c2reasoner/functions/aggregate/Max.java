@@ -40,9 +40,8 @@ public class Max extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = Aggregator.calcAndAggrMultipleHaveValues(args, c2r);
+    args = Aggregator.calcAndAggrMultipleHaveValues(getFunction(), DataType.NUMBER, args, c2r);
     if (args == null) return null;
-    Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
     Expression max = null;
     for (Expression arg : args) {
       if (max == null
