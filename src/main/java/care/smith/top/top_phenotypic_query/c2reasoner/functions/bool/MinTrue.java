@@ -41,7 +41,7 @@ public class MinTrue extends FunctionEntity {
     int count = 0;
     for (Expression arg : args.subList(1, args.size())) {
       arg = c2r.calculate(arg);
-      if (arg == null) continue;
+      if (!Expressions.hasValues(arg)) continue;
       arg = Aggregator.aggregate(arg, c2r);
       Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
       if (Expressions.hasValueTrue(arg)) {

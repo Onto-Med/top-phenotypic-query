@@ -43,7 +43,7 @@ public class And extends FunctionEntity {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     for (Expression arg : args) {
       arg = c2r.calculate(arg);
-      if (arg == null) return Exp.ofFalse();
+      if (!Expressions.hasValues(arg)) return Exp.ofFalse();
       arg = Aggregator.aggregate(arg, c2r);
       Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
       if (Expressions.hasValueFalse(arg)) return arg;

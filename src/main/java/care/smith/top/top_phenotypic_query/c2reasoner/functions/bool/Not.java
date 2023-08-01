@@ -41,7 +41,7 @@ public class Not extends FunctionEntity {
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     Expression arg = c2r.calculate(args.get(0));
-    if (arg == null) return Exp.ofTrue();
+    if (!Expressions.hasValues(arg)) return Exp.ofTrue();
     arg = Aggregator.aggregate(arg, c2r);
     Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
     if (Expressions.hasValueTrue(arg)) return Exp.ofFalse();

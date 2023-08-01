@@ -43,7 +43,7 @@ public class Or extends FunctionEntity {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     for (Expression arg : args) {
       arg = c2r.calculate(arg);
-      if (arg == null) continue;
+      if (!Expressions.hasValues(arg)) continue;
       arg = Aggregator.aggregate(arg, c2r);
       Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
       if (Expressions.hasValueTrue(arg)) return arg;
