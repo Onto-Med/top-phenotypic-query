@@ -53,6 +53,11 @@ public class Aggregator {
   }
 
   public static List<Expression> calcAndAggrMultipleHaveValues(
+      ExpressionFunction f, List<Expression> args, C2R c2r) {
+    return calcAndAggrMultipleHaveValues(f, null, args, c2r);
+  }
+
+  public static List<Expression> calcAndAggrMultipleHaveValues(
       ExpressionFunction f, DataType dt, List<Expression> args, C2R c2r) {
     if (args.size() == 1) {
       Expression arg = args.get(0);

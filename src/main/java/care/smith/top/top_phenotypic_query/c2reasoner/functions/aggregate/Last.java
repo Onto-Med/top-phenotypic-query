@@ -40,9 +40,8 @@ public class Last extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args);
+    args = Aggregator.calcAndAggrMultipleHaveValues(getFunction(), args, c2r);
     if (args == null) return null;
-    args = Aggregator.aggregateIfMultiple(args, c2r);
     args = args.stream().sorted(Values.EXP_DATE_COMPARATOR).collect(Collectors.toList());
     return args.get(args.size() - 1);
   }

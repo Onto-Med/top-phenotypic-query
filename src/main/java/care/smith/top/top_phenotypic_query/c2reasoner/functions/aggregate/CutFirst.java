@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
@@ -42,15 +41,13 @@ public class CutFirst extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args);
+    args = Aggregator.calcAndAggrMultipleHaveValues(getFunction(), args, c2r);
     if (args == null) return null;
-    args = Aggregator.aggregateIfMultiple(args, c2r);
-    List<Value> vals =
+    return Exp.of(
         args.stream()
             .sorted(Values.EXP_DATE_COMPARATOR)
             .skip(1)
             .map(e -> Expressions.getValue(e))
-            .collect(Collectors.toList());
-    return Exp.of(vals);
+            .collect(Collectors.toList()));
   }
 }
