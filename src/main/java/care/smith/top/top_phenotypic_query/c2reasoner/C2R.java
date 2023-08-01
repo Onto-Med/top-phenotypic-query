@@ -30,6 +30,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.constants.Pi;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.Today;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.True;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.ForEach;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
@@ -82,6 +83,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Union;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Vals;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Entities;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
@@ -169,6 +171,7 @@ public class C2R {
     addFunction(EncType.get());
     addFunction(EncAge.get());
     addFunction(RefValues.get());
+    addFunction(ForEach.get());
   }
 
   public MathContext getMathContext() {
@@ -315,6 +318,13 @@ public class C2R {
       calculated.add(res);
     }
     return calculated;
+  }
+
+  public List<Expression> calculateHaveValues(List<Expression> args) {
+    return args.stream()
+        .map(a -> calculate(a))
+        .filter(a -> Expressions.hasValues(a))
+        .collect(Collectors.toList());
   }
 
   public String toString(Expression exp) {

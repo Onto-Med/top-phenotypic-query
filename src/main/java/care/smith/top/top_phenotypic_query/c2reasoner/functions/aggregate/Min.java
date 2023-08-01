@@ -40,10 +40,9 @@ public class Min extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args);
+    args = Aggregator.calcAndAggrMultipleHaveValues(args, c2r);
     if (args == null) return null;
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
-    args = Aggregator.aggregateIfMultiple(args, c2r);
     Expression min = null;
     for (Expression arg : args) {
       if (min == null

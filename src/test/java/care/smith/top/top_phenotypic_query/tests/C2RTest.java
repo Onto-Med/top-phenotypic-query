@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -562,7 +563,9 @@ public class C2RTest {
         new Phe("p")
             .expression(
                 RefValues.of(
-                    Exp.of(ind.putFieldsItem("entityId", Val.of("a"))), Exp.of(15), Exp.of(7)))
+                    Exp.of(Val.of(ind).putFieldsItem("entityId", Val.of("a"))),
+                    Exp.of(15),
+                    Exp.of(7)))
             .get();
 
     Entities phens = Entities.of(p, a);
@@ -591,7 +594,8 @@ public class C2RTest {
 
     Phenotype p =
         new Phe("p")
-            .expression(RefValues.of(Exp.of(ind.putFieldsItem("entityId", Val.of("a"))), Exp.of(7)))
+            .expression(
+                RefValues.of(Exp.of(Val.of(ind).putFieldsItem("entityId", Val.of("a"))), Exp.of(7)))
             .get();
 
     Entities phens = Entities.of(p, a);
@@ -826,9 +830,33 @@ public class C2RTest {
   }
 
   @Test
-  public void testMin() {
+  public void testMin1() {
     C2R c = new C2R();
     Expression e = Min.of(Exp.of(5), Exp.of(3), Exp.of(10));
+    assertEquals(
+        new BigDecimal("3.00"),
+        Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
+  }
+
+  @Test
+  public void testMin2() {
+    C2R c = new C2R();
+    Expression e = Min.of(Exp.of(5, 3, 10));
+    assertEquals(
+        new BigDecimal("3.00"),
+        Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
+  }
+
+  @Test
+  public void testMin3() {
+    C2R c = new C2R();
+    List<Expression> args = new ArrayList<>();
+    args.add(Exp.of(5));
+    args.add(Exp.of(3));
+    args.add(Exp.of(10));
+    args.add(new Expression().values(new ArrayList<>()));
+    args.add(null);
+    Expression e = Min.of(args);
     assertEquals(
         new BigDecimal("3.00"),
         Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));

@@ -49,6 +49,19 @@ public class Aggregator {
     return Exp.toList(args.get(0).getValues());
   }
 
+  public static List<Expression> calcAndAggrMultipleHaveValues(List<Expression> args, C2R c2r) {
+    if (args.size() == 1) {
+      Expression arg = args.get(0);
+      arg = c2r.calculate(arg);
+      if (!Expressions.hasValues(arg)) return null;
+      return Exp.toList(arg.getValues());
+    } else {
+      args = c2r.calculateHaveValues(args);
+      if (args.isEmpty()) return null;
+      return aggregate(args, c2r);
+    }
+  }
+
   private static boolean containsMultipleValues(List<Expression> args) {
     for (Expression arg : args) if (hasMultipleValues(arg)) return true;
     return false;

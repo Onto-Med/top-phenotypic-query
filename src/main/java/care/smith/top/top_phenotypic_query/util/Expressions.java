@@ -16,11 +16,11 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
 public class Expressions {
 
   public static boolean hasValues(Expression exp) {
-    return exp.getValues() != null && !exp.getValues().isEmpty();
+    return exp != null && exp.getValues() != null && !exp.getValues().isEmpty();
   }
 
   public static boolean hasSingleValue(Expression exp) {
-    return exp.getValues() != null && exp.getValues().size() == 1;
+    return exp != null && exp.getValues() != null && exp.getValues().size() == 1;
   }
 
   public static Value getValue(Expression exp) {

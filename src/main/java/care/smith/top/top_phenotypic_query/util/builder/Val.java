@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import care.smith.top.model.BooleanValue;
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeValue;
@@ -159,5 +164,15 @@ public class Val {
 
   public static List<Value> of(Number... nums) {
     return Stream.of(nums).map(n -> of(n)).collect(Collectors.toList());
+  }
+
+  public static Value of(Value v) {
+    ObjectMapper om = JsonMapper.builder().addModule(new JavaTimeModule()).build();
+    try {
+      return om.readValue(om.writeValueAsString(v), Value.class);
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 }
