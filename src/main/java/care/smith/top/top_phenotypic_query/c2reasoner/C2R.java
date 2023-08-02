@@ -344,7 +344,8 @@ public class C2R {
       return getConstant(exp.getConstantId()).getConstant().getTitle();
     if (exp.getValues() != null) return Values.toString(exp.getValues());
     if (exp.getRestriction() != null) return Restrictions.toString(exp.getRestriction());
-    return functionToString(exp);
+    if (exp.getFunctionId() != null) return functionToString(exp);
+    return "empty";
   }
 
   private String functionToString(Expression exp) {

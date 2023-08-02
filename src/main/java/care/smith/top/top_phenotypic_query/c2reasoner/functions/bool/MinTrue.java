@@ -40,10 +40,7 @@ public class MinTrue extends FunctionEntity {
     int min = Expressions.getNumberValue(args.get(0)).intValue();
     int count = 0;
     for (Expression arg : args.subList(1, args.size())) {
-      arg = c2r.calculate(arg);
-      if (!Expressions.hasValues(arg)) continue;
-      arg = Aggregator.aggregate(arg, c2r);
-      Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
+      arg = Aggregator.calcAndAggr(getFunction(), DataType.BOOLEAN, arg, c2r);
       if (Expressions.hasValueTrue(arg)) {
         count++;
         if (count >= min) return Exp.ofTrue();

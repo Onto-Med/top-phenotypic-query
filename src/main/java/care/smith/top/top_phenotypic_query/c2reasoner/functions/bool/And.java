@@ -19,7 +19,7 @@ public class And extends FunctionEntity {
 
   private And() {
     super("and", NotationEnum.PREFIX);
-    minArgumentNumber(2);
+    minArgumentNumber(1);
   }
 
   public static And get() {
@@ -41,13 +41,17 @@ public class And extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    for (Expression arg : args) {
-      arg = c2r.calculate(arg);
-      if (!Expressions.hasValues(arg)) return Exp.ofFalse();
-      arg = Aggregator.aggregate(arg, c2r);
-      Exceptions.checkArgumentHasValueOfType(getFunction(), DataType.BOOLEAN, arg);
-      if (Expressions.hasValueFalse(arg)) return arg;
+    if (args.size() == 1) {
+      args = Aggregator.calcToList(getFunction(), DataType.BOOLEAN, args.get(0), c2r);
+      if (args == null) return Exp.ofFalse();
+      for (Expression arg : args) if (!Expressions.hasValueTrue(arg)) return Exp.ofFalse();
+      return Exp.ofTrue();
+    } else {
+      for (Expression arg : args) {
+        arg = Aggregator.calcAndAggr(getFunction(), DataType.BOOLEAN, arg, c2r);
+        if (!Expressions.hasValueTrue(arg)) return Exp.ofFalse();
+      }
+      return Exp.ofTrue();
     }
-    return Exp.ofTrue();
   }
 }

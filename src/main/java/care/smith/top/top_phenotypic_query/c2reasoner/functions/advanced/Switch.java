@@ -9,6 +9,7 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
@@ -47,15 +48,10 @@ public class Switch extends FunctionEntity {
   private Expression calculate(
       List<Expression> args, int lastValueNum, Expression defaultValue, C2R c2r) {
     for (int i = 0; i < lastValueNum; i += 2) {
-      Expression cond = c2r.calculate(args.get(i));
-      if (!Expressions.hasValues(cond)) continue;
-      Exceptions.checkArgumentType(getFunction(), DataType.BOOLEAN, cond);
-      if (Expressions.getBooleanValue(cond)) return c2r.calculate(args.get(i + 1));
+      Expression cond = Aggregator.calcAndAggr(getFunction(), DataType.BOOLEAN, args.get(i), c2r);
+      if (Expressions.hasValueTrue(cond)) return c2r.calculate(args.get(i + 1));
     }
-    if (defaultValue != null) {
-      defaultValue = c2r.calculate(defaultValue);
-      if (defaultValue != null) return defaultValue;
-    }
+    if (defaultValue != null) return c2r.calculate(defaultValue);
     return null;
   }
 }

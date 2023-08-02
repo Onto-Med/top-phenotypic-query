@@ -611,6 +611,7 @@ public class C2RTest {
   public void testNot() {
     Expression v1 = Exp.ofFalse();
     Expression v2 = Exp.ofTrue();
+    Expression v3 = null;
 
     C2R c = new C2R();
     Expression e = Not.of(v1);
@@ -618,10 +619,16 @@ public class C2RTest {
 
     e = Not.of(v2);
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
+
+    e = Not.of(v3);
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e = Not.of(new Expression());
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
   }
 
   @Test
-  public void testOr() {
+  public void testOr1() {
     Expression v1 = Exp.ofFalse();
     Expression v2 = Exp.ofTrue();
     Expression v3 = Exp.ofFalse();
@@ -635,7 +642,45 @@ public class C2RTest {
   }
 
   @Test
-  public void testAnd() {
+  public void testOr2() {
+    C2R c = new C2R();
+    Expression e = Or.of(Exp.of(List.of(Val.ofFalse(), Val.ofTrue(), Val.ofFalse())));
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e = Or.of(Exp.of(List.of(Val.ofFalse(), Val.ofFalse(), Val.ofFalse())));
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+  }
+
+  @Test
+  public void testOr3() {
+    C2R c = new C2R();
+    List<Expression> args = new ArrayList<>();
+    args.add(null);
+    args.add(Exp.ofTrue());
+    args.add(null);
+    Expression e = Or.of(args);
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    args = new ArrayList<>();
+    args.add(null);
+    args.add(null);
+    args.add(null);
+    e = Or.of(args);
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+  }
+
+  @Test
+  public void testOr4() {
+    C2R c = new C2R();
+    Expression e = Or.of(new Expression());
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+
+    e = Or.of(new Expression(), Exp.ofTrue());
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+  }
+
+  @Test
+  public void testAnd1() {
     Expression v1 = Exp.ofTrue();
     Expression v2 = Exp.ofFalse();
     Expression v3 = Exp.ofTrue();
@@ -649,7 +694,44 @@ public class C2RTest {
   }
 
   @Test
-  public void testMinTrue() {
+  public void testAnd2() {
+    C2R c = new C2R();
+    Expression e = And.of(Exp.of(List.of(Val.ofTrue(), Val.ofFalse(), Val.ofTrue())));
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+
+    e = And.of(Exp.of(List.of(Val.ofTrue(), Val.ofTrue(), Val.ofTrue())));
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+  }
+
+  @Test
+  public void testAnd3() {
+    C2R c = new C2R();
+    List<Expression> args = new ArrayList<>();
+    args.add(null);
+    args.add(Exp.ofTrue());
+    Expression e = And.of(args);
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+
+    args = new ArrayList<>();
+    args.add(null);
+    args.add(null);
+    args.add(null);
+    e = And.of(args);
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+  }
+
+  @Test
+  public void testAnd4() {
+    C2R c = new C2R();
+    Expression e = And.of(new Expression());
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+
+    e = And.of(new Expression(), Exp.ofTrue());
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+  }
+
+  @Test
+  public void testMinTrue1() {
     Expression minTrue = Exp.of(2);
     Expression v1 = Exp.ofTrue();
     Expression v2 = Exp.ofFalse();
@@ -660,6 +742,23 @@ public class C2RTest {
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
 
     e = MinTrue.of(minTrue, v1, v2, v3);
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+  }
+
+  @Test
+  public void testMinTrue2() {
+    List<Expression> args = new ArrayList<>();
+    args.add(Exp.of(2));
+    args.add(Exp.ofTrue());
+    args.add(Exp.ofFalse());
+    args.add(null);
+
+    C2R c = new C2R();
+    Expression e = MinTrue.of(args);
+    assertFalse(Expressions.hasValueTrue(c.calculate(e)));
+
+    args.add(Exp.ofTrue());
+    e = MinTrue.of(args);
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
   }
 

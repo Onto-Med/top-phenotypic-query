@@ -68,11 +68,11 @@ public class Aggregator {
 
   public static List<Expression> calcAndAggrIfMultipleHaveValues(
       ExpressionFunction f, DataType dt, List<Expression> args, C2R c2r) {
-    if (args.size() == 1) return calcAndAggrSingle(f, dt, args.get(0), c2r);
+    if (args.size() == 1) return calcToList(f, dt, args.get(0), c2r);
     else {
       args = c2r.calculateHaveValues(args);
       if (args.isEmpty()) return null;
-      return calcAndAggrMultiple(f, dt, args, c2r);
+      return calcAndAggr(f, dt, args, c2r);
     }
   }
 
@@ -83,15 +83,15 @@ public class Aggregator {
 
   public static List<Expression> calcAndAggrIfMultipleCheckHaveValues(
       ExpressionFunction f, DataType dt, List<Expression> args, C2R c2r) {
-    if (args.size() == 1) return calcAndAggrSingle(f, dt, args.get(0), c2r);
+    if (args.size() == 1) return calcToList(f, dt, args.get(0), c2r);
     else {
       args = c2r.calculateCheckHaveValues(args);
       if (args == null) return null;
-      return calcAndAggrMultiple(f, dt, args, c2r);
+      return calcAndAggr(f, dt, args, c2r);
     }
   }
 
-  private static List<Expression> calcAndAggrSingle(
+  public static List<Expression> calcToList(
       ExpressionFunction f, DataType dt, Expression arg, C2R c2r) {
     arg = c2r.calculate(arg);
     if (!Expressions.hasValues(arg)) return null;
@@ -99,7 +99,14 @@ public class Aggregator {
     return Exp.toList(arg.getValues());
   }
 
-  private static List<Expression> calcAndAggrMultiple(
+  public static Expression calcAndAggr(ExpressionFunction f, DataType dt, Expression arg, C2R c2r) {
+    arg = c2r.calculate(arg);
+    if (!Expressions.hasValues(arg)) return null;
+    if (dt != null) Exceptions.checkArgumentType(f, dt, arg);
+    return aggregate(arg, c2r);
+  }
+
+  private static List<Expression> calcAndAggr(
       ExpressionFunction f, DataType dt, List<Expression> args, C2R c2r) {
     if (dt != null) Exceptions.checkArgumentsType(f, dt, args);
     return aggregate(args, c2r);
