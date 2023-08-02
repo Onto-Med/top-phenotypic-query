@@ -40,7 +40,7 @@ public class First extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = Aggregator.calcAndAggrIfMultiple(getFunction(), args, c2r);
+    args = Aggregator.calcAndAggrIfMultipleHaveValues(getFunction(), args, c2r);
     if (args == null) return null;
     args = args.stream().sorted(Values.EXP_DATE_COMPARATOR).collect(Collectors.toList());
     return args.get(0);

@@ -41,7 +41,7 @@ public class Median extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = Aggregator.calcAndAggrIfMultiple(getFunction(), DataType.NUMBER, args, c2r);
+    args = Aggregator.calcAndAggrIfMultipleHaveValues(getFunction(), DataType.NUMBER, args, c2r);
     if (args == null) return null;
     args = args.stream().sorted(Values.VALUE_COMPARATOR).collect(Collectors.toList());
     int size = args.size();

@@ -35,8 +35,6 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Count;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutFirst;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutLast;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Last;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
@@ -73,6 +71,8 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.Starts
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.TimeDistance;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncType;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.CutFirst;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.CutLast;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Empty;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
