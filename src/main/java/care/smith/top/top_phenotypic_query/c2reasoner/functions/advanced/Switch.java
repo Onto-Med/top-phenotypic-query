@@ -48,7 +48,7 @@ public class Switch extends FunctionEntity {
       List<Expression> args, int lastValueNum, Expression defaultValue, C2R c2r) {
     for (int i = 0; i < lastValueNum; i += 2) {
       Expression cond = c2r.calculate(args.get(i));
-      if (cond == null) continue;
+      if (!Expressions.hasValues(cond)) continue;
       Exceptions.checkArgumentType(getFunction(), DataType.BOOLEAN, cond);
       if (Expressions.getBooleanValue(cond)) return c2r.calculate(args.get(i + 1));
     }

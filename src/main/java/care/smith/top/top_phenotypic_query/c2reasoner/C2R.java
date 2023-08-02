@@ -320,6 +320,16 @@ public class C2R {
     return calculated;
   }
 
+  public List<Expression> calculateCheckHaveValues(List<Expression> args) {
+    List<Expression> calculated = new ArrayList<>();
+    for (Expression arg : args) {
+      Expression res = calculate(arg);
+      if (!Expressions.hasValues(res)) return null;
+      calculated.add(res);
+    }
+    return calculated;
+  }
+
   public List<Expression> calculateHaveValues(List<Expression> args) {
     return args.stream()
         .map(a -> calculate(a))

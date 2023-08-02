@@ -41,7 +41,7 @@ public class CutFirst extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = Aggregator.calcAndAggrMultipleHaveValues(getFunction(), args, c2r);
+    args = Aggregator.calcAndAggrIfMultiple(getFunction(), args, c2r);
     if (args == null) return null;
     return Exp.of(
         args.stream()

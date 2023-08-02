@@ -52,12 +52,12 @@ public class Aggregator {
     return Exp.toList(args.get(0).getValues());
   }
 
-  public static List<Expression> calcAndAggrMultipleHaveValues(
+  public static List<Expression> calcAndAggrIfMultiple(
       ExpressionFunction f, List<Expression> args, C2R c2r) {
-    return calcAndAggrMultipleHaveValues(f, null, args, c2r);
+    return calcAndAggrIfMultiple(f, null, args, c2r);
   }
 
-  public static List<Expression> calcAndAggrMultipleHaveValues(
+  public static List<Expression> calcAndAggrIfMultiple(
       ExpressionFunction f, DataType dt, List<Expression> args, C2R c2r) {
     if (args.size() == 1) {
       Expression arg = args.get(0);

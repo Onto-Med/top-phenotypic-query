@@ -41,7 +41,7 @@ public class Subtract extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args);
+    args = c2r.calculateCheckHaveValues(args);
     if (args == null) return null;
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
     args = Aggregator.aggregate(args, c2r);

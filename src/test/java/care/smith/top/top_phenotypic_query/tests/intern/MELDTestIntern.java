@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Ln;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Multiply;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Sum;
@@ -77,10 +77,14 @@ public class MELDTestIntern {
           .get();
 
   private static Phenotype biliClean =
-      new Phe("biliClean").expression(Max.of(Exp.of(bili), Exp.of(1))).get();
+      new Phe("biliClean")
+          .expression(If.of(Lt.of(Exp.of(bili), Exp.of(1)), Exp.of(1), Exp.of(bili)))
+          .get();
 
   private static Phenotype inrClean =
-      new Phe("inrClean").expression(Max.of(Exp.of(inr), Exp.of(1))).get();
+      new Phe("inrClean")
+          .expression(If.of(Lt.of(Exp.of(inr), Exp.of(1)), Exp.of(1), Exp.of(inr)))
+          .get();
 
   private static Phenotype existDia0_7 =
       new Phe("existDia0_7").expression(Exists.of(Filter.of(Exp.of(dia), Exp.of(7)))).get();
@@ -263,8 +267,6 @@ public class MELDTestIntern {
             .code("http://fhir.de/CodeSystem/bfarm/ops", "8-853")
             .date(LocalDateTime.now().minusDays(6)));
 
-    print();
-
     assertEquals(Set.of(pat0.getReference()), search(meld0, null));
     assertEquals(Set.of(pat1.getReference()), search(meld2, null));
     assertEquals(
@@ -296,7 +298,10 @@ public class MELDTestIntern {
 
     if (exc != null) q.exc(exc);
 
-    return q.execute().getSubjectIds();
+    ResultSet rs = q.execute();
+    //    System.out.println(rs);
+
+    return rs.getSubjectIds();
   }
 
   private void print() throws InstantiationException {

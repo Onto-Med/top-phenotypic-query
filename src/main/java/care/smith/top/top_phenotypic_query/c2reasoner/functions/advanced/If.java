@@ -2,6 +2,7 @@ package care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced;
 
 import java.util.List;
 
+import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
@@ -38,7 +39,11 @@ public class If extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    if (Expressions.getBooleanValue(c2r.calculate(args.get(0)))) return c2r.calculate(args.get(1));
+    Expression cond = c2r.calculate(args.get(0));
+    if (Expressions.hasValues(cond)) {
+      Exceptions.checkArgumentType(getFunction(), DataType.BOOLEAN, cond);
+      if (Expressions.getBooleanValue(cond)) return c2r.calculate(args.get(1));
+    }
     return c2r.calculate(args.get(2));
   }
 }
