@@ -44,7 +44,7 @@ public class EncType extends FunctionEntity {
     Exceptions.checkArgumentsNumber(getFunction(), args);
 
     Expression phe = c2r.calculate(args.get(0));
-    if (phe == null || !Expressions.hasValues(phe)) return Exp.ofFalse();
+    if (!Expressions.hasValues(phe)) return Exp.ofFalse();
 
     for (int i = 1; i < args.size(); i++) {
       Expression enc = args.get(i);
