@@ -36,7 +36,7 @@ public class Avg extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = Aggregator.calcAndAggrIfMultipleHaveValues(getFunction(), DataType.NUMBER, args, c2r);
+    args = Aggregator.calcAndAggrCheckMultipleHaveValues(getFunction(), DataType.NUMBER, args, c2r);
     if (args == null) return null;
     BigDecimal avg = BigDecimal.ZERO;
     for (Expression arg : args)

@@ -320,7 +320,7 @@ public class C2R {
     return calculated;
   }
 
-  public List<Expression> calculateCheckHaveValues(List<Expression> args) {
+  public List<Expression> calculateCheckValues(List<Expression> args) {
     List<Expression> calculated = new ArrayList<>();
     for (Expression arg : args) {
       Expression res = calculate(arg);

@@ -38,7 +38,7 @@ public class Sum extends FunctionEntity {
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args =
-        Aggregator.calcAndAggrIfMultipleCheckHaveValues(getFunction(), DataType.NUMBER, args, c2r);
+        Aggregator.calcAndAggrCheckMultipleCheckValues(getFunction(), DataType.NUMBER, args, c2r);
     if (args == null) return null;
     BigDecimal result = BigDecimal.ZERO;
     for (Expression arg : args)
