@@ -44,7 +44,7 @@ public class Filter extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args);
+    args = c2r.calculateCheckValues(args);
     if (args == null) return null;
 
     Expression phe = args.get(0);

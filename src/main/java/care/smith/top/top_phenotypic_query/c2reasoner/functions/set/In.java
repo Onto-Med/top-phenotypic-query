@@ -45,13 +45,16 @@ public class In extends FunctionEntity {
     if (args == null) return Exp.ofFalse();
     Exceptions.checkArgumentsHaveSameType(getFunction(), args);
 
-    if (args.get(1).getValues() != null) {
-      Expression val = Aggregator.aggregate(args.get(0), c2r);
-      return Exp.of(Values.contains(args.get(1).getValues(), Expressions.getValue(val)));
+    Expression phe = args.get(0);
+    Expression res = args.get(1);
+
+    if (res.getValues() != null) {
+      Expression val = Aggregator.aggregate(phe, c2r);
+      return Exp.of(Values.contains(res.getValues(), Expressions.getValue(val)));
     }
 
-    Restriction r = args.get(1).getRestriction();
-    List<Value> vals = args.get(0).getValues();
+    Restriction r = res.getRestriction();
+    List<Value> vals = phe.getValues();
     if (Restrictions.hasInterval(r))
       return calculateInInterval(
           vals, Restrictions.getInterval(r), r.getQuantifier(), r.getCardinality());

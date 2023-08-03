@@ -39,6 +39,6 @@ public class Empty extends FunctionEntity {
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     Expression arg = c2r.calculate(args.get(0));
-    return Exp.of(arg == null || !Expressions.hasValues(arg));
+    return Exp.of(!Expressions.hasValues(arg));
   }
 }

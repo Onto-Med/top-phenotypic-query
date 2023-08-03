@@ -40,11 +40,10 @@ public class Union extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
+    args = c2r.calculateHaveValues(args);
+    if (args.isEmpty()) return null;
     List<Value> vals = new ArrayList<>();
-    for (Expression arg : args) {
-      arg = c2r.calculate(arg);
-      if (arg != null && arg.getValues() != null) vals.addAll(arg.getValues());
-    }
+    for (Expression arg : args) vals.addAll(arg.getValues());
     return Exp.of(vals);
   }
 }
