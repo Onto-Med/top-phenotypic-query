@@ -40,10 +40,8 @@ public class Ln extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    Expression arg = c2r.calculate(args.get(0));
-    if (!Expressions.hasValues(arg)) return null;
-    Exceptions.checkArgumentType(getFunction(), DataType.NUMBER, arg);
-    arg = Aggregator.aggregate(arg, c2r);
+    Expression arg = Aggregator.calcAndAggr(getFunction(), DataType.NUMBER, args.get(0), c2r);
+    if (arg == null) return null;
     double val = Expressions.getNumberValue(arg).doubleValue();
     return Exp.of(Math.log(val));
   }

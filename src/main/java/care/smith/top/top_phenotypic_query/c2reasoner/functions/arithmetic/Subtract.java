@@ -41,10 +41,8 @@ public class Subtract extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculateCheckValues(args);
+    args = Aggregator.calcAndAggrCheckValues(getFunction(), DataType.NUMBER, args, c2r);
     if (args == null) return null;
-    Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
-    args = Aggregator.aggregate(args, c2r);
     BigDecimal arg1 = Expressions.getNumberValue(args.get(0));
     BigDecimal arg2 = Expressions.getNumberValue(args.get(1));
     BigDecimal sub = arg1.subtract(arg2, c2r.getMathContext());
