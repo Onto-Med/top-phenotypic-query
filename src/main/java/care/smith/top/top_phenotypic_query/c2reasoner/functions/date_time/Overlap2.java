@@ -38,9 +38,9 @@ public class Overlap2 extends FunctionEntity {
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     Expression arg1 = c2r.calculate(args.get(0));
-    if (arg1 == null) return null;
+    if (!Expressions.hasValues(arg1)) return null;
     Expression arg2 = c2r.calculate(args.get(1));
-    if (arg2 == null) return null;
+    if (!Expressions.hasValues(arg2)) return null;
 
     Value v1 = Expressions.getValue(Aggregator.aggregate(arg1, c2r));
     Value v2 = Expressions.getValue(Aggregator.aggregate(arg2, c2r));

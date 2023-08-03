@@ -42,8 +42,8 @@ public class TimeDistance extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args);
-    if (args == null) return Exp.ofFalse();
+    args = c2r.calculateCheckValues(args);
+    if (args == null) return null;
     List<Value> vals = args.get(0).getValues();
     if (vals.size() < 2) return Exp.ofFalse();
     vals = vals.stream().sorted(Values.VALUE_DATE_COMPARATOR).collect(Collectors.toList());

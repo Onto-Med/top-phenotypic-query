@@ -37,7 +37,7 @@ public class Date extends FunctionEntity {
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     Expression arg = c2r.calculate(args.get(0));
-    if (arg == null) return null;
+    if (!Expressions.hasValues(arg)) return null;
     arg = Aggregator.aggregate(arg, c2r);
     LocalDateTime dateTime = Values.getDateTime(Expressions.getValue(arg));
     if (dateTime == null) return null;
