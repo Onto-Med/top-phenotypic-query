@@ -35,7 +35,7 @@ public class Ne extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args);
+    args = c2r.calculateCheckValues(args);
     if (args == null) return null;
     Exceptions.checkArgumentsHaveSameType(getFunction(), args);
     args = Aggregator.aggregate(args, c2r);
