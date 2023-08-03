@@ -51,7 +51,6 @@ public class Switch extends FunctionEntity {
       Expression cond = Aggregator.calcAndAggr(getFunction(), DataType.BOOLEAN, args.get(i), c2r);
       if (Expressions.hasValueTrue(cond)) return c2r.calculate(args.get(i + 1));
     }
-    if (defaultValue != null) return c2r.calculate(defaultValue);
-    return null;
+    return c2r.calculate(defaultValue);
   }
 }

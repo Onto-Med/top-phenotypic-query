@@ -46,8 +46,10 @@ public class ForEach extends FunctionEntity {
     Expression phe = args.get(0);
     Expression exp = args.get(1);
 
-    if (phe.getEntityId() == null || (exp.getEntityId() == null && exp.getFunctionId() == null))
-      return null;
+    if (phe == null
+        || exp == null
+        || phe.getEntityId() == null
+        || (exp.getEntityId() == null && exp.getFunctionId() == null)) return null;
 
     List<Value> vals = c2r.getValues(phe.getEntityId());
     if (vals == null || vals.isEmpty()) return null;
