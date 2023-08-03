@@ -72,9 +72,12 @@ public class Aggregator {
     else return calcAndAggrHaveValues(f, dt, args, c2r);
   }
 
-  public static List<Expression> calcAndAggrCheckMultipleCheckValues(
-      ExpressionFunction f, List<Expression> args, C2R c2r) {
-    return calcAndAggrCheckMultipleCheckValues(f, null, args, c2r);
+  public static List<Expression> calcAndAggrHaveValues(
+      ExpressionFunction f, DataType dt, List<Expression> args, C2R c2r) {
+    args = c2r.calculateHaveValues(args);
+    if (args.isEmpty()) return null;
+    if (dt != null) Exceptions.checkArgumentsType(f, dt, args);
+    return aggregate(args, c2r);
   }
 
   public static List<Expression> calcAndAggrCheckMultipleCheckValues(
@@ -83,23 +86,11 @@ public class Aggregator {
     else return calcAndAggrCheckValues(f, dt, args, c2r);
   }
 
-  public static List<Expression> calcAndAggrHaveValues(
-      ExpressionFunction f, DataType dt, List<Expression> args, C2R c2r) {
-    args = c2r.calculateHaveValues(args);
-    if (args.isEmpty()) return null;
-    return checkTypeAndAggr(f, dt, args, c2r);
-  }
-
   public static List<Expression> calcAndAggrCheckValues(
       ExpressionFunction f, DataType dt, List<Expression> args, C2R c2r) {
     args = c2r.calculateCheckValues(args);
     if (args == null) return null;
-    return checkTypeAndAggr(f, dt, args, c2r);
-  }
-
-  private static List<Expression> checkTypeAndAggr(
-      ExpressionFunction f, DataType dt, List<Expression> args, C2R c2r) {
-    if (dt != null) Exceptions.checkArgumentsType(f, dt, args);
+    Exceptions.checkArgumentsType(f, dt, args);
     return aggregate(args, c2r);
   }
 

@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.tests.intern;
+package care.smith.top.top_phenotypic_query.tests.intern.run;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
