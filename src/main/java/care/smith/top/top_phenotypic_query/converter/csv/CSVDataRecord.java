@@ -14,7 +14,9 @@ public class CSVDataRecord extends CSVRecord {
       List.of(
           "subject",
           "phenotype",
-          "timestamp",
+          "date_time",
+          "start_date_time",
+          "end_date_time",
           "number_value",
           "string_value",
           "date_time_value",
@@ -33,6 +35,12 @@ public class CSVDataRecord extends CSVRecord {
   private void addValueTimestamp(Value val) {
     if (val == null || val.getDateTime() == null) add("");
     else add(DateUtil.format(val.getDateTime()));
+
+    if (val == null || val.getStartDateTime() == null) add("");
+    else add(DateUtil.format(val.getStartDateTime()));
+
+    if (val == null || val.getEndDateTime() == null) add("");
+    else add(DateUtil.format(val.getEndDateTime()));
   }
 
   private void addNumberValue(Value val) {
