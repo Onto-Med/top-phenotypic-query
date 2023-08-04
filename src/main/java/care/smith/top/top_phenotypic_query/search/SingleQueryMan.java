@@ -91,7 +91,7 @@ public class SingleQueryMan {
 
     main = executeSingleVariables(main, true);
 
-    log.debug(main.toString());
+    //    log.debug(main.toString());
 
     return main;
   }
@@ -113,7 +113,7 @@ public class SingleQueryMan {
 
     main = executeSingleVariables(main, true);
 
-    log.debug(main.toString());
+    //    log.debug(main.toString());
 
     return main;
   }
@@ -134,7 +134,7 @@ public class SingleQueryMan {
 
     main = executeSubjectVariables(main, true);
 
-    log.debug(main.toString());
+    //    log.debug(main.toString());
 
     return main;
   }
@@ -152,7 +152,7 @@ public class SingleQueryMan {
     main = executeSubjectExclusions(main);
     if (main.isEmpty()) return main;
 
-    log.debug(main.toString());
+    //    log.debug(main.toString());
 
     return main;
   }

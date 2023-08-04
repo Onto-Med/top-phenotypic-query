@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.MedicationAdministration;
+import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
 
 import care.smith.top.top_phenotypic_query.util.DateUtil;
@@ -32,5 +33,14 @@ public class MedAdm extends MedicationAdministration {
 
   public MedAdm date(String date) {
     return date(DateUtil.parse(date));
+  }
+
+  public MedAdm date(LocalDateTime start, LocalDateTime end) {
+    setEffective(new Period().setStart(DateUtil.toDate(start)).setEnd(DateUtil.toDate(end)));
+    return this;
+  }
+
+  public MedAdm date(String start, String end) {
+    return date(DateUtil.parse(start), DateUtil.parse(end));
   }
 }
