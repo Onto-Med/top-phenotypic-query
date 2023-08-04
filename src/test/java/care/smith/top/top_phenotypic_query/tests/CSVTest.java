@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import care.smith.top.model.Entity;
+import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
@@ -57,8 +58,14 @@ public class CSVTest {
           .get();
   private static Phenotype overweight = new Phe("overweight").restriction(bmi, Res.gt(25)).get();
 
+  private static Phenotype dabi =
+      new Phe("Dabigatran", "http://fhir.de/CodeSystem/bfarm/atc", "B01AE07")
+          .itemType(ItemType.MEDICATION)
+          .bool()
+          .get();
+
   private static Entity[] entities = {
-    age, young, old, sex, female, male, weight, height, bmi, overweight
+    age, young, old, sex, female, male, weight, height, bmi, overweight, dabi
   };
 
   @Test
@@ -85,6 +92,8 @@ public class CSVTest {
             + "bmi;;composite_phenotype;observation;number;;;;;http://loinc.org|39156-5;;(weight / (height ^ [2]))"
             + System.lineSeparator()
             + "overweight;bmi;composite_restriction;observation;boolean;;;;;;|MIN|1|> 25|;"
+            + System.lineSeparator()
+            + "Dabigatran;;single_phenotype;medication;boolean;;;;;http://fhir.de/CodeSystem/bfarm/atc|B01AE07;;"
             + System.lineSeparator();
 
     String metadataActual = new CSV().toString(entities);
@@ -124,6 +133,8 @@ public class CSVTest {
             + "bmi,,composite_phenotype,observation,number,,,,,http://loinc.org|39156-5,,(weight / (height ^ [2]))"
             + System.lineSeparator()
             + "overweight,bmi,composite_restriction,observation,boolean,,,,,,|MIN|1|> 25|,"
+            + System.lineSeparator()
+            + "Dabigatran,,single_phenotype,medication,boolean,,,,,http://fhir.de/CodeSystem/bfarm/atc|B01AE07,,"
             + System.lineSeparator();
 
     String metadataActual =
@@ -160,6 +171,8 @@ public class CSVTest {
             + "bmi,,composite_phenotype,observation,number,,,,,http://loinc.org|39156-5,,(weight / (height ^ [2]))"
             + System.lineSeparator()
             + "overweight,bmi,composite_restriction,observation,boolean,,,,,,|MIN|1|> 25|,"
+            + System.lineSeparator()
+            + "Dabigatran,,single_phenotype,medication,boolean,,,,,http://fhir.de/CodeSystem/bfarm/atc|B01AE07,,"
             + System.lineSeparator();
 
     DataAdapterConfig config = DataAdapterConfig.getInstanceFromResource("config/CSV_Adapter.yml");
@@ -202,43 +215,47 @@ public class CSVTest {
     rs.addValue("2", weight, null, Val.of(80));
     rs.addValue("2", height, null, Val.of(1.65));
     rs.addValueWithRestriction("2", overweight, Val.of(29.38));
+    rs.addValue(
+        "2", dabi, null, Val.of(true, DateUtil.parse("2010-01-01"), DateUtil.parse("2011-01-31")));
 
     String dataRequired =
-        "subject;phenotype;timestamp;number_value;string_value;date_time_value;boolean_value"
+        "subject;phenotype;date_time;start_date_time;end_date_time;number_value;string_value;date_time_value;boolean_value"
             + System.lineSeparator()
-            + "1;age;;15;;;"
+            + "1;age;;;;15;;;"
             + System.lineSeparator()
-            + "1;young;;;;;true"
+            + "1;young;;;;;;;true"
             + System.lineSeparator()
-            + "1;sex;;;male;;"
+            + "1;sex;;;;;male;;"
             + System.lineSeparator()
-            + "1;male;;;;;true"
+            + "1;male;;;;;;;true"
             + System.lineSeparator()
-            + "1;weight;2008-01-01T00:00:00;58;;;"
+            + "1;weight;2008-01-01T00:00:00;;;58;;;"
             + System.lineSeparator()
-            + "1;weight;2009-01-01T00:00:00;59;;;"
+            + "1;weight;2009-01-01T00:00:00;;;59;;;"
             + System.lineSeparator()
-            + "1;weight;2010-01-01T00:00:00;60;;;"
+            + "1;weight;2010-01-01T00:00:00;;;60;;;"
             + System.lineSeparator()
-            + "1;height;;1.8;;;"
+            + "1;height;;;;1.8;;;"
             + System.lineSeparator()
-            + "1;bmi;;18.52;;;"
+            + "1;bmi;;;;18.52;;;"
             + System.lineSeparator()
-            + "2;age;;35;;;"
+            + "2;age;;;;35;;;"
             + System.lineSeparator()
-            + "2;old;;;;;true"
+            + "2;old;;;;;;;true"
             + System.lineSeparator()
-            + "2;sex;;;female;;"
+            + "2;sex;;;;;female;;"
             + System.lineSeparator()
-            + "2;female;;;;;true"
+            + "2;female;;;;;;;true"
             + System.lineSeparator()
-            + "2;weight;;80;;;"
+            + "2;weight;;;;80;;;"
             + System.lineSeparator()
-            + "2;height;;1.65;;;"
+            + "2;height;;;;1.65;;;"
             + System.lineSeparator()
-            + "2;bmi;;29.38;;;"
+            + "2;bmi;;;;29.38;;;"
             + System.lineSeparator()
-            + "2;overweight;;;;;true"
+            + "2;overweight;;;;;;;true"
+            + System.lineSeparator()
+            + "2;Dabigatran;;2010-01-01T00:00:00;2011-01-31T00:00:00;;;;true"
             + System.lineSeparator();
 
     String dataActual = new CSV().toString(rs);
