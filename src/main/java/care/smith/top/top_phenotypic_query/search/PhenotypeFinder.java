@@ -1,6 +1,7 @@
 package care.smith.top.top_phenotypic_query.search;
 
 import java.sql.SQLException;
+import java.util.Objects;
 
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
@@ -48,9 +49,20 @@ public class PhenotypeFinder {
       for (QueryCriterion cri : query.getCriteria()) executeCompositeSearch(cri, rs);
 
     if (query.getProjection() != null)
-      for (ProjectionEntry pro : query.getProjection()) executeCompositeSearch(pro, rs);
+      for (ProjectionEntry pro : query.getProjection())
+        if (!hasCriterion(pro)) executeCompositeSearch(pro, rs);
 
     return rs;
+  }
+
+  private boolean hasCriterion(ProjectionEntry pro) {
+    if (query.getCriteria() == null) return false;
+    for (QueryCriterion cri : query.getCriteria()) {
+      if (Objects.equals(cri.getSubjectId(), pro.getSubjectId())
+          && Objects.equals(cri.getDateTimeRestriction(), pro.getDateTimeRestriction()))
+        return true;
+    }
+    return false;
   }
 
   private void executeCompositeSearch(ProjectionEntry pro, ResultSet rs) {

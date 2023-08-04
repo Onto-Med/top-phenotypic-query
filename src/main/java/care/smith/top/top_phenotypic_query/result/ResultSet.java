@@ -71,7 +71,10 @@ public class ResultSet extends LinkedHashMap<String, SubjectPhenotypes> {
   private Value convert(Value val, String sourceUnit, String modelUnit) {
     if (sourceUnit != null && modelUnit != null && Values.hasNumberType(val))
       return Val.of(
-          UCUM.convert(Values.getNumberValue(val), sourceUnit, modelUnit), val.getDateTime());
+          UCUM.convert(Values.getNumberValue(val), sourceUnit, modelUnit),
+          val.getDateTime(),
+          val.getStartDateTime(),
+          val.getEndDateTime());
     return val;
   }
 

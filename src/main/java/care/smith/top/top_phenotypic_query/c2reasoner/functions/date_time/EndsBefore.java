@@ -41,14 +41,10 @@ public class EndsBefore extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    Expression arg1 = c2r.calculate(args.get(0));
-    if (arg1 == null) return null;
-    Expression arg2 = c2r.calculate(args.get(1));
-    if (arg2 == null) return null;
-
-    Value v1 = Expressions.getValue(Aggregator.aggregate(arg1, c2r));
-    Value v2 = Expressions.getValue(Aggregator.aggregate(arg2, c2r));
-
+    args = c2r.calculateCheckValues(args);
+    if (args == null) return null;
+    Value v1 = Expressions.getValue(Aggregator.aggregate(args.get(0), c2r));
+    Value v2 = Expressions.getValue(Aggregator.aggregate(args.get(1), c2r));
     return Exp.of(Values.endsBefore(v1, v2));
   }
 }

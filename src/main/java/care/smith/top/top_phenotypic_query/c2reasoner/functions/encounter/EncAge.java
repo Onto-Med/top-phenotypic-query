@@ -49,7 +49,7 @@ public class EncAge extends FunctionEntity {
     Expression bd = args.get(0);
     Exceptions.checkArgumentItemType(getFunction(), ItemType.SUBJECT_BIRTH_DATE, bd, 1, c2r);
     bd = c2r.calculate(bd);
-    if (bd == null || !Expressions.hasValues(bd)) return null;
+    if (!Expressions.hasValues(bd)) return null;
     Exceptions.checkArgumentType(getFunction(), DataType.DATE_TIME, bd);
     LocalDateTime birthdate = Expressions.getDateTimeValue(bd);
 

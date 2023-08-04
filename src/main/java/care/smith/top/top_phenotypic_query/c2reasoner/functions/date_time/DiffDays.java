@@ -36,7 +36,7 @@ public class DiffDays extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args);
+    args = c2r.calculateCheckValues(args);
     if (args == null) return null;
     Exceptions.checkArgumentsType(getFunction(), DataType.DATE_TIME, args);
     LocalDateTime start = Expressions.getDateTimeValue(args.get(0));

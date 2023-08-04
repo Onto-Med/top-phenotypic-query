@@ -2,12 +2,13 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -22,8 +23,6 @@ import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutFirst;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutLast;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Last;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
@@ -47,9 +46,12 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Ne;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.DiffYears;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYears;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.CutFirst;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.CutLast;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Li;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.RefValues;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Union;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
@@ -470,9 +472,146 @@ public class C2RTest {
   }
 
   @Test
+  public void testFilter4() {
+    LocalDateTime now = LocalDateTime.now();
+    Value v1 = Val.of(5, now.minusDays(6));
+    Value v2 = Val.of(10, now.minusDays(15));
+    Value v3 = Val.of(15, now.minusDays(3));
+    Value v4 = Val.of(8, now.minusDays(8));
+
+    Phenotype a = new Phe("a").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, v1);
+    vals.addValue("a", null, v2);
+    vals.addValue("a", null, v3);
+    vals.addValue("a", null, v4);
+
+    Phenotype p = new Phe("p").expression(Filter.of(Exp.of(a), Exp.of(7))).get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(5), BigDecimal.valueOf(15)),
+        Expressions.getNumberValues(c.calculate(p)));
+  }
+
+  @Test
+  public void testRefValues1() {
+    Phenotype a = new Phe("a").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    LocalDateTime now = LocalDateTime.now();
+    vals.addValue("a", null, Val.of(106, now.minusDays(6)));
+    vals.addValue("a", null, Val.of(115, now.minusDays(15)));
+    vals.addValue("a", null, Val.of(109, now.minusDays(9)));
+    vals.addValue("a", null, Val.of(103, now.minusDays(3)));
+    vals.addValue("a", null, Val.of(108, now.minusDays(8)));
+    vals.addValue("a", null, Val.of(101, now.minusDays(1)));
+
+    Phenotype p = new Phe("p").expression(RefValues.of(Exp.of(a), Exp.of(7))).get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(106), BigDecimal.valueOf(103), BigDecimal.valueOf(108)),
+        Expressions.getNumberValues(c.calculate(p)));
+  }
+
+  @Test
+  public void testRefValues2() {
+    Phenotype a = new Phe("a").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    LocalDateTime now = LocalDateTime.now();
+    vals.addValue("a", null, Val.of(106, now.minusDays(6)));
+    vals.addValue("a", null, Val.of(116, now.minusDays(16)));
+    vals.addValue("a", null, Val.of(117, now.minusDays(17)));
+    vals.addValue("a", null, Val.of(109, now.minusDays(9)));
+    vals.addValue("a", null, Val.of(103, now.minusDays(3)));
+    vals.addValue("a", null, Val.of(108, now.minusDays(8)));
+    vals.addValue("a", null, Val.of(101, now.minusDays(1)));
+
+    Phenotype p = new Phe("p").expression(RefValues.of(Exp.of(a), Exp.of(15), Exp.of(7))).get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(116), BigDecimal.valueOf(109)),
+        Expressions.getNumberValues(c.calculate(p)));
+  }
+
+  @Test
+  public void testRefValues3() {
+    Phenotype a = new Phe("a").number().get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    LocalDateTime now = LocalDateTime.now();
+    Value ind = Val.of(103, now.minusDays(3));
+    vals.addValue("a", null, Val.of(106, now.minusDays(6)));
+    vals.addValue("a", null, Val.of(111, now.minusDays(11)));
+    vals.addValue("a", null, Val.of(118, now.minusDays(18)));
+    vals.addValue("a", null, Val.of(119, now.minusDays(19)));
+    vals.addValue("a", null, Val.of(110, now.minusDays(10)));
+    vals.addValue("a", null, ind);
+    vals.addValue("a", null, Val.of(108, now.minusDays(8)));
+    vals.addValue("a", null, Val.of(101, now.minusDays(1)));
+
+    Phenotype p =
+        new Phe("p")
+            .expression(
+                RefValues.of(
+                    Exp.of(Val.of(ind).putFieldsItem("entityId", Val.of("a"))),
+                    Exp.of(15),
+                    Exp.of(7)))
+            .get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(111), BigDecimal.valueOf(118)),
+        Expressions.getNumberValues(c.calculate(p)));
+  }
+
+  @Test
+  public void testRefValues4() {
+    Phenotype a = new Phe("a").number().get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    LocalDateTime now = LocalDateTime.now();
+    Value ind = Val.of(103, now.minusDays(3));
+    vals.addValue("a", null, Val.of(106, now.minusDays(6)));
+    vals.addValue("a", null, Val.of(111, now.minusDays(11)));
+    vals.addValue("a", null, Val.of(118, now.minusDays(18)));
+    vals.addValue("a", null, Val.of(119, now.minusDays(19)));
+    vals.addValue("a", null, Val.of(110, now.minusDays(10)));
+    vals.addValue("a", null, ind);
+    vals.addValue("a", null, Val.of(108, now.minusDays(8)));
+    vals.addValue("a", null, Val.of(1031, now.minusDays(3)));
+
+    Phenotype p =
+        new Phe("p")
+            .expression(
+                RefValues.of(Exp.of(Val.of(ind).putFieldsItem("entityId", Val.of("a"))), Exp.of(7)))
+            .get();
+
+    Entities phens = Entities.of(p, a);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(106), BigDecimal.valueOf(110), BigDecimal.valueOf(108)),
+        Expressions.getNumberValues(c.calculate(p)));
+  }
+
+  @Test
   public void testNot() {
     Expression v1 = Exp.ofFalse();
     Expression v2 = Exp.ofTrue();
+    Expression v3 = null;
 
     C2R c = new C2R();
     Expression e = Not.of(v1);
@@ -480,10 +619,16 @@ public class C2RTest {
 
     e = Not.of(v2);
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
+
+    e = Not.of(v3);
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e = Not.of(new Expression());
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
   }
 
   @Test
-  public void testOr() {
+  public void testOr1() {
     Expression v1 = Exp.ofFalse();
     Expression v2 = Exp.ofTrue();
     Expression v3 = Exp.ofFalse();
@@ -497,7 +642,45 @@ public class C2RTest {
   }
 
   @Test
-  public void testAnd() {
+  public void testOr2() {
+    C2R c = new C2R();
+    Expression e = Or.of(Exp.of(List.of(Val.ofFalse(), Val.ofTrue(), Val.ofFalse())));
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e = Or.of(Exp.of(List.of(Val.ofFalse(), Val.ofFalse(), Val.ofFalse())));
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+  }
+
+  @Test
+  public void testOr3() {
+    C2R c = new C2R();
+    List<Expression> args = new ArrayList<>();
+    args.add(null);
+    args.add(Exp.ofTrue());
+    args.add(null);
+    Expression e = Or.of(args);
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    args = new ArrayList<>();
+    args.add(null);
+    args.add(null);
+    args.add(null);
+    e = Or.of(args);
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+  }
+
+  @Test
+  public void testOr4() {
+    C2R c = new C2R();
+    Expression e = Or.of(new Expression());
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+
+    e = Or.of(new Expression(), Exp.ofTrue());
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+  }
+
+  @Test
+  public void testAnd1() {
     Expression v1 = Exp.ofTrue();
     Expression v2 = Exp.ofFalse();
     Expression v3 = Exp.ofTrue();
@@ -511,7 +694,44 @@ public class C2RTest {
   }
 
   @Test
-  public void testMinTrue() {
+  public void testAnd2() {
+    C2R c = new C2R();
+    Expression e = And.of(Exp.of(List.of(Val.ofTrue(), Val.ofFalse(), Val.ofTrue())));
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+
+    e = And.of(Exp.of(List.of(Val.ofTrue(), Val.ofTrue(), Val.ofTrue())));
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+  }
+
+  @Test
+  public void testAnd3() {
+    C2R c = new C2R();
+    List<Expression> args = new ArrayList<>();
+    args.add(null);
+    args.add(Exp.ofTrue());
+    Expression e = And.of(args);
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+
+    args = new ArrayList<>();
+    args.add(null);
+    args.add(null);
+    args.add(null);
+    e = And.of(args);
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+  }
+
+  @Test
+  public void testAnd4() {
+    C2R c = new C2R();
+    Expression e = And.of(new Expression());
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+
+    e = And.of(new Expression(), Exp.ofTrue());
+    assertTrue(Expressions.hasValueFalse(c.calculate(e)));
+  }
+
+  @Test
+  public void testMinTrue1() {
     Expression minTrue = Exp.of(2);
     Expression v1 = Exp.ofTrue();
     Expression v2 = Exp.ofFalse();
@@ -522,6 +742,23 @@ public class C2RTest {
     assertFalse(Expressions.hasValueTrue(c.calculate(e)));
 
     e = MinTrue.of(minTrue, v1, v2, v3);
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+  }
+
+  @Test
+  public void testMinTrue2() {
+    List<Expression> args = new ArrayList<>();
+    args.add(Exp.of(2));
+    args.add(Exp.ofTrue());
+    args.add(Exp.ofFalse());
+    args.add(null);
+
+    C2R c = new C2R();
+    Expression e = MinTrue.of(args);
+    assertFalse(Expressions.hasValueTrue(c.calculate(e)));
+
+    args.add(Exp.ofTrue());
+    e = MinTrue.of(args);
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
   }
 
@@ -551,13 +788,7 @@ public class C2RTest {
 
     Expression res1 = Switch.of(e1, s1, e3, s3);
 
-    Exception exception =
-        assertThrows(
-            ArithmeticException.class,
-            () -> {
-              c.calculate(res1);
-            });
-    assertEquals("No default value defined for the function 'switch'!", exception.getMessage());
+    assertNull(c.calculate(res1));
   }
 
   @Test
@@ -698,9 +929,33 @@ public class C2RTest {
   }
 
   @Test
-  public void testMin() {
+  public void testMin1() {
     C2R c = new C2R();
     Expression e = Min.of(Exp.of(5), Exp.of(3), Exp.of(10));
+    assertEquals(
+        new BigDecimal("3.00"),
+        Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
+  }
+
+  @Test
+  public void testMin2() {
+    C2R c = new C2R();
+    Expression e = Min.of(Exp.of(5, 3, 10));
+    assertEquals(
+        new BigDecimal("3.00"),
+        Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));
+  }
+
+  @Test
+  public void testMin3() {
+    C2R c = new C2R();
+    List<Expression> args = new ArrayList<>();
+    args.add(Exp.of(5));
+    args.add(Exp.of(3));
+    args.add(Exp.of(10));
+    args.add(new Expression().values(new ArrayList<>()));
+    args.add(null);
+    Expression e = Min.of(args);
     assertEquals(
         new BigDecimal("3.00"),
         Expressions.getNumberValue(c.calculate(e)).setScale(2, RoundingMode.HALF_UP));

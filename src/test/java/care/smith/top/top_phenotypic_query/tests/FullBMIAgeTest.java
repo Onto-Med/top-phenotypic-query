@@ -25,7 +25,7 @@ import care.smith.top.top_phenotypic_query.util.Values;
 public class FullBMIAgeTest extends AbstractTest {
 
   @Test
-  public void test() throws InstantiationException, SQLException {
+  public void test1() throws InstantiationException, SQLException {
     QueryCriterion cri1 =
         (QueryCriterion)
             new QueryCriterion()
@@ -72,5 +72,32 @@ public class FullBMIAgeTest extends AbstractTest {
 
     assertEquals(BigDecimal.ONE, Values.getNumberValue(getValue("Finding", phes)));
     assertTrue(Values.getBooleanValue(getValue("Overweight", phes)));
+  }
+
+  @Test
+  public void test2() throws InstantiationException, SQLException {
+    QueryCriterion cri1 =
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(true)
+                .defaultAggregationFunctionId(defAgrFunc.getId())
+                .subjectId(overWeight.getId())
+                .dateTimeRestriction(getDTR(2000))
+                .type(TypeEnum.QUERYCRITERION);
+    QueryCriterion cri2 =
+        (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId());
+    PhenotypeQuery query =
+        new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2).addProjectionItem(cri1);
+    URL configFile =
+        Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test3.yml");
+    assertNotNull(configFile);
+    DataAdapter adapter = DataAdapter.getInstance(configFile.getPath());
+
+    PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
+    ResultSet rs = pf.execute();
+    adapter.close();
+
+    assertEquals(Set.of("1"), rs.getSubjectIds());
+    assertEquals(1, rs.getPhenotypes("1").size());
   }
 }

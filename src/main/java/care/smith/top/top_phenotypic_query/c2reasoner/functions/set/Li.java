@@ -40,13 +40,11 @@ public class Li extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args);
-    if (args == null) return null;
+    args = c2r.calculateHaveValues(args);
+    if (args.isEmpty()) return null;
     args = Aggregator.aggregateIfNumber(args, c2r);
     Expression res = new Expression();
-    for (Expression arg : args) {
-      if (arg.getValues() != null) for (Value val : arg.getValues()) res.addValuesItem(val);
-    }
+    for (Expression arg : args) for (Value val : arg.getValues()) res.addValuesItem(val);
     return res;
   }
 }

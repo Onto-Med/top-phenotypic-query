@@ -2,12 +2,14 @@ package care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced;
 
 import java.util.List;
 
+import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 
@@ -38,7 +40,8 @@ public class If extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    if (Expressions.getBooleanValue(c2r.calculate(args.get(0)))) return c2r.calculate(args.get(1));
+    Expression cond = Aggregator.calcAndAggr(getFunction(), DataType.BOOLEAN, args.get(0), c2r);
+    if (Expressions.hasValueTrue(cond)) return c2r.calculate(args.get(1));
     return c2r.calculate(args.get(2));
   }
 }

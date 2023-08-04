@@ -30,12 +30,11 @@ import care.smith.top.top_phenotypic_query.c2reasoner.constants.Pi;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.Today;
 import care.smith.top.top_phenotypic_query.c2reasoner.constants.True;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.ForEach;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.Switch;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Avg;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Count;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutFirst;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.CutLast;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.First;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Last;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
@@ -72,15 +71,19 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.Starts
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.TimeDistance;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncType;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.CutFirst;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.CutLast;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Empty;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Li;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.RefValues;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Union;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Vals;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Entities;
+import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
@@ -167,6 +170,8 @@ public class C2R {
     addFunction(Ln.get());
     addFunction(EncType.get());
     addFunction(EncAge.get());
+    addFunction(RefValues.get());
+    addFunction(ForEach.get());
   }
 
   public MathContext getMathContext() {
@@ -315,6 +320,23 @@ public class C2R {
     return calculated;
   }
 
+  public List<Expression> calculateCheckValues(List<Expression> args) {
+    List<Expression> calculated = new ArrayList<>();
+    for (Expression arg : args) {
+      Expression res = calculate(arg);
+      if (!Expressions.hasValues(res)) return null;
+      calculated.add(res);
+    }
+    return calculated;
+  }
+
+  public List<Expression> calculateHaveValues(List<Expression> args) {
+    return args.stream()
+        .map(a -> calculate(a))
+        .filter(a -> Expressions.hasValues(a))
+        .collect(Collectors.toList());
+  }
+
   public String toString(Expression exp) {
     if (exp == null) return "null";
     if (exp.getEntityId() != null) return exp.getEntityId();
@@ -322,7 +344,8 @@ public class C2R {
       return getConstant(exp.getConstantId()).getConstant().getTitle();
     if (exp.getValues() != null) return Values.toString(exp.getValues());
     if (exp.getRestriction() != null) return Restrictions.toString(exp.getRestriction());
-    return functionToString(exp);
+    if (exp.getFunctionId() != null) return functionToString(exp);
+    return "empty";
   }
 
   private String functionToString(Expression exp) {

@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.set;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
@@ -42,15 +42,13 @@ public class CutFirst extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    args = c2r.calculate(args);
+    args = Aggregator.calcAndAggrCheckMultipleHaveValues(getFunction(), args, c2r);
     if (args == null) return null;
-    args = Aggregator.aggregateIfMultiple(args, c2r);
-    List<Value> vals =
+    return Exp.of(
         args.stream()
             .sorted(Values.EXP_DATE_COMPARATOR)
             .skip(1)
             .map(e -> Expressions.getValue(e))
-            .collect(Collectors.toList());
-    return Exp.of(vals);
+            .collect(Collectors.toList()));
   }
 }

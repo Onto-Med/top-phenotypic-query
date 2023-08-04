@@ -37,22 +37,19 @@ public class Overlap2 extends FunctionEntity {
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
-    Expression arg1 = c2r.calculate(args.get(0));
-    if (arg1 == null) return null;
-    Expression arg2 = c2r.calculate(args.get(1));
-    if (arg2 == null) return null;
-
-    Value v1 = Expressions.getValue(Aggregator.aggregate(arg1, c2r));
-    Value v2 = Expressions.getValue(Aggregator.aggregate(arg2, c2r));
+    args = c2r.calculateCheckValues(args);
+    if (args == null) return null;
+    Value v1 = Expressions.getValue(Aggregator.aggregate(args.get(0), c2r));
+    Value v2 = Expressions.getValue(Aggregator.aggregate(args.get(1), c2r));
 
     int distance1 = 0;
     int distance2 = 0;
     if (args.size() > 2) {
-      Expression arg3 = c2r.calculate(args.get(2));
+      Expression arg3 = args.get(2);
       Exceptions.checkArgumentType(getFunction(), DataType.NUMBER, arg3);
       distance1 = Expressions.getNumberValue(arg3).intValue();
       if (args.size() > 3) {
-        Expression arg4 = c2r.calculate(args.get(3));
+        Expression arg4 = args.get(3);
         Exceptions.checkArgumentType(getFunction(), DataType.NUMBER, arg4);
         distance2 = Expressions.getNumberValue(arg4).intValue();
       } else distance2 = distance1;
