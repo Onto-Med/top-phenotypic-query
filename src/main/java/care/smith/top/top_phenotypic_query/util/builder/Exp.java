@@ -88,7 +88,9 @@ public class Exp {
 
   public static Expression inRestriction(Phenotype p) {
     if (!Phenotypes.isRestriction(p)) return null;
-    return inRestriction(p.getSuperPhenotype(), p.getRestriction());
+    var supP = p.getSuperPhenotype();
+    if (supP == null) return null;
+    return inRestriction(supP, p.getRestriction());
   }
 
   public static Expression inRestriction(Phenotype superPhe, Restriction r) {
