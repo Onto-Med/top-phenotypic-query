@@ -1,0 +1,4 @@
+id: MII_Test_FHIR_Adapter
+adapter: care.smith.top.top_phenotypic_query.adapter.fhir.FHIRAdapter
+connection:
+  url: https://mii-agiop-3p.life.uni-leipzig.de/blaze
