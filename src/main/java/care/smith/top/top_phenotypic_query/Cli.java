@@ -96,7 +96,7 @@ public class Cli implements Callable<Integer> {
     return 0;
   }
 
-  void writeResultSetToZip(ResultSet resultSet, Entity[] entities, File zipFile, boolean force)
+  public static void writeResultSetToZip(ResultSet resultSet, Entity[] entities, File zipFile, boolean force)
       throws IOException {
     if (zipFile.exists() && !force) throw new FileAlreadyExistsException(zipFile.getAbsolutePath());
 

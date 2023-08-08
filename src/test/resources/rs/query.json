@@ -1,0 +1,63 @@
+{
+  "id": "94b46317-d4d3-4069-b0ce-a582b708f24a",
+  "dataSource": "MII_Test_FHIR_Adapter",
+  "criteria": [],
+  "projection": [
+    {
+      "subjectId": "8802bd19-fb85-4a82-88f8-bbfe0d024d9f",
+      "defaultAggregationFunctionId": "Last",
+      "type": "ProjectionEntry"
+    },
+    {
+      "subjectId": "4ce646f8-07cf-4207-80c6-8716cbdc01ec",
+      "defaultAggregationFunctionId": "Last",
+      "type": "ProjectionEntry"
+    },
+    {
+      "subjectId": "605cae20-f748-434e-b2eb-3b8e49e3530b",
+      "type": "ProjectionEntry"
+    },
+    {
+      "subjectId": "1079b7e6-6a48-4c5c-8aca-c3b23fee1b2f",
+      "type": "ProjectionEntry"
+    },
+    {
+      "subjectId": "333a984f-828c-4e0e-b33c-ba7a48752ba5",
+      "type": "ProjectionEntry"
+    },
+    {
+      "subjectId": "f695fdce-cb1d-4453-a019-b1cca9fa8ba8",
+      "type": "ProjectionEntry"
+    },
+    {
+      "subjectId": "1111b580-4877-4371-93f4-dcf35b1ad67c",
+      "type": "ProjectionEntry"
+    },
+    {
+      "subjectId": "caf9b0e6-7479-4171-85cd-9b56b9a704fb",
+      "type": "ProjectionEntry"
+    },
+    {
+      "subjectId": "0532901b-97f4-4d4f-bd64-4772b00a812e",
+      "type": "ProjectionEntry"
+    },
+    {
+      "subjectId": "086cd9d0-3f2f-40c8-bd12-af326dfc2944",
+      "defaultAggregationFunctionId": "Last",
+      "type": "ProjectionEntry"
+    },
+    {
+      "subjectId": "8dd398c7-4267-4002-a374-325cd49df481",
+      "type": "ProjectionEntry"
+    },
+    {
+      "subjectId": "c663a780-c6ed-488d-ad21-390330574dec",
+      "type": "ProjectionEntry"
+    },
+    {
+      "subjectId": "7b76312f-425f-4087-831e-e44421c82599",
+      "type": "ProjectionEntry"
+    }
+  ],
+  "type": "phenotype"
+}

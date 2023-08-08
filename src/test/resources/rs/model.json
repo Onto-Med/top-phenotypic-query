@@ -1,0 +1,476 @@
+[
+  {
+    "entityType": "single_restriction",
+    "id": "f695fdce-cb1d-4453-a019-b1cca9fa8ba8",
+    "titles": [
+      { "lang": "de", "text": "≥ 100 Kilogramm" },
+      { "lang": "en", "text": "≥ 100 kilogram" }
+    ],
+    "synonyms": [],
+    "descriptions": [],
+    "codes": [],
+    "repository": {
+      "id": "bmi_example",
+      "name": "BMI Example",
+      "primary": true,
+      "organisation": { "id": "imise" }
+    },
+    "version": 2,
+    "createdAt": 1666252270.560753,
+    "dataType": "boolean",
+    "restriction": {
+      "type": "number",
+      "quantifier": "min",
+      "cardinality": 1,
+      "minOperator": ">=",
+      "values": [100, null]
+    },
+    "superPhenotype": {
+      "entityType": "single_phenotype",
+      "id": "7b76312f-425f-4087-831e-e44421c82599",
+      "titles": [
+        { "lang": "de", "text": "Gewicht" },
+        { "lang": "en", "text": "Weight" }
+      ]
+    }
+  },
+  {
+    "entityType": "single_restriction",
+    "id": "333a984f-828c-4e0e-b33c-ba7a48752ba5",
+    "titles": [
+      { "lang": "de", "text": "≥ 150 Centimeter" },
+      { "lang": "en", "text": "≥ 150 centimeters" }
+    ],
+    "synonyms": [],
+    "descriptions": [],
+    "codes": [],
+    "repository": {
+      "id": "bmi_example",
+      "name": "BMI Example",
+      "primary": true,
+      "organisation": { "id": "imise" }
+    },
+    "version": 4,
+    "author": "Christoph Beger",
+    "createdAt": 1685972092.104277,
+    "dataType": "boolean",
+    "restriction": {
+      "type": "number",
+      "quantifier": "min",
+      "cardinality": 1,
+      "minOperator": ">=",
+      "values": [150, null]
+    },
+    "superPhenotype": {
+      "entityType": "single_phenotype",
+      "id": "8dd398c7-4267-4002-a374-325cd49df481",
+      "titles": [
+        { "lang": "de", "text": "Größe" },
+        { "lang": "en", "text": "Height" }
+      ]
+    }
+  },
+  {
+    "entityType": "single_restriction",
+    "id": "605cae20-f748-434e-b2eb-3b8e49e3530b",
+    "titles": [
+      { "lang": "de", "text": "Weiblich" },
+      { "lang": "en", "text": "Female" }
+    ],
+    "synonyms": [],
+    "descriptions": [],
+    "codes": [],
+    "repository": {
+      "id": "bmi_example",
+      "name": "BMI Example",
+      "primary": true,
+      "organisation": { "id": "imise" }
+    },
+    "version": 3,
+    "author": "Christoph Beger",
+    "createdAt": 1691495862.846331,
+    "dataType": "boolean",
+    "restriction": {
+      "type": "string",
+      "quantifier": "min",
+      "cardinality": 1,
+      "values": ["female"]
+    },
+    "superPhenotype": {
+      "entityType": "single_phenotype",
+      "id": "c663a780-c6ed-488d-ad21-390330574dec",
+      "titles": [
+        { "lang": "de", "text": "Geschlecht" },
+        { "lang": "en", "text": "Sex" }
+      ]
+    }
+  },
+  {
+    "entityType": "single_restriction",
+    "id": "1111b580-4877-4371-93f4-dcf35b1ad67c",
+    "titles": [
+      { "lang": "de", "text": "< 18 Jahre" },
+      { "lang": "en", "text": "< 18 years" }
+    ],
+    "synonyms": [],
+    "descriptions": [],
+    "codes": [],
+    "repository": {
+      "id": "bmi_example",
+      "name": "BMI Example",
+      "primary": true,
+      "organisation": { "id": "imise" }
+    },
+    "version": 2,
+    "createdAt": 1666080453.541448,
+    "dataType": "boolean",
+    "restriction": {
+      "type": "number",
+      "quantifier": "min",
+      "cardinality": 1,
+      "maxOperator": "<",
+      "values": [null, 18]
+    },
+    "superPhenotype": {
+      "entityType": "single_phenotype",
+      "id": "0532901b-97f4-4d4f-bd64-4772b00a812e",
+      "titles": [
+        { "lang": "de", "text": "Alter" },
+        { "lang": "en", "text": "Age" }
+      ]
+    }
+  },
+  {
+    "entityType": "single_restriction",
+    "id": "caf9b0e6-7479-4171-85cd-9b56b9a704fb",
+    "titles": [
+      { "lang": "de", "text": "≥ 18 Jahre" },
+      { "lang": "en", "text": "≥ 18 years" }
+    ],
+    "synonyms": [],
+    "descriptions": [],
+    "codes": [],
+    "repository": {
+      "id": "bmi_example",
+      "name": "BMI Example",
+      "primary": true,
+      "organisation": { "id": "imise" }
+    },
+    "version": 2,
+    "createdAt": 1666080498.83577,
+    "dataType": "boolean",
+    "restriction": {
+      "type": "number",
+      "quantifier": "min",
+      "cardinality": 1,
+      "minOperator": ">=",
+      "values": [18, null]
+    },
+    "superPhenotype": {
+      "entityType": "single_phenotype",
+      "id": "0532901b-97f4-4d4f-bd64-4772b00a812e",
+      "titles": [
+        { "lang": "de", "text": "Alter" },
+        { "lang": "en", "text": "Age" }
+      ]
+    }
+  },
+  {
+    "entityType": "single_phenotype",
+    "id": "8dd398c7-4267-4002-a374-325cd49df481",
+    "titles": [
+      { "lang": "de", "text": "Größe" },
+      { "lang": "en", "text": "Height" }
+    ],
+    "synonyms": [
+      { "lang": "de", "text": "Länge" },
+      { "lang": "en", "text": "Length" }
+    ],
+    "descriptions": [],
+    "codes": [
+      {
+        "uri": "https://loinc.org/3137-7",
+        "codeSystem": { "uri": "http://loinc.org" },
+        "code": "3137-7"
+      }
+    ],
+    "repository": {
+      "id": "bmi_example",
+      "name": "BMI Example",
+      "primary": true,
+      "organisation": { "id": "imise" }
+    },
+    "version": 4,
+    "author": "Christoph Beger",
+    "createdAt": 1687523780.665845,
+    "superCategories": [],
+    "dataType": "number",
+    "itemType": "observation",
+    "unit": "cm"
+  },
+  {
+    "entityType": "composite_restriction",
+    "id": "8802bd19-fb85-4a82-88f8-bbfe0d024d9f",
+    "titles": [
+      { "lang": "de", "text": "25-30" },
+      { "lang": "en", "text": "25-30" }
+    ],
+    "synonyms": [],
+    "descriptions": [],
+    "codes": [],
+    "repository": {
+      "id": "bmi_example",
+      "name": "BMI Example",
+      "primary": true,
+      "organisation": { "id": "imise" }
+    },
+    "version": 2,
+    "createdAt": 1666080425.03574,
+    "dataType": "boolean",
+    "restriction": {
+      "type": "number",
+      "quantifier": "min",
+      "cardinality": 1,
+      "minOperator": ">=",
+      "maxOperator": "<",
+      "values": [25, 30]
+    },
+    "superPhenotype": {
+      "entityType": "composite_phenotype",
+      "id": "086cd9d0-3f2f-40c8-bd12-af326dfc2944",
+      "titles": [
+        { "lang": "de", "text": "BMI" },
+        { "lang": "en", "text": "BMI" }
+      ]
+    }
+  },
+  {
+    "entityType": "composite_restriction",
+    "id": "4ce646f8-07cf-4207-80c6-8716cbdc01ec",
+    "titles": [
+      { "lang": "de", "text": "27-30" },
+      { "lang": "en", "text": "27-30" }
+    ],
+    "synonyms": [],
+    "descriptions": [],
+    "codes": [],
+    "repository": {
+      "id": "bmi_example",
+      "name": "BMI Example",
+      "primary": true,
+      "organisation": { "id": "imise" }
+    },
+    "version": 2,
+    "createdAt": 1666080431.381376,
+    "dataType": "boolean",
+    "restriction": {
+      "type": "number",
+      "quantifier": "min",
+      "cardinality": 1,
+      "minOperator": ">=",
+      "maxOperator": "<",
+      "values": [27, 30]
+    },
+    "superPhenotype": {
+      "entityType": "composite_phenotype",
+      "id": "086cd9d0-3f2f-40c8-bd12-af326dfc2944",
+      "titles": [
+        { "lang": "de", "text": "BMI" },
+        { "lang": "en", "text": "BMI" }
+      ]
+    }
+  },
+  {
+    "entityType": "single_phenotype",
+    "id": "7b76312f-425f-4087-831e-e44421c82599",
+    "titles": [
+      { "lang": "de", "text": "Gewicht" },
+      { "lang": "en", "text": "Weight" }
+    ],
+    "synonyms": [],
+    "descriptions": [],
+    "codes": [
+      {
+        "uri": "https://loinc.org/3141-9",
+        "codeSystem": { "uri": "http://loinc.org" },
+        "code": "3141-9"
+      }
+    ],
+    "repository": {
+      "id": "bmi_example",
+      "name": "BMI Example",
+      "primary": true,
+      "organisation": { "id": "imise" }
+    },
+    "version": 4,
+    "author": "Christoph Beger",
+    "createdAt": 1687523774.767818,
+    "superCategories": [],
+    "dataType": "number",
+    "itemType": "observation",
+    "unit": "kg"
+  },
+  {
+    "entityType": "single_phenotype",
+    "id": "c663a780-c6ed-488d-ad21-390330574dec",
+    "titles": [
+      { "lang": "de", "text": "Geschlecht" },
+      { "lang": "en", "text": "Sex" }
+    ],
+    "synonyms": [],
+    "descriptions": [],
+    "codes": [
+      {
+        "uri": "https://loinc.org/46098-0",
+        "codeSystem": { "uri": "http://loinc.org" },
+        "code": "46098-0"
+      }
+    ],
+    "repository": {
+      "id": "bmi_example",
+      "name": "BMI Example",
+      "primary": true,
+      "organisation": { "id": "imise" }
+    },
+    "version": 4,
+    "author": "Christoph Beger",
+    "createdAt": 1687523762.918054,
+    "superCategories": [],
+    "dataType": "string",
+    "itemType": "subject_sex"
+  },
+  {
+    "entityType": "composite_phenotype",
+    "id": "086cd9d0-3f2f-40c8-bd12-af326dfc2944",
+    "titles": [
+      { "lang": "de", "text": "BMI" },
+      { "lang": "en", "text": "BMI" }
+    ],
+    "synonyms": [
+      { "lang": "de", "text": "Körper-Masse-Index" },
+      { "lang": "en", "text": "Body mass index" }
+    ],
+    "descriptions": [],
+    "codes": [
+      {
+        "uri": "https://loinc.org/39156-5",
+        "codeSystem": { "uri": "http://loinc.org" },
+        "code": "39156-5",
+        "name": "Body mass index"
+      }
+    ],
+    "repository": {
+      "id": "bmi_example",
+      "name": "BMI Example",
+      "primary": true,
+      "organisation": { "id": "imise" }
+    },
+    "version": 5,
+    "author": "Christoph Beger",
+    "createdAt": 1686160235.062377,
+    "superCategories": [],
+    "dataType": "number",
+    "expression": {
+      "functionId": "Divide",
+      "arguments": [
+        {
+          "entityId": "7b76312f-425f-4087-831e-e44421c82599",
+          "arguments": [],
+          "values": []
+        },
+        {
+          "functionId": "Power",
+          "arguments": [
+            {
+              "functionId": "Divide",
+              "arguments": [
+                {
+                  "entityId": "8dd398c7-4267-4002-a374-325cd49df481",
+                  "arguments": [],
+                  "values": []
+                },
+                {
+                  "arguments": [],
+                  "values": [{ "dataType": "number", "value": 100 }]
+                }
+              ],
+              "values": []
+            },
+            {
+              "arguments": [],
+              "values": [{ "dataType": "number", "value": 2 }]
+            }
+          ],
+          "values": []
+        }
+      ],
+      "values": []
+    },
+    "unit": "kg/m2"
+  },
+  {
+    "entityType": "single_phenotype",
+    "id": "0532901b-97f4-4d4f-bd64-4772b00a812e",
+    "titles": [
+      { "lang": "de", "text": "Alter" },
+      { "lang": "en", "text": "Age" }
+    ],
+    "synonyms": [],
+    "descriptions": [],
+    "codes": [
+      {
+        "uri": "https://loinc.org/30525-0",
+        "codeSystem": { "uri": "http://loinc.org" },
+        "code": "30525-0"
+      }
+    ],
+    "repository": {
+      "id": "bmi_example",
+      "name": "BMI Example",
+      "primary": true,
+      "organisation": { "id": "imise" }
+    },
+    "version": 4,
+    "author": "Christoph Beger",
+    "createdAt": 1687523694.500979,
+    "superCategories": [],
+    "dataType": "number",
+    "itemType": "subject_age",
+    "unit": "a"
+  },
+  {
+    "entityType": "single_restriction",
+    "id": "1079b7e6-6a48-4c5c-8aca-c3b23fee1b2f",
+    "titles": [
+      { "lang": "de", "text": "Männlich" },
+      { "lang": "en", "text": "Male" }
+    ],
+    "synonyms": [],
+    "descriptions": [],
+    "codes": [],
+    "repository": {
+      "id": "bmi_example",
+      "name": "BMI Example",
+      "primary": true,
+      "organisation": { "id": "imise" }
+    },
+    "version": 3,
+    "author": "Christoph Beger",
+    "createdAt": 1691495870.747454,
+    "dataType": "boolean",
+    "restriction": {
+      "type": "string",
+      "quantifier": "min",
+      "cardinality": 1,
+      "values": ["male"]
+    },
+    "superPhenotype": {
+      "entityType": "single_phenotype",
+      "id": "c663a780-c6ed-488d-ad21-390330574dec",
+      "titles": [
+        { "lang": "de", "text": "Geschlecht" },
+        { "lang": "en", "text": "Sex" }
+      ]
+    }
+  }
+]
