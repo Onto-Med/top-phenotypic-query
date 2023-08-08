@@ -52,6 +52,47 @@ token to access the package.
 </dependency>
 ```
 
+## Authentication
+
+[Create a GitHub personal access token (classic)](https://github.com/settings/tokens/new), see also the [GitHub docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic).
+Check the `read:packages` box, generate the token and copy it.
+You may have to enable `read:packages` again if it fails to activate the first time.
+Then create a `~/.m2/settings.xml` if it doesn't exist, add the following and fill in USERNAME and TOKEN:
+
+```xml
+<?xml version="1.0"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0                       http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <activeProfiles>
+    <activeProfile>github</activeProfile>
+  </activeProfiles>
+
+  <profiles>
+    <profile>
+      <id>github</id>
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+          <id>github</id>
+          <url>https://maven.pkg.github.com/onto-med/top-api</url>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+
+  <servers>
+    <server>
+      <id>github</id>
+      <username>USERNAME</username>
+      <password>TOKEN</password>
+    </server>
+  </servers>
+</settings>
+```
+
 ## Usage
 
 ### Data Adapter Configuration
