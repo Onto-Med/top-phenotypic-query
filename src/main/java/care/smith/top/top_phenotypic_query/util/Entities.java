@@ -52,7 +52,7 @@ public class Entities {
       }
       if (Phenotypes.isRestriction(p)) {
         if (Phenotypes.isSingle(p) && p.getRestriction() == null) p.setRestriction(Res.ofCodes(p));
-        if (config == null
+        if (config == null || supP == null
             || Phenotypes.isCompositePhenotype(supP)
             || !setInExpression(config, supP, p)) p.setExpression(Exp.inRestriction(p));
       }
