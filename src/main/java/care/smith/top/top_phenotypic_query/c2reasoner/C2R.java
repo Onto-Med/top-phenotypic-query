@@ -61,6 +61,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.Date;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.DiffDays;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.DiffMonths;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.DiffYears;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.Duration;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.EndsBefore;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.Overlap1;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.Overlap2;
@@ -172,6 +173,7 @@ public class C2R {
     addFunction(EncAge.get());
     addFunction(RefValues.get());
     addFunction(ForEach.get());
+    addFunction(Duration.get());
   }
 
   public MathContext getMathContext() {
