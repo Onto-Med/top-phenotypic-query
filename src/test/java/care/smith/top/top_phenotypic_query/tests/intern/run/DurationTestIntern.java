@@ -22,7 +22,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 
-public class DurationTest {
+public class DurationTestIntern {
 
   private static Client client = new Client();
 
