@@ -11,6 +11,10 @@ import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Ge;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.Date;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
@@ -25,6 +29,7 @@ public class HapiTestIntern {
   private static Phenotype weight =
       new Phe("weight", "http://loinc.org", "3141-9").number("kg").get();
   private static Phenotype heavy = new Phe("heavy").restriction(weight, Res.ge(100)).get();
+  private static Phenotype light = new Phe("light").restriction(weight, Res.lt(100)).get();
 
   private static Phenotype height =
       new Phe("height", "http://loinc.org", "3137-7", "8302-2").number("cm").get();
@@ -49,6 +54,31 @@ public class HapiTestIntern {
   private static Phenotype obesityClassIII =
       new Phe("obesityClassIII").restriction(bmi, Res.ge(40)).get();
 
+  private static Phenotype enc = new Phe("enc").itemType(ItemType.ENCOUNTER).string().get();
+
+  private static Phenotype age = new Phe("age").itemType(ItemType.SUBJECT_AGE).number().get();
+
+  private static Phenotype sex = new Phe("sex").itemType(ItemType.SUBJECT_SEX).string().get();
+  private static Phenotype female = new Phe("female").restriction(sex, Res.of("female")).get();
+  private static Phenotype male = new Phe("male").restriction(sex, Res.of("male")).get();
+
+  private static Phenotype med =
+      new Phe("med", "http://hl7.org/fhir/sid/ndc", "50580-506-02")
+          .itemType(ItemType.MEDICATION)
+          .bool()
+          .get();
+
+  private static Phenotype check1 =
+      new Phe("check1")
+          .expression(Exists.of(Filter.of(Exp.of(weight), Exp.ofConstant("lt"), Date.of(med))))
+          .get();
+
+  private static Phenotype check2 =
+      new Phe("check2")
+          .expression(
+              Ge.of(Filter.of(Exp.of(weight), Exp.ofConstant("lt"), Date.of(med)), Exp.of(60)))
+          .get();
+
   private static Entity[] entities = {
     weight,
     heavy,
@@ -62,6 +92,36 @@ public class HapiTestIntern {
     obesityClassII,
     obesityClassIII
   };
+
+  @Test
+  public void testEnc() throws InstantiationException {
+    ResultSet rs = new Que(CONFIG, enc).pro(enc).execute();
+    assertEquals(869, rs.size());
+  }
+
+  @Test
+  public void testAge() throws InstantiationException {
+    ResultSet rs = new Que(CONFIG, age).pro(age).execute();
+    assertEquals(5700, rs.size());
+  }
+
+  @Test
+  public void testFemale() throws InstantiationException {
+    ResultSet rs = new Que(CONFIG, sex, female).inc(female).execute();
+    assertEquals(10000, rs.size());
+  }
+
+  @Test
+  public void testMale() throws InstantiationException {
+    ResultSet rs = new Que(CONFIG, sex, male).inc(male).execute();
+    assertEquals(10000, rs.size());
+  }
+
+  @Test
+  public void testMed() throws InstantiationException {
+    ResultSet rs = new Que(CONFIG, med).inc(med).execute();
+    assertEquals(100, rs.size());
+  }
 
   @Test
   public void test() throws InstantiationException {
