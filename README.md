@@ -40,9 +40,8 @@ how to call it programmatically.
 
 ## Installation
 
-Add the following Maven dependency to your project's `pom.xml` file. Because the package is hosted on
-the [GitHub Maven Package Registry](https://docs.github.com/en/packages), you must authenticate with a personal access
-token to access the package.
+Add the following Maven dependency to your project's `pom.xml` file and see section [Authentication to GitHub Packages](#authentication-to-github-packages)
+for authentication with [GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry).
 
 ```xml
 <dependency>
@@ -52,46 +51,14 @@ token to access the package.
 </dependency>
 ```
 
-## Authentication
+### Authentication to GitHub Packages
 
-[Create a GitHub personal access token (classic)](https://github.com/settings/tokens/new), see also the [GitHub docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic).
-Check the `read:packages` box, generate the token and copy it.
-You may have to enable `read:packages` again if it fails to activate the first time.
-Then create a `~/.m2/settings.xml` if it doesn't exist, add the following and fill in USERNAME and TOKEN:
+Because the Maven package is hosted at [GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry),
+you need to make some modifications to your Maven installation in order to download and install the package.
+Please follow the [Authenticating to GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#authenticating-to-github-packages)
+instructions.
 
-```xml
-<?xml version="1.0"?>
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0                       http://maven.apache.org/xsd/settings-1.0.0.xsd">
-
-  <activeProfiles>
-    <activeProfile>github</activeProfile>
-  </activeProfiles>
-
-  <profiles>
-    <profile>
-      <id>github</id>
-      <repositories>
-        <repository>
-          <id>central</id>
-          <url>https://repo1.maven.org/maven2</url>
-        </repository>
-        <repository>
-          <id>github</id>
-          <url>https://maven.pkg.github.com/onto-med/top-api</url>
-        </repository>
-      </repositories>
-    </profile>
-  </profiles>
-
-  <servers>
-    <server>
-      <id>github</id>
-      <username>USERNAME</username>
-      <password>TOKEN</password>
-    </server>
-  </servers>
-</settings>
-```
+Authentification is required for `care.smith.top:top-phenotypic-query` and the dependency [care.smith.top:top-api](https://maven.pkg.github.com/onto-med/top-api).
 
 ## Usage
 
