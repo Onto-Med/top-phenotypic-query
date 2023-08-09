@@ -66,7 +66,7 @@ public class Values {
 
   public static String toString(Value val) {
     if (val == null) return null;
-    return addFields(addDateTime(toStringWithoutDateTime(val), getDateTime(val)), val.getFields());
+    return addFields(addDateTime(toStringWithoutDateTime(val), val), val.getFields());
   }
 
   private static String addFields(String str, Map<String, Value> fields) {
@@ -79,8 +79,11 @@ public class Values {
     return str;
   }
 
-  private static String addDateTime(String str, LocalDateTime dateTime) {
-    return (dateTime == null) ? str : str + "|" + DateUtil.format(dateTime);
+  private static String addDateTime(String str, Value v) {
+    if (v.getDateTime() != null) str += "|" + DateUtil.format(v.getDateTime());
+    if (v.getStartDateTime() != null) str += "|" + DateUtil.format(v.getStartDateTime());
+    if (v.getEndDateTime() != null) str += "|" + DateUtil.format(v.getEndDateTime());
+    return str;
   }
 
   public static String toString(List<Value> vals) {

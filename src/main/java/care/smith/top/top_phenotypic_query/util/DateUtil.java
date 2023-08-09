@@ -175,16 +175,19 @@ public class DateUtil {
     BigDecimal months = BigDecimal.valueOf(ChronoUnit.MONTHS.between(start, end));
     return months
         .add(days.divide(BigDecimal.valueOf(30), MathContext.DECIMAL32))
-        .setScale(2, RoundingMode.HALF_UP);
+        .setScale(3, RoundingMode.HALF_UP);
   }
 
   public static BigDecimal getPeriodInDays(LocalDateTime start, LocalDateTime end) {
-    return BigDecimal.valueOf(ChronoUnit.DAYS.between(start, end));
+    return BigDecimal.valueOf(Duration.between(start, end).toSeconds())
+        .divide(BigDecimal.valueOf(86400), MathContext.DECIMAL32)
+        .setScale(3, RoundingMode.HALF_UP);
   }
 
   public static BigDecimal getPeriodInHours(LocalDateTime start, LocalDateTime end) {
-    return BigDecimal.valueOf(Duration.between(start, end).toMillis())
-        .divide(BigDecimal.valueOf(3600000), MathContext.DECIMAL32);
+    return BigDecimal.valueOf(Duration.between(start, end).toSeconds())
+        .divide(BigDecimal.valueOf(3600), MathContext.DECIMAL32)
+        .setScale(3, RoundingMode.HALF_UP);
   }
 
   public static long birthdateToAge(LocalDateTime birthdate) {

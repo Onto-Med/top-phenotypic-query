@@ -33,4 +33,9 @@ public class Enc extends Encounter {
   public Enc period(String start, String end) {
     return period(DateUtil.parse(start), DateUtil.parse(end));
   }
+
+  public Enc start(String start) {
+    setPeriod(new Period().setStart(DateUtil.parseToDate(start)));
+    return this;
+  }
 }
