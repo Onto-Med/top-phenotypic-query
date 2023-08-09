@@ -164,7 +164,7 @@ as it is currently not supported by all IDEs.
 
 ## License
 
-The code in this repository and the package `care.smith.top:top-phenotypic-query` are licensed under [GPL-3.0](LICENSE).
+The code in this repository and the package `care.smith.top:top-phenotypic-query` are licensed under [MIT](LICENSE).
 
 ## References
 
