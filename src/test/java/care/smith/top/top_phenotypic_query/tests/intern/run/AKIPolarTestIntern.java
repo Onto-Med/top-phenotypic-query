@@ -105,6 +105,7 @@ public class AKIPolarTestIntern {
     Reference pat6 = client.add(new Pat("p6").birthDate("1951-01-01").gender("male"));
     Reference pat7 = client.add(new Pat("p7").birthDate("1951-01-01").gender("male"));
     Reference pat8 = client.add(new Pat("p8").birthDate("1951-01-01").gender("male"));
+    Reference pat9 = client.add(new Pat("p9").birthDate("1951-01-01").gender("male"));
 
     client.add(
         new Obs("p1a", pat1)
@@ -259,6 +260,27 @@ public class AKIPolarTestIntern {
             .value(100, "mmol/L")
             .date("2020-01-04"));
 
+    client.add(
+        new Obs("p9a", pat9)
+            .code("http://loinc.org", "2160-0")
+            .value(31, "mmol/L")
+            .date("2020-01-05"));
+    client.add(
+        new Obs("p9b", pat9)
+            .code("http://loinc.org", "2160-0")
+            .value(10, "mmol/L")
+            .date("2017-01-02"));
+    client.add(
+        new Obs("p9c", pat9)
+            .code("http://loinc.org", "2160-0")
+            .value(20, "mmol/L")
+            .date("2018-01-03"));
+    client.add(
+        new Obs("p9d", pat9)
+            .code("http://loinc.org", "2160-0")
+            .value(30, "mmol/L")
+            .date("2019-01-04"));
+
     try {
       ResultSet rs =
           new Que(
@@ -310,6 +332,10 @@ public class AKIPolarTestIntern {
           rs.get(pat7.getReference()).getValues("AKIAll", null));
 
       assertEquals(List.of(Val.of(0)), rs.get(pat8.getReference()).getValues("AKIAll", null));
+
+      assertEquals(
+          List.of(Val.of(0), Val.of(0), Val.of(0), Val.of(0)),
+          rs.get(pat9.getReference()).getValues("AKIAll", null));
 
     } catch (InstantiationException e) {
       e.printStackTrace();
