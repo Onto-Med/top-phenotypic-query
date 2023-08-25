@@ -42,6 +42,8 @@ public class DrugDrugTestIntern {
     Reference pat2 = client.add(new Pat("p2").birthDate("2001-01-01").gender("female"));
     Reference pat3 = client.add(new Pat("p3").birthDate("1951-01-01").gender("male"));
     Reference pat4 = client.add(new Pat("p4").birthDate("1951-01-01").gender("male"));
+    Reference pat5 = client.add(new Pat("p5").birthDate("1951-01-01").gender("male"));
+    Reference pat6 = client.add(new Pat("p6").birthDate("1951-01-01").gender("male"));
 
     Reference d1 = client.add(new Med("d1", "X1"));
     Reference d2 = client.add(new Med("d2", "Y3"));
@@ -64,6 +66,16 @@ public class DrugDrugTestIntern {
     client.add(new MedReq("p4d1a", pat4, d1).dosageInstructionDate("2020-01-03", "2020-01-04"));
     client.add(new MedReq("p4d1b", pat4, d1).dosageInstructionDate("2020-01-04", "2020-01-05"));
 
+    client.add(new MedReq("p5d1a", pat5, d1).dosageInstructionDate("2020-01-03", "2020-01-04"));
+    client.add(new MedReq("p5d1b", pat5, d1).dosageInstructionStartDate("2020-01-07"));
+    client.add(new MedReq("p5d2a", pat5, d2).dosageInstructionDate("2020-01-05", "2020-01-06"));
+    client.add(new MedReq("p5d2b", pat5, d2).dosageInstructionDate("2020-01-09", "2020-01-10"));
+
+    client.add(new MedReq("p6d1a", pat6, d1).dosageInstructionDate("2020-01-03", "2020-01-04"));
+    client.add(new MedReq("p6d2a", pat6, d1).dosageInstructionDate("2020-01-06", "2020-01-07"));
+    client.add(new MedReq("p6d1b", pat6, d2).dosageInstructionStartDate("2020-01-05"));
+    client.add(new MedReq("p6d2b", pat6, d2).dosageInstructionDate("2020-01-09", "2020-01-10"));
+
     ResultSet rs =
         new Que("config/Default_FHIR_Adapter_Test.yml", drug1, drug2, overlap)
             .inc(overlap)
@@ -71,6 +83,8 @@ public class DrugDrugTestIntern {
 
     System.out.println(rs);
 
-    assertEquals(Set.of(pat2.getReference(), pat3.getReference()), rs.getSubjectIds());
+    assertEquals(
+        Set.of(pat2.getReference(), pat3.getReference(), pat5.getReference(), pat6.getReference()),
+        rs.getSubjectIds());
   }
 }
