@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.tests.intern.fhir;
 
+import java.util.List;
+
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 
@@ -36,5 +38,9 @@ public class Client {
 
   public Reference add(Resource r) {
     return new Reference(r.getResourceType() + "/" + client.createResource(r).get());
+  }
+
+  public List<Resource> execute(String query) {
+    return client.findResources(query);
   }
 }
