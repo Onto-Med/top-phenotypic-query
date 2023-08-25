@@ -235,6 +235,7 @@ public class Values {
 
   private static boolean overlaps1(
       LocalDateTime v1Start, LocalDateTime v1End, LocalDateTime v2Start, int maxDistance) {
+    if (v1Start == null || v1End == null || v2Start == null) return false;
     return !v1Start.isAfter(v2Start) && !v1End.plusHours(maxDistance).isBefore(v2Start);
   }
 

@@ -3,8 +3,12 @@ package care.smith.top.top_phenotypic_query.tests.intern.fhir;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import java.time.LocalDateTime;
 import org.hl7.fhir.r4.model.DateTimeType;
+import org.hl7.fhir.r4.model.Dosage;
 import org.hl7.fhir.r4.model.MedicationRequest;
+import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.Timing;
+import org.hl7.fhir.r4.model.Timing.TimingRepeatComponent;
 
 public class MedReq extends MedicationRequest {
 
@@ -30,5 +34,24 @@ public class MedReq extends MedicationRequest {
 
   public MedReq date(String date) {
     return date(DateUtil.parse(date));
+  }
+
+  public MedReq dosageInstructionDate(LocalDateTime start, LocalDateTime end) {
+    addDosageInstruction(
+        new Dosage()
+            .setTiming(
+                new Timing()
+                    .setRepeat(
+                        new TimingRepeatComponent()
+                            .setBounds(
+                                new Period()
+                                    .setStartElement(new DateTimeType(DateUtil.toDate(start)))
+                                    .setEndElement(new DateTimeType(DateUtil.toDate(end)))))));
+
+    return this;
+  }
+
+  public MedReq dosageInstructionDate(String start, String end) {
+    return dosageInstructionDate(DateUtil.parse(start), DateUtil.parse(end));
   }
 }
