@@ -88,7 +88,10 @@ public class HapiTestIntern {
     preObesity,
     obesityClassI,
     obesityClassII,
-    obesityClassIII
+    obesityClassIII,
+    male,
+    female,
+    sex
   };
 
   @Test
@@ -129,6 +132,22 @@ public class HapiTestIntern {
             .execute();
 
     System.out.println(rs.getSubjectIds());
+
+    assertEquals(
+        Set.of(
+            "Patient/7045382",
+            "Patient/7045388",
+            "Patient/7045432",
+            "Patient/7046218",
+            "Patient/7046869"),
+        rs.getSubjectIds());
+  }
+
+  @Test
+  public void test3() throws InstantiationException {
+    ResultSet rs = new Que(CONFIG, entities).inc(female).inc(obesityClassI).execute();
+
+    System.out.println(rs.size());
 
     assertEquals(
         Set.of(
