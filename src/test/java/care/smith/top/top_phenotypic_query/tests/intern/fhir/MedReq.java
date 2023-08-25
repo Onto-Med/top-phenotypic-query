@@ -39,21 +39,18 @@ public class MedReq extends MedicationRequest {
   }
 
   public MedReq dosageInstructionDate(LocalDateTime start, LocalDateTime end) {
+    Period p = new Period().setStartElement(new DateTimeType(DateUtil.toDate(start)));
+    if (end != null) p.setEndElement(new DateTimeType(DateUtil.toDate(end)));
     addDosageInstruction(
-        new Dosage()
-            .setTiming(
-                new Timing()
-                    .setRepeat(
-                        new TimingRepeatComponent()
-                            .setBounds(
-                                new Period()
-                                    .setStartElement(new DateTimeType(DateUtil.toDate(start)))
-                                    .setEndElement(new DateTimeType(DateUtil.toDate(end)))))));
-
+        new Dosage().setTiming(new Timing().setRepeat(new TimingRepeatComponent().setBounds(p))));
     return this;
   }
 
   public MedReq dosageInstructionDate(String start, String end) {
     return dosageInstructionDate(DateUtil.parse(start), DateUtil.parse(end));
+  }
+
+  public MedReq dosageInstructionStartDate(String start) {
+    return dosageInstructionDate(DateUtil.parse(start), null);
   }
 }

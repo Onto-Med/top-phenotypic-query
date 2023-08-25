@@ -181,4 +181,13 @@ public class PeriodTest {
     Value v4 = Val.of(5, DateUtil.parse("2001-01-01"), DateUtil.parse("2001-01-03"));
     assertEquals(Exp.ofTrue(), new C2R().calculate(Overlap2.of(Exp.of(v1, v2), Exp.of(v3, v4))));
   }
+
+  @Test
+  public void test15d() {
+    Value v1 = Val.of(3, DateUtil.parse("2001-01-03"), DateUtil.parse("2001-01-04"));
+    Value v2 = Val.of(3, DateUtil.parse("2001-01-05"), null);
+    Value v3 = Val.of(5, DateUtil.parse("2001-01-07"), DateUtil.parse("2001-01-08"));
+    Value v4 = Val.of(5, DateUtil.parse("2001-01-09"), DateUtil.parse("2001-01-10"));
+    assertEquals(Exp.ofTrue(), new C2R().calculate(Overlap2.of(Exp.of(v1, v2), Exp.of(v3, v4))));
+  }
 }
