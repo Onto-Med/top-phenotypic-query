@@ -8,6 +8,10 @@ public class PhenotypeQuery {
 
   private String baseQuery;
   private String dateTimeIntervalPart;
+  private String dateTimeIntervalPartGe;
+  private String dateTimeIntervalPartGt;
+  private String dateTimeIntervalPartLe;
+  private String dateTimeIntervalPartLt;
   private String subjectsPart;
   private String valueIntervalPart;
   private String valueListPart;
@@ -35,6 +39,38 @@ public class PhenotypeQuery {
 
   public void setDateTimeIntervalPart(String dateTimeIntervalPart) {
     this.dateTimeIntervalPart = dateTimeIntervalPart;
+  }
+
+  public String getDateTimeIntervalPartGe() {
+    return dateTimeIntervalPartGe;
+  }
+
+  public void setDateTimeIntervalPartGe(String dateTimeIntervalPartGe) {
+    this.dateTimeIntervalPartGe = dateTimeIntervalPartGe;
+  }
+
+  public String getDateTimeIntervalPartGt() {
+    return dateTimeIntervalPartGt;
+  }
+
+  public void setDateTimeIntervalPartGt(String dateTimeIntervalPartGt) {
+    this.dateTimeIntervalPartGt = dateTimeIntervalPartGt;
+  }
+
+  public String getDateTimeIntervalPartLe() {
+    return dateTimeIntervalPartLe;
+  }
+
+  public void setDateTimeIntervalPartLe(String dateTimeIntervalPartLe) {
+    this.dateTimeIntervalPartLe = dateTimeIntervalPartLe;
+  }
+
+  public String getDateTimeIntervalPartLt() {
+    return dateTimeIntervalPartLt;
+  }
+
+  public void setDateTimeIntervalPartLt(String dateTimeIntervalPartLt) {
+    this.dateTimeIntervalPartLt = dateTimeIntervalPartLt;
   }
 
   public String getSubjectsPart() {
@@ -159,6 +195,14 @@ public class PhenotypeQuery {
         + baseQuery
         + ", dateTimeIntervalPart="
         + dateTimeIntervalPart
+        + ", dateTimeIntervalPartGe="
+        + dateTimeIntervalPartGe
+        + ", dateTimeIntervalPartGt="
+        + dateTimeIntervalPartGt
+        + ", dateTimeIntervalPartLe="
+        + dateTimeIntervalPartLe
+        + ", dateTimeIntervalPartLt="
+        + dateTimeIntervalPartLt
         + ", subjectsPart="
         + subjectsPart
         + ", valueIntervalPart="

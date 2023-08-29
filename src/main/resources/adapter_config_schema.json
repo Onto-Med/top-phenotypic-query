@@ -68,6 +68,18 @@
         "dateTimeIntervalPart": {
           "type": "string"
         },
+        "dateTimeIntervalPartGe": {
+          "type": "string"
+        },
+        "dateTimeIntervalPartGt": {
+          "type": "string"
+        },
+        "dateTimeIntervalPartLe": {
+          "type": "string"
+        },
+        "dateTimeIntervalPartLt": {
+          "type": "string"
+        },
         "output": {
           "type": "object",
           "properties": {
@@ -75,6 +87,12 @@
               "type": "string"
             },
             "dateTime": {
+              "type": "string"
+            },
+            "startDateTime": {
+              "type": "string"
+            },
+            "endDateTime": {
               "type": "string"
             },
             "dateTimeValue": {
@@ -93,7 +111,14 @@
               "type": "string"
             }
           },
-          "required": ["subject", "dateTime"]
+          "anyOf": [
+            {
+              "required": ["subject", "dateTime"]
+            },
+            {
+              "required": ["subject", "startDateTime"]
+            }
+          ]
         },
         "subjectsPart": {
           "type": "string"
@@ -105,10 +130,13 @@
           "type": "string"
         }
       },
-      "required": [
-        "baseQuery",
-        "dateTimeIntervalPart",
-        "output"
+      "anyOf": [
+        {
+          "required": ["baseQuery", "dateTimeIntervalPart", "output"]
+        },
+        {
+          "required": ["baseQuery", "dateTimeIntervalPartGe", "dateTimeIntervalPartGt", "dateTimeIntervalPartLe", "dateTimeIntervalPartLt", "output"]
+        }
       ]
     }
   },
