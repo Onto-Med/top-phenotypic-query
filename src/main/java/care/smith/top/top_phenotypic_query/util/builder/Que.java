@@ -1,9 +1,13 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,6 +132,23 @@ public class Que {
       adapter.close();
     }
     return rs;
+  }
+
+  private String readResource(String path) {
+    try {
+      return Files.readString(Path.of("src/test/resources/" + path));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public Que executeSqlFromResources(String... files) {
+    return executeSql(Stream.of(files).map(f -> readResource(f)).toArray(String[]::new));
+  }
+
+  public Que cleanDB() {
+    return executeSql("DROP ALL OBJECTS");
   }
 
   public Que executeSql(String... statements) {
