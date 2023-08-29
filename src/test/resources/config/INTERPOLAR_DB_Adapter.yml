@@ -1,7 +1,7 @@
 id: INTERPOLAR_DB_Adapter
 adapter: care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter
 connection:
-  url: jdbc:h2:mem:interpolar_db;INIT=RUNSCRIPT FROM 'classpath:INTERPOLAR_DB.sql'
+  url: jdbc:h2:mem:interpolar_db?allowMultiQueries=true'
   user: user
   password: password
 subjectQuery:
@@ -76,4 +76,5 @@ phenotypeQueries:
       subject: encounter_id
       startDateTime: start_date_time
       endDateTime: end_date_time
- 
+  medication:
+    union: [ medication_administration, medication_statement, medication_request ]
