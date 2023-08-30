@@ -22,7 +22,7 @@ CREATE TABLE observation (
     start_date_time timestamp,
     end_date_time   timestamp,
     unit            text,
-    number_value    numeric,
+    number_value    numeric(20, 2),
     text_value      text,
     date_time_value timestamp,
     boolean_value   boolean,
