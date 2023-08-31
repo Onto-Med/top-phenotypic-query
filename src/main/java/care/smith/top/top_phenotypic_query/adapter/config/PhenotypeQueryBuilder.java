@@ -86,14 +86,12 @@ public class PhenotypeQueryBuilder extends QueryBuilder {
   }
 
   public PhenotypeQueryBuilder dateTimeIntervalLimit(String operator, String value) {
-    if (">".equals(operator) && query.getDateTimeIntervalPartGt() != null)
-      add(query.getDateTimeIntervalPartGt(), operator, value, mappings);
-    else if (">=".equals(operator) && query.getDateTimeIntervalPartGe() != null)
-      add(query.getDateTimeIntervalPartGe(), operator, value, mappings);
-    else if ("<".equals(operator) && query.getDateTimeIntervalPartLt() != null)
-      add(query.getDateTimeIntervalPartLt(), operator, value, mappings);
-    else if ("<=".equals(operator) && query.getDateTimeIntervalPartLe() != null)
-      add(query.getDateTimeIntervalPartLe(), operator, value, mappings);
+    if (query.getStartDateTimeIntervalPart() != null
+        && ("<".equals(operator) || "<=".equals(operator)))
+      add(query.getStartDateTimeIntervalPart(), operator, value, mappings);
+    else if (query.getEndDateTimeIntervalPart() != null
+        && (">".equals(operator) || ">=".equals(operator)))
+      add(query.getEndDateTimeIntervalPart(), operator, value, mappings);
     else add(query.getDateTimeIntervalPart(), operator, value, mappings);
     return this;
   }
