@@ -8,10 +8,8 @@ public class PhenotypeQuery {
 
   private String baseQuery;
   private String dateTimeIntervalPart;
-  private String dateTimeIntervalPartGe;
-  private String dateTimeIntervalPartGt;
-  private String dateTimeIntervalPartLe;
-  private String dateTimeIntervalPartLt;
+  private String startDateTimeIntervalPart;
+  private String endDateTimeIntervalPart;
   private String subjectsPart;
   private String valueIntervalPart;
   private String valueListPart;
@@ -41,36 +39,20 @@ public class PhenotypeQuery {
     this.dateTimeIntervalPart = dateTimeIntervalPart;
   }
 
-  public String getDateTimeIntervalPartGe() {
-    return dateTimeIntervalPartGe;
+  public String getStartDateTimeIntervalPart() {
+    return startDateTimeIntervalPart;
   }
 
-  public void setDateTimeIntervalPartGe(String dateTimeIntervalPartGe) {
-    this.dateTimeIntervalPartGe = dateTimeIntervalPartGe;
+  public void setStartDateTimeIntervalPart(String startDateTimeIntervalPart) {
+    this.startDateTimeIntervalPart = startDateTimeIntervalPart;
   }
 
-  public String getDateTimeIntervalPartGt() {
-    return dateTimeIntervalPartGt;
+  public String getEndDateTimeIntervalPart() {
+    return endDateTimeIntervalPart;
   }
 
-  public void setDateTimeIntervalPartGt(String dateTimeIntervalPartGt) {
-    this.dateTimeIntervalPartGt = dateTimeIntervalPartGt;
-  }
-
-  public String getDateTimeIntervalPartLe() {
-    return dateTimeIntervalPartLe;
-  }
-
-  public void setDateTimeIntervalPartLe(String dateTimeIntervalPartLe) {
-    this.dateTimeIntervalPartLe = dateTimeIntervalPartLe;
-  }
-
-  public String getDateTimeIntervalPartLt() {
-    return dateTimeIntervalPartLt;
-  }
-
-  public void setDateTimeIntervalPartLt(String dateTimeIntervalPartLt) {
-    this.dateTimeIntervalPartLt = dateTimeIntervalPartLt;
+  public void setEndDateTimeIntervalPart(String endDateTimeIntervalPart) {
+    this.endDateTimeIntervalPart = endDateTimeIntervalPart;
   }
 
   public String getSubjectsPart() {
@@ -195,14 +177,10 @@ public class PhenotypeQuery {
         + baseQuery
         + ", dateTimeIntervalPart="
         + dateTimeIntervalPart
-        + ", dateTimeIntervalPartGe="
-        + dateTimeIntervalPartGe
-        + ", dateTimeIntervalPartGt="
-        + dateTimeIntervalPartGt
-        + ", dateTimeIntervalPartLe="
-        + dateTimeIntervalPartLe
-        + ", dateTimeIntervalPartLt="
-        + dateTimeIntervalPartLt
+        + ", startDateTimeIntervalPart="
+        + startDateTimeIntervalPart
+        + ", endDateTimeIntervalPart="
+        + endDateTimeIntervalPart
         + ", subjectsPart="
         + subjectsPart
         + ", valueIntervalPart="

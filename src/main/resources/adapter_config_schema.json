@@ -68,16 +68,10 @@
         "dateTimeIntervalPart": {
           "type": "string"
         },
-        "dateTimeIntervalPartGe": {
+        "startDateTimeIntervalPart": {
           "type": "string"
         },
-        "dateTimeIntervalPartGt": {
-          "type": "string"
-        },
-        "dateTimeIntervalPartLe": {
-          "type": "string"
-        },
-        "dateTimeIntervalPartLt": {
+        "endDateTimeIntervalPart": {
           "type": "string"
         },
         "output": {
@@ -138,7 +132,7 @@
           "required": ["baseQuery", "dateTimeIntervalPart", "output"]
         },
         {
-          "required": ["baseQuery", "dateTimeIntervalPartGe", "dateTimeIntervalPartGt", "dateTimeIntervalPartLe", "dateTimeIntervalPartLt", "output"]
+          "required": ["baseQuery", "startDateTimeIntervalPart", "endDateTimeIntervalPart", "output"]
         }
       ]
     }

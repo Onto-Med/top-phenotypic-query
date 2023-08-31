@@ -16,10 +16,8 @@ phenotypeQueries:
   encounter:
     baseQuery: "SELECT encounter_id, start_date_time, end_date_time, class FROM encounter\nWHERE TRUE"
     textValueListPart: "\nAND class IN ({values})" 
-    dateTimeIntervalPartGt: "\nAND (start_date_time > {value} OR end_date_time IS NULL OR end_date_time > {value})"
-    dateTimeIntervalPartGe: "\nAND (start_date_time >= {value} OR end_date_time IS NULL OR end_date_time >= {value})"
-    dateTimeIntervalPartLt: "\nAND (start_date_time < {value})"
-    dateTimeIntervalPartLe: "\nAND (start_date_time <= {value})"
+    startDateTimeIntervalPart: "\nAND start_date_time {operator} {value}"
+    endDateTimeIntervalPart: "\nAND (end_date_time IS NULL OR end_date_time {operator} {value})"
     output:
       subject: encounter_id
       textValue: class
@@ -48,30 +46,24 @@ phenotypeQueries:
       dateTime: date_time
   medication_administration:
     baseQuery: "SELECT encounter_id, start_date_time, end_date_time FROM medication_administration m\nWHERE EXISTS (SELECT c.medication_id FROM medication_coding c WHERE m.medication_id = c.medication_id AND system || '|' || code IN ({codes}))"
-    dateTimeIntervalPartGt: "\nAND (start_date_time > {value} OR end_date_time IS NULL OR end_date_time > {value})"
-    dateTimeIntervalPartGe: "\nAND (start_date_time >= {value} OR end_date_time IS NULL OR end_date_time >= {value})"
-    dateTimeIntervalPartLt: "\nAND (start_date_time < {value})"
-    dateTimeIntervalPartLe: "\nAND (start_date_time <= {value})"
+    startDateTimeIntervalPart: "\nAND start_date_time {operator} {value}"
+    endDateTimeIntervalPart: "\nAND (end_date_time IS NULL OR end_date_time {operator} {value})"
     output:
       subject: encounter_id
       startDateTime: start_date_time
       endDateTime: end_date_time
   medication_statement:
     baseQuery: "SELECT encounter_id, start_date_time, end_date_time FROM medication_statement m\nWHERE EXISTS (SELECT c.medication_id FROM medication_coding c WHERE m.medication_id = c.medication_id AND system || '|' || code IN ({codes}))"
-    dateTimeIntervalPartGt: "\nAND (start_date_time > {value} OR end_date_time IS NULL OR end_date_time > {value})"
-    dateTimeIntervalPartGe: "\nAND (start_date_time >= {value} OR end_date_time IS NULL OR end_date_time >= {value})"
-    dateTimeIntervalPartLt: "\nAND (start_date_time < {value})"
-    dateTimeIntervalPartLe: "\nAND (start_date_time <= {value})"
+    startDateTimeIntervalPart: "\nAND start_date_time {operator} {value}"
+    endDateTimeIntervalPart: "\nAND (end_date_time IS NULL OR end_date_time {operator} {value})"
     output:
       subject: encounter_id
       startDateTime: start_date_time
       endDateTime: end_date_time
   medication_request:
     baseQuery: "SELECT encounter_id, start_date_time, end_date_time FROM medication_request m\nWHERE EXISTS (SELECT c.medication_id FROM medication_coding c WHERE m.medication_id = c.medication_id AND system || '|' || code IN ({codes}))"
-    dateTimeIntervalPartGt: "\nAND (start_date_time > {value} OR end_date_time IS NULL OR end_date_time > {value})"
-    dateTimeIntervalPartGe: "\nAND (start_date_time >= {value} OR end_date_time IS NULL OR end_date_time >= {value})"
-    dateTimeIntervalPartLt: "\nAND (start_date_time < {value})"
-    dateTimeIntervalPartLe: "\nAND (start_date_time <= {value})"
+    startDateTimeIntervalPart: "\nAND start_date_time {operator} {value}"
+    endDateTimeIntervalPart: "\nAND (end_date_time IS NULL OR end_date_time {operator} {value})"
     output:
       subject: encounter_id
       startDateTime: start_date_time
