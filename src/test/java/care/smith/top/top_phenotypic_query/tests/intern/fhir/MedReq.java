@@ -22,6 +22,11 @@ public class MedReq extends MedicationRequest {
     setMedication(medRef);
   }
 
+  public MedReq(String identifier, Reference medRef) {
+    addIdentifier().setSystem(Client.SYSTEM).setValue(identifier);
+    setMedication(medRef);
+  }
+
   public MedReq enc(Reference encRef) {
     setEncounter(encRef);
     return this;
