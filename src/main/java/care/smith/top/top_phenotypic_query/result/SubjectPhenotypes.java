@@ -21,6 +21,11 @@ public class SubjectPhenotypes extends LinkedHashMap<String, PhenotypeValues> {
     this.subjectId = subjectId;
   }
 
+  public SubjectPhenotypes subjectId(String subjectId) {
+    this.subjectId = subjectId;
+    return this;
+  }
+
   public void setValues(PhenotypeValues values) {
     put(values.getPhenotypeName(), values);
   }
