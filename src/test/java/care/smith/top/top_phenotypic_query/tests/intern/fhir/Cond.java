@@ -23,6 +23,11 @@ public class Cond extends Condition {
     setCode(cc);
   }
 
+  public Cond(String identifier) {
+    addIdentifier().setSystem(Client.SYSTEM).setValue(identifier);
+    setCode(cc);
+  }
+
   public Cond enc(Reference encRef) {
     setEncounter(encRef);
     return this;
