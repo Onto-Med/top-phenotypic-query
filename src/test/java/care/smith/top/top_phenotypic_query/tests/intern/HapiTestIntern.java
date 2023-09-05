@@ -7,10 +7,6 @@ import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Ge;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.Date;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
@@ -27,7 +23,7 @@ public class HapiTestIntern {
   private static Phenotype weight =
       new Phe("weight", "http://loinc.org", "3141-9").number("kg").get();
   private static Phenotype heavy = new Phe("heavy").restriction(weight, Res.ge(100)).get();
-  private static Phenotype light = new Phe("light").restriction(weight, Res.lt(100)).get();
+  //  private static Phenotype light = new Phe("light").restriction(weight, Res.lt(100)).get();
 
   private static Phenotype height =
       new Phe("height", "http://loinc.org", "3137-7", "8302-2").number("cm").get();
@@ -66,16 +62,16 @@ public class HapiTestIntern {
           .bool()
           .get();
 
-  private static Phenotype check1 =
-      new Phe("check1")
-          .expression(Exists.of(Filter.of(Exp.of(weight), Exp.ofConstant("lt"), Date.of(med))))
-          .get();
-
-  private static Phenotype check2 =
-      new Phe("check2")
-          .expression(
-              Ge.of(Filter.of(Exp.of(weight), Exp.ofConstant("lt"), Date.of(med)), Exp.of(60)))
-          .get();
+  //  private static Phenotype check1 =
+  //      new Phe("check1")
+  //          .expression(Exists.of(Filter.of(Exp.of(weight), Exp.ofConstant("lt"), Date.of(med))))
+  //          .get();
+  //
+  //  private static Phenotype check2 =
+  //      new Phe("check2")
+  //          .expression(
+  //              Ge.of(Filter.of(Exp.of(weight), Exp.ofConstant("lt"), Date.of(med)), Exp.of(60)))
+  //          .get();
 
   private static Entity[] entities = {
     weight,
