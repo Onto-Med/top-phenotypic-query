@@ -71,9 +71,7 @@ public class FHIRAnaphylaxisTestIntern {
     Reference enc5 =
         client.add(
             new Enc("e5", pat5).cls("http://terminology.hl7.org/CodeSystem/v3-ActCode", "IMP"));
-    Reference enc6a =
-        client.add(
-            new Enc("e6a", pat6).cls("http://terminology.hl7.org/CodeSystem/v3-ActCode", "IMP"));
+    client.add(new Enc("e6a", pat6).cls("http://terminology.hl7.org/CodeSystem/v3-ActCode", "IMP"));
     Reference enc6b =
         client.add(
             new Enc("e6b", pat6).cls("http://terminology.hl7.org/CodeSystem/v3-ActCode", "XYZ"));

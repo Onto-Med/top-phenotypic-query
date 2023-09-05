@@ -303,32 +303,4 @@ public class MELDTestIntern {
 
     return rs.getSubjectIds();
   }
-
-  private void print() throws InstantiationException {
-    ResultSet rs =
-        new Que(
-                "config/Default_FHIR_Adapter_Test.yml",
-                crea,
-                bili,
-                inr,
-                creaClean,
-                biliClean,
-                inrClean,
-                dia,
-                existDia0_7,
-                med,
-                meld,
-                meld0,
-                meld1,
-                meld2,
-                meld3)
-            .pro(crea)
-            .pro(bili)
-            .pro(inr)
-            .pro(dia)
-            .pro(med)
-            .pro(meld)
-            .execute();
-    System.out.println(rs);
-  }
 }
