@@ -70,7 +70,8 @@ public class FHIRMedicationTestInternEnc {
 
     client.add(new MedAdm("p1a-m", med1).enc(pat1a).date("2020-01-01"));
     client.add(new MedAdm("p1b-m", med1).enc(pat1b).date("2020-01-01"));
-    client.add(new MedAdm("p1c-m", med1).enc(pat1c).date("2020-01-01"));
+    client.add(new MedAdm("p1c-m1", med1).enc(pat1c).date("2020-01-01"));
+    client.add(new MedSta("p1c-m2", med1).enc(pat1c).date("2020-01-02"));
     client.add(new MedAdm("p1d-m", med1).enc(pat1d).date("2020-01-01"));
     client.add(new MedAdm("p1e-m", med1).enc(pat1e).date("2019-01-01"));
 
