@@ -56,9 +56,9 @@ public class FHIRPatientFinder extends FHIRPathResourceFinder {
         sbjAdded = true;
       }
     }
-    if (!sbjAdded) rs.addSubject(sbj);
 
-    String patRef = path.getString(res, out.getPatientReference());
-    if (patRef != null) rs.addValue(sbj, "PatientReference", null, Val.of(patRef));
+    boolean patCheck = EncounterPatientRef.check(search, path, res, out, rs, sbj);
+
+    if (!sbjAdded && !patCheck) rs.addSubject(sbj);
   }
 }

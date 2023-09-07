@@ -80,6 +80,11 @@ public class FHIRAnaphylaxisTestIntern {
             .enc(enc1)
             .date("2020-01-01"));
     client.add(
+        new Cond("p1cx", pat1)
+            .code("http://fhir.de/CodeSystem/bfarm/icd-10-gm", "T78.0")
+            .enc(enc1)
+            .date("2020-01-02"));
+    client.add(
         new Cond("p2c", pat2)
             .code("http://fhir.de/CodeSystem/bfarm/icd-10-gm", "T78.0")
             .enc(enc2)

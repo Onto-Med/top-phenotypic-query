@@ -50,6 +50,10 @@ public class FHIRClient {
     this.path = new FHIRPath(ctx);
   }
 
+  public IGenericClient getClient() {
+    return client;
+  }
+
   public List<Resource> findResources(String query) {
     List<Resource> resources = new ArrayList<>();
     new FHIRResourceFinder(client, resources).findResources(query);

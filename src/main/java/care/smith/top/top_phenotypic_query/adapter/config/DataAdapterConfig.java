@@ -27,6 +27,7 @@ public class DataAdapterConfig {
   private CodeMapping ageMapping;
   private CodeMapping sexMapping;
   private Map<String, CodeMapping> codeMappings = new HashMap<>();
+  private String baseId;
 
   public static DataAdapterConfig getInstance(String yamlFilePath) {
     try {
@@ -196,6 +197,7 @@ public class DataAdapterConfig {
     setId(other.getId());
     setAdapter(other.getAdapter());
     setConnection(other.getConnection());
+    if (other.getBaseId() != null) setBaseId(other.getBaseId());
     if (other.getCsvSettings() != null) setCsvSettings(other.getCsvSettings());
     if (other.getSubjectQuery() != null) setSubjectQuery(other.getSubjectQuery());
     phenotypeQueries.putAll(other.getPhenotypeQueries());
@@ -204,6 +206,22 @@ public class DataAdapterConfig {
     if (other.getSexMapping() != null) setSexMapping(other.getSexMapping());
     setCodeMappings(other.getCodeMappings());
     return this;
+  }
+
+  public String getBaseId() {
+    return baseId;
+  }
+
+  public void setBaseId(String baseId) {
+    this.baseId = baseId;
+  }
+
+  public boolean isEncounterId() {
+    return "encounter".equals(baseId);
+  }
+
+  public boolean isPatientId() {
+    return !isEncounterId();
   }
 
   @Override
@@ -228,6 +246,8 @@ public class DataAdapterConfig {
         + sexMapping
         + ", codeMappings="
         + codeMappings
+        + ", baseId="
+        + baseId
         + "]";
   }
 }

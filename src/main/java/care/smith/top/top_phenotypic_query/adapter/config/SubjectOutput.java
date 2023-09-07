@@ -5,7 +5,7 @@ public class SubjectOutput {
   private String id;
   private String sex;
   private String birthdate;
-  private String patientReference;
+  private String patient;
 
   public String getId() {
     return id;
@@ -31,12 +31,12 @@ public class SubjectOutput {
     this.birthdate = birthdate;
   }
 
-  public String getPatientReference() {
-    return patientReference;
+  public String getPatient() {
+    return patient;
   }
 
-  public void setPatientReference(String patientReference) {
-    this.patientReference = patientReference;
+  public void setPatient(String patient) {
+    this.patient = patient;
   }
 
   @Override
@@ -47,8 +47,8 @@ public class SubjectOutput {
         + sex
         + ", birthdate="
         + birthdate
-        + ", patientReference="
-        + patientReference
+        + ", patient="
+        + patient
         + "]";
   }
 }
