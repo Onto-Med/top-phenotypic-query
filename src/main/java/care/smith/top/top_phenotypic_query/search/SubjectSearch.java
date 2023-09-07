@@ -142,6 +142,10 @@ public class SubjectSearch extends PhenotypeSearch {
     return adapter;
   }
 
+  public DataAdapterConfig getConfig() {
+    return config;
+  }
+
   @Override
   public ResultSet execute() throws SQLException {
     return adapter.execute(this);

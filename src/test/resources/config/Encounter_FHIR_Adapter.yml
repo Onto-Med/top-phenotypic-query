@@ -2,6 +2,7 @@ id: Encounter_FHIR_Adapter
 adapter: care.smith.top.top_phenotypic_query.adapter.fhir.FHIRAdapter
 connection:
   url: http://localhost:8080/baseR4
+baseId: encounter
 subjectQuery: 
   baseQuery: "Encounter?_count=100&_elements=subject&_include=Encounter:subject"
   sexListPart: "&subject.gender={values}"
@@ -9,7 +10,7 @@ subjectQuery:
   output:
     sex: gender.value
     birthdate: birthDate
-    patientReference: subject.reference.value
+    patient: subject.reference.value
 phenotypeQueries:
   encounter:
     baseQuery: "Encounter?_count=100&_elements=subject,class,period"

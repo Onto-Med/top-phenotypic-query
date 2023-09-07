@@ -84,17 +84,30 @@ public class BlazeTestIntern {
     assertEquals(13, obsCount);
   }
 
-  @Test
-  public void test2() throws InstantiationException {
-    Phenotype enc = new Phe("encounter").itemType(ItemType.ENCOUNTER).string().get();
-    Phenotype stat = new Phe("stationaer").restriction(enc, Res.of("stationaer")).get();
-    Entity[] entities = {enc, stat};
+  //  @Test
+  //  public void test2() throws InstantiationException {
+  //    Phenotype enc = new Phe("encounter").itemType(ItemType.ENCOUNTER).string().get();
+  //    Phenotype stat = new Phe("stationaer").restriction(enc, Res.of("stationaer")).get();
+  //    Entity[] entities = {enc, stat};
+  //
+  //    ResultSet rs = new Que(CONFIG, entities).inc(stat).execute();
+  //
+  //    System.out.println(rs.getSubjectIds());
+  //    System.out.println(rs.getSubjectIds().size());
+  //  }
 
-    ResultSet rs = new Que(CONFIG, entities).inc(stat).execute();
-
-    System.out.println(rs.getSubjectIds());
-    System.out.println(rs.getSubjectIds().size());
-  }
+  //  @Test
+  //  public void testEncPartOf() throws InstantiationException {
+  //    Phenotype bd = new Phe("birthdate").dateTime().itemType(ItemType.SUBJECT_BIRTH_DATE).get();
+  //    Phenotype enc = new Phe("encounter").string().itemType(ItemType.ENCOUNTER).get();
+  //    Phenotype age = new Phe("age").expression(EncAge.of(bd, enc)).get();
+  //    Phenotype old = new Phe("old").restriction(age, Res.ge(83)).get();
+  //
+  //    ResultSet rs =
+  //        new Que("config/Blaze_Enc_Adapter_Test.yml", bd, enc, age, old).inc(old).execute();
+  //
+  //    System.out.println(rs);
+  //  }
 
   @Test
   public void testEncAge() throws InstantiationException {
