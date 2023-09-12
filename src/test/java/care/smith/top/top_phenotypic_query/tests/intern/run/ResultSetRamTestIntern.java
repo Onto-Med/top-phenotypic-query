@@ -98,6 +98,7 @@ public class ResultSetRamTestIntern {
 			}
 		}
 
+		System.out.println((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000_000+" MB used");
 		Assertions.assertEquals(subjectCount, rs.size());
 		Assertions.assertEquals(valueCount, rs.getValues("0", height.getId()).getValues(dtr).size());
 		Assertions.assertEquals(valueCount, rs.getValues("0", weight.getId()).getValues(dtr).size());
