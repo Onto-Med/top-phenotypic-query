@@ -36,4 +36,9 @@ public class Enc extends Encounter {
     setPeriod(new Period().setStart(DateUtil.parseToDate(start)));
     return this;
   }
+
+  public Enc partOf(Reference encRef) {
+    setPartOf(encRef);
+    return this;
+  }
 }
