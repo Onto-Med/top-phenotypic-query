@@ -40,9 +40,8 @@ how to call it programmatically.
 
 ## Installation
 
-Add the following Maven dependency to your project's `pom.xml` file. Because the package is hosted on
-the [GitHub Maven Package Registry](https://docs.github.com/en/packages), you must authenticate with a personal access
-token to access the package.
+Add the following Maven dependency to your project's `pom.xml` file and see section [Authentication to GitHub Packages](#authentication-to-github-packages)
+for authentication with [GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry).
 
 ```xml
 <dependency>
@@ -51,6 +50,15 @@ token to access the package.
     <version><!-- the version number --></version>
 </dependency>
 ```
+
+### Authentication to GitHub Packages
+
+Because the Maven package is hosted at [GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry),
+you need to make some modifications to your Maven installation in order to download and install the package.
+Please follow the [Authenticating to GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#authenticating-to-github-packages)
+instructions.
+
+Authentification is required for `care.smith.top:top-phenotypic-query` and the dependency [care.smith.top:top-api](https://maven.pkg.github.com/onto-med/top-api).
 
 ## Usage
 
@@ -113,9 +121,13 @@ PhenotypeExporter exporter;
 exporter.write(phenotypes, repository, uri, outputStream);
 ```
 
+## Contribution and Development
+
+Please see our [Contributing Guide](CONTRIBUTING.md).
+
 ## License
 
-The code in this repository and the package `care.smith.top:top-phenotypic-query` are licensed under [GPL-3.0](LICENSE).
+The code in this repository and the package `care.smith.top:top-phenotypic-query` are licensed under [MIT](LICENSE).
 
 ## References
 
