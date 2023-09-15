@@ -36,6 +36,12 @@ public class MELDTestInternEnc {
 
   private static Client client = new Client();
 
+  private static Phenotype sex = new Phe("sex").itemType(ItemType.SUBJECT_SEX).string().get();
+  private static Phenotype male = new Phe("male").restriction(sex, Res.of("male")).get();
+
+  private static Phenotype age = new Phe("age").itemType(ItemType.SUBJECT_AGE).number().get();
+  private static Phenotype old = new Phe("old").restriction(age, Res.gt(70)).get();
+
   private static Phenotype crea =
       new Phe("crea", "http://loinc.org", "2160-0")
           .itemType(ItemType.OBSERVATION)
@@ -122,45 +128,46 @@ public class MELDTestInternEnc {
   void test() throws InstantiationException {
     client.clean();
 
-    Reference patM = client.add(new Pat("pM").birthDate("2001-01-01").gender("male"));
-    Reference patF = client.add(new Pat("pF").birthDate("2002-01-01").gender("female"));
+    Reference patMY = client.add(new Pat("pMY").birthDate("2001-01-01").gender("male"));
+    Reference patMO = client.add(new Pat("pMO").birthDate("1950-01-01").gender("male"));
+    Reference patFO = client.add(new Pat("pFO").birthDate("1940-01-01").gender("female"));
 
-    Reference e0a = client.add(new Enc("e0a", patM));
-    Reference e0b = client.add(new Enc("e0b", patM).partOf(e0a));
-    Reference e0c = client.add(new Enc("e0c", patM).partOf(e0b));
-    Reference e0d = client.add(new Enc("e0d", patM).partOf(e0b));
+    Reference e0a = client.add(new Enc("e0a", patMY));
+    Reference e0b = client.add(new Enc("e0b", patMY).partOf(e0a));
+    Reference e0c = client.add(new Enc("e0c", patMY).partOf(e0b));
+    Reference e0d = client.add(new Enc("e0d", patMY).partOf(e0b));
 
-    Reference e1a = client.add(new Enc("e1a", patF));
-    Reference e1b = client.add(new Enc("e1b", patF).partOf(e1a));
-    Reference e1c = client.add(new Enc("e1c", patF).partOf(e1b));
+    Reference e1a = client.add(new Enc("e1a", patFO));
+    Reference e1b = client.add(new Enc("e1b", patFO).partOf(e1a));
+    Reference e1c = client.add(new Enc("e1c", patFO).partOf(e1b));
 
-    Reference e2a = client.add(new Enc("e2a", patM));
-    Reference e2b = client.add(new Enc("e2b", patM).partOf(e2a));
-    Reference e2c = client.add(new Enc("e2c", patM).partOf(e2b));
+    Reference e2a = client.add(new Enc("e2a", patMO));
+    Reference e2b = client.add(new Enc("e2b", patMO).partOf(e2a));
+    Reference e2c = client.add(new Enc("e2c", patMO).partOf(e2b));
 
-    Reference e3a = client.add(new Enc("e3a", patF));
-    Reference e3b = client.add(new Enc("e3b", patF).partOf(e3a));
-    Reference e3c = client.add(new Enc("e3c", patF).partOf(e3a));
-    Reference e3d = client.add(new Enc("e3d", patF).partOf(e3b));
+    Reference e3a = client.add(new Enc("e3a", patFO));
+    Reference e3b = client.add(new Enc("e3b", patFO).partOf(e3a));
+    Reference e3c = client.add(new Enc("e3c", patFO).partOf(e3a));
+    Reference e3d = client.add(new Enc("e3d", patFO).partOf(e3b));
 
-    Reference e4a = client.add(new Enc("e4a", patM));
-    Reference e4b = client.add(new Enc("e4b", patM).partOf(e4a));
-    Reference e4c = client.add(new Enc("e4c", patM).partOf(e4b));
-    Reference e4d = client.add(new Enc("e4d", patM).partOf(e4c));
-    Reference e4e = client.add(new Enc("e4e", patM).partOf(e4d));
+    Reference e4a = client.add(new Enc("e4a", patMY));
+    Reference e4b = client.add(new Enc("e4b", patMY).partOf(e4a));
+    Reference e4c = client.add(new Enc("e4c", patMY).partOf(e4b));
+    Reference e4d = client.add(new Enc("e4d", patMY).partOf(e4c));
+    Reference e4e = client.add(new Enc("e4e", patMY).partOf(e4d));
 
-    Reference e5a = client.add(new Enc("e5a", patF));
-    Reference e5b = client.add(new Enc("e5b", patF).partOf(e5a));
+    Reference e5a = client.add(new Enc("e5a", patFO));
+    Reference e5b = client.add(new Enc("e5b", patFO).partOf(e5a));
 
-    Reference e6a = client.add(new Enc("e6a", patM));
-    Reference e6b = client.add(new Enc("e6b", patM).partOf(e6a));
+    Reference e6a = client.add(new Enc("e6a", patMY));
+    Reference e6b = client.add(new Enc("e6b", patMY).partOf(e6a));
 
-    Reference e7a = client.add(new Enc("e7a", patF));
-    Reference e7b = client.add(new Enc("e7b", patF).partOf(e7a));
+    Reference e7a = client.add(new Enc("e7a", patFO));
+    Reference e7b = client.add(new Enc("e7b", patFO).partOf(e7a));
 
-    Reference e8a = client.add(new Enc("e8a", patM));
-    Reference e8b = client.add(new Enc("e8b", patM).partOf(e8a));
-    Reference e8c = client.add(new Enc("e8c", patM).partOf(e8a));
+    Reference e8a = client.add(new Enc("e8a", patMO));
+    Reference e8b = client.add(new Enc("e8b", patMO).partOf(e8a));
+    Reference e8c = client.add(new Enc("e8c", patMO).partOf(e8a));
 
     client.add(
         new Obs("e0crea1")
@@ -300,36 +307,41 @@ public class MELDTestInternEnc {
             .code("http://fhir.de/CodeSystem/bfarm/ops", "8-853")
             .date(LocalDateTime.now().minusDays(6)));
 
-    assertEquals(Set.of(e0a.getReference()), search(meld0, null));
-    assertEquals(Set.of(e1a.getReference()), search(meld2, null));
+    assertEquals(Set.of(e0a.getReference()), search(null, meld0));
+    assertEquals(Set.of(e1a.getReference()), search(null, meld2));
     assertEquals(
         Set.of(e2a.getReference(), e3a.getReference(), e4a.getReference(), e8a.getReference()),
-        search(meld3, null));
+        search(null, meld3));
+    assertEquals(Set.of(e2a.getReference(), e8a.getReference()), search(null, meld3, male, old));
     assertEquals(
-        Set.of(e2a.getReference(), e4a.getReference(), e8a.getReference()), search(meld3, med));
+        Set.of(e2a.getReference(), e4a.getReference(), e8a.getReference()), search(med, meld3));
   }
 
-  private Set<String> search(Phenotype inc, Phenotype exc) throws InstantiationException {
+  private Set<String> search(Phenotype exc, Phenotype... inc) throws InstantiationException {
     Que q =
         new Que(
-                "config/Encounter_FHIR_Adapter.yml",
-                crea,
-                bili,
-                inr,
-                creaClean,
-                biliClean,
-                inrClean,
-                dia,
-                existDia0_7,
-                med,
-                meld,
-                meld0,
-                meld1,
-                meld2,
-                meld3)
-            .inc(inc);
+            "config/Encounter_FHIR_Adapter.yml",
+            sex,
+            male,
+            age,
+            old,
+            crea,
+            bili,
+            inr,
+            creaClean,
+            biliClean,
+            inrClean,
+            dia,
+            existDia0_7,
+            med,
+            meld,
+            meld0,
+            meld1,
+            meld2,
+            meld3);
 
     if (exc != null) q.exc(exc);
+    for (Phenotype i : inc) q.inc(i);
 
     ResultSet rs = q.execute();
     //    System.out.println(rs);
