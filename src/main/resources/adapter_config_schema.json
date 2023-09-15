@@ -165,6 +165,9 @@
           "description": "Token for HTTP bearer authentication"
         }
       },
+      "baseId": {
+        "type": "string"
+      },
       "required": ["url"]
     },
     "subjectQuery": {
