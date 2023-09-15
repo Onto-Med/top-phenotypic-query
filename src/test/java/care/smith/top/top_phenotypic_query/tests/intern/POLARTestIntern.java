@@ -14,7 +14,10 @@ import java.sql.SQLException;
 public class POLARTestIntern extends AbstractTest {
 
   public static void main(String[] args)
-      throws SQLException, MalformedURLException, IOException, InstantiationException,
+      throws SQLException,
+          MalformedURLException,
+          IOException,
+          InstantiationException,
           InterruptedException {
     Entities entities =
         Entities.of(
