@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class FHIRPath {
     return FHIRUtil.getString(getValue(res, path));
   }
 
-  public BigDecimal getNumber(Resource res, String path) {
+  public Double getNumber(Resource res, String path) {
     return FHIRUtil.getNumber(getValue(res, path));
   }
 

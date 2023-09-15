@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
-import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -148,7 +147,7 @@ public class DB2FHIRTestIntern {
     String system;
     String code;
     String unit;
-    BigDecimal value;
+    Double value;
 
     Phenotype(ResultSet rs, Map<String, String> patIds, boolean withValue) throws SQLException {
       id = rs.getString("phenotype_id");
@@ -158,7 +157,7 @@ public class DB2FHIRTestIntern {
       code = rs.getString("code");
       if (withValue) {
         unit = rs.getString("unit");
-        value = rs.getBigDecimal("number_value");
+        value = rs.getDouble("number_value");
       }
     }
 
@@ -186,7 +185,7 @@ public class DB2FHIRTestIntern {
       return unit;
     }
 
-    BigDecimal getValue() {
+    Double getValue() {
       return value;
     }
   }

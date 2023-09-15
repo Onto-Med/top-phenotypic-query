@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +28,7 @@ public class Val {
     return new NumberValue().value(Values.toDecimal(val)).dataType(DataType.NUMBER);
   }
 
-  public static Value of(BigDecimal val) {
+  public static Value of(Double val) {
     return new NumberValue().value(val).dataType(DataType.NUMBER);
   }
 
@@ -49,7 +48,7 @@ public class Val {
     return of(val).dateTime(dateTime);
   }
 
-  public static Value of(BigDecimal val, LocalDateTime dateTime) {
+  public static Value of(Double val, LocalDateTime dateTime) {
     return of(val).dateTime(dateTime);
   }
 
@@ -69,7 +68,7 @@ public class Val {
     return of(val).startDateTime(starDateTime).endDateTime(endDateTime);
   }
 
-  public static Value of(BigDecimal val, LocalDateTime starDateTime, LocalDateTime endDateTime) {
+  public static Value of(Double val, LocalDateTime starDateTime, LocalDateTime endDateTime) {
     return of(val).startDateTime(starDateTime).endDateTime(endDateTime);
   }
 
@@ -92,7 +91,7 @@ public class Val {
   }
 
   public static Value of(
-      BigDecimal val,
+      Double val,
       LocalDateTime dateTime,
       LocalDateTime starDateTime,
       LocalDateTime endDateTime) {
@@ -150,7 +149,7 @@ public class Val {
     return vals.stream().map(v -> of(v)).collect(Collectors.toList());
   }
 
-  public static List<Value> ofNumber(List<BigDecimal> vals) {
+  public static List<Value> ofNumber(List<Double> vals) {
     return vals.stream().map(v -> of(v)).collect(Collectors.toList());
   }
 

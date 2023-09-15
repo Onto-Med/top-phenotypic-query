@@ -3,7 +3,6 @@ package care.smith.top.top_phenotypic_query.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
@@ -136,19 +135,19 @@ public class AKITest {
 
     assertEquals(Set.of("1", "2", "5"), rs.getSubjectIds());
 
-    assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("1", "rvRatio0_7", dtr));
-    assertEquals(BigDecimal.valueOf(-1), rs.getNumberValue("1", "rvRatio8_365", dtr));
-    assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("1", "rvRatio", dtr));
+    assertEquals(Double.valueOf(2), rs.getNumberValue("1", "rvRatio0_7", dtr));
+    assertEquals(Double.valueOf(-1), rs.getNumberValue("1", "rvRatio8_365", dtr));
+    assertEquals(Double.valueOf(2), rs.getNumberValue("1", "rvRatio", dtr));
     assertTrue(rs.getBooleanValue("1", "rvRatioGe1_5", dtr));
 
-    assertEquals(BigDecimal.valueOf(-1), rs.getNumberValue("2", "rvRatio0_7", dtr));
-    assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("2", "rvRatio8_365", dtr));
-    assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("2", "rvRatio", dtr));
+    assertEquals(Double.valueOf(-1), rs.getNumberValue("2", "rvRatio0_7", dtr));
+    assertEquals(Double.valueOf(3), rs.getNumberValue("2", "rvRatio8_365", dtr));
+    assertEquals(Double.valueOf(3), rs.getNumberValue("2", "rvRatio", dtr));
     assertTrue(rs.getBooleanValue("2", "rvRatioGe1_5", dtr));
 
-    assertEquals(BigDecimal.valueOf(2), rs.getNumberValue("5", "rvRatio0_7", dtr));
-    assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("5", "rvRatio8_365", dtr));
-    assertEquals(BigDecimal.valueOf(3), rs.getNumberValue("5", "rvRatio", dtr));
+    assertEquals(Double.valueOf(2), rs.getNumberValue("5", "rvRatio0_7", dtr));
+    assertEquals(Double.valueOf(3), rs.getNumberValue("5", "rvRatio8_365", dtr));
+    assertEquals(Double.valueOf(3), rs.getNumberValue("5", "rvRatio", dtr));
     assertTrue(rs.getBooleanValue("5", "rvRatioGe1_5", dtr));
   }
 

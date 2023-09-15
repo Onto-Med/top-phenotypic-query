@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.adapter;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -83,7 +82,7 @@ public abstract class DataAdapterSettings {
   protected abstract void addDateInterval(
       Restriction r, PhenotypeQueryBuilder builder, SingleSearch search);
 
-  public abstract String formatNumber(BigDecimal num);
+  public abstract String formatNumber(Double num);
 
   public abstract String formatDateTime(LocalDateTime date);
 

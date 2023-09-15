@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.util;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -28,7 +27,7 @@ public class Expressions {
     return null;
   }
 
-  public static BigDecimal getNumberValue(Expression exp) {
+  public static Double getNumberValue(Expression exp) {
     return Values.getNumberValue(getValue(exp));
   }
 
@@ -44,7 +43,7 @@ public class Expressions {
     return Values.getDateTimeValue(getValue(exp));
   }
 
-  public static List<BigDecimal> getNumberValues(Expression exp) {
+  public static List<Double> getNumberValues(Expression exp) {
     return Values.getNumberValues(exp.getValues());
   }
 

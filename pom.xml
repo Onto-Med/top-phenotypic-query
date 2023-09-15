@@ -10,13 +10,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>top-api</id>
-            <url>https://maven.pkg.github.com/onto-med/top-api</url>
-        </repository>
-    </repositories>
-
     <distributionManagement>
         <repository>
             <id>github</id>
@@ -26,10 +19,11 @@
     </distributionManagement>
 
     <dependencies>
+	<!-- for this test branch, the modified top-api with branch migrate-number-format-from-unspecified-to-double must be manually installed with mvn install -->
         <dependency>
             <groupId>care.smith.top</groupId>
             <artifactId>top-api</artifactId>
-            <version>0.9.0</version>
+            <version>0.9.1</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>

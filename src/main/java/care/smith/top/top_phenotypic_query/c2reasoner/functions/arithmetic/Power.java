@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic;
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
@@ -41,21 +40,21 @@ public class Power extends FunctionEntity {
     if (args == null) return null;
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
 
-    BigDecimal arg1 = Expressions.getNumberValue(Aggregator.aggregate(args.get(0), c2r));
-    BigDecimal arg2 = Expressions.getNumberValue(args.get(1));
+    Double arg1 = Expressions.getNumberValue(Aggregator.aggregate(args.get(0), c2r));
+    Double arg2 = Expressions.getNumberValue(args.get(1));
 
-    int signOf2 = arg2.signum();
+    int signOf2 = (int) Math.signum(arg2);
     double dn1 = arg1.doubleValue();
-    arg2 = arg2.multiply(new BigDecimal(signOf2)); // n2 is now positive
-    BigDecimal remainderOf2 = arg2.remainder(BigDecimal.ONE);
-    BigDecimal n2IntPart = arg2.subtract(remainderOf2);
-    BigDecimal intPow = arg1.pow(n2IntPart.intValueExact(), c2r.getMathContext());
-    BigDecimal doublePow = BigDecimal.valueOf(Math.pow(dn1, remainderOf2.doubleValue()));
+    arg2 = arg2*signOf2; // n2 is now positive
+    Double remainderOf2 = arg2%1.0;
+    Double n2IntPart = arg2-remainderOf2;
+    Double intPow = Math.pow(arg1,n2IntPart.intValue());
+    Double doublePow = Double.valueOf(Math.pow(dn1, remainderOf2.doubleValue()));
 
-    BigDecimal result = intPow.multiply(doublePow, c2r.getMathContext());
+    Double result = intPow*doublePow;
     if (signOf2 == -1)
       result =
-          BigDecimal.ONE.divide(result, c2r.getMathContext().getPrecision(), RoundingMode.HALF_UP);
+          1.0/result;
 
     return Exp.of(result);
   }

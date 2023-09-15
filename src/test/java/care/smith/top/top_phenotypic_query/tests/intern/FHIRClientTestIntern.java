@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
-import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -82,8 +81,8 @@ public class FHIRClientTestIntern {
       String sex = rs.getString("sex");
       String obsId = rs.getString("assessment_id");
       LocalDateTime date = rs.getTimestamp("created_at").toLocalDateTime();
-      BigDecimal height = rs.getBigDecimal("height");
-      BigDecimal weight = rs.getBigDecimal("weight");
+      Double height = rs.getDouble("height");
+      Double weight = rs.getDouble("weight");
 
       String fhirPatId = patIds.get(patId);
       if (fhirPatId == null) {
@@ -106,19 +105,19 @@ public class FHIRClientTestIntern {
   }
 
   private static void createHeight(
-      String id, String fhirPatId, BigDecimal val, LocalDateTime date) {
+      String id, String fhirPatId, Double val, LocalDateTime date) {
     createObservation(id, fhirPatId, val, date, "cm", "http://loinc.org", "3137-7");
   }
 
   private static void createWeight(
-      String id, String fhirPatId, BigDecimal val, LocalDateTime date) {
+      String id, String fhirPatId, Double val, LocalDateTime date) {
     createObservation(id, fhirPatId, val, date, "kg", "http://loinc.org", "3141-9");
   }
 
   private static void createObservation(
       String id,
       String fhirPatId,
-      BigDecimal val,
+      Double val,
       LocalDateTime date,
       String unit,
       String system,

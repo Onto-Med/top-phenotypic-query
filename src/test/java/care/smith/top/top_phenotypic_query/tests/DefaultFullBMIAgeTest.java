@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -43,18 +42,18 @@ public class DefaultFullBMIAgeTest extends AbstractTest {
     phesExpected.remove("Male");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
-    assertEquals(new BigDecimal(21), Values.getNumberValue(getValue("Age", phes)));
+    assertEquals(new Double(21), Values.getNumberValue(getValue("Age", phes)));
     assertFalse(Values.getBooleanValue(getValue("Old", phes)));
     assertTrue(Values.getBooleanValue(getValue("Young", phes)));
 
     assertEquals("female", Values.getStringValue(getValue("Sex", phes)));
     assertTrue(Values.getBooleanValue(getValue("Female", phes)));
 
-    assertEquals(new BigDecimal("25.95155709342561"), Values.getNumberValue(getValue("BMI", phes)));
+    assertEquals(new Double("25.95155709342561"), Values.getNumberValue(getValue("BMI", phes)));
     assertFalse(Values.getBooleanValue(getValue("BMI19_25", phes)));
     assertTrue(Values.getBooleanValue(getValue("BMI25_30", phes)));
 
-    assertEquals(BigDecimal.ONE, Values.getNumberValue(getValue("Finding", phes)));
+    assertEquals(1.0, Values.getNumberValue(getValue("Finding", phes)));
     assertTrue(Values.getBooleanValue(getValue("Overweight", phes)));
   }
 
@@ -80,17 +79,17 @@ public class DefaultFullBMIAgeTest extends AbstractTest {
     phesExpected.remove("Female");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
-    assertEquals(new BigDecimal(21), Values.getNumberValue(getValue("Age", phes)));
+    assertEquals(new Double(21), Values.getNumberValue(getValue("Age", phes)));
     assertFalse(Values.getBooleanValue(getValue("Old", phes)));
     assertTrue(Values.getBooleanValue(getValue("Young", phes)));
 
     assertEquals("female", Values.getStringValue(getValue("Sex", phes)));
 
-    assertEquals(new BigDecimal("25.95155709342561"), Values.getNumberValue(getValue("BMI", phes)));
+    assertEquals(new Double("25.95155709342561"), Values.getNumberValue(getValue("BMI", phes)));
     assertFalse(Values.getBooleanValue(getValue("BMI19_25", phes)));
     assertTrue(Values.getBooleanValue(getValue("BMI25_30", phes)));
 
-    assertEquals(BigDecimal.ONE, Values.getNumberValue(getValue("Finding", phes)));
+    assertEquals(1.0, Values.getNumberValue(getValue("Finding", phes)));
     assertTrue(Values.getBooleanValue(getValue("Overweight", phes)));
   }
 }

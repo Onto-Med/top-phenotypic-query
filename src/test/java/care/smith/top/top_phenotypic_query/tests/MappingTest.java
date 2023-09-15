@@ -3,7 +3,6 @@ package care.smith.top.top_phenotypic_query.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 
@@ -53,8 +52,8 @@ public class MappingTest extends AbstractTest {
         new NumberRestriction()
             .minOperator(RestrictionOperator.GREATER_THAN_OR_EQUAL_TO)
             .maxOperator(RestrictionOperator.LESS_THAN)
-            .addValuesItem(BigDecimal.valueOf(18))
-            .addValuesItem(BigDecimal.valueOf(34))
+            .addValuesItem(Double.valueOf(18))
+            .addValuesItem(Double.valueOf(34))
             .cardinality(1)
             .quantifier(Quantifier.EXACT)
             .type(DataType.NUMBER);
@@ -62,8 +61,8 @@ public class MappingTest extends AbstractTest {
         new NumberRestriction()
             .minOperator(RestrictionOperator.GREATER_THAN_OR_EQUAL_TO)
             .maxOperator(RestrictionOperator.LESS_THAN)
-            .addValuesItem(BigDecimal.valueOf(19))
-            .addValuesItem(BigDecimal.valueOf(34))
+            .addValuesItem(Double.valueOf(19))
+            .addValuesItem(Double.valueOf(34))
             .cardinality(1)
             .quantifier(Quantifier.EXACT)
             .type(DataType.NUMBER);
@@ -91,7 +90,7 @@ public class MappingTest extends AbstractTest {
     CodeMapping heightMap = config.getCodeMapping("http://loinc.org|3137-7");
     Restriction source = heightMap.getSourceRestriction(model, height);
     assertEquals(
-        List.of(BigDecimal.valueOf(150), BigDecimal.valueOf(200)),
+        List.of(Double.valueOf(150), Double.valueOf(200)),
         Restrictions.getNumberValues(source));
   }
 }

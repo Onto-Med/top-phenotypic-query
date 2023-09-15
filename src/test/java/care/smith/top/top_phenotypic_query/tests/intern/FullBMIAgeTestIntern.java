@@ -158,7 +158,7 @@ public class FullBMIAgeTestIntern extends AbstractTest {
   //                    .arg(new ConstantExpression(new DecimalValue(2))));
   //
   //    c.setVariable("m", 76.6057689700064);
-  //    c.setVariable("l", UCUM.convert(new BigDecimal("167.617921540792"), "cm", "m"));
+  //    c.setVariable("l", UCUM.convert(new Double("167.617921540792"), "cm", "m"));
   //
   //    System.out.println(c.calculate(e).getValueDecimal());
   //  }

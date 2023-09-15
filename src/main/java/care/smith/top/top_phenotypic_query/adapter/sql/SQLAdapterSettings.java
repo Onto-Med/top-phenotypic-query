@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.adapter.sql;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -37,8 +36,8 @@ public class SQLAdapterSettings extends DataAdapterSettings {
   }
 
   @Override
-  public String formatNumber(BigDecimal num) {
-    return num.toPlainString();
+  public String formatNumber(Double num) {
+    return num.toString();
   }
 
   @Override
@@ -179,8 +178,8 @@ public class SQLAdapterSettings extends DataAdapterSettings {
 
   private int setNumberValues(PreparedStatement ps, Restriction r, int paramNum)
       throws SQLException {
-    for (BigDecimal v : Restrictions.getNumberValues(r)) {
-      if (v != null) ps.setBigDecimal(paramNum++, v);
+    for (Double v : Restrictions.getNumberValues(r)) {
+      if (v != null) ps.setDouble(paramNum++, v);
     }
     return paramNum;
   }

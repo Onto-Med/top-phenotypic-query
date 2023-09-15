@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -72,11 +71,11 @@ public class BMIAgeTest extends AbstractTest {
     assertFalse(Values.getBooleanValue(getValue("Old", phes)));
     assertTrue(Values.getBooleanValue(getValue("Young", phes)));
 
-    assertEquals(new BigDecimal("25.95155709342561"), Values.getNumberValue(getValue("BMI", phes)));
+    assertEquals(new Double("25.95155709342561"), Values.getNumberValue(getValue("BMI", phes)));
     assertFalse(Values.getBooleanValue(getValue("BMI19_25", phes)));
     assertTrue(Values.getBooleanValue(getValue("BMI25_30", phes)));
 
-    assertEquals(BigDecimal.ONE, Values.getNumberValue(getValue("Finding", phes)));
+    assertEquals(1.0, Values.getNumberValue(getValue("Finding", phes)));
     assertTrue(Values.getBooleanValue(getValue("Overweight", phes)));
   }
 

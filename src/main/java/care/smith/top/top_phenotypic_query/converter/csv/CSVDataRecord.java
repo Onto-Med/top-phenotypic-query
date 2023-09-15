@@ -45,7 +45,7 @@ public class CSVDataRecord extends CSVRecord {
 
   private void addNumberValue(Value val) {
     if (val == null || !Values.hasNumberType(val)) add("");
-    else add(Values.getNumberValue(val).toPlainString());
+    else add(Values.getNumberValue(val).toString());
   }
 
   private void addStringValue(Value val) {

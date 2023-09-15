@@ -2,7 +2,6 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -68,12 +67,12 @@ public class WeightTest {
     SubjectPhenotypes phes2 = rs.getPhenotypes("2");
     assertEquals(Set.of("weight"), phes2.getPhenotypeNames());
     assertEquals(
-        BigDecimal.valueOf(110), Values.getNumberValue(phes2.getValues("weight", null).get(0)));
+        Double.valueOf(110), Values.getNumberValue(phes2.getValues("weight", null).get(0)));
 
     SubjectPhenotypes phes4 = rs.getPhenotypes("4");
     assertEquals(Set.of("weight"), phes4.getPhenotypeNames());
     assertEquals(
-        BigDecimal.valueOf(180), Values.getNumberValue(phes4.getValues("weight", null).get(0)));
+        Double.valueOf(180), Values.getNumberValue(phes4.getValues("weight", null).get(0)));
   }
 
   private String insertSubjects() {

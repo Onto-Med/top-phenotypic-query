@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -63,12 +62,12 @@ public class FHIRUtil {
     return null;
   }
 
-  public static BigDecimal getNumber(Base value) {
+  public static Double getNumber(Base value) {
     if (value == null) return null;
-    if (value instanceof Quantity) return ((Quantity) value).getValue();
-    if (value instanceof DecimalType) return ((DecimalType) value).getValue();
+    if (value instanceof Quantity) return ((Quantity) value).getValue().doubleValue();
+    if (value instanceof DecimalType) return ((DecimalType) value).getValue().doubleValue();
     if (value instanceof IntegerType)
-      return BigDecimal.valueOf(((IntegerType) value).getValue().longValue());
+      return Double.valueOf(((IntegerType) value).getValue().longValue());
     return null;
   }
 

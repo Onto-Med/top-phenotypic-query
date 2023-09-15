@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.util;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -48,19 +47,19 @@ public class Values {
         @Override
         public int compare(Expression e1, Expression e2) {
           if (!Expressions.hasValues(e1) || !Expressions.hasValues(e2)) return 0;
-          BigDecimal v1 = Expressions.getNumberValue(e1);
-          BigDecimal v2 = Expressions.getNumberValue(e2);
+          Double v1 = Expressions.getNumberValue(e1);
+          Double v2 = Expressions.getNumberValue(e2);
           if (v1 == null || v2 == null) return 0;
           return v1.compareTo(v2);
         }
       };
 
-  public static BigDecimal toDecimal(Number num) {
+  public static Double toDecimal(Number num) {
     if (num == null) return null;
-    return new BigDecimal(num.toString());
+    return new Double(num.toString());
   }
 
-  public static List<BigDecimal> toDecimals(Number... nums) {
+  public static List<Double> toDecimals(Number... nums) {
     return Stream.of(nums).map(n -> toDecimal(n)).collect(Collectors.toList());
   }
 
@@ -109,7 +108,7 @@ public class Values {
 
   public static String toStringWithoutDateTime(NumberValue val) {
     if (val.getValue() == null) return null;
-    return val.getValue().toPlainString();
+    return val.getValue().toString();
   }
 
   public static String toStringWithoutDateTime(DateTimeValue val) {
@@ -122,7 +121,7 @@ public class Values {
     return ((StringValue) val).getValue();
   }
 
-  public static BigDecimal getNumberValue(Value val) {
+  public static Double getNumberValue(Value val) {
     if (val == null) return null;
     return ((NumberValue) val).getValue();
   }
@@ -141,7 +140,7 @@ public class Values {
     return vals.stream().map(v -> getStringValue(v)).collect(Collectors.toList());
   }
 
-  public static List<BigDecimal> getNumberValues(List<Value> vals) {
+  public static List<Double> getNumberValues(List<Value> vals) {
     return vals.stream().map(v -> getNumberValue(v)).collect(Collectors.toList());
   }
 

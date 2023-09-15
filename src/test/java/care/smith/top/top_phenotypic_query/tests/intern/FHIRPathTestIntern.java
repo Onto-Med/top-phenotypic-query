@@ -3,7 +3,6 @@ package care.smith.top.top_phenotypic_query.tests.intern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hl7.fhir.r4.model.CodeableConcept;
@@ -65,7 +64,7 @@ public class FHIRPathTestIntern {
 
     assertEquals("Patient/1", path.getString(obs, "subject.reference.value"));
     assertEquals(LocalDateTime.of(2001, 2, 3, 4, 5), path.getDateTime(obs, "effective"));
-    assertEquals(BigDecimal.valueOf(4.12), path.getNumber(obs, "value"));
+    assertEquals(Double.valueOf(4.12), path.getNumber(obs, "value"));
     assertEquals("10 trillion/L", path.getString(obs, "value.unit"));
     assertEquals("http://unitsofmeasure.org", path.getString(obs, "value.system"));
     assertEquals("10*12/L", path.getString(obs, "value.code"));
@@ -130,7 +129,7 @@ public class FHIRPathTestIntern {
             new CodeableConcept(new Coding().setSystem("http://value.system.com").setCode("ccc")));
 
     assertEquals(
-        BigDecimal.valueOf(111),
+        Double.valueOf(111),
         path.getNumber(
             obs,
             "component.where(code.coding.system.value + '|' + code.coding.code = 'http://system.com|xxx').value.value"));
@@ -231,9 +230,9 @@ public class FHIRPathTestIntern {
                                     .setSystem("http://unitsofmeasure.org")
                                     .setCode("min"))));
 
-    assertEquals(BigDecimal.valueOf(4.5), path.getNumber(med, "dosage.dose.value"));
-    assertEquals(BigDecimal.valueOf(8), path.getNumber(med, "dosage.rate.numerator"));
-    assertEquals(BigDecimal.valueOf(1), path.getNumber(med, "dosage.rate.denominator"));
+    assertEquals(Double.valueOf(4.5), path.getNumber(med, "dosage.dose.value"));
+    assertEquals(Double.valueOf(8), path.getNumber(med, "dosage.rate.numerator"));
+    assertEquals(Double.valueOf(1), path.getNumber(med, "dosage.rate.denominator"));
   }
 
   @Test
@@ -256,8 +255,8 @@ public class FHIRPathTestIntern {
                             .setSystem("http://unitsofmeasure.org")
                             .setCode("ml")));
 
-    assertEquals(BigDecimal.valueOf(4.5), path.getNumber(med, "dosage.dose.value"));
-    assertEquals(BigDecimal.valueOf(8), path.getNumber(med, "dosage.rate.value"));
+    assertEquals(Double.valueOf(4.5), path.getNumber(med, "dosage.dose.value"));
+    assertEquals(Double.valueOf(8), path.getNumber(med, "dosage.rate.value"));
   }
 
   @Test
@@ -287,7 +286,7 @@ public class FHIRPathTestIntern {
                                 .setDisplay(
                                     "Swallow - dosing instruction imperative (qualifier value)"))));
 
-    assertEquals(BigDecimal.valueOf(2), path.getNumber(med, "dosage.dose.value"));
+    assertEquals(Double.valueOf(2), path.getNumber(med, "dosage.dose.value"));
     assertEquals(
         "http://snomed.info/sct|26643006",
         path.getString(med, "dosage.route.coding.select(system.value + '|' + code)"));

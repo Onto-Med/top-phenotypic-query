@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -74,7 +73,7 @@ public class ResultSetRamTestIntern {
 	}
 
 	@Test
-	void testVeryLargeResultSet() {
+	void testVeryLargeResultSet() throws InterruptedException {
 		Phenotype height = buildPhenotype("height", "cm");
 		Phenotype weight = buildPhenotype("weight", "kg");
 
@@ -97,7 +96,9 @@ public class ResultSetRamTestIntern {
 				rs.addValue(String.valueOf(i), weight, dtr, buildValue(j));
 			}
 		}
-
+		System.gc();
+		System.out.println("Sleeping 5");
+		Thread.sleep(5000);
 		System.out.println((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000_000+" MB used");
 		Assertions.assertEquals(subjectCount, rs.size());
 		Assertions.assertEquals(valueCount, rs.getValues("0", height.getId()).getValues(dtr).size());
@@ -121,7 +122,7 @@ public class ResultSetRamTestIntern {
 
 	Value buildValue(int day) {
 		return new NumberValue()
-			.value(new BigDecimal(100))
+			.value(100.0)
 			.dataType(DataType.NUMBER)
 			.dateTime(LocalDateTime.of(2022, 1, 1, 0, 0).plusDays(day));
 	}

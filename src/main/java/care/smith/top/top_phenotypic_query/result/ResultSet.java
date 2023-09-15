@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.result;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -160,7 +159,7 @@ public class ResultSet extends LinkedHashMap<String, SubjectPhenotypes> {
     return values.getValues(dateRange);
   }
 
-  public List<BigDecimal> getNumberValues(
+  public List<Double> getNumberValues(
       String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
     List<Value> vals = getValues(subjectId, phenotypeName, dateRange);
     if (vals == null || vals.isEmpty()) return new ArrayList<>();
@@ -181,9 +180,9 @@ public class ResultSet extends LinkedHashMap<String, SubjectPhenotypes> {
     return Values.getStringValues(vals);
   }
 
-  public BigDecimal getNumberValue(
+  public Double getNumberValue(
       String subjectId, String phenotypeName, DateTimeRestriction dateRange) {
-    List<BigDecimal> vals = getNumberValues(subjectId, phenotypeName, dateRange);
+    List<Double> vals = getNumberValues(subjectId, phenotypeName, dateRange);
     if (vals.isEmpty()) return null;
     return vals.get(0);
   }

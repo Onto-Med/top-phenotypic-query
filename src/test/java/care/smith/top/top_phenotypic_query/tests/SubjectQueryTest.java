@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -52,7 +51,7 @@ public class SubjectQueryTest extends AbstractTest {
 
     SubjectPhenotypes phes = rs.getPhenotypes("3");
     assertEquals(Set.of("Age", "Young", "Sex", "Female", "birthdate"), phes.getPhenotypeNames());
-    assertEquals(BigDecimal.valueOf(33), Values.getNumberValue(phes.getValues("Age", null).get(0)));
+    assertEquals(Double.valueOf(33), Values.getNumberValue(phes.getValues("Age", null).get(0)));
     assertEquals(
         LocalDateTime.parse("1990-01-01T00:00:00"),
         Values.getDateTimeValue(phes.getValues("birthdate", null).get(0)));
@@ -105,7 +104,7 @@ public class SubjectQueryTest extends AbstractTest {
 
     SubjectPhenotypes phes = rs.getPhenotypes("4");
     assertEquals(Set.of("Sex", "Female", "Young", "birthdate", "Age"), phes.getPhenotypeNames());
-    assertEquals(BigDecimal.valueOf(32), Values.getNumberValue(phes.getValues("Age", null).get(0)));
+    assertEquals(Double.valueOf(32), Values.getNumberValue(phes.getValues("Age", null).get(0)));
     assertEquals(
         LocalDateTime.parse("1991-01-01T00:00:00"),
         Values.getDateTimeValue(phes.getValues("birthdate", null).get(0)));

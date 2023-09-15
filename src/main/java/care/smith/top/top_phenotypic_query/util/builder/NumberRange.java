@@ -1,7 +1,5 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
-import java.math.BigDecimal;
-
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.NumberRestriction;
@@ -12,8 +10,8 @@ import care.smith.top.top_phenotypic_query.util.Values;
 
 public class NumberRange extends Range {
 
-  private BigDecimal minValue;
-  private BigDecimal maxValue;
+  private Double minValue;
+  private Double maxValue;
 
   public NumberRange() {}
 
@@ -33,7 +31,7 @@ public class NumberRange extends Range {
     return limit(oper, Values.toDecimal(val));
   }
 
-  public NumberRange limit(RestrictionOperator oper, BigDecimal val) {
+  public NumberRange limit(RestrictionOperator oper, Double val) {
     if (oper == null || val == null) return this;
     if (oper == RestrictionOperator.GREATER_THAN
         || oper == RestrictionOperator.GREATER_THAN_OR_EQUAL_TO) {

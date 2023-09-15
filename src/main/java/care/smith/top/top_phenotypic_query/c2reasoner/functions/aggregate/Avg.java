@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import care.smith.top.model.DataType;
@@ -38,9 +37,9 @@ public class Avg extends FunctionEntity {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = Aggregator.calcAndAggrCheckMultipleHaveValues(getFunction(), DataType.NUMBER, args, c2r);
     if (args == null) return null;
-    BigDecimal avg = BigDecimal.ZERO;
+    Double avg = 0.0;
     for (Expression arg : args)
-      avg = avg.add(Expressions.getNumberValue(arg), c2r.getMathContext());
-    return Exp.of(avg.divide(new BigDecimal(args.size()), c2r.getMathContext()));
+      avg = avg+Expressions.getNumberValue(arg);
+    return Exp.of(avg/args.size());
   }
 }

@@ -1,7 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.constants;
 
-import java.math.BigDecimal;
-
 import care.smith.top.model.Constant;
 import care.smith.top.model.DataType;
 import care.smith.top.model.NumberConstant;
@@ -23,7 +21,7 @@ public class Pi extends ConstantEntity {
   private static Value createValue() {
     return new NumberValue()
         .value(
-            new BigDecimal(
+            new Double(
                 "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679"))
         .dataType(DataType.NUMBER);
   }

@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.tests;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -218,15 +217,15 @@ public abstract class AbstractTest {
     NumberRestriction restriction = getNumberRestriction();
 
     if (min != null) {
-      restriction.minOperator(minOperator).addValuesItem(new BigDecimal(min.toString()));
-      //      addArgument(range, new BigDecimal(min.toString()));
+      restriction.minOperator(minOperator).addValuesItem(new Double(min.toString()));
+      //      addArgument(range, new Double(min.toString()));
       //      addArgument(limits, minOperator.getValue());
     }
 
     if (max != null) {
       if (min == null) restriction.addValuesItem(null);
-      restriction.maxOperator(maxOperator).addValuesItem(new BigDecimal(max.toString()));
-      //      addArgument(range, new BigDecimal(max.toString()));
+      restriction.maxOperator(maxOperator).addValuesItem(new Double(max.toString()));
+      //      addArgument(range, new Double(max.toString()));
       //      addArgument(limits, maxOperator.getValue());
     }
 
@@ -280,8 +279,8 @@ public abstract class AbstractTest {
     NumberRestriction restriction = getNumberRestriction();
 
     for (Number value : rangeValues) {
-      restriction.addValuesItem(new BigDecimal(value.toString()));
-      //      addArgument(range, new BigDecimal(value.toString()));
+      restriction.addValuesItem(new Double(value.toString()));
+      //      addArgument(range, new Double(value.toString()));
     }
 
     //    Expression exp = getInExpression(values, range, limits);
@@ -310,7 +309,7 @@ public abstract class AbstractTest {
     }
   }
 
-  //  private static void addArgument(Expression exp, BigDecimal val) {
+  //  private static void addArgument(Expression exp, Double val) {
   //    exp.addArgumentsItem(new Expression().value(new NumberValue().value(val)));
   //  }
   //

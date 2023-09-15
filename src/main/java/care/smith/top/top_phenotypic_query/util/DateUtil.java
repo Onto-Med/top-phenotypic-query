@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.util;
 
-import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -119,7 +118,7 @@ public class DateUtil {
     return LocalDate.now().minusYears(years).atStartOfDay();
   }
 
-  public static BigDecimal getPeriod(LocalDateTime start, LocalDateTime end, String ucumUnit)
+  public static Double getPeriod(LocalDateTime start, LocalDateTime end, String ucumUnit)
       throws UcumException {
     switch (ucumUnit) {
       case "a":
@@ -133,61 +132,55 @@ public class DateUtil {
     }
   }
 
-  public static BigDecimal getPeriod(LocalDateTime start, String ucumUnit) throws UcumException {
+  public static Double getPeriod(LocalDateTime start, String ucumUnit) throws UcumException {
     return getPeriod(start, LocalDateTime.now(), ucumUnit);
   }
 
-  public static BigDecimal getPeriodInYears(LocalDateTime start, LocalDateTime end) {
+  public static Double getPeriodInYears(LocalDateTime start, LocalDateTime end) {
     return getPeriodInYears(start.toLocalDate(), end.toLocalDate());
   }
 
-  public static BigDecimal getPeriodInYears(LocalDate start, LocalDate end) {
+  public static Double getPeriodInYears(LocalDate start, LocalDate end) {
     long years = ChronoUnit.YEARS.between(start, end);
-    return BigDecimal.valueOf(years)
-        .add(getYearDecimalPart(start.plusYears(years), end))
-        .setScale(3, RoundingMode.HALF_UP);
+    return Double.valueOf(years)
+        +getYearDecimalPart(start.plusYears(years), end);
 
     //    return getPeriodInDays(start, end)
-    //        .divide(new BigDecimal("365.25"), MathContext.DECIMAL32)
+    //        .divide(new Double("365.25"), MathContext.DECIMAL32)
     //        .setScale(2, RoundingMode.HALF_UP);
   }
 
-  private static BigDecimal getYearDecimalPart(LocalDate start, LocalDate end) {
+  private static Double getYearDecimalPart(LocalDate start, LocalDate end) {
     if (start.getYear() == end.getYear()) return getOneYearDecimalPart(start, end);
     LocalDate startOfYear = LocalDate.of(end.getYear(), 1, 1);
-    return getOneYearDecimalPart(start, startOfYear)
-        .add(getOneYearDecimalPart(startOfYear, end), MathContext.DECIMAL32);
+    return getOneYearDecimalPart(start, startOfYear)+getOneYearDecimalPart(startOfYear, end);
   }
 
-  private static BigDecimal getOneYearDecimalPart(LocalDate start, LocalDate end) {
+  private static Double getOneYearDecimalPart(LocalDate start, LocalDate end) {
     long days = ChronoUnit.DAYS.between(start, end);
     int daysInYear = (start.isLeapYear()) ? 366 : 365;
-    return BigDecimal.valueOf(days).divide(BigDecimal.valueOf(daysInYear), MathContext.DECIMAL32);
+    return Double.valueOf(days)/(Double.valueOf(daysInYear));
   }
 
-  public static BigDecimal getPeriodInYears(LocalDateTime start) {
+  public static Double getPeriodInYears(LocalDateTime start) {
     return getPeriodInYears(start, LocalDateTime.now());
   }
 
-  public static BigDecimal getPeriodInMonths(LocalDateTime start, LocalDateTime end) {
-    BigDecimal days =
-        BigDecimal.valueOf(Period.between(start.toLocalDate(), end.toLocalDate()).getDays());
-    BigDecimal months = BigDecimal.valueOf(ChronoUnit.MONTHS.between(start, end));
-    return months
-        .add(days.divide(BigDecimal.valueOf(30), MathContext.DECIMAL32))
-        .setScale(3, RoundingMode.HALF_UP);
+  public static Double getPeriodInMonths(LocalDateTime start, LocalDateTime end) {
+    Double days =
+        Double.valueOf(Period.between(start.toLocalDate(), end.toLocalDate()).getDays());
+    Double months = Double.valueOf(ChronoUnit.MONTHS.between(start, end));
+    return months+days/(Double.valueOf(30));
+   }
+
+  public static Double getPeriodInDays(LocalDateTime start, LocalDateTime end) {
+    return Double.valueOf(Duration.between(start, end).toSeconds())
+        /(Double.valueOf(86400));
   }
 
-  public static BigDecimal getPeriodInDays(LocalDateTime start, LocalDateTime end) {
-    return BigDecimal.valueOf(Duration.between(start, end).toSeconds())
-        .divide(BigDecimal.valueOf(86400), MathContext.DECIMAL32)
-        .setScale(3, RoundingMode.HALF_UP);
-  }
-
-  public static BigDecimal getPeriodInHours(LocalDateTime start, LocalDateTime end) {
-    return BigDecimal.valueOf(Duration.between(start, end).toSeconds())
-        .divide(BigDecimal.valueOf(3600), MathContext.DECIMAL32)
-        .setScale(3, RoundingMode.HALF_UP);
+  public static Double getPeriodInHours(LocalDateTime start, LocalDateTime end) {
+    return Double.valueOf(Duration.between(start, end).toSeconds())
+        /(Double.valueOf(3600));
   }
 
   public static long birthdateToAge(LocalDateTime birthdate) {

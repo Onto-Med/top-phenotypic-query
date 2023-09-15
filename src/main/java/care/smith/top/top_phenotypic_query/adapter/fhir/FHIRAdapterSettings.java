@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,8 +27,8 @@ public class FHIRAdapterSettings extends DataAdapterSettings {
   }
 
   @Override
-  public String formatNumber(BigDecimal num) {
-    return num.toPlainString();
+  public String formatNumber(Double num) {
+    return num.toString();
   }
 
   @Override

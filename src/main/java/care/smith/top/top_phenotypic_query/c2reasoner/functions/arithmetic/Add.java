@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import care.smith.top.model.DataType;
@@ -38,9 +37,9 @@ public class Add extends FunctionEntity {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = Aggregator.calcAndAggrCheckValues(getFunction(), DataType.NUMBER, args, c2r);
     if (args == null) return null;
-    BigDecimal arg1 = Expressions.getNumberValue(args.get(0));
-    BigDecimal arg2 = Expressions.getNumberValue(args.get(1));
-    BigDecimal sum = arg1.add(arg2, c2r.getMathContext());
+    Double arg1 = Expressions.getNumberValue(args.get(0));
+    Double arg2 = Expressions.getNumberValue(args.get(1));
+    Double sum = arg1+arg2;
     return Exp.of(sum);
   }
 }

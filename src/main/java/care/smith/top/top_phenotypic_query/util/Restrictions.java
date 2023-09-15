@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.util;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -216,8 +215,8 @@ public class Restrictions {
     return limits;
   }
 
-  public static Map<RestrictionOperator, BigDecimal> getNumberInterval(Restriction r) {
-    Map<RestrictionOperator, BigDecimal> limits = new LinkedHashMap<>();
+  public static Map<RestrictionOperator, Double> getNumberInterval(Restriction r) {
+    Map<RestrictionOperator, Double> limits = new LinkedHashMap<>();
     NumberRestriction nr = (NumberRestriction) r;
     if (nr.getMinOperator() != null) limits.put(nr.getMinOperator(), nr.getValues().get(0));
     if (nr.getMaxOperator() != null) limits.put(nr.getMaxOperator(), nr.getValues().get(1));
@@ -236,8 +235,8 @@ public class Restrictions {
     return (vals == null) ? new ArrayList<>() : vals;
   }
 
-  public static List<BigDecimal> getNumberValues(Restriction r) {
-    List<BigDecimal> vals = ((NumberRestriction) r).getValues();
+  public static List<Double> getNumberValues(Restriction r) {
+    List<Double> vals = ((NumberRestriction) r).getValues();
     return (vals == null) ? new ArrayList<>() : vals;
   }
 
@@ -255,12 +254,12 @@ public class Restrictions {
     return !hasInterval(r) && !hasValues(r);
   }
 
-  public static BigDecimal getMinIntervalValue(NumberRestriction r) {
+  public static Double getMinIntervalValue(NumberRestriction r) {
     if (r.getMinOperator() == null) return null;
     return r.getValues().get(0);
   }
 
-  public static BigDecimal getMaxIntervalValue(NumberRestriction r) {
+  public static Double getMaxIntervalValue(NumberRestriction r) {
     if (r.getMaxOperator() == null) return null;
     return r.getValues().get(1);
   }
@@ -273,8 +272,8 @@ public class Restrictions {
     return (format == null) ? val.toString() : format.formatBoolean(val);
   }
 
-  private static String format(BigDecimal val, DataAdapterSettings format) {
-    return (format == null) ? val.toPlainString() : format.formatNumber(val);
+  private static String format(Double val, DataAdapterSettings format) {
+    return (format == null) ? val.toString() : format.formatNumber(val);
   }
 
   private static String format(LocalDateTime val, DataAdapterSettings format) {
@@ -294,7 +293,7 @@ public class Restrictions {
   public static Restriction getRestriction(List<String> list) {
     RestrictionOperator minOperator = null;
     RestrictionOperator maxOperator = null;
-    List<BigDecimal> decimalValues = new ArrayList<>();
+    List<Double> decimalValues = new ArrayList<>();
     List<LocalDateTime> dateValues = new ArrayList<>();
     List<Boolean> booleanValues = new ArrayList<>();
     List<String> stringValues = new ArrayList<>();
@@ -309,7 +308,7 @@ public class Restrictions {
       else if (RestrictionOperator.LESS_THAN_OR_EQUAL_TO.getValue().equals(e))
         maxOperator = RestrictionOperator.LESS_THAN_OR_EQUAL_TO;
       else {
-        if (NumberUtils.isParsable(e)) decimalValues.add(new BigDecimal(e));
+        if (NumberUtils.isParsable(e)) decimalValues.add(new Double(e));
         else {
           Optional<LocalDateTime> dv = DateUtil.parseOptional(e);
           if (dv.isPresent()) dateValues.add(dv.get());
@@ -342,7 +341,7 @@ public class Restrictions {
 
   public static Restriction convertValues(Restriction r, String inUnit, String outUnit) {
     NumberRestriction nr = (NumberRestriction) r;
-    List<BigDecimal> vals =
+    List<Double> vals =
         nr.getValues().stream()
             .map(v -> UCUM.convert(v, inUnit, outUnit))
             .collect(Collectors.toList());

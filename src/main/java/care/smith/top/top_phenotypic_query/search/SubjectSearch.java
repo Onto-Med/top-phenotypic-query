@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.search;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -64,8 +63,8 @@ public class SubjectSearch extends PhenotypeSearch {
     bdR.setQuantifier(ageR.getQuantifier());
     bdR.setCardinality(ageR.getCardinality());
 
-    BigDecimal ageMin = Restrictions.getMinIntervalValue(ageR);
-    BigDecimal ageMax = Restrictions.getMaxIntervalValue(ageR);
+    Double ageMin = Restrictions.getMinIntervalValue(ageR);
+    Double ageMax = Restrictions.getMaxIntervalValue(ageR);
 
     if (ageMax != null) {
       bdR.addValuesItem(DateUtil.ageToBirthdate(ageMax.longValue()));

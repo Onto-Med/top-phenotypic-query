@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +49,7 @@ public class TimeDistance extends FunctionEntity {
 
     int a = 1;
     Expression arg2 = args.get(1);
-    BigDecimal count = BigDecimal.valueOf(2);
+    Double count = Double.valueOf(2);
     if (Expressions.hasNumberType(arg2)) {
       count = Expressions.getNumberValue(arg2);
       if (count.intValue() < 2) return Exp.ofFalse();
@@ -79,7 +78,7 @@ public class TimeDistance extends FunctionEntity {
   }
 
   private boolean checkValue(Value v1, Value v2, NumberRange nr) {
-    BigDecimal distance =
+    Double distance =
         DateUtil.getPeriodInHours(Values.getEndDateTime(v1), Values.getStartDateTime(v2));
     return Values.contains(Restrictions.getInterval(nr.get()), Val.of(distance));
   }

@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.adapter.sql;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -100,7 +99,7 @@ public class SQLAdapter extends DataAdapter {
       } else if (Phenotypes.hasDateTimeType(phe))
         val = Val.of(sqlRS.getTimestamp(pheCol).toLocalDateTime(), date, startDate, endDate);
       else if (Phenotypes.hasNumberType(phe))
-        val = Val.of(sqlRS.getBigDecimal(pheCol), date, startDate, endDate);
+        val = Val.of(sqlRS.getDouble(pheCol), date, startDate, endDate);
       else val = Val.of(sqlRS.getString(pheCol), date, startDate, endDate);
       if (val != null)
         rs.addValueWithRestriction(
@@ -156,7 +155,7 @@ public class SQLAdapter extends DataAdapter {
           Boolean sexSqlVal = sqlRS.getBoolean(sexCol);
           if (sexSqlVal != null) rs.addValueWithRestriction(sbj, sex, Val.of(sexSqlVal));
         } else if (Phenotypes.hasNumberType(sex)) {
-          BigDecimal sexSqlVal = sqlRS.getBigDecimal(sexCol);
+          Double sexSqlVal = sqlRS.getDouble(sexCol);
           if (sexSqlVal != null) rs.addValueWithRestriction(sbj, sex, Val.of(sexSqlVal));
         } else {
           String sexSqlVal = sqlRS.getString(sexCol);
@@ -252,7 +251,7 @@ public class SQLAdapter extends DataAdapter {
     age.addCodesItem(
         new Code().code("30525-0").codeSystem(new CodeSystem().uri(new URI("http://loinc.org"))));
 
-    NumberRestriction ageR = new NumberRestriction().addValuesItem(BigDecimal.valueOf(20));
+    NumberRestriction ageR = new NumberRestriction().addValuesItem(Double.valueOf(20));
     ageR.setType(DataType.NUMBER);
     ageR.setQuantifier(Quantifier.MIN);
     ageR.setCardinality(1);
