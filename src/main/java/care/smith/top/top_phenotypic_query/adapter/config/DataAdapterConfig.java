@@ -1,5 +1,11 @@
 package care.smith.top.top_phenotypic_query.adapter.config;
 
+import care.smith.top.model.Code;
+import care.smith.top.model.ItemType;
+import care.smith.top.model.Phenotype;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,14 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
-import care.smith.top.model.Code;
-import care.smith.top.model.ItemType;
-import care.smith.top.model.Phenotype;
-import care.smith.top.top_phenotypic_query.util.Phenotypes;
 
 public class DataAdapterConfig {
 

@@ -1,11 +1,5 @@
 package care.smith.top.top_phenotypic_query.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import care.smith.top.model.Code;
 import care.smith.top.model.DataType;
 import care.smith.top.model.Entity;
@@ -13,6 +7,11 @@ import care.smith.top.model.EntityType;
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Phenotypes {
 

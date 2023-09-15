@@ -1,7 +1,7 @@
 package care.smith.top.top_phenotypic_query.tests.intern.fhir;
 
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 import java.time.LocalDateTime;
-
 import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.Dosage;
 import org.hl7.fhir.r4.model.MedicationRequest;
@@ -9,8 +9,6 @@ import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Timing;
 import org.hl7.fhir.r4.model.Timing.TimingRepeatComponent;
-
-import care.smith.top.top_phenotypic_query.util.DateUtil;
 
 public class MedReq extends MedicationRequest {
 

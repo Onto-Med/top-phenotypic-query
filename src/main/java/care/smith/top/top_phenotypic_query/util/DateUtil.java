@@ -15,7 +15,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import org.fhir.ucum.UcumException;
 
 public class DateUtil {

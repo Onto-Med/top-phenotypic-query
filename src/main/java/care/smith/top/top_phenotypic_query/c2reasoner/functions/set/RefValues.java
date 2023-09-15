@@ -1,8 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.set;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
@@ -16,6 +13,8 @@ import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.DateTimeRange;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class RefValues extends FunctionEntity {
 

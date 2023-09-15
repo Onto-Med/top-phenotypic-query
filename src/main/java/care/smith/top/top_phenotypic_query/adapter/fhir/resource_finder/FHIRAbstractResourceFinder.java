@@ -1,11 +1,10 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder;
 
+import ca.uhn.fhir.rest.api.CacheControlDirective;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Resource;
-
-import ca.uhn.fhir.rest.api.CacheControlDirective;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
 
 public abstract class FHIRAbstractResourceFinder {
 

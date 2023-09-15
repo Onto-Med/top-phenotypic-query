@@ -1,17 +1,15 @@
 package care.smith.top.top_phenotypic_query.search;
 
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Queries;
 import care.smith.top.top_phenotypic_query.util.Queries.QueryType;
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SingleQueryMan {
 

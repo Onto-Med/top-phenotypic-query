@@ -1,16 +1,15 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import care.smith.top.model.Expression;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Exp {
 

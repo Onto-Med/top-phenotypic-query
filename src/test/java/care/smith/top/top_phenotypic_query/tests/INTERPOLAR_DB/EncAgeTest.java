@@ -2,14 +2,13 @@ package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Test;
-
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
+import org.junit.jupiter.api.Test;
 
 public class EncAgeTest {
 

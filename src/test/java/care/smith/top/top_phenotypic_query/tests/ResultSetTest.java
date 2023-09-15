@@ -3,15 +3,13 @@ package care.smith.top.top_phenotypic_query.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
-import java.util.Set;
-
-import org.junit.jupiter.api.Test;
-
 import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
+import java.util.List;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 public class ResultSetTest extends AbstractTest {
 

@@ -1,19 +1,16 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-
-import org.hl7.fhir.r4.model.Encounter;
-import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.Resource;
-
-import com.google.common.collect.Sets;
-
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRClient;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRUtil;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
+import com.google.common.collect.Sets;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import org.hl7.fhir.r4.model.Encounter;
+import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.Resource;
 
 public class EncounterPartsFinder extends FHIRAbstractResourceFinder {
 

@@ -1,16 +1,5 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import care.smith.top.model.BooleanValue;
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeValue;
@@ -18,6 +7,15 @@ import care.smith.top.model.NumberValue;
 import care.smith.top.model.StringValue;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.util.Values;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Val {
 

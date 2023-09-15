@@ -1,5 +1,12 @@
 package care.smith.top.top_phenotypic_query.util;
 
+import care.smith.top.model.Entity;
+import care.smith.top.model.EntityPage;
+import care.smith.top.model.Repository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -10,15 +17,6 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import care.smith.top.model.Entity;
-import care.smith.top.model.EntityPage;
-import care.smith.top.model.Repository;
 
 public class HTTP {
 

@@ -3,16 +3,6 @@ package care.smith.top.top_phenotypic_query.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.Set;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import com.google.common.collect.ObjectArrays;
-
 import care.smith.top.model.DataType;
 import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
@@ -27,6 +17,13 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import com.google.common.collect.ObjectArrays;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.Set;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class BooleanSinglePhenotypeTest extends AbstractTest {
 
