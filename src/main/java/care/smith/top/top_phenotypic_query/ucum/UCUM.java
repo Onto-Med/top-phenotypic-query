@@ -1,7 +1,6 @@
 package care.smith.top.top_phenotypic_query.ucum;
 
 import java.math.BigDecimal;
-
 import org.fhir.ucum.Decimal;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;

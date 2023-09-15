@@ -1,9 +1,8 @@
 package care.smith.top.top_phenotypic_query.search;
 
-import java.sql.SQLException;
-
 import care.smith.top.model.Query;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import java.sql.SQLException;
 
 public abstract class PhenotypeSearch {
 

@@ -1,13 +1,5 @@
 package care.smith.top.top_phenotypic_query.util;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import care.smith.top.model.BooleanValue;
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeValue;
@@ -17,6 +9,13 @@ import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringValue;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Values {
 

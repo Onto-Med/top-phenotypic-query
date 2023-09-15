@@ -1,14 +1,13 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FHIRAdapter extends DataAdapter {
 

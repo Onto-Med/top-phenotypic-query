@@ -1,16 +1,5 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import org.hl7.fhir.r4.model.Patient;
-
 import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.model.QueryCriterion;
@@ -22,6 +11,15 @@ import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.tests.AbstractTest;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import org.hl7.fhir.r4.model.Patient;
 
 public class FullBMIAgeTestIntern extends AbstractTest {
 

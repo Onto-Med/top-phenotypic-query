@@ -1,8 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
@@ -12,6 +9,8 @@ import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Median extends FunctionEntity {
 

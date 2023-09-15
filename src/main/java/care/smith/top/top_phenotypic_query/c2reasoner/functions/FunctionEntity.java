@@ -1,14 +1,13 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.util.Values;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class FunctionEntity {
   private static final String DEFAULT_TYPE = "none";

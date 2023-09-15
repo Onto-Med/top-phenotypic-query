@@ -1,12 +1,10 @@
 package care.smith.top.top_phenotypic_query.tests.intern.fhir;
 
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 import java.time.LocalDateTime;
-
 import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.MedicationStatement;
 import org.hl7.fhir.r4.model.Reference;
-
-import care.smith.top.top_phenotypic_query.util.DateUtil;
 
 public class MedSta extends MedicationStatement {
 

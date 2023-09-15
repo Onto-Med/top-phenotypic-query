@@ -4,11 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.math.BigDecimal;
-import java.util.Set;
-
-import org.junit.jupiter.api.Test;
-
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.model.QueryCriterion;
@@ -21,6 +16,9 @@ import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
+import java.math.BigDecimal;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 public class BMIAgeTest extends AbstractTest {
 

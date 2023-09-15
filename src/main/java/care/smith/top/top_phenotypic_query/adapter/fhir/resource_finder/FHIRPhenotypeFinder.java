@@ -1,11 +1,5 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Map;
-
-import org.hl7.fhir.r4.model.Resource;
-
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
@@ -15,6 +9,10 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Map;
+import org.hl7.fhir.r4.model.Resource;
 
 public class FHIRPhenotypeFinder extends FHIRPathResourceFinder {
 

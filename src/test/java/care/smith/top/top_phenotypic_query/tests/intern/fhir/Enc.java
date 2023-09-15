@@ -1,13 +1,11 @@
 package care.smith.top.top_phenotypic_query.tests.intern.fhir;
 
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 import java.time.LocalDateTime;
-
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
-
-import care.smith.top.top_phenotypic_query.util.DateUtil;
 
 public class Enc extends Encounter {
 
