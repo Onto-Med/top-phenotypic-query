@@ -136,7 +136,7 @@ public class FHIRClient {
     MethodOutcome resp =
         client
             .delete()
-            .resourceConditionalByUrl(resourceType + "?identifier=" + system + "|")
+            .resourceConditionalByUrl(resourceType + "?_cascade=delete&identifier=" + system + "|")
             .execute();
     return delete(resp.getOperationOutcome());
   }

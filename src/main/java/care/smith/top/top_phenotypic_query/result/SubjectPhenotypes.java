@@ -36,6 +36,17 @@ public class SubjectPhenotypes extends LinkedHashMap<String, PhenotypeValues> {
     for (PhenotypeValues vals : values) setValues(vals);
   }
 
+  public void addValues(SubjectPhenotypes sbjPhens) {
+    for (PhenotypeValues phensVals : sbjPhens.values()) {
+      for (DateTimeRestriction dtr : phensVals.keySet())
+        addValues(phensVals.getPhenotypeName(), dtr, phensVals.get(dtr));
+    }
+  }
+
+  public void addValues(String phenotypeName, DateTimeRestriction dateRange, List<Value> vals) {
+    vals.forEach(v -> addValue(phenotypeName, dateRange, v));
+  }
+
   public void addValue(String phenotypeName, DateTimeRestriction dateRange, Value val) {
     PhenotypeValues values = get(phenotypeName);
     if (values == null) {

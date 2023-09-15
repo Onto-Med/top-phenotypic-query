@@ -24,6 +24,11 @@ public class Proc extends Procedure {
     setCode(cc);
   }
 
+  public Proc(String identifier) {
+    addIdentifier().setSystem(Client.SYSTEM).setValue(identifier);
+    setCode(cc);
+  }
+
   public Proc enc(Reference encRef) {
     setEncounter(encRef);
     return this;

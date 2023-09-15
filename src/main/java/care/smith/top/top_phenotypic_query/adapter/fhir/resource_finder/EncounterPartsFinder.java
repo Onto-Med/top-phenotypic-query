@@ -10,23 +10,20 @@ import org.hl7.fhir.r4.model.Resource;
 
 import com.google.common.collect.Sets;
 
-import ca.uhn.fhir.rest.client.api.IGenericClient;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRClient;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRUtil;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 
 public class EncounterPartsFinder extends FHIRAbstractResourceFinder {
 
   private Map<String, String> partOfRefs = new HashMap<>();
   private Map<String, String> parts = new HashMap<>();
 
-  private EncounterPartsFinder(IGenericClient client) {
-    super(client);
-  }
-
-  public static Map<String, String> get(FHIRClient cli) {
-    EncounterPartsFinder finder = new EncounterPartsFinder(cli.getClient());
-    finder.findResources("Encounter?_count=100&_elements=partOf");
-    return finder.getParts();
+  public EncounterPartsFinder(FHIRClient cli) {
+    super(cli.getClient());
+    findResources("Encounter?_count=100&_elements=partOf");
+    getParts();
   }
 
   @Override
@@ -39,9 +36,12 @@ public class EncounterPartsFinder extends FHIRAbstractResourceFinder {
       partOfRefs.put(FHIRUtil.getId(enc), FHIRUtil.getId(partOfRef));
   }
 
-  public Map<String, String> getParts() {
+  private void getParts() {
     partOfRefs.forEach((child, parent) -> add(parent, Sets.newHashSet(child)));
-    return parts;
+
+    //    parts.entrySet().stream()
+    //        .sorted(Map.Entry.<String, String>comparingByKey())
+    //        .forEach(System.out::println);
   }
 
   private void add(String parent, HashSet<String> children) {
@@ -50,6 +50,24 @@ public class EncounterPartsFinder extends FHIRAbstractResourceFinder {
     else {
       children.add(parent);
       add(parentOfParent, children);
+    }
+  }
+
+  public void groupParts(ResultSet rs) {
+    if (parts.isEmpty()) return;
+    for (String childId : new HashSet<>(rs.getSubjectIds())) {
+      String parentId = parts.get(childId);
+      if (parentId != null) {
+        SubjectPhenotypes childPhens = rs.getPhenotypes(childId);
+        if (childPhens == null) continue;
+        SubjectPhenotypes parentPhens = rs.getPhenotypes(parentId);
+        if (parentPhens == null) {
+          parentPhens = new SubjectPhenotypes(parentId);
+          rs.setPhenotypes(parentPhens);
+        }
+        parentPhens.addValues(childPhens);
+        rs.removeSubject(childId);
+      }
     }
   }
 }

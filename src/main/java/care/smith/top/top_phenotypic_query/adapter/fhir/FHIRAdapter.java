@@ -1,8 +1,5 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,13 +15,13 @@ import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 public class FHIRAdapter extends DataAdapter {
 
   private FHIRClient client;
-  private Map<String, String> encounterParts = new HashMap<>();
+  private EncounterPartsFinder encParts;
   private static final Logger log = LoggerFactory.getLogger(FHIRAdapter.class);
 
   public FHIRAdapter(DataAdapterConfig config) {
     super(mergeDefault(config, "Default_FHIR_Adapter"));
     this.client = new FHIRClient(this.config);
-    if (config.isEncounterId()) encounterParts = EncounterPartsFinder.get(client);
+    if (config.isEncounterId()) encParts = new EncounterPartsFinder(client);
   }
 
   @Override
@@ -32,6 +29,7 @@ public class FHIRAdapter extends DataAdapter {
     String query = getSettings().createSinglePreparedQuery(search);
     log.debug("Execute FHIR query: {}", query);
     ResultSet rs = client.findPhenotypes(query, search);
+    if (encParts != null) encParts.groupParts(rs);
     checkQuantifier(search, rs);
     return rs;
   }
@@ -41,6 +39,7 @@ public class FHIRAdapter extends DataAdapter {
     String query = getSettings().createSubjectPreparedQuery(search);
     log.debug("Execute FHIR query: {}", query);
     ResultSet rs = client.findPatients(query, search);
+    if (encParts != null) encParts.groupParts(rs);
     EncounterPatientRef.check(rs, config);
     return rs;
   }
