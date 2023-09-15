@@ -1,11 +1,5 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
@@ -15,6 +9,11 @@ import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FHIRAdapterSettings extends DataAdapterSettings {
 

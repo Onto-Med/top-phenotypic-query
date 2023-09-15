@@ -1,5 +1,8 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRClient;
+import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -8,7 +11,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DateTimeType;
@@ -17,10 +19,6 @@ import org.hl7.fhir.r4.model.Observation;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Reference;
-
-import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
-import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRClient;
-import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 
 public class FHIRClientTestIntern {
 

@@ -1,10 +1,9 @@
 package care.smith.top.top_phenotypic_query.converter.csv;
 
-import java.util.List;
-
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Values;
+import java.util.List;
 
 public class CSVDataRecord extends CSVRecord {
 

@@ -1,15 +1,5 @@
 package care.smith.top.top_phenotypic_query.util;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import care.smith.top.model.Category;
 import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
@@ -21,6 +11,15 @@ import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Entities {
 
@@ -52,7 +51,8 @@ public class Entities {
       }
       if (Phenotypes.isRestriction(p)) {
         if (Phenotypes.isSingle(p) && p.getRestriction() == null) p.setRestriction(Res.ofCodes(p));
-        if (config == null || supP == null
+        if (config == null
+            || supP == null
             || Phenotypes.isCompositePhenotype(supP)
             || !setInExpression(config, supP, p)) p.setExpression(Exp.inRestriction(p));
       }

@@ -1,9 +1,8 @@
 package care.smith.top.top_phenotypic_query.converter;
 
+import care.smith.top.model.Entity;
 import java.io.File;
 import java.io.InputStream;
-
-import care.smith.top.model.Entity;
 
 /**
  * Implementations of this interface are used to convert a specifically formatted input into a list

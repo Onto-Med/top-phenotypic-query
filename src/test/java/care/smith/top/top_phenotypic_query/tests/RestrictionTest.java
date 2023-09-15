@@ -2,10 +2,6 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.net.URL;
-
-import org.junit.jupiter.api.Test;
-
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
@@ -16,6 +12,8 @@ import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
+import java.net.URL;
+import org.junit.jupiter.api.Test;
 
 public class RestrictionTest {
 

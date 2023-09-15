@@ -1,7 +1,5 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
-import java.time.LocalDateTime;
-
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Expression;
@@ -9,6 +7,7 @@ import care.smith.top.model.Quantifier;
 import care.smith.top.model.RestrictionOperator;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Expressions;
+import java.time.LocalDateTime;
 
 public class DateTimeRange extends Range {
 

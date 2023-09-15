@@ -1,9 +1,5 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.sql.SQLException;
-
 import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
@@ -11,11 +7,17 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.tests.AbstractTest;
 import care.smith.top.top_phenotypic_query.util.Entities;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.sql.SQLException;
 
 public class POLARTestIntern extends AbstractTest {
 
   public static void main(String[] args)
-      throws SQLException, MalformedURLException, IOException, InstantiationException,
+      throws SQLException,
+          MalformedURLException,
+          IOException,
+          InstantiationException,
           InterruptedException {
     Entities entities =
         Entities.of(

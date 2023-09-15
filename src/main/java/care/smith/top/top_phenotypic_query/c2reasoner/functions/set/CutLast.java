@@ -1,8 +1,5 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.set;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
@@ -13,6 +10,8 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggreg
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CutLast extends FunctionEntity {
 

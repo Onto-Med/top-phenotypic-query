@@ -1,11 +1,9 @@
 package care.smith.top.top_phenotypic_query.tests.intern.fhir;
 
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 import java.time.LocalDateTime;
-
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Patient;
-
-import care.smith.top.top_phenotypic_query.util.DateUtil;
 
 public class Pat extends Patient {
 

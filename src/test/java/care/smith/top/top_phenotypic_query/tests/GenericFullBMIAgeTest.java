@@ -4,16 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.math.BigDecimal;
-import java.util.Set;
-
-import org.junit.jupiter.api.Test;
-
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
+import java.math.BigDecimal;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 public class GenericFullBMIAgeTest extends AbstractTest {
 

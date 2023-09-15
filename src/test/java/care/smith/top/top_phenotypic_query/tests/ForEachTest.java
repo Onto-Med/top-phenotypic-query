@@ -2,11 +2,6 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
 import care.smith.top.model.Expression;
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
@@ -22,6 +17,9 @@ import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
+import java.time.LocalDateTime;
+import java.util.List;
+import org.junit.jupiter.api.Test;
 
 public class ForEachTest {
 
