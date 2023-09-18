@@ -12,6 +12,31 @@ import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>If-function</h1>
+ *
+ * <p>If a condition (the if-expression) is true, the If-function returns the then-expression,
+ * otherwise the optional else-expression. If the if-expression is false and the else-expression is
+ * undefined, a 'missing value' is returned.
+ *
+ * <table><caption>Arguments:</caption>
+ * <tr>
+ *   <th>Arguments</th>
+ *   <th>Description</th>
+ *   <th>Example</th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;If&gt; ::= &lt;if_exp&gt; &lt;then_exp&gt; [&lt;else_exp&gt;]</td>
+ *   <td><p>&lt;if_exp&gt;: boolean
+ *   <p>&lt;then_exp&gt; and &lt;else_exp&gt;: any (but the same) data type</td>
+ *   <td>If(Bilirubin &lt; 1, 1, Bilirubin)</td>
+ * </tr>
+ * </table>
+ *
+ * @author JRG TOP
+ */
 public class If extends FunctionEntity {
 
   private static If INSTANCE = new If();
