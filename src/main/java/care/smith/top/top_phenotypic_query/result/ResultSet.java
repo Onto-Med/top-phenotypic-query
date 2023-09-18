@@ -142,7 +142,10 @@ public class ResultSet extends LinkedHashMap<String, SubjectPhenotypes> {
   }
 
   public void addSubject(String subjectId) {
-    if (!getSubjectIds().contains(subjectId)) put(subjectId, new SubjectPhenotypes(subjectId));
+    if (!getSubjectIds().contains(subjectId)) {
+      put(subjectId, new SubjectPhenotypes(subjectId));
+      log.debug("subject is added: {}", subjectId);
+    }
   }
 
   public PhenotypeValues getValues(String subjectId, String phenotypeName) {

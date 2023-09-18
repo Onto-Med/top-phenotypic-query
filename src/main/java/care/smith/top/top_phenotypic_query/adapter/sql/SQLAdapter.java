@@ -63,7 +63,9 @@ public class SQLAdapter extends DataAdapter {
 
   private LocalDateTime getDate(String dateCol, java.sql.ResultSet sqlRS) throws SQLException {
     if (dateCol == null) return null;
-    return sqlRS.getTimestamp(dateCol).toLocalDateTime();
+    Timestamp ts = sqlRS.getTimestamp(dateCol);
+    if (ts == null) return null;
+    return ts.toLocalDateTime();
   }
 
   @Override

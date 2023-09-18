@@ -18,6 +18,11 @@ public class MedSta extends MedicationStatement {
     setMedication(medRef);
   }
 
+  public MedSta(String identifier, Reference medRef) {
+    addIdentifier().setSystem(Client.SYSTEM).setValue(identifier);
+    setMedication(medRef);
+  }
+
   public MedSta enc(Reference encRef) {
     setContext(encRef);
     return this;

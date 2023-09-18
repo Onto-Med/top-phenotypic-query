@@ -1,3 +1,4 @@
+baseId: patient
 subjectQuery:
   baseQuery: "SELECT subject_id, birth_date, sex FROM subject\nWHERE TRUE"
   sexListPart: "\nAND sex IN ({values})"

@@ -5,6 +5,7 @@ public class SubjectOutput {
   private String id;
   private String sex;
   private String birthdate;
+  private String patient;
 
   public String getId() {
     return id;
@@ -30,8 +31,24 @@ public class SubjectOutput {
     this.birthdate = birthdate;
   }
 
+  public String getPatient() {
+    return patient;
+  }
+
+  public void setPatient(String patient) {
+    this.patient = patient;
+  }
+
   @Override
   public String toString() {
-    return "SubjectOutput [id=" + id + ", sex=" + sex + ", birthdate=" + birthdate + "]";
+    return "SubjectOutput [id="
+        + id
+        + ", sex="
+        + sex
+        + ", birthdate="
+        + birthdate
+        + ", patient="
+        + patient
+        + "]";
   }
 }

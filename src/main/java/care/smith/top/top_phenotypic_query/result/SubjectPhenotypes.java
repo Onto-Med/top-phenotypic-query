@@ -21,12 +21,28 @@ public class SubjectPhenotypes extends LinkedHashMap<String, PhenotypeValues> {
     this.subjectId = subjectId;
   }
 
+  public SubjectPhenotypes subjectId(String subjectId) {
+    this.subjectId = subjectId;
+    return this;
+  }
+
   public void setValues(PhenotypeValues values) {
     put(values.getPhenotypeName(), values);
   }
 
   public void setValues(PhenotypeValues... values) {
     for (PhenotypeValues vals : values) setValues(vals);
+  }
+
+  public void addValues(SubjectPhenotypes sbjPhens) {
+    for (PhenotypeValues phensVals : sbjPhens.values()) {
+      for (DateTimeRestriction dtr : phensVals.keySet())
+        addValues(phensVals.getPhenotypeName(), dtr, phensVals.get(dtr));
+    }
+  }
+
+  public void addValues(String phenotypeName, DateTimeRestriction dateRange, List<Value> vals) {
+    vals.forEach(v -> addValue(phenotypeName, dateRange, v));
   }
 
   public void addValue(String phenotypeName, DateTimeRestriction dateRange, Value val) {

@@ -1,3 +1,4 @@
+baseId: patient
 subjectQuery: 
   baseQuery: "Patient?_count=100&_elements=gender,birthDate"
   sexListPart: "&gender={values}"

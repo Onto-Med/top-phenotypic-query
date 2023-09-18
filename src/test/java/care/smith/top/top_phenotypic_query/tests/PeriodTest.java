@@ -153,4 +153,40 @@ public class PeriodTest {
     assertEquals(Exp.ofFalse(), new C2R().calculate(EndsBefore.of(Exp.of(v1), Exp.of(v2))));
     assertEquals(Exp.ofFalse(), new C2R().calculate(EndsBefore.of(Exp.of(v2), Exp.of(v1))));
   }
+
+  @Test
+  public void test15a() {
+    Value v1 = Val.of(3, DateUtil.parse("2001-01-03"), DateUtil.parse("2001-01-04"));
+    Value v2 = Val.of(3, DateUtil.parse("2001-01-05"), DateUtil.parse("2001-01-06"));
+    Value v3 = Val.of(5, DateUtil.parse("2001-01-07"), DateUtil.parse("2001-01-08"));
+    Value v4 = Val.of(5, DateUtil.parse("2001-01-09"), DateUtil.parse("2001-01-10"));
+    assertEquals(Exp.ofFalse(), new C2R().calculate(Overlap2.of(Exp.of(v1, v2), Exp.of(v3, v4))));
+  }
+
+  @Test
+  public void test15b() {
+    Value v1 = Val.of(3, DateUtil.parse("2001-01-03"), DateUtil.parse("2001-01-04"));
+    Value v2 = Val.of(3, DateUtil.parse("2001-01-05"), DateUtil.parse("2001-01-06"));
+    Value v3 = Val.of(5, DateUtil.parse("2001-01-06"), DateUtil.parse("2001-01-08"));
+    Value v4 = Val.of(5, DateUtil.parse("2001-01-09"), DateUtil.parse("2001-01-10"));
+    assertEquals(Exp.ofTrue(), new C2R().calculate(Overlap2.of(Exp.of(v1, v2), Exp.of(v3, v4))));
+  }
+
+  @Test
+  public void test15c() {
+    Value v1 = Val.of(3, DateUtil.parse("2001-01-03"), DateUtil.parse("2001-01-04"));
+    Value v2 = Val.of(3, DateUtil.parse("2001-01-05"), DateUtil.parse("2001-01-06"));
+    Value v3 = Val.of(5, DateUtil.parse("2001-01-07"), DateUtil.parse("2001-01-08"));
+    Value v4 = Val.of(5, DateUtil.parse("2001-01-01"), DateUtil.parse("2001-01-03"));
+    assertEquals(Exp.ofTrue(), new C2R().calculate(Overlap2.of(Exp.of(v1, v2), Exp.of(v3, v4))));
+  }
+
+  @Test
+  public void test15d() {
+    Value v1 = Val.of(3, DateUtil.parse("2001-01-03"), DateUtil.parse("2001-01-04"));
+    Value v2 = Val.of(3, DateUtil.parse("2001-01-05"), null);
+    Value v3 = Val.of(5, DateUtil.parse("2001-01-07"), DateUtil.parse("2001-01-08"));
+    Value v4 = Val.of(5, DateUtil.parse("2001-01-09"), DateUtil.parse("2001-01-10"));
+    assertEquals(Exp.ofTrue(), new C2R().calculate(Overlap2.of(Exp.of(v1, v2), Exp.of(v3, v4))));
+  }
 }

@@ -34,10 +34,8 @@ public class FHIRPatientFinder extends FHIRPathResourceFinder {
   @Override
   protected void addResource(Resource res) {
     String sbj = FHIRUtil.getId(res);
-    if (bd == null && sex == null) {
-      rs.addSubject(sbj);
-      return;
-    }
+    boolean sbjAdded = false;
+
     if (bd != null) {
       LocalDateTime bdVal = path.getDateTime(res, out.getBirthdate());
       if (bdVal != null) {
@@ -48,11 +46,19 @@ public class FHIRPatientFinder extends FHIRPathResourceFinder {
           Value ageVal = Val.of(DateUtil.birthdateToAge(bdVal));
           rs.addValueWithRestriction(sbj, age, ageVal);
         }
+        sbjAdded = true;
       }
     }
     if (sex != null) {
       String sexVal = path.getString(res, out.getSex());
-      if (sexVal != null) rs.addValueWithRestriction(sbj, sex, Val.of(sexVal));
+      if (sexVal != null) {
+        rs.addValueWithRestriction(sbj, sex, Val.of(sexVal));
+        sbjAdded = true;
+      }
     }
+
+    boolean patCheck = EncounterPatientRef.check(search, path, res, out, rs, sbj);
+
+    if (!sbjAdded && !patCheck) rs.addSubject(sbj);
   }
 }

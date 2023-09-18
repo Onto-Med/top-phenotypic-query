@@ -1,0 +1,90 @@
+id: Encounter_FHIR_Adapter
+adapter: care.smith.top.top_phenotypic_query.adapter.fhir.FHIRAdapter
+connection:
+  url: http://localhost:8080/baseR4
+baseId: encounter
+subjectQuery: 
+  baseQuery: "Encounter?_count=100&_elements=subject&_include=Encounter:subject"
+  sexListPart: "&subject.gender={values}"
+  birthdateIntervalPart: "&subject.birthdate{operator}{value}"
+  output:
+    sex: gender.value
+    birthdate: birthDate
+    patient: subject.reference.value
+phenotypeQueries:
+  encounter:
+    baseQuery: "Encounter?_count=100&_elements=subject,class,period"
+    textValueListPart: "&class={values}"
+    dateTimeIntervalPart: "&date{operator}{value}"
+    output:
+      subject: id.substring(indexOf('Encounter')).replaceMatches('/_history.*', '')
+      textValue: class.code
+      startDateTime: period.start
+      endDateTime: period.end
+  condition:
+    baseQuery: "Condition?code={codes}&_count=100&_elements=subject,recordedDate,encounter"
+    dateTimeIntervalPart: "&recorded-date{operator}{value}"
+    subjectsPart: "&subject={values}"
+    output:
+      subject: encounter.reference.value
+      dateTime: recordedDate
+  procedure:
+    baseQuery: "Procedure?code={codes}&_count=100&_elements=subject,performedDateTime,encounter"
+    dateTimeIntervalPart: "&date{operator}{value}"
+    output:
+      subject: encounter.reference.value
+      dateTime: performed
+  observation:
+    baseQuery: "Observation?code={codes}&_count=100&_elements=subject,effectiveDateTime,encounter,valueQuantity"
+    numberValueIntervalPart: "&value-quantity{operator}{value}"
+    numberValueListPart: "&value-quantity={values}"
+    textValueListPart: "&value-string={values}"
+    conceptValueListPart: "&value-concept={values}"
+    dateTimeValueIntervalPart: "&value-date{operator}{value}"
+    dateTimeIntervalPart: "&date{operator}{value}"
+    subjectsPart: "&subject={values}"
+    output:
+      subject: encounter.reference.value
+      numberValue: value.value
+      textValue: value
+      conceptValue: value.coding.select(system.value + '|' + code)
+      dateTimeValue: value
+      dateTime: effective
+  observation_component:
+    baseQuery: "Observation?component-code={codes}&_count=100&_elements=subject,effectiveDateTime,encounter,component"
+    numberValueIntervalPart: "&component-value-quantity{operator}{value}"
+    numberValueListPart: "&component-value-quantity={values}"
+    conceptValueListPart: "&component-value-concept={values}"
+    dateTimeIntervalPart: "&date{operator}{value}"
+    subjectsPart: "&subject={values}"
+    output:
+      subject: encounter.reference.value
+      numberValue: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.value
+      conceptValue: component.where(code.coding.system.value + '|' + code.coding.code = '{code}').value.coding.select(system.value + '|' + code)
+      dateTime: effective
+  medication_administration:
+    baseQuery: "MedicationAdministration?medication.code={codes}&_count=100&_elements=subject,effectivePeriod,context"
+    dateTimeIntervalPart: "&effective-time{operator}{value}"
+    output:
+      subject: context.reference.value
+      dateTime: effective
+      startDateTime: effective.start
+      endDateTime: effective.end
+  medication_statement:
+    baseQuery: "MedicationStatement?medication.code={codes}&_count=100&_elements=subject,effectivePeriod,context"
+    dateTimeIntervalPart: "&effective{operator}{value}"
+    output:
+      subject: context.reference.value
+      dateTime: effective
+      startDateTime: effective.start
+      endDateTime: effective.end
+  medication_request:
+    baseQuery: "MedicationRequest?medication.code={codes}&_count=100&_elements=subject,authoredOn,encounter,dosageInstruction"
+    dateTimeIntervalPart: "&authoredon{operator}{value}"
+    output:
+      subject: encounter.reference.value
+      dateTime: authoredOn
+      startDateTime: dosageInstruction.timing.repeat.bounds.start
+      endDateTime: dosageInstruction.timing.repeat.bounds.end
+  medication:
+    union: [ medication_administration, medication_statement, medication_request ]

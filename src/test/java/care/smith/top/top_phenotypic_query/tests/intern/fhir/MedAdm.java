@@ -19,6 +19,11 @@ public class MedAdm extends MedicationAdministration {
     setMedication(medRef);
   }
 
+  public MedAdm(String identifier, Reference medRef) {
+    addIdentifier().setSystem(Client.SYSTEM).setValue(identifier);
+    setMedication(medRef);
+  }
+
   public MedAdm enc(Reference encRef) {
     setContext(encRef);
     return this;

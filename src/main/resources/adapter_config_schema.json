@@ -68,6 +68,12 @@
         "dateTimeIntervalPart": {
           "type": "string"
         },
+        "startDateTimeIntervalPart": {
+          "type": "string"
+        },
+        "endDateTimeIntervalPart": {
+          "type": "string"
+        },
         "output": {
           "type": "object",
           "properties": {
@@ -75,6 +81,12 @@
               "type": "string"
             },
             "dateTime": {
+              "type": "string"
+            },
+            "startDateTime": {
+              "type": "string"
+            },
+            "endDateTime": {
               "type": "string"
             },
             "dateTimeValue": {
@@ -93,7 +105,14 @@
               "type": "string"
             }
           },
-          "required": ["subject", "dateTime"]
+          "anyOf": [
+            {
+              "required": ["subject", "dateTime"]
+            },
+            {
+              "required": ["subject", "startDateTime"]
+            }
+          ]
         },
         "subjectsPart": {
           "type": "string"
@@ -105,10 +124,16 @@
           "type": "string"
         }
       },
-      "required": [
-        "baseQuery",
-        "dateTimeIntervalPart",
-        "output"
+      "oneOf": [
+        {
+          "required": ["union"]
+        },
+        {
+          "required": ["baseQuery", "dateTimeIntervalPart", "output"]
+        },
+        {
+          "required": ["baseQuery", "startDateTimeIntervalPart", "endDateTimeIntervalPart", "output"]
+        }
       ]
     }
   },
@@ -139,6 +164,9 @@
           "type": "string",
           "description": "Token for HTTP bearer authentication"
         }
+      },
+      "baseId": {
+        "type": "string"
       },
       "required": ["url"]
     },

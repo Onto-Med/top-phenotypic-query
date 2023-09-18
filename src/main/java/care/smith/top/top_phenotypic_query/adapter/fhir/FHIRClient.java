@@ -50,6 +50,10 @@ public class FHIRClient {
     this.path = new FHIRPath(ctx);
   }
 
+  public IGenericClient getClient() {
+    return client;
+  }
+
   public List<Resource> findResources(String query) {
     List<Resource> resources = new ArrayList<>();
     new FHIRResourceFinder(client, resources).findResources(query);
@@ -130,7 +134,7 @@ public class FHIRClient {
     MethodOutcome resp =
         client
             .delete()
-            .resourceConditionalByUrl(resourceType + "?identifier=" + system + "|")
+            .resourceConditionalByUrl(resourceType + "?_cascade=delete&identifier=" + system + "|")
             .execute();
     return delete(resp.getOperationOutcome());
   }

@@ -69,9 +69,7 @@ public class FHIRAnaphylaxisTestIntern {
     Reference enc5 =
         client.add(
             new Enc("e5", pat5).cls("http://terminology.hl7.org/CodeSystem/v3-ActCode", "IMP"));
-    Reference enc6a =
-        client.add(
-            new Enc("e6a", pat6).cls("http://terminology.hl7.org/CodeSystem/v3-ActCode", "IMP"));
+    client.add(new Enc("e6a", pat6).cls("http://terminology.hl7.org/CodeSystem/v3-ActCode", "IMP"));
     Reference enc6b =
         client.add(
             new Enc("e6b", pat6).cls("http://terminology.hl7.org/CodeSystem/v3-ActCode", "XYZ"));
@@ -81,6 +79,11 @@ public class FHIRAnaphylaxisTestIntern {
             .code("http://fhir.de/CodeSystem/bfarm/icd-10-gm", "T78.0")
             .enc(enc1)
             .date("2020-01-01"));
+    client.add(
+        new Cond("p1cx", pat1)
+            .code("http://fhir.de/CodeSystem/bfarm/icd-10-gm", "T78.0")
+            .enc(enc1)
+            .date("2020-01-02"));
     client.add(
         new Cond("p2c", pat2)
             .code("http://fhir.de/CodeSystem/bfarm/icd-10-gm", "T78.0")
