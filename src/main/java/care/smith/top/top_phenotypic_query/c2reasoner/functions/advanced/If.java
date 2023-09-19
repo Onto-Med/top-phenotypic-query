@@ -21,17 +21,22 @@ import java.util.List;
  * otherwise the optional else-expression. If the if-expression is false and the else-expression is
  * undefined, a 'missing value' is returned.
  *
- * <table><caption>Arguments:</caption>
+ * <table class="striped"><caption>Arguments:</caption>
  * <tr>
- *   <th>Arguments</th>
- *   <th>Description</th>
- *   <th>Example</th>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
  * </tr>
  * <tr>
- *   <td>&lt;If&gt; ::= &lt;if_exp&gt; &lt;then_exp&gt; [&lt;else_exp&gt;]</td>
- *   <td><p>&lt;if_exp&gt;: boolean
- *   <p>&lt;then_exp&gt; and &lt;else_exp&gt;: any (but the same) data type</td>
- *   <td>If(Bilirubin &lt; 1, 1, Bilirubin)</td>
+ *   <td>&lt;if-exp&gt; &lt;then-exp&gt; [&lt;else-exp&gt;]</td>
+ *   <td>
+ *     &lt;if-exp&gt;: boolean<br>
+ *     &lt;then-exp&gt;: any<br>
+ *     &lt;else-exp&gt;: same as &lt;then-exp&gt;
+ *   </td>
+ *   <td>same as &lt;then-exp&gt;</td>
+ *   <td><i>If</i>(Bilirubin &lt; 1, 1, Bilirubin)</td>
  * </tr>
  * </table>
  *

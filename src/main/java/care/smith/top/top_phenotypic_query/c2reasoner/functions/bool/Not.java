@@ -12,6 +12,33 @@ import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>Not-function</h1>
+ *
+ * <p>The Not-function is a Boolean operation on a single Boolean expression (argument). It returns
+ * 'true' if the argument is false, otherwise 'false'.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;: boolean</td>
+ *   <td>boolean</td>
+ *   <td>
+ *     <i>Not</i>(Overweight)
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author JRG TOP
+ */
 public class Not extends FunctionEntity {
 
   private static Not INSTANCE = new Not();

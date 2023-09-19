@@ -14,6 +14,38 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ *
+ *
+ * <h1>ForEach-function</h1>
+ *
+ * <p>The ForEach-function (loop) executes an expression for each value of a phenotype class (input
+ * variable) and returns a list of result expressions (i.e. one result expression per input
+ * phenotype value).
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;input-var&gt; &lt;exp&gt;</td>
+ *   <td>
+ *     &lt;input-var&gt;: number<br>
+ *     &lt;exp&gt;: any
+ *   </td>
+ *   <td>list of values of the same data type as &lt;exp&gt;</td>
+ *   <td>
+ *     <i>ForEach</i>(Creatinine, CreatinineCheck)<br>
+ *     The CreatinineCheck is executed for each Creatinine value.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author JRG TOP
+ */
 public class ForEach extends FunctionEntity {
 
   private static ForEach INSTANCE = new ForEach();
