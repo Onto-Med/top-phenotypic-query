@@ -33,12 +33,14 @@ import java.util.List;
  *   <td>&lt;exp&gt;: boolean</td>
  *   <td>boolean</td>
  *   <td>
- *     Hypertension <i>Or</i> Overweight
+ *     Hypertension <i>Or</i> Overweight<br>
+ *     The function returns 'true' if at least one of the two conditions is true,<br>
+ *     otherwise 'false'.
  *   </td>
  * </tr>
  * </table>
  *
- * @author JRG TOP
+ * @author TOP group
  */
 public class Or extends FunctionEntity {
 

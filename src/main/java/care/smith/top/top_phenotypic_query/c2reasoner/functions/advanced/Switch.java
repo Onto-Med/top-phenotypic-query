@@ -37,11 +37,16 @@ import java.util.List;
  *     &lt;else-exp&gt;: same as all &lt;then-exp&gt;
  *   </td>
  *   <td>same as all &lt;then-exp&gt;</td>
- *   <td><i>Switch</i>(Creatinine &lt; 1, 1, Creatinine &gt; 3, 3, Creatinine)</td>
+ *   <td>
+ *     <i>Switch</i>(Creatinine &lt; 1, 1, Creatinine &gt; 3, 3, Creatinine)<br>
+ *     The function returns 1 if the Creatinine value is less than 1,<br>
+ *     3 if the Creatinine value is greater than 3,<br>
+ *     otherwise the Creatinine value.
+ *   </td>
  * </tr>
  * </table>
  *
- * @author JRG TOP
+ * @author TOP group
  */
 public class Switch extends FunctionEntity {
 

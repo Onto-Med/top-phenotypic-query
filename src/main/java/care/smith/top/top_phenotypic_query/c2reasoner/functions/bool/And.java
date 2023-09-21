@@ -33,12 +33,14 @@ import java.util.List;
  *   <td>&lt;exp&gt;: boolean</td>
  *   <td>boolean</td>
  *   <td>
- *     Male <i>And</i> Young <i>And</i> Overweight
+ *     Male <i>And</i> Young <i>And</i> Overweight<br>
+ *     The function returns 'true' if all three condition are true,<br>
+ *     otherwise 'false'.
  *   </td>
  * </tr>
  * </table>
  *
- * @author JRG TOP
+ * @author TOP group
  */
 public class And extends FunctionEntity {
 

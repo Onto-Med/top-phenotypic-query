@@ -35,12 +35,14 @@ import java.util.List;
  *   </td>
  *   <td>boolean</td>
  *   <td>
- *     <i>MinTrue</i>(2, Overweight, Hypertension, Stroke)
+ *     <i>MinTrue</i>(2, Overweight, Hypertension, Stroke)<br>
+ *     The function returns 'true' if at least two of the tree conditions are true,<br>
+ *     otherwise 'false'.
  *   </td>
  * </tr>
  * </table>
  *
- * @author JRG TOP
+ * @author TOP group
  */
 public class MinTrue extends FunctionEntity {
 

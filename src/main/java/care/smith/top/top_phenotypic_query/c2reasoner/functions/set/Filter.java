@@ -20,6 +20,51 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ *
+ *
+ * <h1>Filter-function</h1>
+ *
+ * <p>The Filter-function reduces the number of elements in a set based on a value range or date
+ * range restriction. I.e. the elements remaining in the set must lie in the value range and must be
+ * created/valid in the date range.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;set-exp&gt; &lt;num-days&gt;</td>
+ *   <td>
+ *     &lt;set-exp&gt;: any<br>
+ *     &lt;num-days&gt;: number
+ *   </td>
+ *   <td>list of values of the same data type as &lt;set-exp&gt;</td>
+ *   <td>
+ *     <i>Filter</i>(Creatinine, 7)<br>
+ *     The function returns all Creatinine values of the last 7 days.
+ *   </td>
+ * </tr>
+ * <tr>
+ *   <td>&lt;set-exp&gt; (&lt;comparison-operator&gt; &lt;limit-exp&gt;)+</td>
+ *   <td>
+ *     &lt;set-exp&gt;: if one of &lt;limit-exp&gt; is a number then number, otherwise any<br>
+ *     &lt;comparison-operator&gt;: constant (&gt;, &ge;, &lt;, &le;)<br>
+ *     &lt;limit-exp&gt;: number or date-time
+ *   </td>
+ *   <td>list of values of the same data type as &lt;set-exp&gt;</td>
+ *   <td>
+ *     <i>Filter</i>(Creatinine, &ge;, 0.7, &le;, 1.3, &ge;, 2023-01-01, &le;, 2023-01-31)<br>
+ *     The function returns all Creatinine values from January 2023 that lie between 0.7 and 1.3.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Filter extends FunctionEntity {
 
   private static Filter INSTANCE = new Filter();

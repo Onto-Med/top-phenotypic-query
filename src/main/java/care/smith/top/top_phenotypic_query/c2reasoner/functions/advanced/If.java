@@ -36,11 +36,15 @@ import java.util.List;
  *     &lt;else-exp&gt;: same as &lt;then-exp&gt;
  *   </td>
  *   <td>same as &lt;then-exp&gt;</td>
- *   <td><i>If</i>(Bilirubin &lt; 1, 1, Bilirubin)</td>
+ *   <td>
+ *     <i>If</i>(Bilirubin &lt; 1, 1, Bilirubin)<br>
+ *     The function returns 1 if the Bilirubin value is less than 1,<br>
+ *     otherwise the Bilirubin value.
+ *   </td>
  * </tr>
  * </table>
  *
- * @author JRG TOP
+ * @author TOP group
  */
 public class If extends FunctionEntity {
 

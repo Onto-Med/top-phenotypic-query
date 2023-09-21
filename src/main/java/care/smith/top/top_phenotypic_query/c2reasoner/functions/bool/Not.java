@@ -18,7 +18,7 @@ import java.util.List;
  * <h1>Not-function</h1>
  *
  * <p>The Not-function is a Boolean operation on a single Boolean expression (argument). It returns
- * 'true' if the argument is false, otherwise 'false'.
+ * 'false' if the argument is true, otherwise 'true'.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>
@@ -32,12 +32,14 @@ import java.util.List;
  *   <td>&lt;exp&gt;: boolean</td>
  *   <td>boolean</td>
  *   <td>
- *     <i>Not</i>(Overweight)
+ *     <i>Not</i>(Overweight)<br>
+ *     The function returns 'false' if the condition 'Overweight' is true,<br>
+ *     otherwise 'true'.
  *   </td>
  * </tr>
  * </table>
  *
- * @author JRG TOP
+ * @author TOP group
  */
 public class Not extends FunctionEntity {
 

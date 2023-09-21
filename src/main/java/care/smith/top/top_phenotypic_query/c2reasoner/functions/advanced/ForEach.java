@@ -39,12 +39,13 @@ import java.util.stream.Collectors;
  *   <td>list of values of the same data type as &lt;exp&gt;</td>
  *   <td>
  *     <i>ForEach</i>(Creatinine, CreatinineCheck)<br>
- *     The CreatinineCheck is executed for each Creatinine value.
+ *     The CreatinineCheck is executed for each Creatinine value.<br>
+ *     A boolean list expression is returned.
  *   </td>
  * </tr>
  * </table>
  *
- * @author JRG TOP
+ * @author TOP group
  */
 public class ForEach extends FunctionEntity {
 

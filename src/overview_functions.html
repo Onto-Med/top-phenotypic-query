@@ -3,17 +3,17 @@
 
 <p>The functions described here can be used in the expression editor of the TOP Framework.</p>
 
-<p>Each expression represents either a phenotype class, a constant or a function with a set of
+<p>Each expression represents either a phenotype class, a constant/value (list) or a function with a set of
 arguments (which are also expressions) and has a particular data type (number, string,
-boolean or date/time). For example, a number expression is either a numeric phenotype
-class (e.g. weight), a numeric constant (e.g. pi or 5) or a function returning a number
+boolean or date-time). For example, a number expression is either a numeric phenotype
+class (e.g. weight), a numeric constant/value (list) (e.g. pi or [1, 2, 3]) or a function returning a number
 expression. A function converts its arguments into a single expression of a defined data type.</p>
 
 <p>The functions are grouped by category (package). For detailed information about a function, 
 please click on the corresponding package and then on the desired function.</p>
 
-<p>To specify argument lists for functions we use a simplified form of the Backus-Naur Form.
-The arguments are placed in angle brackets. The following characters can be added after single arguments 
+<p>To specify argument lists for functions we use some special characters (like in regular expressions or extended Backus-Naur Form).
+The arguments are placed in angle brackets. The following characters may occur after single arguments 
 or argument groups (in round brackets):</p>
 
 <ul>
@@ -22,5 +22,5 @@ or argument groups (in round brackets):</p>
   <li>? : 0 or 1 occurrences, alternatively [ ... ]</li>
 </ul>
 
- @author JRG TOP
+ @author TOP group
  </body>
