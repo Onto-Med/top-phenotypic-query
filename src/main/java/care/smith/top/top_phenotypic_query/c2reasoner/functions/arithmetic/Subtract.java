@@ -13,6 +13,33 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>Subtract-function</h1>
+ *
+ * <p>The Subtract-function subtracts the second argument from the first one.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;: number</td>
+ *   <td>number</td>
+ *   <td>
+ *     6 - 2<br>
+ *     The function returns 4.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Subtract extends FunctionEntity {
 
   private static Subtract INSTANCE = new Subtract();

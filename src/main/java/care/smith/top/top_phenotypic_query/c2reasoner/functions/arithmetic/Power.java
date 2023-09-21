@@ -13,6 +13,36 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>Power-function</h1>
+ *
+ * <p>The Power-function realizes the exponentiation operation.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;base-exp&gt; &lt;power-exp&gt;</td>
+ *   <td>
+ *     &lt;base-exp&gt;: number<br>
+ *     &lt;power-exp&gt;: number
+ *   </td>
+ *   <td>number</td>
+ *   <td>
+ *     6 ^ 2<br>
+ *     The function returns 36.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Power extends FunctionEntity {
 
   private static Power INSTANCE = new Power();
