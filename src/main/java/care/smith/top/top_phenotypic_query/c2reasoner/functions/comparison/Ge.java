@@ -11,6 +11,34 @@ import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>Ge-function</h1>
+ *
+ * <p>The Ge-function realizes the comparison operator '&ge;' (greater or equal) and returns 'true'
+ * if the first argument is greater than or equal to the second argument, otherwise 'false'.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;: number</td>
+ *   <td>boolean</td>
+ *   <td>
+ *     6 &ge; 2<br>
+ *     The function returns 'true'.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Ge extends FunctionEntity {
 
   private static Ge INSTANCE = new Ge();
