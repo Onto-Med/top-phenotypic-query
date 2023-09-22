@@ -9,6 +9,33 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>Count-function</h1>
+ *
+ * <p>The Count-function returns the number of values of the argument expression.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;: any</td>
+ *   <td>number</td>
+ *   <td>
+ *     <i>Count</i>(Body_Temperature)<br>
+ *     The function returns the number of temperature measurements (e.g., in a certain period).
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Count extends FunctionEntity {
 
   private static final Count INSTANCE = new Count();
