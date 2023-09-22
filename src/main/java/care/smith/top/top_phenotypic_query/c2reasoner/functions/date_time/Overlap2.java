@@ -13,6 +13,42 @@ import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>Overlap2-function</h1>
+ *
+ * <p>The Overlap2-function returns 'true' if the two processes (e.g., encounter or medication
+ * administration) represented by the first and the second arguments temporally overlap
+ * (bidirectional), otherwise 'false'. The third and the fourth optional arguments specifies the
+ * maximum number of hours that may lie between the two processes (in both directions). If only the
+ * third argument is specified, it applies to both directions.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;exp&gt; [&lt;hours-num&gt;] [&lt;hours-num&gt;]</td>
+ *   <td>
+ *     &lt;exp&gt;: any<br>
+ *     &lt;hours-num&gt;: number
+ *   </td>
+ *   <td>boolean</td>
+ *   <td>
+ *     <i>Overlap2</i>(Drug1, Drug2, 3, 4)<br>
+ *     The function returns 'true' if the medication administrations of Drug1 and Drug2<br>
+ *     temporally overlap (maximum 3 hour may lie between if Drug1 before Drug2<br>
+ *     and maximum 4 hour may lie between if Drug2 before Drug1).
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Overlap2 extends FunctionEntity {
 
   private static Overlap2 INSTANCE = new Overlap2();

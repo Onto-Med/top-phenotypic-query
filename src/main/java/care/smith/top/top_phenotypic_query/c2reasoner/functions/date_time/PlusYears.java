@@ -11,6 +11,37 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>PlusYears-function</h1>
+ *
+ * <p>The PlusYears-function adds the given number of years (2. argument) to the given date (1.
+ * argument) and returns the resulting date.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;date-exp&gt; &lt;num-years&gt;</td>
+ *   <td>
+ *     &lt;date-exp&gt;: date-time<br>
+ *     &lt;num-years&gt;: number
+ *   </td>
+ *   <td>date-time</td>
+ *   <td>
+ *     <i>PlusYears</i>(2020-01-01, 3)<br>
+ *     The function returns the 2023-01-01.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class PlusYears extends FunctionEntity {
 
   private static PlusYears INSTANCE = new PlusYears();

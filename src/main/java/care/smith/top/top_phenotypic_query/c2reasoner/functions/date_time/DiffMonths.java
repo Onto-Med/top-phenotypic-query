@@ -12,6 +12,33 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>DiffMonths-function</h1>
+ *
+ * <p>The DiffMonths-function returns the time difference in months between two dates.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;: date-time</td>
+ *   <td>number</td>
+ *   <td>
+ *     <i>DiffMonths</i>(2020-01-01, 2020-03-01)<br>
+ *     The function returns 2 (months).
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class DiffMonths extends FunctionEntity {
 
   private static DiffMonths INSTANCE = new DiffMonths();

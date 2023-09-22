@@ -11,6 +11,37 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>PlusMonths-function</h1>
+ *
+ * <p>The PlusMonths-function adds the given number of months (2. argument) to the given date (1.
+ * argument) and returns the resulting date.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;date-exp&gt; &lt;num-months&gt;</td>
+ *   <td>
+ *     &lt;date-exp&gt;: date-time<br>
+ *     &lt;num-months&gt;: number
+ *   </td>
+ *   <td>date-time</td>
+ *   <td>
+ *     <i>PlusMonths</i>(2020-01-01, 3)<br>
+ *     The function returns the 2020-04-01.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class PlusMonths extends FunctionEntity {
 
   private static PlusMonths INSTANCE = new PlusMonths();

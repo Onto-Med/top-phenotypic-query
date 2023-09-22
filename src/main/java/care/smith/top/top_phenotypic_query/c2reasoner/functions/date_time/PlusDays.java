@@ -11,6 +11,37 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>PlusDays-function</h1>
+ *
+ * <p>The PlusDays-function adds the given number of days (2. argument) to the given date (1.
+ * argument) and returns the resulting date.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;date-exp&gt; &lt;num-days&gt;</td>
+ *   <td>
+ *     &lt;date-exp&gt;: date-time<br>
+ *     &lt;num-days&gt;: number
+ *   </td>
+ *   <td>date-time</td>
+ *   <td>
+ *     <i>PlusDays</i>(2020-01-01, 3)<br>
+ *     The function returns the 2020-01-04.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class PlusDays extends FunctionEntity {
 
   private static PlusDays INSTANCE = new PlusDays();

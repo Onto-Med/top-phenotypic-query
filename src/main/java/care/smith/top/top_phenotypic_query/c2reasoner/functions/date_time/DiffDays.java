@@ -12,6 +12,33 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>DiffDays-function</h1>
+ *
+ * <p>The DiffDays-function returns the time difference in days between two dates.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;: date-time</td>
+ *   <td>number</td>
+ *   <td>
+ *     <i>DiffDays</i>(2020-01-01, 2020-01-05)<br>
+ *     The function returns 4 (days).
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class DiffDays extends FunctionEntity {
 
   private static DiffDays INSTANCE = new DiffDays();
