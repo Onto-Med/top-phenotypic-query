@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
  * <h1>TimeDistance-function</h1>
  *
  * <p>The TimeDistance-function returns 'true' if the value set (1. argument) contains at least n
- * values (2. argument) whose time intervals (in hours) between each other lie in the defined range
- * (3.-6. arguments), otherwise 'false'.
+ * values (2. argument) in such a way that the time intervals (in hours) between them lie within a
+ * defined range (3.-6. arguments), otherwise 'false'.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * <tr>
  *   <td>&lt;set-exp&gt; [&lt;values-num&gt;] (&lt;comparison-operator&gt; &lt;limit-exp&gt;)+</td>
  *   <td>
- *     &lt;set-exp&gt;: number<br>
+ *     &lt;set-exp&gt;: any<br>
  *     &lt;values-num&gt;: number (default value: 2)<br>
  *     &lt;comparison-operator&gt;: constant (&gt;, &ge;, &lt;, &le;)<br>
  *     &lt;limit-exp&gt;: number
@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  *   <td>
  *     <i>TimeDistance</i>(Blood_Glucose, 3, &gt;, 6, &le;, 72)<br>
  *     The function returns 'true' if among all blood glucose values occur at least three<br>
- *     whose time intervals between each other lie in the range of 6 to 72 hours.
+ *     in such a way that the time intervals between them lie in the range from 6 to 72 hours.
  *   </td>
  * </tr>
  * </table>

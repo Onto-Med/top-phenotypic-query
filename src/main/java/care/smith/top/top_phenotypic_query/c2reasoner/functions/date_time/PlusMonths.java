@@ -35,7 +35,7 @@ import java.util.List;
  *   <td>date-time</td>
  *   <td>
  *     <i>PlusMonths</i>(2020-01-01, 3)<br>
- *     The function returns the 2020-04-01.
+ *     The function returns 2020-04-01.
  *   </td>
  * </tr>
  * </table>

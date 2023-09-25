@@ -35,7 +35,7 @@ import java.util.List;
  *   <td>date-time</td>
  *   <td>
  *     <i>PlusDays</i>(2020-01-01, 3)<br>
- *     The function returns the 2020-01-04.
+ *     The function returns 2020-01-04.
  *   </td>
  * </tr>
  * </table>
