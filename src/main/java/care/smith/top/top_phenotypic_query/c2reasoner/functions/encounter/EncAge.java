@@ -17,6 +17,36 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ *
+ *
+ * <h1>EncAge-function</h1>
+ *
+ * <p>The EncAge-function returns the age of the patient at the start of the last encounter.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;birth-date-exp&gt; &lt;enc-exp&gt;</td>
+ *   <td>
+ *     &lt;birth-date-exp&gt;: date-time (item type: subject birth date)<br>
+ *     &lt;enc-exp&gt;: text (item type: encounter)
+ *   </td>
+ *   <td>number</td>
+ *   <td>
+ *     <i>EncAge</i>(Birth_Date, Encounter)<br>
+ *     The function returns the age of the patient at the start of the last encounter.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class EncAge extends FunctionEntity {
 
   private static EncAge INSTANCE = new EncAge();
