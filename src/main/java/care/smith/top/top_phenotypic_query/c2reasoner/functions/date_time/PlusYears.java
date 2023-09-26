@@ -27,10 +27,10 @@ import java.util.List;
  *   <th><b>Example</b></th>
  * </tr>
  * <tr>
- *   <td>&lt;date-exp&gt; &lt;num-years&gt;</td>
+ *   <td>&lt;date-exp&gt; &lt;years-num&gt;</td>
  *   <td>
  *     &lt;date-exp&gt;: date-time<br>
- *     &lt;num-years&gt;: number
+ *     &lt;years-num&gt;: number
  *   </td>
  *   <td>date-time</td>
  *   <td>

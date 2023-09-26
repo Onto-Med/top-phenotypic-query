@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  *
  * <h1>TimeDistance-function</h1>
  *
- * <p>The TimeDistance-function returns 'true' if the value set (1. argument) contains at least n
+ * <p>The TimeDistance-function returns 'true' if the value list (1. argument) contains at least n
  * values (2. argument) in such a way that the time intervals (in hours) between them lie within a
  * defined range (3.-6. arguments), otherwise 'false'.
  *
@@ -35,12 +35,12 @@ import java.util.stream.Collectors;
  *   <th><b>Example</b></th>
  * </tr>
  * <tr>
- *   <td>&lt;set-exp&gt; [&lt;values-num&gt;] (&lt;comparison-operator&gt; &lt;limit-exp&gt;)+</td>
+ *   <td>&lt;exp&gt; [&lt;values-num&gt;] (&lt;comparison-operator&gt; &lt;limit&gt;)+</td>
  *   <td>
- *     &lt;set-exp&gt;: any<br>
+ *     &lt;exp&gt;: any<br>
  *     &lt;values-num&gt;: number (default value: 2)<br>
  *     &lt;comparison-operator&gt;: constant (&gt;, &ge;, &lt;, &le;)<br>
- *     &lt;limit-exp&gt;: number
+ *     &lt;limit&gt;: number
  *   </td>
  *   <td>boolean</td>
  *   <td>
