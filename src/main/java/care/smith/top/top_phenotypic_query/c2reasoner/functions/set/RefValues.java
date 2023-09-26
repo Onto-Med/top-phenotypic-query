@@ -17,12 +17,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- *
- *
- * <h1>RefValues-function</h1>
- *
- * <p>The RefValues-function reduces the number of elements in a list (1. argument) based on a date
- * range restriction. The 2. and the optional 3. argument specify the date range in days with
+ * The <b>RefValues-function</b> reduces the number of elements in a list (1. argument) based on a
+ * date range restriction. The 2. and the optional 3. argument specify the date range in days with
  * respect to the temporally last element (index) in the given list (1. argument), e.g., 2-4 days
  * before the last element. The elements remaining in the list must be created/valid in the defined
  * date range.

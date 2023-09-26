@@ -11,11 +11,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- *
- *
- * <h1>Empty-function</h1>
- *
- * <p>The Empty-function returns 'true' if the argument expression contains no values, otherwise
+ * The <b>Empty-function</b> returns 'true' if the argument expression contains no values, otherwise
  * 'false'.
  *
  * <table class="striped"><caption>Arguments:</caption>

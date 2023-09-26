@@ -13,14 +13,10 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- *
- *
- * <h1>Switch-function</h1>
- *
- * <p>The Switch-function combines any number of if-then pairs and an optional default expression
- * (else-expression). If one of the if-expressions is true, the corresponding then-expression is
- * returned, otherwise the else-expression. If all if-expressions are false and the else-expression
- * is undefined, a 'missing value' is returned.
+ * The <b>Switch-function</b> combines any number of if-then pairs and an optional default
+ * expression (else-expression). If one of the if-expressions is true, the corresponding
+ * then-expression is returned, otherwise the else-expression. If all if-expressions are false and
+ * the else-expression is undefined, a 'missing value' is returned.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

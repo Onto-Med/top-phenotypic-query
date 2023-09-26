@@ -12,12 +12,8 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- *
- *
- * <h1>Ne-function</h1>
- *
- * <p>The Ne-function realizes the comparison operator '&ne;' (not equal) and returns 'true' if the
- * two arguments are unequal, otherwise 'false'.
+ * The <b>Ne-function</b> realizes the comparison operator '&ne;' (not equal) and returns 'true' if
+ * the two arguments are unequal, otherwise 'false'.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

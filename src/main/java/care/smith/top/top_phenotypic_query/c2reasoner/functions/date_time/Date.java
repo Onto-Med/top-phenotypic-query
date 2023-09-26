@@ -14,11 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- *
- *
- * <h1>Date-function</h1>
- *
- * <p>The Date-function returns the timestamp (date + time) of the argument value.
+ * The <b>Date-function</b> returns the timestamp (date + time) of the argument value.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

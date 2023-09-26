@@ -13,11 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- *
- *
- * <h1>Multiply-function</h1>
- *
- * <p>The Multiply-function multiplies the two arguments.
+ * The <b>Multiply-function</b> multiplies the two arguments.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

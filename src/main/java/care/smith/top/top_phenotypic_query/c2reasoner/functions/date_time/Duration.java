@@ -15,11 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- *
- *
- * <h1>Duration-function</h1>
- *
- * <p>The Duration-function returns the duration (in days) of a process (e.g., encounter or
+ * The <b>Duration-function</b> returns the duration (in days) of a process (e.g., encounter or
  * medication administration).
  *
  * <table class="striped"><caption>Arguments:</caption>

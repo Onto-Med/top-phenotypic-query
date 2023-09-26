@@ -12,11 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- *
- *
- * <h1>PlusYears-function</h1>
- *
- * <p>The PlusYears-function adds the given number of years (2. argument) to the given date (1.
+ * The <b>PlusYears-function</b> adds the given number of years (2. argument) to the given date (1.
  * argument) and returns the resulting date.
  *
  * <table class="striped"><caption>Arguments:</caption>

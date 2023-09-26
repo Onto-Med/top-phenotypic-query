@@ -14,11 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- *
- *
- * <h1>Subtract-function</h1>
- *
- * <p>The Subtract-function subtracts the second argument from the first one.
+ * The <b>Subtract-function</b> subtracts the second argument from the first one.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

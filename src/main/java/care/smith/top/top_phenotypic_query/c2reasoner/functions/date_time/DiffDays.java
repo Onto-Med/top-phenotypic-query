@@ -13,11 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- *
- *
- * <h1>DiffDays-function</h1>
- *
- * <p>The DiffDays-function returns the time difference in days between two dates.
+ * The <b>DiffDays-function</b> returns the time difference in days between two dates.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

@@ -13,11 +13,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- *
- *
- * <h1>Ln-function</h1>
- *
- * <p>The Ln-function realizes the natural logarithm.
+ * The <b>Ln-function</b> calculates the natural logarithm.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

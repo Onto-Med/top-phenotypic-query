@@ -12,12 +12,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- *
- *
- * <h1>PlusMonths-function</h1>
- *
- * <p>The PlusMonths-function adds the given number of months (2. argument) to the given date (1.
- * argument) and returns the resulting date.
+ * The <b>PlusMonths-function</b> adds the given number of months (2. argument) to the given date
+ * (1. argument) and returns the resulting date.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

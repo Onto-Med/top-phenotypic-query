@@ -14,11 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- *
- *
- * <h1>CutFirst-function</h1>
- *
- * <p>The CutFirst-function cuts the temporally first element of the given arguments list and
+ * The <b>CutFirst-function</b> cuts the temporally first element of the given arguments list and
  * returns the resulting list. It is allowed to use the function with a single argument expression
  * if it returns a list of values.
  *

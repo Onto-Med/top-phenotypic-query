@@ -13,11 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- *
- *
- * <h1>Add-function</h1>
- *
- * <p>The Add-function adds the two arguments.
+ * The <b>Add-function</b> adds the two arguments.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

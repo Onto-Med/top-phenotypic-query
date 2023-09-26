@@ -13,11 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- *
- *
- * <h1>DiffMonths-function</h1>
- *
- * <p>The DiffMonths-function returns the time difference in months between two dates.
+ * The <b>DiffMonths-function</b> returns the time difference in months between two dates.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

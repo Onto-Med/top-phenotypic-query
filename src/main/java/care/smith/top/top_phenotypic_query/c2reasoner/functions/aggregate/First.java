@@ -12,13 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- *
- *
- * <h1>First-function</h1>
- *
- * <p>The First-function returns the temporally first value of the argument values (based on their
- * timestamps). It is allowed to use the function with a single argument expression if it returns a
- * list of values.
+ * The <b>First-function</b> returns the temporally first value of the argument values (based on
+ * their timestamps). It is allowed to use the function with a single argument expression if it
+ * returns a list of values.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

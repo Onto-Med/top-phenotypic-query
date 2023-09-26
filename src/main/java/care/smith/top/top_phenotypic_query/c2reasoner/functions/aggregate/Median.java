@@ -13,12 +13,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- *
- *
- * <h1>Median-function</h1>
- *
- * <p>The Median-function returns the median (separating the higher half from the lower half) of the
- * argument values. It is allowed to use the function with a single argument expression if it
+ * The <b>Median-function</b> returns the median (separating the higher half from the lower half) of
+ * the argument values. It is allowed to use the function with a single argument expression if it
  * returns a list of values.
  *
  * <table class="striped"><caption>Arguments:</caption>

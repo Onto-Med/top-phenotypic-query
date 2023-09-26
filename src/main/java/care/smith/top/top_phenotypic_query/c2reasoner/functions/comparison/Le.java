@@ -12,12 +12,8 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- *
- *
- * <h1>Le-function</h1>
- *
- * <p>The Le-function realizes the comparison operator '&le;' (less or equal) and returns 'true' if
- * the first argument is less than or equal to the second argument, otherwise 'false'.
+ * The <b>Le-function</b> realizes the comparison operator '&le;' (less or equal) and returns 'true'
+ * if the first argument is less than or equal to the second argument, otherwise 'false'.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

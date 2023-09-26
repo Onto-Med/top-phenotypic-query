@@ -12,13 +12,9 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- *
- *
- * <h1>MinTrue-function</h1>
- *
- * <p>The MinTrue-function is an extended Boolean operation. The first argument specifies the
+ * The <b>MinTrue-function</b> is an extended Boolean operation. The first argument specifies the
  * minimum number of subsequent arguments that must be true. If there are at least as many true
- * arguments (starting with the second), the function returns 'true', otherwise 'false'.
+ * arguments (starting with the second argument), the function returns 'true', otherwise 'false'.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>
