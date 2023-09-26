@@ -13,7 +13,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- * The <b>Not-function</b> is a Boolean operation on a single Boolean expression (argument). It
+ * The function <b>Not</b> is a Boolean operation on a single Boolean expression (argument). It
  * returns 'false' if the argument is true, otherwise 'true'.
  *
  * <table class="striped"><caption>Arguments:</caption>

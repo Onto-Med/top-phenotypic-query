@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The <b>Median-function</b> returns the median (separating the higher half from the lower half) of
+ * The function <b>Median</b> returns the median (separating the higher half from the lower half) of
  * the argument values. It is allowed to use the function with a single argument expression if it
  * returns a list of values.
  *

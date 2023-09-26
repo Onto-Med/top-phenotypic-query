@@ -14,7 +14,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- * The <b>Overlap2-function</b> returns 'true' if the two processes (e.g., encounter or medication
+ * The function <b>Overlap2</b> returns 'true' if the two processes (e.g., encounter or medication
  * administration) represented by the first and the second arguments temporally overlap
  * (bidirectional), otherwise 'false'. The third and the fourth optional arguments specifies the
  * maximum number of hours that may lie between the two processes (in both directions). If only the

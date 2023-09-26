@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The <b>Union-function</b> combines its argument expressions to one expression containing multiple
+ * The function <b>Union</b> combines its argument expressions to one expression containing multiple
  * values. The function must not be used for phenotype restrictions, but only for phenotypes!
  *
  * <table class="striped"><caption>Arguments:</caption>

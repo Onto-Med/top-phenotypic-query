@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * The <b>Divide-function</b> divides the first argument by the second one.
+ * The function <b>Divide</b> divides the first argument by the second one.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

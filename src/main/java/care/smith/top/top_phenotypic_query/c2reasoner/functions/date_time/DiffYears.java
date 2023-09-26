@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * The <b>DiffYears-function</b> returns the time difference in years between two dates.
+ * The function <b>DiffYears</b> returns the time difference in years between two dates.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * The <b>Filter-function</b> reduces the number of elements in a list (1st argument) based on a
+ * The function <b>Filter</b> reduces the number of elements in a list (1st argument) based on a
  * value range or date range restriction. I.e., the elements remaining in the list must lie in the
  * value range and must be created/valid in the date range.
  *

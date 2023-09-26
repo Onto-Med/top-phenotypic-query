@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The <b>Vals-function</b> combines its argument expressions to one expression containing multiple
+ * The function <b>Vals</b> combines its argument expressions to one expression containing multiple
  * values. The function should be used mainly for phenotype restrictions. It is allowed to use the
  * function with a single argument expression.
  *

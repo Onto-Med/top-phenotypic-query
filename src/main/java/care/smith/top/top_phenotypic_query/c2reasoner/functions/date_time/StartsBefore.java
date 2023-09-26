@@ -14,7 +14,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- * The <b>StartsBefore-function</b> returns 'true' if the process (e.g., encounter or medication
+ * The function <b>StartsBefore</b> returns 'true' if the process (e.g., encounter or medication
  * administration) represented by the 1st argument starts before the process represented by the 2nd
  * argument, otherwise 'false'.
  *

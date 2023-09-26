@@ -12,7 +12,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- * The <b>Eq-function</b> realizes the comparison operator '=' (equal) and returns 'true' if the two
+ * The function <b>Eq</b> realizes the comparison operator '=' (equal) and returns 'true' if the two
  * arguments are equal, otherwise 'false'.
  *
  * <table class="striped"><caption>Arguments:</caption>

@@ -12,7 +12,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- * The <b>Li-function</b> combines its argument expressions to one expression containing multiple
+ * The function <b>Li</b> combines its argument expressions to one expression containing multiple
  * values. If an argument contains multiple numeric values, they are aggregated. The function must
  * not be used for phenotype restrictions, but only for phenotypes!
  *

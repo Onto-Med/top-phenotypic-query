@@ -12,7 +12,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- * The <b>Min-function</b> returns the minimum value of the argument values. It is allowed to use
+ * The function <b>Min</b> returns the minimum value of the argument values. It is allowed to use
  * the function with a single argument expression if it returns a list of values.
  *
  * <table class="striped"><caption>Arguments:</caption>

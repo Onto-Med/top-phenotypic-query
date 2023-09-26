@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * The <b>Avg-function</b> returns the average of the argument values. It is allowed to use the
+ * The function <b>Avg</b> returns the average of the argument values. It is allowed to use the
  * function with a single argument expression if it returns a list of values.
  *
  * <table class="striped"><caption>Arguments:</caption>

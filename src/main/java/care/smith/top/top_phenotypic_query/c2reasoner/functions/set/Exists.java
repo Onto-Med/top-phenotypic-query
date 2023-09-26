@@ -11,7 +11,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- * The <b>Exists-function</b> returns 'true' if the argument expression contains values, otherwise
+ * The function <b>Exists</b> returns 'true' if the argument expression contains values, otherwise
  * 'false'.
  *
  * <table class="striped"><caption>Arguments:</caption>

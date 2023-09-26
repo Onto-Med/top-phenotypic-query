@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The <b>CutLast-function</b> cuts the temporally last element of the given arguments list and
+ * The function <b>CutLast</b> cuts the temporally last element of the given arguments list and
  * returns the resulting list. It is allowed to use the function with a single argument expression
  * if it returns a list of values.
  *

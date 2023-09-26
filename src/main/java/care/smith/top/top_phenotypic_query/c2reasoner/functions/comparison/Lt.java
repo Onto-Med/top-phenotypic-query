@@ -13,7 +13,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- * The <b>Lt-function</b> realizes the comparison operator '&lt;' (less) and returns 'true' if the
+ * The function <b>Lt</b> realizes the comparison operator '&lt;' (less) and returns 'true' if the
  * first argument is less than the second argument, otherwise 'false'.
  *
  * <table class="striped"><caption>Arguments:</caption>

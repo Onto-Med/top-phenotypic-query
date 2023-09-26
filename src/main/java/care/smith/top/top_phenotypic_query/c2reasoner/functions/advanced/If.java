@@ -13,7 +13,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- * The <b>If-function</b> returns the then-expression (2nd argument) if a condition (the
+ * The function <b>If</b> returns the then-expression (2nd argument) if a condition (the
  * if-expression, 1st argument) is true, otherwise the optional else-expression (3rd argument). If the
  * if-expression is false and the else-expression is undefined, a 'missing value' is returned.
  *

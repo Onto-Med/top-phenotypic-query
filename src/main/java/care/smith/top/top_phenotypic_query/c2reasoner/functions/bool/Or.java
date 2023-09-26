@@ -13,7 +13,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- * The <b>Or-function</b> is a Boolean operation on any number of Boolean expressions (arguments).
+ * The function <b>Or</b> is a Boolean operation on any number of Boolean expressions (arguments).
  * It returns 'true' if at least one argument is true, otherwise 'false'. It is allowed to use the
  * function with a single argument expression if it returns a list of values.
  *

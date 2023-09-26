@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The <b>Last-function</b> returns the temporally last value of the argument values (based on their
+ * The function <b>Last</b> returns the temporally last value of the argument values (based on their
  * timestamps). It is allowed to use the function with a single argument expression if it returns a
  * list of values.
  *

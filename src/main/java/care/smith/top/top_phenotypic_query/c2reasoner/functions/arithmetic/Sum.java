@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * The <b>Sum-function</b> adds all its arguments.
+ * The function <b>Sum</b> adds all its arguments.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

@@ -14,7 +14,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- * The <b>EncType-function</b> returns 'true' if the encounter type (e.g., inpatient or ambulatory)
+ * The function <b>EncType</b> returns 'true' if the encounter type (e.g., inpatient or ambulatory)
  * in which the data (1st argument) was collected matches one of the defined types (starting with the
  * second argument), otherwise 'false'.
  *

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The <b>First-function</b> returns the temporally first value of the argument values (based on
+ * The function <b>First</b> returns the temporally first value of the argument values (based on
  * their timestamps). It is allowed to use the function with a single argument expression if it
  * returns a list of values.
  *

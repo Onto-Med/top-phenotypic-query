@@ -10,7 +10,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- * The <b>Count-function</b> returns the number of values of the argument expression.
+ * The function <b>Count</b> returns the number of values of the argument expression.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

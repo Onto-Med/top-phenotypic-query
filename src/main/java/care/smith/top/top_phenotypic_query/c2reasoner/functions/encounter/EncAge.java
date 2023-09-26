@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The <b>EncAge-function</b> returns the age of the patient at the start of the last encounter.
+ * The function <b>EncAge</b> returns the age of the patient at the start of the last encounter.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

@@ -14,7 +14,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 /**
- * The <b>Power-function</b> realizes the exponentiation operation.
+ * The function <b>Power</b> realizes the exponentiation operation.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

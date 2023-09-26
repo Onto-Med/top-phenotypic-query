@@ -13,7 +13,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
 /**
- * The <b>And-function</b> is a Boolean operation on any number of Boolean expressions (arguments).
+ * The function <b>And</b> is a Boolean operation on any number of Boolean expressions (arguments).
  * It returns 'true' if all arguments are true, otherwise 'false'. It is allowed to use the function
  * with a single argument expression if it returns a list of values.
  *
