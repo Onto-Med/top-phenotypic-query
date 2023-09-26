@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * The <b>EndsBefore-function</b> returns 'true' if the process (e.g., encounter or medication
- * administration) represented by the 1. argument ends before the process represented by the 2.
+ * administration) represented by the 1st argument ends before the process represented by the 2nd
  * argument, otherwise 'false'.
  *
  * <table class="striped"><caption>Arguments:</caption>

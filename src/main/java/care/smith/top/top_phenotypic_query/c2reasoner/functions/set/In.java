@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The <b>In-function</b> return 'true' if the given value (1. argument) lies in a given range (2.
+ * The <b>In-function</b> return 'true' if the given value (1st argument) lies in a given range (2nd
  * argument), otherwise 'false'. The function is automatically generated for all phenotype
  * restrictions and does not have to be defined manually.
  *

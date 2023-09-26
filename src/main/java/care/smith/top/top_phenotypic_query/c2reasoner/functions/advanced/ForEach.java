@@ -15,8 +15,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * The <b>ForEach-function</b> (loop) executes an expression (2. argument) for each value of a
- * phenotype class (input variable, 1. argument) and returns a list of result expressions (i.e. one
+ * The <b>ForEach-function</b> (loop) executes an expression (2nd argument) for each value of a
+ * phenotype class (input variable, 1st argument) and returns a list of result expressions (i.e. one
  * result expression per input phenotype value).
  *
  * <table class="striped"><caption>Arguments:</caption>

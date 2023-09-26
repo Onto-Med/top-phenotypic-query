@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The <b>TimeDistance-function</b> returns 'true' if the value list (1. argument) contains at least
- * n values (2. argument) in such a way that the time intervals (in hours) between them lie within a
- * defined range (3.-6. arguments), otherwise 'false'.
+ * The <b>TimeDistance-function</b> returns 'true' if the value list (1st argument) contains at
+ * least n values (2nd argument) in such a way that the time intervals (in hours) between them lie
+ * within a defined range (3rd-6th arguments), otherwise 'false'.
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>

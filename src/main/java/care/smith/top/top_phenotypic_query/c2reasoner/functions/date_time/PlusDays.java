@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * The <b>PlusDays-function</b> adds the given number of days (2. argument) to the given date (1.
+ * The <b>PlusDays-function</b> adds the given number of days (2nd argument) to the given date (1st
  * argument) and returns the resulting date.
  *
  * <table class="striped"><caption>Arguments:</caption>
