@@ -8,6 +8,12 @@ import care.smith.top.model.Value;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * The constant <b>Today</b> represents the current date (with time 00:00).<br>
+ * <b>Return data type:</b> date-time
+ *
+ * @author TOP group
+ */
 public class Today extends ConstantEntity {
 
   private static final Today INSTANCE = new Today();

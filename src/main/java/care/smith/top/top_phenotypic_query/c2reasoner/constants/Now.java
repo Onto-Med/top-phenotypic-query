@@ -7,6 +7,12 @@ import care.smith.top.model.DateTimeValue;
 import care.smith.top.model.Value;
 import java.time.LocalDateTime;
 
+/**
+ * The constant <b>Now</b> represents the current time.<br>
+ * <b>Return data type:</b> date-time
+ *
+ * @author TOP group
+ */
 public class Now extends ConstantEntity {
 
   private static final Now INSTANCE = new Now();

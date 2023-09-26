@@ -7,6 +7,13 @@ import care.smith.top.model.NumberValue;
 import care.smith.top.model.Value;
 import java.math.BigDecimal;
 
+/**
+ * The constant <b>Pi (&pi;)</b> is the ratio of a circle's circumference to its diameter,
+ * approximately equal to 3.14159.<br>
+ * <b>Return data type:</b> number
+ *
+ * @author TOP group
+ */
 public class Pi extends ConstantEntity {
 
   private static final Pi INSTANCE = new Pi();
