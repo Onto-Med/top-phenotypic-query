@@ -10,6 +10,34 @@ import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>Empty-function</h1>
+ *
+ * <p>The Empty-function returns 'true' if the argument expression contains no values, otherwise
+ * 'false'.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;: any</td>
+ *   <td>boolean</td>
+ *   <td>
+ *     <i>Empty</i>(Body_Temperature)<br>
+ *     The function returns 'true' if no temperature values exist.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Empty extends FunctionEntity {
 
   private static Empty INSTANCE = new Empty();

@@ -11,6 +11,35 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggreg
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ *
+ *
+ * <h1>Li-function</h1>
+ *
+ * <p>The Li-function combines its argument expressions to one expression containing multiple
+ * values. If an argument contains multiple numeric values, they are aggregated. The function must
+ * not be used for phenotype restrictions, but only for phenotypes!
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;exp&gt;+</td>
+ *   <td>&lt;exp&gt;: any</td>
+ *   <td>list of values of the same data type as &lt;exp&gt;</td>
+ *   <td>
+ *     <i>Li</i>(Value1, Value2)<br>
+ *     The function returns an expression containing the both values.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Li extends FunctionEntity {
 
   private static final Li INSTANCE = new Li();

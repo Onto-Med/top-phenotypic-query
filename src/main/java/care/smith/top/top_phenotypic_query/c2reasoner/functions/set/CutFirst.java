@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  *   <th><b>Example</b></th>
  * </tr>
  * <tr>
- *   <td>&lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;+</td>
  *   <td>&lt;exp&gt;: any</td>
  *   <td>list of values of the same data type as &lt;exp&gt;</td>
  *   <td>
