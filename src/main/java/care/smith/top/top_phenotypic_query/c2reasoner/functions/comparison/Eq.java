@@ -11,6 +11,30 @@ import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ * The function <b>Eq</b> realizes the comparison operator '=' (equal) and returns 'true' if the two
+ * arguments are equal, otherwise 'false'.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;: number</td>
+ *   <td>boolean</td>
+ *   <td>
+ *     6 = 2<br>
+ *     The function returns 'false'.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Eq extends FunctionEntity {
 
   private static Eq INSTANCE = new Eq();

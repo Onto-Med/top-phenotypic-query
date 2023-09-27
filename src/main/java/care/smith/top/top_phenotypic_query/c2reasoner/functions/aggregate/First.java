@@ -11,6 +11,31 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The function <b>First</b> returns the temporally first value of the argument values (based on
+ * their timestamps). It is allowed to use the function with a single argument expression if it
+ * returns a list of values.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt;+</td>
+ *   <td>&lt;exp&gt;: any</td>
+ *   <td>same as &lt;exp&gt;</td>
+ *   <td>
+ *     <i>First</i>(Body_Temperature)<br>
+ *     The function returns the first temperature value (e.g., in a certain period).
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class First extends FunctionEntity {
 
   private static final First INSTANCE = new First();

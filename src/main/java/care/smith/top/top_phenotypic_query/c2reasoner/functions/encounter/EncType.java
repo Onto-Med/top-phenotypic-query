@@ -13,6 +13,34 @@ import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ * The function <b>EncType</b> returns 'true' if the encounter type (e.g., inpatient or ambulatory)
+ * in which the data (1st argument) was collected matches one of the defined types (starting with
+ * the second argument), otherwise 'false'.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;data-exp&gt; &lt;enc-type&gt;+</td>
+ *   <td>
+ *     &lt;data-exp&gt;: any<br>
+ *     &lt;enc-type&gt;: text
+ *   </td>
+ *   <td>boolean</td>
+ *   <td>
+ *     <i>EncType</i>(Anaphylaxis, IMP)<br>
+ *     The function returns 'true' if the Anaphylaxis diagnosis was inpatient (IMP).
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class EncType extends FunctionEntity {
 
   private static EncType INSTANCE = new EncType();

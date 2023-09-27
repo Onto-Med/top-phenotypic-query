@@ -12,6 +12,29 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * The function <b>DiffYears</b> returns the time difference in years between two dates.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;: date-time</td>
+ *   <td>number</td>
+ *   <td>
+ *     <i>DiffYears</i>(2020-01-01, 2023-01-01)<br>
+ *     The function returns 3 (years).
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class DiffYears extends FunctionEntity {
 
   private static DiffYears INSTANCE = new DiffYears();

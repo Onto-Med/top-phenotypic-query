@@ -20,6 +20,47 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * The function <b>Filter</b> reduces the number of elements in a list (1st argument) based on a
+ * value range or date range restriction. I.e., the elements remaining in the list must lie in the
+ * value range and must be created/valid in the date range.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;days-num&gt;</td>
+ *   <td>
+ *     &lt;exp&gt;: any<br>
+ *     &lt;days-num&gt;: number
+ *   </td>
+ *   <td>list of values of the same data type as &lt;exp&gt;</td>
+ *   <td>
+ *     <i>Filter</i>(Creatinine, 7)<br>
+ *     The function returns all Creatinine values of the last 7 days.
+ *   </td>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; (&lt;comparison-operator&gt; &lt;limit&gt;)+</td>
+ *   <td>
+ *     &lt;exp&gt;: if one of &lt;limit&gt; is a number then number, otherwise any<br>
+ *     &lt;comparison-operator&gt;: constant (&gt;, &ge;, &lt;, &le;)<br>
+ *     &lt;limit&gt;: number or date-time
+ *   </td>
+ *   <td>list of values of the same data type as &lt;exp&gt;</td>
+ *   <td>
+ *     <i>Filter</i>(Creatinine, &ge;, 0.7, &le;, 1.3, &ge;, 2023-01-01, &le;, 2023-01-31)<br>
+ *     The function returns all Creatinine values from January 2023 that lie between 0.7 and 1.3.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Filter extends FunctionEntity {
 
   private static Filter INSTANCE = new Filter();

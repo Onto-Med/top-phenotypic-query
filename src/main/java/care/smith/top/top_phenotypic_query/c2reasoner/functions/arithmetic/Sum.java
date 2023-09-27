@@ -12,6 +12,29 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * The function <b>Sum</b> adds all its arguments.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;exp&gt;+</td>
+ *   <td>&lt;exp&gt;: number</td>
+ *   <td>number</td>
+ *   <td>
+ *     <i>Sum</i>(6, 2, 3)<br>
+ *     The function returns 11.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Sum extends FunctionEntity {
 
   private static Sum INSTANCE = new Sum();

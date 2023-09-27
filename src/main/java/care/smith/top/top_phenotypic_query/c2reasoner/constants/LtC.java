@@ -7,6 +7,12 @@ import care.smith.top.model.StringConstant;
 import care.smith.top.model.StringValue;
 import care.smith.top.model.Value;
 
+/**
+ * The constant <b>LtC (less)</b> represents the comparison operator '&lt;'.<br>
+ * <b>Return data type:</b> text
+ *
+ * @author TOP group
+ */
 public class LtC extends ConstantEntity {
 
   private static final LtC INSTANCE = new LtC();

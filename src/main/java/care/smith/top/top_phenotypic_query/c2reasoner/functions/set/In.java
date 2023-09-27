@@ -17,6 +17,34 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The function <b>In</b> return 'true' if the given value (1st argument) lies in a given range (2nd
+ * argument), otherwise 'false'. The function is automatically generated for all phenotype
+ * restrictions and does not have to be defined manually.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;value-exp&gt; &lt;restr-exp&gt;</td>
+ *   <td>
+ *     &lt;value-exp&gt;: number<br>
+ *     &lt;restr-exp&gt;: number
+ *   </td>
+ *   <td>boolean</td>
+ *   <td>
+ *     <i>In</i>(Body_Temperature, Increased)<br>
+ *     The function returns 'true' if the actual temperature value lies in the increased range.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class In extends FunctionEntity {
 
   private static final In INSTANCE = new In();

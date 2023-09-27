@@ -14,6 +14,30 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * The function <b>Duration</b> returns the duration (in days) of a process (e.g., encounter or
+ * medication administration).
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;: any</td>
+ *   <td>number</td>
+ *   <td>
+ *     <i>Duration</i>(Dabigatran)<br>
+ *     The function returns the duration (in days) of the Dabigatran administration.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Duration extends FunctionEntity {
 
   private static Duration INSTANCE = new Duration();

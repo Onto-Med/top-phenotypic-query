@@ -12,6 +12,32 @@ import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ * The function <b>And</b> is a Boolean operation on any number of Boolean expressions (arguments).
+ * It returns 'true' if all arguments are true, otherwise 'false'. It is allowed to use the function
+ * with a single argument expression if it returns a list of values.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt;+</td>
+ *   <td>&lt;exp&gt;: boolean</td>
+ *   <td>boolean</td>
+ *   <td>
+ *     Male <i>And</i> Young <i>And</i> Overweight<br>
+ *     The function returns 'true' if all three condition are true,<br>
+ *     otherwise 'false'.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class And extends FunctionEntity {
 
   private static And INSTANCE = new And();

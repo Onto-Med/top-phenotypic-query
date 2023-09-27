@@ -6,6 +6,12 @@ import care.smith.top.model.Constant;
 import care.smith.top.model.DataType;
 import care.smith.top.model.Value;
 
+/**
+ * The constant <b>False</b> is a Boolean constant.<br>
+ * <b>Return data type:</b> boolean
+ *
+ * @author TOP group
+ */
 public class False extends ConstantEntity {
 
   private static final False INSTANCE = new False();

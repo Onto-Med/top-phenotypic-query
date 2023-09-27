@@ -16,6 +16,36 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * The function <b>RefValues</b> reduces the number of elements in a list (1st argument) based on a
+ * date range restriction. The 2nd and the optional 3rd argument specify the date range in days with
+ * respect to the temporally last element (index) in the given list (1st argument), e.g., 2-4 days
+ * before the last element. The elements remaining in the list must be created/valid in the defined
+ * date range.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;days-num&gt; [&lt;days-num&gt;]</td>
+ *   <td>
+ *     &lt;exp&gt;: any<br>
+ *     &lt;days-num&gt;: number
+ *   </td>
+ *   <td>list of values of the same data type as &lt;exp&gt;</td>
+ *   <td>
+ *     <i>RefValues</i>(Creatinine, 2, 4)<br>
+ *     The function returns all Creatinine values collected 2-4 days before the last value.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class RefValues extends FunctionEntity {
 
   private static RefValues INSTANCE = new RefValues();

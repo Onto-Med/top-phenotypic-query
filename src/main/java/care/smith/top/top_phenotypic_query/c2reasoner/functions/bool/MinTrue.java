@@ -11,6 +11,35 @@ import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ * The function <b>MinTrue</b> is an extended Boolean operation. The first argument specifies the
+ * minimum number of subsequent arguments that must be true. If there are at least as many true
+ * arguments (starting with the second argument), the function returns 'true', otherwise 'false'.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;min-num&gt; &lt;exp&gt; &lt;exp&gt;+</td>
+ *   <td>
+ *     &lt;min-num&gt;: number<br>
+ *     &lt;exp&gt;: boolean
+ *   </td>
+ *   <td>boolean</td>
+ *   <td>
+ *     <i>MinTrue</i>(2, Overweight, Hypertension, Stroke)<br>
+ *     The function returns 'true' if at least two of the tree conditions are true,<br>
+ *     otherwise 'false'.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class MinTrue extends FunctionEntity {
 
   private static MinTrue INSTANCE = new MinTrue();

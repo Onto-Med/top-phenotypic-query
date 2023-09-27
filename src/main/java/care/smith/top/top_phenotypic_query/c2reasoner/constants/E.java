@@ -7,6 +7,12 @@ import care.smith.top.model.NumberValue;
 import care.smith.top.model.Value;
 import java.math.BigDecimal;
 
+/**
+ * The constant <b>E (e)</b> is the Euler's number, approximately equal to 2.71828.<br>
+ * <b>Return data type:</b> number
+ *
+ * @author TOP group
+ */
 public class E extends ConstantEntity {
 
   private static final E INSTANCE = new E();

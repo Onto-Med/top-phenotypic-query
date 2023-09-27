@@ -7,6 +7,12 @@ import care.smith.top.model.StringConstant;
 import care.smith.top.model.StringValue;
 import care.smith.top.model.Value;
 
+/**
+ * The constant <b>GeC (greater or equal)</b> represents the comparison operator '&ge;'.<br>
+ * <b>Return data type:</b> text
+ *
+ * @author TOP group
+ */
 public class GeC extends ConstantEntity {
 
   private static final GeC INSTANCE = new GeC();

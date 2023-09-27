@@ -7,6 +7,12 @@ import care.smith.top.model.StringConstant;
 import care.smith.top.model.StringValue;
 import care.smith.top.model.Value;
 
+/**
+ * The constant <b>LeC (less or equal)</b> represents the comparison operator '&le;'.<br>
+ * <b>Return data type:</b> text
+ *
+ * @author TOP group
+ */
 public class LeC extends ConstantEntity {
 
   private static final LeC INSTANCE = new LeC();

@@ -18,6 +18,37 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The function <b>TimeDistance</b> returns 'true' if the value list (1st argument) contains at
+ * least n values (2nd argument) in such a way that the time intervals (in hours) between them lie
+ * within a defined range (3rd-6th arguments), otherwise 'false'.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; [&lt;values-num&gt;] (&lt;comparison-operator&gt; &lt;limit&gt;)+</td>
+ *   <td>
+ *     &lt;exp&gt;: any<br>
+ *     &lt;values-num&gt;: number (default value: 2)<br>
+ *     &lt;comparison-operator&gt;: constant (&gt;, &ge;, &lt;, &le;)<br>
+ *     &lt;limit&gt;: number
+ *   </td>
+ *   <td>boolean</td>
+ *   <td>
+ *     <i>TimeDistance</i>(Blood_Glucose, 3, &gt;, 6, &le;, 72)<br>
+ *     The function returns 'true' if among all blood glucose values occur at least three<br>
+ *     in such a way that the time intervals between them lie in the range from 6 to 72 hours.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class TimeDistance extends FunctionEntity {
 
   private static TimeDistance INSTANCE = new TimeDistance();

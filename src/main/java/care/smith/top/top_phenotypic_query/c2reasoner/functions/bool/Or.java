@@ -12,6 +12,32 @@ import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ * The function <b>Or</b> is a Boolean operation on any number of Boolean expressions (arguments).
+ * It returns 'true' if at least one argument is true, otherwise 'false'. It is allowed to use the
+ * function with a single argument expression if it returns a list of values.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt;+</td>
+ *   <td>&lt;exp&gt;: boolean</td>
+ *   <td>boolean</td>
+ *   <td>
+ *     Hypertension <i>Or</i> Overweight<br>
+ *     The function returns 'true' if at least one of the two conditions is true,<br>
+ *     otherwise 'false'.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Or extends FunctionEntity {
 
   private static Or INSTANCE = new Or();

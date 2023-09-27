@@ -13,6 +13,31 @@ import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ * The function <b>StartsBefore</b> returns 'true' if the process (e.g., encounter or medication
+ * administration) represented by the 1st argument starts before the process represented by the 2nd
+ * argument, otherwise 'false'.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;: any</td>
+ *   <td>boolean</td>
+ *   <td>
+ *     <i>StartsBefore</i>(eGFR, Dabigatran)<br>
+ *     The function returns 'true' if the eGFR measurement started before the Dabigatran administration.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class StartsBefore extends FunctionEntity {
 
   private static StartsBefore INSTANCE = new StartsBefore();

@@ -11,6 +11,30 @@ import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ * The function <b>Le</b> realizes the comparison operator '&le;' (less or equal) and returns 'true'
+ * if the first argument is less than or equal to the second argument, otherwise 'false'.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;: number</td>
+ *   <td>boolean</td>
+ *   <td>
+ *     6 &le; 2<br>
+ *     The function returns 'false'.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Le extends FunctionEntity {
 
   private static Le INSTANCE = new Le();

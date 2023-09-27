@@ -11,6 +11,30 @@ import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ * The function <b>Min</b> returns the minimum value of the argument values. It is allowed to use
+ * the function with a single argument expression if it returns a list of values.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt;+</td>
+ *   <td>&lt;exp&gt;: number</td>
+ *   <td>number</td>
+ *   <td>
+ *     <i>Min</i>(Body_Temperature)<br>
+ *     The function returns the minimum temperature value (e.g., in a certain period).
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Min extends FunctionEntity {
 
   private static final Min INSTANCE = new Min();

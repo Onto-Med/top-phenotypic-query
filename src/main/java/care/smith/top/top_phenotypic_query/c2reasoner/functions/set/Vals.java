@@ -11,6 +11,31 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The function <b>Vals</b> combines its argument expressions to one expression containing multiple
+ * values. The function should be used mainly for phenotype restrictions. It is allowed to use the
+ * function with a single argument expression.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt;+</td>
+ *   <td>&lt;exp&gt;: any</td>
+ *   <td>list of values of the same data type as &lt;exp&gt;</td>
+ *   <td>
+ *     <i>Vals</i>(Value1, Value2)<br>
+ *     The function returns an expression containing the both values.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Vals extends FunctionEntity {
 
   private static Vals INSTANCE = new Vals();

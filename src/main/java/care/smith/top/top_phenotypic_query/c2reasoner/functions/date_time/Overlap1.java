@@ -13,6 +13,37 @@ import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ * The function <b>Overlap1</b> returns 'true' if the two processes (e.g., encounter or medication
+ * administration) represented by the first and the second arguments temporally overlap
+ * (unidirectional, i.e., the first one starts not later as the second one), otherwise 'false'. The
+ * third optional argument specifies the maximum number of hours that may lie between the two
+ * processes.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;exp&gt; [&lt;hours-num&gt;]</td>
+ *   <td>
+ *     &lt;exp&gt;: any<br>
+ *     &lt;hours-num&gt;: number
+ *   </td>
+ *   <td>boolean</td>
+ *   <td>
+ *     <i>Overlap1</i>(Drug1, Drug2, 3)<br>
+ *     The function returns 'true' if the medication administrations of Drug1 and Drug2<br>
+ *     temporally overlap (maximum 3 hour may lie between) and Drug1 starts not later as Drug2.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Overlap1 extends FunctionEntity {
 
   private static Overlap1 INSTANCE = new Overlap1();

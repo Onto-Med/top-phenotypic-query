@@ -12,6 +12,30 @@ import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ * The function <b>Gt</b> realizes the comparison operator '&gt;' (greater) and returns 'true' if
+ * the first argument is greater than the second argument, otherwise 'false'.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;exp&gt;</td>
+ *   <td>&lt;exp&gt;: number</td>
+ *   <td>boolean</td>
+ *   <td>
+ *     6 &gt; 2<br>
+ *     The function returns 'true'.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Gt extends FunctionEntity {
 
   private static Gt INSTANCE = new Gt();

@@ -12,6 +12,38 @@ import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ * The function <b>Switch</b> combines any number of if-then pairs and an optional default
+ * expression (else-expression). If one of the if-expressions is true, the corresponding
+ * then-expression is returned, otherwise the else-expression. If all if-expressions are false and
+ * the else-expression is undefined, a 'missing value' is returned.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>(&lt;if-exp&gt; &lt;then-exp&gt;)+ [&lt;else-exp&gt;]</td>
+ *   <td>
+ *     &lt;if-exp&gt;: boolean<br>
+ *     &lt;then-exp&gt;: any (all equal)<br>
+ *     &lt;else-exp&gt;: same as all &lt;then-exp&gt;
+ *   </td>
+ *   <td>same as all &lt;then-exp&gt;</td>
+ *   <td>
+ *     <i>Switch</i>(Creatinine &lt; 1, 1, Creatinine &gt; 3, 3, Creatinine)<br>
+ *     The function returns 1 if the Creatinine value is less than 1,<br>
+ *     3 if the Creatinine value is greater than 3,<br>
+ *     otherwise the Creatinine value.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Switch extends FunctionEntity {
 
   private static Switch INSTANCE = new Switch();

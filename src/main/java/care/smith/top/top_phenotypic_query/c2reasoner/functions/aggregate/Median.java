@@ -12,6 +12,31 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The function <b>Median</b> returns the median (separating the higher half from the lower half) of
+ * the argument values. It is allowed to use the function with a single argument expression if it
+ * returns a list of values.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt;+</td>
+ *   <td>&lt;exp&gt;: number</td>
+ *   <td>number</td>
+ *   <td>
+ *     <i>Median</i>(Body_Temperature)<br>
+ *     The function returns the median temperature value (e.g., in a certain period).
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Median extends FunctionEntity {
 
   private static final Median INSTANCE = new Median();

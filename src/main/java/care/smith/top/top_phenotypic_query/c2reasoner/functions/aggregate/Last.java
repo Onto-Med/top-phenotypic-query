@@ -11,6 +11,31 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The function <b>Last</b> returns the temporally last value of the argument values (based on their
+ * timestamps). It is allowed to use the function with a single argument expression if it returns a
+ * list of values.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt;+</td>
+ *   <td>&lt;exp&gt;: any</td>
+ *   <td>same as &lt;exp&gt;</td>
+ *   <td>
+ *     <i>Last</i>(Body_Temperature)<br>
+ *     The function returns the last temperature value (e.g., in a certain period).
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class Last extends FunctionEntity {
 
   private static final Last INSTANCE = new Last();

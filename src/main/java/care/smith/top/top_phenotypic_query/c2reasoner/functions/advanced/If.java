@@ -12,6 +12,36 @@ import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import java.util.List;
 
+/**
+ * The function <b>If</b> returns the then-expression (2nd argument) if a condition (the
+ * if-expression, 1st argument) is true, otherwise the optional else-expression (3rd argument). If
+ * the if-expression is false and the else-expression is undefined, a 'missing value' is returned.
+ *
+ * <table class="striped"><caption>Arguments:</caption>
+ * <tr>
+ *   <th><b>Arguments</b></th>
+ *   <th><b>Arguments data types</b></th>
+ *   <th><b>Return data type</b></th>
+ *   <th><b>Example</b></th>
+ * </tr>
+ * <tr>
+ *   <td>&lt;if-exp&gt; &lt;then-exp&gt; [&lt;else-exp&gt;]</td>
+ *   <td>
+ *     &lt;if-exp&gt;: boolean<br>
+ *     &lt;then-exp&gt;: any<br>
+ *     &lt;else-exp&gt;: same as &lt;then-exp&gt;
+ *   </td>
+ *   <td>same as &lt;then-exp&gt;</td>
+ *   <td>
+ *     <i>If</i>(Bilirubin &lt; 1, 1, Bilirubin)<br>
+ *     The function returns 1 if the Bilirubin value is less than 1,<br>
+ *     otherwise the Bilirubin value.
+ *   </td>
+ * </tr>
+ * </table>
+ *
+ * @author TOP group
+ */
 public class If extends FunctionEntity {
 
   private static If INSTANCE = new If();
