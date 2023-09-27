@@ -1,5 +1,7 @@
 # TOP Phenotypic Query
 
+[![JavaDoc](https://img.shields.io/badge/JavaDoc-Online-green)](https://Onto-Med.github.io/top-phenotypic-query/)
+
 ## Introduction
 
 TOP Phenotypic Query is a Java Maven package that is responsible for the phenotyping business logic in the TOP
