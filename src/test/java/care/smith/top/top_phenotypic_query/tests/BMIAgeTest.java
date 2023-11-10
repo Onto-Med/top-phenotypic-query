@@ -78,7 +78,7 @@ public class BMIAgeTest extends AbstractTest {
     assertTrue(Values.getBooleanValue(getValue("Overweight", phes)));
   }
 
-  private static ResultSet getResultSet() {
+  protected static ResultSet getResultSet() {
     PhenotypeValues weightVals1 = new PhenotypeValues("Weight");
     weightVals1.setValues(getDTR(2000), Val.of(75));
     PhenotypeValues heightVals1 = new PhenotypeValues("Height");
