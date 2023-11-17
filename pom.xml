@@ -3,6 +3,7 @@
 	<groupId>care.smith.top</groupId>
 	<artifactId>top-phenotypic-query</artifactId>
 	<version>0.7.0</version>
+	<name>TOP Phenotypic Query</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
