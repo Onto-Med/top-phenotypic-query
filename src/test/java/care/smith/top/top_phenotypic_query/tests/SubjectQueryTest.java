@@ -52,7 +52,7 @@ public class SubjectQueryTest extends AbstractTest {
     assertEquals(Set.of("Age", "Young", "Sex", "Female", "birthdate"), phes.getPhenotypeNames());
     assertEquals(BigDecimal.valueOf(33), Values.getNumberValue(phes.getValues("Age", null).get(0)));
     assertEquals(
-        LocalDateTime.parse("1990-01-01T00:00:00"),
+        LocalDateTime.parse("1991-01-01T00:00:00"),
         Values.getDateTimeValue(phes.getValues("birthdate", null).get(0)));
     assertEquals("female", Values.getStringValue(phes.getValues("Sex", null).get(0)));
     assertTrue(Values.getBooleanValue(phes.getValues("Female", null).get(0)));
@@ -105,7 +105,7 @@ public class SubjectQueryTest extends AbstractTest {
     assertEquals(Set.of("Sex", "Female", "Young", "birthdate", "Age"), phes.getPhenotypeNames());
     assertEquals(BigDecimal.valueOf(32), Values.getNumberValue(phes.getValues("Age", null).get(0)));
     assertEquals(
-        LocalDateTime.parse("1991-01-01T00:00:00"),
+        LocalDateTime.parse("1992-01-01T00:00:00"),
         Values.getDateTimeValue(phes.getValues("birthdate", null).get(0)));
     assertTrue(Values.getBooleanValue(phes.getValues("Young", null).get(0)));
   }

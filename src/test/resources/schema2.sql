@@ -15,10 +15,10 @@ CREATE TABLE assessment1 (
 );
 
 INSERT INTO subject VALUES
-    (1, '1970-01-01', 'female'),
-    (2, '1971-01-01', 'male'),
-    (3, '1990-01-01', 'female'),
-    (4, '1991-01-01', 'male');
+    (1, '1971-01-01', 'female'),
+    (2, '1972-01-01', 'male'),
+    (3, '1991-01-01', 'female'),
+    (4, '1992-01-01', 'male');
 
 INSERT INTO assessment1 (subject_id, created_at, height, weight) VALUES
     (1, '2000-05-20T12:43:00', 170, 70),

@@ -33,9 +33,9 @@ public class EncAgeTest {
 
     System.out.println(rs);
 
-    assertEquals(83, rs.getNumberValue("11", "age", null).intValue());
+    assertEquals(84, rs.getNumberValue("11", "age", null).intValue());
     assertEquals(60, rs.getNumberValue("11", "encounter age", null).intValue());
-    assertEquals(83, rs.getNumberValue("12", "age", null).intValue());
+    assertEquals(84, rs.getNumberValue("12", "age", null).intValue());
     assertEquals(70, rs.getNumberValue("12", "encounter age", null).intValue());
 
     assertEquals(43, rs.getNumberValue("21", "age", null).intValue());

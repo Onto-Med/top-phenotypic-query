@@ -54,30 +54,30 @@ public class BlazeTestIntern {
 
     assertEquals(
         Set.of(
-            "Patient/1UKE",
-            "Patient/UKB013",
-            "Patient/UKB014",
-            "Patient/UKFAU3",
-            "Patient/UKFAU9",
-            "Patient/UKFR3"),
+            "Patient/UKB-0013",
+            "Patient/UKB-0014",
+            "Patient/UKE-0001",
+            "Patient/UKFAU-0003",
+            "Patient/UKFAU-0009",
+            "Patient/UKFR-0003"),
         rs.getSubjectIds());
 
     int obsCount = 0;
     obsCount +=
-        rs.getNumberValues("Patient/1UKE", "hemoglobin_values_hemoglobinOver14_5", null).size();
+        rs.getNumberValues("Patient/UKB-0013", "hemoglobin_values_hemoglobinOver14_5", null).size();
     obsCount +=
-        rs.getNumberValues("Patient/UKB013", "hemoglobin_values_hemoglobinOver14_5", null).size();
+        rs.getNumberValues("Patient/UKB-0014", "hemoglobin_values_hemoglobinOver14_5", null).size();
     obsCount +=
-        rs.getNumberValues("Patient/UKB014", "hemoglobin_values_hemoglobinOver14_5", null).size();
+        rs.getNumberValues("Patient/UKE-0001", "hemoglobin_values_hemoglobinOver14_5", null).size();
     obsCount +=
-        rs.getNumberValues("Patient/UKFAU3", "hemoglobin_values_hemoglobinOver14_5", null).size();
+        rs.getNumberValues("Patient/UKFAU-0003", "hemoglobin_values_hemoglobinOver14_5", null)
+            .size();
     obsCount +=
-        rs.getNumberValues("Patient/UKFAU9", "hemoglobin_values_hemoglobinOver14_5", null).size();
+        rs.getNumberValues("Patient/UKFAU-0009", "hemoglobin_values_hemoglobinOver14_5", null)
+            .size();
     obsCount +=
-        rs.getNumberValues("Patient/UKFR3", "hemoglobin_values_hemoglobinOver14_5", null).size();
-
-    System.out.println(
-        rs.getNumberValues("Patient/1UKE", "hemoglobin_values_hemoglobinOver14_5", null));
+        rs.getNumberValues("Patient/UKFR-0003", "hemoglobin_values_hemoglobinOver14_5", null)
+            .size();
 
     assertEquals(13, obsCount);
   }
@@ -112,12 +112,14 @@ public class BlazeTestIntern {
     Phenotype bd = new Phe("birthdate").dateTime().itemType(ItemType.SUBJECT_BIRTH_DATE).get();
     Phenotype enc = new Phe("encounter").string().itemType(ItemType.ENCOUNTER).get();
     Phenotype age = new Phe("age").expression(EncAge.of(bd, enc)).get();
-    Phenotype old = new Phe("old").restriction(age, Res.ge(83)).get();
+    Phenotype old = new Phe("old").restriction(age, Res.gt(82)).get();
 
     ResultSet rs = new Que(CONFIG, bd, enc, age, old).inc(old).execute();
 
     System.out.println(rs);
 
-    assertEquals(Set.of("Patient/UKFAU4", "Patient/uksh201"), rs.getSubjectIds());
+    assertEquals(
+        Set.of("Patient/UKSH-0004", "Patient/VHF09998", "Patient/VHF09999", "Patient/VHF10000"),
+        rs.getSubjectIds());
   }
 }

@@ -34,11 +34,11 @@ CREATE TABLE height (
 );
 
 INSERT INTO subject VALUES
-    (1, '2002-01-01', 'female'),
-    (2, '1982-01-01', 'female'),
-    (3, '2002-01-01', 'male'),
-    (4, '1982-01-01', 'male'),
-    (5, '2002-01-01', 'female');
+    (1, '2003-01-01', 'female'),
+    (2, '1983-01-01', 'female'),
+    (3, '2003-01-01', 'male'),
+    (4, '1983-01-01', 'male'),
+    (5, '2003-01-01', 'female');
 
 INSERT INTO weight (subject_id, created_at, code_system, code, unit, number_value) VALUES
     (1, '2000-05-20T12:43:00', 'http://loinc.org', '3141-9', 'kg', 75),

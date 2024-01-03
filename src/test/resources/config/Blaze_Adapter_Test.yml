@@ -2,3 +2,22 @@ id: Blaze_Adapter
 adapter: care.smith.top.top_phenotypic_query.adapter.fhir.FHIRAdapter
 connection:
   url: https://mii-agiop-3p.life.uni-leipzig.de/blaze
+phenotypeQueries:
+  observation:
+    baseQuery: "Observation?code={codes}"
+    numberValueIntervalPart: "&value-quantity{operator}{value}"
+    numberValueListPart: "&value-quantity={values}"
+    textValueListPart: "&value-string={values}"
+    conceptValueListPart: "&value-concept={values}"
+    dateTimeValueIntervalPart: "&value-date{operator}{value}"
+    dateTimeIntervalPart: "&date{operator}{value}"
+    subjectsPart: "&subject={values}"
+    output:
+      subject: subject.reference.value
+      numberValue: value.value
+      textValue: value
+      conceptValue: value.coding.select(system.value + '|' + code)
+      dateTimeValue: value
+      dateTime: effective
+      fields:
+        encounterId: encounter.reference.value
