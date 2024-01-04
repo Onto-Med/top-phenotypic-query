@@ -3,6 +3,7 @@ package care.smith.top.top_phenotypic_query.util;
 import care.smith.top.model.Category;
 import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
+import care.smith.top.model.ItemType;
 import care.smith.top.model.LocalisableText;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Repository;
@@ -266,5 +267,33 @@ public class Entities {
   @Override
   public String toString() {
     return "Entities [entities=" + entities.values() + "]";
+  }
+
+  public NoCodesException checkNoCodes() {
+    String phenotypes =
+        getEntities().stream()
+            .filter(e -> hasNoCodes(e))
+            .map(e -> e.getId() + " (" + getFirstTitle(e) + ")")
+            .collect(Collectors.joining(", "));
+    if (phenotypes.isEmpty()) return null;
+    return new NoCodesException(phenotypes);
+  }
+
+  private boolean hasNoCodes(Entity e) {
+    if (e.getEntityType() != EntityType.SINGLE_PHENOTYPE) return false;
+    Phenotype p = (Phenotype) e;
+    if (p.getItemType() == ItemType.SUBJECT_AGE
+        || p.getItemType() == ItemType.SUBJECT_BIRTH_DATE
+        || p.getItemType() == ItemType.SUBJECT_SEX
+        || p.getItemType() == ItemType.ENCOUNTER) return false;
+    return e.getCodes() == null || e.getCodes().isEmpty();
+  }
+
+  public class NoCodesException extends Exception {
+    private static final long serialVersionUID = 1L;
+
+    public NoCodesException(String phenotypes) {
+      super("The following single phenotypes have no codes: " + phenotypes + "!");
+    }
   }
 }

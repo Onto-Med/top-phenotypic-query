@@ -12,6 +12,7 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import care.smith.top.top_phenotypic_query.util.Values;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -23,7 +24,7 @@ import org.junit.jupiter.api.Test;
 public class FullBMIAgeTest extends AbstractTest {
 
   @Test
-  public void test1() throws InstantiationException, SQLException {
+  public void test1() throws InstantiationException, SQLException, NoCodesException {
     QueryCriterion cri1 =
         (QueryCriterion)
             new QueryCriterion()
@@ -73,7 +74,7 @@ public class FullBMIAgeTest extends AbstractTest {
   }
 
   @Test
-  public void test2() throws InstantiationException, SQLException {
+  public void test2() throws InstantiationException, SQLException, NoCodesException {
     QueryCriterion cri1 =
         (QueryCriterion)
             new QueryCriterion()

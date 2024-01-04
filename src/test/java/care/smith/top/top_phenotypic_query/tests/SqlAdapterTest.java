@@ -15,6 +15,7 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.util.Entities;
+import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -84,7 +85,7 @@ public class SqlAdapterTest extends AbstractTest {
   }
 
   @Test
-  void testCorruptedPhenotype() throws InstantiationException, SQLException {
+  void testCorruptedPhenotype() throws InstantiationException, SQLException, NoCodesException {
     DataAdapter adapter = DataAdapter.getInstanceFromResource("config/SQL_Adapter_Test1.yml");
 
     Phenotype stringPhenotype = getPhenotype("Sex", "http://loinc.org", "46098-0", DataType.STRING);

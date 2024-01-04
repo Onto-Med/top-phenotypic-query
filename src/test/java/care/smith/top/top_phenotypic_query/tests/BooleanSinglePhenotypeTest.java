@@ -16,6 +16,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import com.google.common.collect.ObjectArrays;
 import java.net.URL;
@@ -50,7 +51,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   }
 
   @Test
-  public void test1() throws SQLException {
+  public void test1() throws SQLException, NoCodesException {
     QueryCriterion cri1 =
         (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(h.getId());
     QueryCriterion cri2 =
@@ -64,7 +65,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   }
 
   @Test
-  public void test2() throws SQLException {
+  public void test2() throws SQLException, NoCodesException {
     QueryCriterion cri1 =
         (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(h.getId());
     QueryCriterion cri2 =
@@ -78,7 +79,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   }
 
   @Test
-  public void test3() throws SQLException {
+  public void test3() throws SQLException, NoCodesException {
     Expression exp = And.of(Exp.ofEntity("Weight"), Not.of(Exp.ofEntity("Height")));
     Phenotype composite =
         (Phenotype)
@@ -101,7 +102,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   }
 
   @Test
-  public void test4() throws SQLException {
+  public void test4() throws SQLException, NoCodesException {
     Expression exp = And.of(Exp.ofEntity("Height"), Not.of(Exp.ofEntity("Weight")));
     Phenotype composite =
         (Phenotype)
@@ -124,7 +125,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   }
 
   @Test
-  public void test5() throws SQLException {
+  public void test5() throws SQLException, NoCodesException {
     Expression exp = And.of(Exp.ofEntity("Weight"), Not.of(Exp.ofEntity("Height")));
     Phenotype composite =
         (Phenotype)
@@ -147,7 +148,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   }
 
   @Test
-  public void test6() throws SQLException {
+  public void test6() throws SQLException, NoCodesException {
     Expression exp = And.of(Exp.ofEntity("Height"), Not.of(Exp.ofEntity("Weight")));
     Phenotype composite =
         (Phenotype)

@@ -1,22 +1,15 @@
 package care.smith.top.top_phenotypic_query.tests.intern.run;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import care.smith.top.model.Entity;
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
-import care.smith.top.model.PhenotypeQuery;
-import care.smith.top.model.ProjectionEntry.TypeEnum;
-import care.smith.top.model.QueryCriterion;
-import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
-import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -33,22 +26,7 @@ public class BlazeTestIntern {
 
   @Test
   public void test1() throws InstantiationException, SQLException {
-    QueryCriterion cri =
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(true)
-                .subjectId(hemoglobinOver14_5.getId())
-                .type(TypeEnum.QUERYCRITERION);
-    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri);
-
-    URL configFile = Thread.currentThread().getContextClassLoader().getResource(CONFIG);
-    assertNotNull(configFile);
-    DataAdapter adapter = DataAdapter.getInstance(configFile.getPath());
-
-    PhenotypeFinder pf = new PhenotypeFinder(query, entities, adapter);
-    ResultSet rs = pf.execute();
-
-    //    ResultSet rs = new Que(CONFIG, entities).inc(hemoglobinOver14_5).execute();
+    ResultSet rs = new Que(CONFIG, entities).inc(hemoglobinOver14_5).execute();
 
     System.out.println(rs.getSubjectIds());
 

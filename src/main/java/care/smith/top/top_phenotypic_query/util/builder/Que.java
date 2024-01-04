@@ -11,6 +11,7 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -124,7 +125,7 @@ public class Que {
     ResultSet rs = null;
     try {
       rs = pf.execute();
-    } catch (SQLException e) {
+    } catch (SQLException | NoCodesException e) {
       e.printStackTrace();
     } finally {
       adapter.close();

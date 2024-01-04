@@ -9,6 +9,7 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.Entities;
+import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import java.sql.SQLException;
@@ -39,7 +40,9 @@ public class PhenotypeFinder {
     return phenotypes;
   }
 
-  public ResultSet execute() throws SQLException {
+  public ResultSet execute() throws SQLException, NoCodesException {
+    NoCodesException e = phenotypes.checkNoCodes();
+    if (e != null) throw e;
     return executeCompositeSearches(executeSingleSearches()).clean(query.getProjection());
   }
 

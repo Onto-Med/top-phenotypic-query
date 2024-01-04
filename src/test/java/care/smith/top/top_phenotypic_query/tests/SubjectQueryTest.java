@@ -13,6 +13,7 @@ import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
+import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import care.smith.top.top_phenotypic_query.util.Values;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -31,7 +32,7 @@ public class SubjectQueryTest extends AbstractTest {
   static Entity[] phenotypes = {age, young, sex, female};
 
   @Test
-  public void test1() throws InstantiationException, SQLException {
+  public void test1() throws InstantiationException, SQLException, NoCodesException {
     PhenotypeQuery query =
         new PhenotypeQuery()
             .addCriteriaItem(
@@ -60,7 +61,7 @@ public class SubjectQueryTest extends AbstractTest {
   }
 
   @Test
-  public void test2() throws InstantiationException, SQLException {
+  public void test2() throws InstantiationException, SQLException, NoCodesException {
     PhenotypeQuery query =
         new PhenotypeQuery()
             .addCriteriaItem(
@@ -84,7 +85,7 @@ public class SubjectQueryTest extends AbstractTest {
   }
 
   @Test
-  public void test3() throws InstantiationException, SQLException {
+  public void test3() throws InstantiationException, SQLException, NoCodesException {
     PhenotypeQuery query =
         new PhenotypeQuery()
             .addCriteriaItem(
@@ -111,7 +112,7 @@ public class SubjectQueryTest extends AbstractTest {
   }
 
   @Test
-  public void test4() throws InstantiationException, SQLException {
+  public void test4() throws InstantiationException, SQLException, NoCodesException {
     PhenotypeQuery query =
         new PhenotypeQuery()
             .addCriteriaItem(

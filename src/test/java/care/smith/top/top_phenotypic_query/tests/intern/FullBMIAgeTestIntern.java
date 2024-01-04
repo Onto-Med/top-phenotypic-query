@@ -11,6 +11,7 @@ import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.tests.AbstractTest;
+import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import org.hl7.fhir.r4.model.Patient;
 
 public class FullBMIAgeTestIntern extends AbstractTest {
 
-  public static void main(String[] args) throws SQLException {
+  public static void main(String[] args) throws SQLException, NoCodesException {
     long start = new Date().getTime();
     test(getFHIRAdapter());
     long end = new Date().getTime();
@@ -42,7 +43,7 @@ public class FullBMIAgeTestIntern extends AbstractTest {
     return new SQLAdapter(DataAdapterConfig.getInstance("test_files/SQL_Adapter_Test_intern.yml"));
   }
 
-  private static void test(DataAdapter adapter) throws SQLException {
+  private static void test(DataAdapter adapter) throws SQLException, NoCodesException {
     QueryCriterion cri1 =
         (QueryCriterion)
             new QueryCriterion()

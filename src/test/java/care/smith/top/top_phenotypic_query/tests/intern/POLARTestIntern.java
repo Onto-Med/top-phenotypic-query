@@ -7,6 +7,7 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.tests.AbstractTest;
 import care.smith.top.top_phenotypic_query.util.Entities;
+import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
@@ -18,7 +19,8 @@ public class POLARTestIntern extends AbstractTest {
           MalformedURLException,
           IOException,
           InstantiationException,
-          InterruptedException {
+          InterruptedException,
+          NoCodesException {
     Entities entities =
         Entities.of(
             "http://top-prod.imise.uni-leipzig.de/api/polar/delir/entity",
