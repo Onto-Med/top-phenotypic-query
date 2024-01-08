@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Deploy JavaDoc
         uses: MathieuSoysal/Javadoc-publisher.yml@v2.4.0
+        env:
+          GH_MAVEN_PKG_AUTH_TOKEN: ${{ secrets.GH_MAVEN_PKG_AUTH_TOKEN }}
+          GH_MAVEN_PKG_USER: ${{ secrets.GH_MAVEN_PKG_USER }}
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           javadoc-branch: javadoc
