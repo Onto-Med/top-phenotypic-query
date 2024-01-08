@@ -36,6 +36,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Subtract;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Sum;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.MaxTrue;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.MinTrue;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Or;
@@ -145,6 +146,7 @@ public class C2R {
     addFunction(Or.get());
     addFunction(Not.get());
     addFunction(MinTrue.get());
+    addFunction(MaxTrue.get());
     addFunction(Eq.get());
     addFunction(Ge.get());
     addFunction(Gt.get());

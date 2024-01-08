@@ -26,6 +26,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Ln;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Multiply;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.MaxTrue;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.MinTrue;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Or;
@@ -758,6 +759,26 @@ public class C2RTest {
     args.add(Exp.ofTrue());
     e = MinTrue.of(args);
     assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+  }
+
+  @Test
+  public void testMaxTrue() {
+    Expression maxTrue = Exp.of(2);
+    Expression v1 = Exp.ofTrue();
+    Expression v2 = Exp.ofFalse();
+    Expression v3 = Exp.ofTrue();
+    Expression v4 = Exp.ofFalse();
+    Expression v5 = Exp.ofTrue();
+
+    C2R c = new C2R();
+    Expression e = MaxTrue.of(maxTrue, v1, v2, v3, v4);
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e = MaxTrue.of(maxTrue, v2, v4);
+    assertTrue(Expressions.hasValueTrue(c.calculate(e)));
+
+    e = MaxTrue.of(maxTrue, v1, v2, v3, v4, v5);
+    assertFalse(Expressions.hasValueTrue(c.calculate(e)));
   }
 
   @Test
