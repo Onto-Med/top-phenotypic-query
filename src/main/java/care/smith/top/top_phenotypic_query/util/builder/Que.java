@@ -38,6 +38,12 @@ public class Que {
     this.entities = entities;
   }
 
+  public Que(DataAdapterConfig config, Entity... entities) throws InstantiationException {
+    this.adapter = DataAdapter.getInstance(config);
+    this.config = config;
+    this.entities = entities;
+  }
+
   public DataAdapter getAdapter() {
     return adapter;
   }

@@ -1,14 +1,15 @@
 package care.smith.top.top_phenotypic_query.tests.default_sql_writer;
 
+import care.smith.top.model.Code;
+import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,12 +33,14 @@ public class DefaultSqlWriter {
           + "    code_system     text   NOT NULL,\r\n"
           + "    code            text   NOT NULL,\r\n"
           + "    unit            text,\r\n"
-          + "    number_value    numeric(20,2),\r\n"
+          + "    number_value    numeric(20,3),\r\n"
           + "    text_value      text,\r\n"
           + "    date_time_value timestamp,\r\n"
           + "    boolean_value   boolean,\r\n"
           + "    PRIMARY KEY (phenotype_id)\r\n"
           + ")";
+
+  private SqlTablePrinter tablePrinter;
 
   private Logger log = LoggerFactory.getLogger(DefaultSqlWriter.class);
 
@@ -48,6 +51,7 @@ public class DefaultSqlWriter {
               config.getConnectionAttribute("url"),
               config.getConnectionAttribute("user"),
               config.getConnectionAttribute("password"));
+      tablePrinter = new SqlTablePrinter(con);
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -93,27 +97,11 @@ public class DefaultSqlWriter {
   }
 
   public void printSbj() {
-    print("subject");
+    tablePrinter.print("subject");
   }
 
   public void printPhe() {
-    print("phenotype");
-  }
-
-  private void print(String table) {
-    try {
-      Statement st = con.createStatement();
-      ResultSet rs = st.executeQuery("SELECT * FROM " + table);
-      ResultSetMetaData rsmd = rs.getMetaData();
-      int columnsNumber = rsmd.getColumnCount();
-      while (rs.next()) {
-        for (int i = 1; i <= columnsNumber; i++) System.out.print(rs.getString(i) + " | ");
-        System.out.println();
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    System.out.println();
+    tablePrinter.print("phenotype");
   }
 
   public class SbjPhe {
@@ -122,6 +110,18 @@ public class DefaultSqlWriter {
 
     private SbjPhe(Integer sbjId) {
       this.sbjId = sbjId;
+    }
+
+    public SbjPhe insertPhe(LocalDateTime date, Phenotype phe, Number value) {
+      return insertPhe(DateUtil.format(date), phe, value);
+    }
+
+    public SbjPhe insertPhe(String date, Phenotype phe, Number value) {
+      Code code = phe.getCodes().get(new Random().nextInt(phe.getCodes().size()));
+      if (phe.getUnit() != null)
+        return insertPhe(
+            date, code.getCodeSystem().getUri().toString(), code.getCode(), phe.getUnit(), value);
+      return insertPhe(date, code.getCodeSystem().getUri().toString(), code.getCode(), value);
     }
 
     public SbjPhe insertPhe(
@@ -163,6 +163,15 @@ public class DefaultSqlWriter {
       return this;
     }
 
+    public SbjPhe insertPhe(LocalDateTime date, Phenotype phe, String value) {
+      return insertPhe(DateUtil.format(date), phe, value);
+    }
+
+    public SbjPhe insertPhe(String date, Phenotype phe, String value) {
+      Code code = phe.getCodes().get(new Random().nextInt(phe.getCodes().size()));
+      return insertPhe(date, code.getCodeSystem().getUri().toString(), code.getCode(), value);
+    }
+
     public SbjPhe insertPhe(LocalDateTime date, String codeSystem, String code, String value) {
       return insertPhe(DateUtil.format(date), codeSystem, code, value);
     }
@@ -172,6 +181,33 @@ public class DefaultSqlWriter {
           "INSERT INTO phenotype (subject_id, created_at, code_system, code, text_value) VALUES ("
               + String.join(
                   ", ", sbjId.toString(), quote(date), quote(codeSystem), quote(code), quote(value))
+              + ")");
+      return this;
+    }
+
+    public SbjPhe insertPhe(LocalDateTime date, Phenotype phe, Boolean value) {
+      return insertPhe(DateUtil.format(date), phe, value);
+    }
+
+    public SbjPhe insertPhe(String date, Phenotype phe, Boolean value) {
+      Code code = phe.getCodes().get(new Random().nextInt(phe.getCodes().size()));
+      return insertPhe(date, code.getCodeSystem().getUri().toString(), code.getCode(), value);
+    }
+
+    public SbjPhe insertPhe(LocalDateTime date, String codeSystem, String code, Boolean value) {
+      return insertPhe(DateUtil.format(date), codeSystem, code, value);
+    }
+
+    public SbjPhe insertPhe(String date, String codeSystem, String code, Boolean value) {
+      execute(
+          "INSERT INTO phenotype (subject_id, created_at, code_system, code, boolean_value) VALUES ("
+              + String.join(
+                  ", ",
+                  sbjId.toString(),
+                  quote(date),
+                  quote(codeSystem),
+                  quote(code),
+                  value.toString())
               + ")");
       return this;
     }
