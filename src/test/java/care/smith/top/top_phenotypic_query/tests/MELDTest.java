@@ -24,13 +24,18 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
+import java.math.BigDecimal;
 import java.util.Set;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class MELDTest {
 
   private static final DataAdapterConfig CONFIG =
       DataAdapterConfig.getInstanceFromResource("config/Default_SQL_Adapter.yml");
+
+  private static final DefaultSqlWriter WRITER = new DefaultSqlWriter(CONFIG);
 
   private static Phenotype crea =
       new Phe("crea", "http://loinc.org", "2160-0")
@@ -131,37 +136,35 @@ public class MELDTest {
   private static Phenotype meld2 = new Phe("meld2").restriction(meld, Res.geLt(10, 15)).get();
   private static Phenotype meld3 = new Phe("meld3").restriction(meld, Res.ge(15)).get();
 
-  @Test
-  public void test() throws InstantiationException {
-    DefaultSqlWriter writer = new DefaultSqlWriter(CONFIG);
-
-    writer
+  @BeforeAll
+  static void beforeAll() {
+    WRITER
         .insertSbj(0, "2001-01-01", "male")
         .insertPhe("2020-01-01", crea, 0.1)
         .insertPhe("2019-01-02", crea, 2.1)
         .insertPhe("2020-01-01", bili, 0.2)
         .insertPhe("2020-01-01", inr, 0.3);
 
-    writer
+    WRITER
         .insertSbj(1, "2001-01-01", "male")
         .insertPhe("2020-01-01", crea, 1.1)
         .insertPhe("2020-01-01", bili, 1.2)
         .insertPhe("2020-01-01", inr, 1.3);
 
-    writer
+    WRITER
         .insertSbj(2, "2001-01-01", "female")
         .insertPhe("2020-01-01", crea, 2.1)
         .insertPhe("2020-01-01", bili, 2.2)
         .insertPhe("2020-01-01", inr, 2.3);
 
-    writer
+    WRITER
         .insertSbj(3, "1951-01-01", "male")
         .insertPhe("2020-01-01", crea, 3.1)
         .insertPhe("2020-01-01", bili, 3.2)
         .insertPhe("2020-01-01", inr, 3.3)
         .insertPhe("2020-01-01", med, true);
 
-    writer
+    WRITER
         .insertSbj(4, "1951-01-01", "female")
         .insertPhe("2020-01-01", crea, 0.1)
         .insertPhe("2020-01-01", bili, 0.2)
@@ -169,29 +172,29 @@ public class MELDTest {
         .insertPhe(DateUtil.parse("2020-01-01").minusDays(8), diaInt, true)
         .insertPhe(DateUtil.parse("2020-01-01").minusDays(6), diaInt, true);
 
-    writer
+    WRITER
         .insertSbj(5, "1951-01-01", "male")
         .insertPhe("2020-01-01", crea, 2.1)
         .insertPhe("2020-01-01", bili, 2.2);
 
-    writer
+    WRITER
         .insertSbj(6, "1951-01-01", "male")
         .insertPhe("2020-01-01", crea, 2.1)
         .insertPhe("2020-01-01", inr, 2.3);
 
-    writer
+    WRITER
         .insertSbj(7, "1951-01-01", "male")
         .insertPhe("2020-01-01", bili, 2.2)
         .insertPhe("2020-01-01", inr, 2.3);
 
-    writer
+    WRITER
         .insertSbj(8, "1951-01-01", "male")
         .insertPhe("2020-01-01", bili, 3.2)
         .insertPhe("2020-01-01", inr, 3.3)
         .insertPhe(DateUtil.parse("2020-01-01").minusDays(5), diaInt, true)
         .insertPhe(DateUtil.parse("2020-01-01").minusDays(6), diaInt, true);
 
-    writer
+    WRITER
         .insertSbj(9, "1951-01-01", "female")
         .insertPhe("2020-01-01", crea, 0.1)
         .insertPhe("2020-01-01", bili, 0.2)
@@ -199,43 +202,71 @@ public class MELDTest {
         .insertPhe(DateUtil.parse("2020-01-01").minusDays(7), diaInt, true)
         .insertPhe(DateUtil.parse("2020-01-01").minusDays(6), diaInt, true);
 
-    writer
+    WRITER
         .insertSbj(10, "1951-01-01", "female")
         .insertPhe("2020-01-01", crea, 0.1)
         .insertPhe("2020-01-01", bili, 0.2)
         .insertPhe("2020-01-01", inr, 0.3)
         .insertPhe(DateUtil.parse("2020-01-01").minusDays(7), diaCon, true);
 
-    writer
+    WRITER
         .insertSbj(11, "1951-01-01", "female")
         .insertPhe("2020-01-01", crea, 0.1)
         .insertPhe("2020-01-01", bili, 0.2)
         .insertPhe("2020-01-01", inr, 0.3)
         .insertPhe(DateUtil.parse("2020-01-01").minusDays(8), diaCon, true);
 
-    //    writer.printSbj();
-    //    writer.printPhe();
-
-    assertEquals(Set.of("0", "4", "11"), search(meld0, null));
-    assertEquals(Set.of("1"), search(meld2, null));
-    assertEquals(Set.of("2", "3", "9", "10"), search(meld3, null));
-    assertEquals(Set.of("2", "9", "10"), search(meld3, med));
-
-    writer.close();
+    //    WRITER.printSbj();
+    //    WRITER.printPhe();
   }
 
-  private Set<String> search(Phenotype inc, Phenotype exc) throws InstantiationException {
+  @AfterAll
+  static void afterAll() {
+    WRITER.close();
+  }
+
+  @Test
+  void testMELD0() throws InstantiationException {
+    ResultSet rs = search(meld0, null);
+    assertEquals(Set.of("0", "4", "11"), rs.getSubjectIds());
+    assertEquals(new BigDecimal("6.430"), rs.getNumberValue("0", "meld", null));
+    assertEquals(new BigDecimal("6.430"), rs.getNumberValue("4", "meld", null));
+    assertEquals(new BigDecimal("6.430"), rs.getNumberValue("11", "meld", null));
+  }
+
+  @Test
+  void testMELD2() throws InstantiationException {
+    ResultSet rs = search(meld2, null);
+    assertEquals(Set.of("1"), rs.getSubjectIds());
+    assertEquals(new BigDecimal("10.96977366744444"), rs.getNumberValue("1", "meld", null));
+  }
+
+  @Test
+  void testMELD3a() throws InstantiationException {
+    ResultSet rs = search(meld3, null);
+    assertEquals(Set.of("2", "3", "9", "10"), rs.getSubjectIds());
+    assertEquals(new BigDecimal("25.83929138811024"), rs.getNumberValue("2", "meld", null));
+    assertEquals(new BigDecimal("35.02615991492657"), rs.getNumberValue("3", "meld", null));
+    assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("9", "meld", null));
+    assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("10", "meld", null));
+  }
+
+  @Test
+  void testMELD3b() throws InstantiationException {
+    ResultSet rs = search(meld3, med);
+    assertEquals(Set.of("2", "9", "10"), rs.getSubjectIds());
+    assertEquals(new BigDecimal("25.83929138811024"), rs.getNumberValue("2", "meld", null));
+    assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("9", "meld", null));
+    assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("10", "meld", null));
+  }
+
+  private ResultSet search(Phenotype inc, Phenotype exc) throws InstantiationException {
     Que q =
         new Que(
                 CONFIG, crea, bili, inr, creaAdj, biliAdj, inrAdj, diaInt, diaCon, diaAdj, med,
                 meld, meld0, meld1, meld2, meld3)
             .inc(inc);
-
     if (exc != null) q.exc(exc);
-
-    ResultSet rs = q.execute();
-    //    System.out.println(rs);
-
-    return rs.getSubjectIds();
+    return q.execute();
   }
 }
