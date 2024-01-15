@@ -20,3 +20,4 @@ jobs:
           javadoc-branch: javadoc
           java-version: 11
           project: maven
+          custom-command: mvn -B javadoc:aggregate --no-transfer-progress -s .mvn-ci.xml --file pom.xml
