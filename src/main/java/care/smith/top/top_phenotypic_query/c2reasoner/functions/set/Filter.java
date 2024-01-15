@@ -8,6 +8,7 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
@@ -42,6 +43,19 @@ import java.util.stream.Collectors;
  *   <td>
  *     <i>Filter</i>(Creatinine, 7)<br>
  *     The function returns all Creatinine values of the last 7 days.
+ *   </td>
+ * </tr>
+ * <tr>
+ *   <td>&lt;exp&gt; &lt;days-num&gt; &lt;phe&gt;</td>
+ *   <td>
+ *     &lt;exp&gt;: any<br>
+ *     &lt;days-num&gt;: number<br>
+ *     &lt;phe&gt;: phenotype class
+ *   </td>
+ *   <td>list of values of the same data type as &lt;exp&gt;</td>
+ *   <td>
+ *     <i>Filter</i>(Dialysis, 7, Creatinine)<br>
+ *     The function returns all dialyses for the 7 days prior to the (last) creatinine measurement.
  *   </td>
  * </tr>
  * <tr>
@@ -99,6 +113,22 @@ public class Filter extends FunctionEntity {
                   RestrictionOperator.GREATER_THAN_OR_EQUAL_TO,
                   LocalDateTime.now().minusDays(days));
       return Exp.of(filterDate(phe.getValues(), Restrictions.getInterval(dr.get())));
+    }
+
+    if (args.size() == 3) {
+      Expression daysExp = args.get(1);
+      if (Expressions.getDataType(daysExp) == DataType.NUMBER) {
+        Expression datePhe = Aggregator.aggregate(args.get(2), c2r);
+        LocalDateTime endDateTime = Values.getDateTime(Expressions.getValue(datePhe));
+        if (endDateTime == null) return null;
+        LocalDateTime startDateTime =
+            endDateTime.minusDays(Expressions.getNumberValue(daysExp).intValue());
+        DateTimeRange dr =
+            new DateTimeRange()
+                .limit(RestrictionOperator.GREATER_THAN_OR_EQUAL_TO, startDateTime)
+                .limit(RestrictionOperator.LESS_THAN, endDateTime);
+        return Exp.of(filterDate(phe.getValues(), Restrictions.getInterval(dr.get())));
+      }
     }
 
     for (int i = 1; i < args.size(); i++) {
