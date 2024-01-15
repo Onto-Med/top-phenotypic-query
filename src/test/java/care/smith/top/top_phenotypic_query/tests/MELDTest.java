@@ -25,6 +25,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Set;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,6 +37,11 @@ public class MELDTest {
       DataAdapterConfig.getInstanceFromResource("config/Default_SQL_Adapter.yml");
 
   private static final DefaultSqlWriter WRITER = new DefaultSqlWriter(CONFIG);
+
+  private static Phenotype age =
+      new Phe("age").itemType(ItemType.SUBJECT_AGE).titleEn("Age").number().get();
+
+  private static Phenotype old = new Phe("old").restriction(age, Res.ge(12)).get();
 
   private static Phenotype crea =
       new Phe("crea", "http://loinc.org", "2160-0")
@@ -216,6 +222,19 @@ public class MELDTest {
         .insertPhe("2020-01-01", inr, 0.3)
         .insertPhe(DateUtil.parse("2020-01-01").minusDays(8), diaCon, true);
 
+    WRITER
+        .insertSbj(12, LocalDateTime.now().minusYears(10), "female")
+        .insertPhe("2020-01-01", crea, 0.1)
+        .insertPhe("2020-01-01", bili, 0.2)
+        .insertPhe("2020-01-01", inr, 0.3)
+        .insertPhe(DateUtil.parse("2020-01-01").minusDays(7), diaCon, true);
+
+    WRITER
+        .insertSbj(13, LocalDateTime.now().minusYears(10), "male")
+        .insertPhe("2020-01-01", crea, 1.1)
+        .insertPhe("2020-01-01", bili, 1.2)
+        .insertPhe("2020-01-01", inr, 1.3);
+
     //    WRITER.printSbj();
     //    WRITER.printPhe();
   }
@@ -227,7 +246,7 @@ public class MELDTest {
 
   @Test
   void testMELD0() throws InstantiationException {
-    ResultSet rs = search(meld0, null);
+    ResultSet rs = search(meld0, null, null);
     assertEquals(Set.of("0", "4", "11"), rs.getSubjectIds());
     assertEquals(new BigDecimal("6.430"), rs.getNumberValue("0", "meld", null));
     assertEquals(new BigDecimal("6.430"), rs.getNumberValue("4", "meld", null));
@@ -235,37 +254,58 @@ public class MELDTest {
   }
 
   @Test
-  void testMELD2() throws InstantiationException {
-    ResultSet rs = search(meld2, null);
+  void testMELD2a() throws InstantiationException {
+    ResultSet rs = search(meld2, null, null);
+    assertEquals(Set.of("1", "13"), rs.getSubjectIds());
+    assertEquals(new BigDecimal("10.96977366744444"), rs.getNumberValue("1", "meld", null));
+    assertEquals(new BigDecimal("10.96977366744444"), rs.getNumberValue("13", "meld", null));
+  }
+
+  @Test
+  void testMELD2b() throws InstantiationException {
+    ResultSet rs = search(meld2, null, old);
     assertEquals(Set.of("1"), rs.getSubjectIds());
     assertEquals(new BigDecimal("10.96977366744444"), rs.getNumberValue("1", "meld", null));
   }
 
   @Test
   void testMELD3a() throws InstantiationException {
-    ResultSet rs = search(meld3, null);
-    assertEquals(Set.of("2", "3", "9", "10"), rs.getSubjectIds());
+    ResultSet rs = search(meld3, null, null);
+    assertEquals(Set.of("2", "3", "9", "10", "12"), rs.getSubjectIds());
     assertEquals(new BigDecimal("25.83929138811024"), rs.getNumberValue("2", "meld", null));
     assertEquals(new BigDecimal("35.02615991492657"), rs.getNumberValue("3", "meld", null));
     assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("9", "meld", null));
     assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("10", "meld", null));
+    assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("12", "meld", null));
   }
 
   @Test
   void testMELD3b() throws InstantiationException {
-    ResultSet rs = search(meld3, med);
+    ResultSet rs = search(meld3, med, null);
+    assertEquals(Set.of("2", "9", "10", "12"), rs.getSubjectIds());
+    assertEquals(new BigDecimal("25.83929138811024"), rs.getNumberValue("2", "meld", null));
+    assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("9", "meld", null));
+    assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("10", "meld", null));
+    assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("12", "meld", null));
+  }
+
+  @Test
+  void testMELD3c() throws InstantiationException {
+    ResultSet rs = search(meld3, med, old);
     assertEquals(Set.of("2", "9", "10"), rs.getSubjectIds());
     assertEquals(new BigDecimal("25.83929138811024"), rs.getNumberValue("2", "meld", null));
     assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("9", "meld", null));
     assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("10", "meld", null));
   }
 
-  private ResultSet search(Phenotype inc, Phenotype exc) throws InstantiationException {
+  private ResultSet search(Phenotype inc, Phenotype exc, Phenotype ageInc)
+      throws InstantiationException {
     Que q =
         new Que(
-                CONFIG, crea, bili, inr, creaAdj, biliAdj, inrAdj, diaInt, diaCon, diaAdj, med,
-                meld, meld0, meld1, meld2, meld3)
+                CONFIG, age, old, crea, bili, inr, creaAdj, biliAdj, inrAdj, diaInt, diaCon, diaAdj,
+                med, meld, meld0, meld1, meld2, meld3)
             .inc(inc);
+    if (ageInc != null) q.inc(ageInc);
     if (exc != null) q.exc(exc);
     return q.execute();
   }
