@@ -282,6 +282,7 @@ public class MELDTest {
   @Test
   void testMELD3b() throws InstantiationException {
     ResultSet rs = search(meld3, med, null);
+    System.out.println(rs);
     assertEquals(Set.of("2", "9", "10", "12"), rs.getSubjectIds());
     assertEquals(new BigDecimal("25.83929138811024"), rs.getNumberValue("2", "meld", null));
     assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("9", "meld", null));
@@ -304,6 +305,7 @@ public class MELDTest {
         new Que(
                 CONFIG, age, old, crea, bili, inr, creaAdj, biliAdj, inrAdj, diaInt, diaCon, diaAdj,
                 med, meld, meld0, meld1, meld2, meld3)
+            .pro(old)
             .inc(inc);
     if (ageInc != null) q.inc(ageInc);
     if (exc != null) q.exc(exc);

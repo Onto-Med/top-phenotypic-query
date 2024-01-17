@@ -36,6 +36,8 @@ public class GenericFullBMIAgeTest extends AbstractTest {
     phesExpected.remove("BMI27_30");
     phesExpected.remove("BMI19_27");
     phesExpected.remove("Male");
+    phesExpected.remove("Heavy");
+    phesExpected.remove("Light");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
     assertEquals(new BigDecimal(21), Values.getNumberValue(getValue("Age", phes)));
@@ -73,6 +75,8 @@ public class GenericFullBMIAgeTest extends AbstractTest {
     phesExpected.remove("BMI27_30");
     phesExpected.remove("BMI19_27");
     phesExpected.remove("Female");
+    phesExpected.remove("Heavy");
+    phesExpected.remove("Light");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
     assertEquals(new BigDecimal(21), Values.getNumberValue(getValue("Age", phes)));

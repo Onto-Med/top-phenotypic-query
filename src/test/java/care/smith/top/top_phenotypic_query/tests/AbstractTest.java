@@ -59,6 +59,7 @@ public abstract class AbstractTest {
           "http://hl7.org/fhir/administrative-gender|male");
   protected static Phenotype weight =
       getPhenotype("Weight", "http://loinc.org", "3141-9").itemType(ItemType.ALLERGY_INTOLERANCE);
+  protected static Phenotype light = getInterval("Light", weight, 0, 100);
   protected static Phenotype heavy = getInterval("Heavy", weight, 100, 500);
   protected static Phenotype height = getPhenotype("Height", "http://loinc.org", "3137-7", "m");
   protected static Phenotype bmi = getPhenotype("BMI", getBMIExpression());
@@ -84,7 +85,9 @@ public abstract class AbstractTest {
     bmi25_30,
     bmi27_30,
     finding,
-    overWeight
+    overWeight,
+    light,
+    heavy
   };
 
   protected static ExpressionFunction defAgrFunc = Last.get().getFunction();

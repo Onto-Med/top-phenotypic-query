@@ -43,7 +43,7 @@ public class PhenotypeFinder {
   public ResultSet execute() throws SQLException, NoCodesException {
     NoCodesException e = phenotypes.checkNoCodes();
     if (e != null) throw e;
-    return executeCompositeSearches(executeSingleSearches()).clean(query.getProjection());
+    return executeCompositeSearches(executeSingleSearches());
   }
 
   private ResultSet executeCompositeSearches(ResultSet rs) {
