@@ -121,6 +121,10 @@ public class DataAdapterConfig {
     this.birthdateMapping = birthdateMapping;
   }
 
+  public boolean isSubjectAttribute(Phenotype p) {
+    return isBirthdate(p) || isAge(p) || isSex(p);
+  }
+
   public boolean isBirthdate(Phenotype p) {
     if (Phenotypes.getItemType(p) == ItemType.SUBJECT_BIRTH_DATE) return true;
     if (Phenotypes.getUnrestrictedPhenotypeCodes(p) == null) return false;

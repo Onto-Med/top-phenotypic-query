@@ -42,6 +42,7 @@ public class MELDTest {
       new Phe("age").itemType(ItemType.SUBJECT_AGE).titleEn("Age").number().get();
 
   private static Phenotype old = new Phe("old").restriction(age, Res.ge(12)).get();
+  private static Phenotype young = new Phe("young").restriction(age, Res.lt(12)).get();
 
   private static Phenotype crea =
       new Phe("crea", "http://loinc.org", "2160-0")
@@ -49,6 +50,9 @@ public class MELDTest {
           .titleEn("Creatinine [Mass/volume] in Serum or Plasma")
           .number("mg/dL")
           .get();
+
+  private static Phenotype creaHigh = new Phe("creaHigh").restriction(crea, Res.gt(2)).get();
+  private static Phenotype creaLow = new Phe("creaLow").restriction(crea, Res.le(2)).get();
 
   private static Phenotype bili =
       new Phe("bili", "http://loinc.org", "42719-5")
@@ -282,7 +286,6 @@ public class MELDTest {
   @Test
   void testMELD3b() throws InstantiationException {
     ResultSet rs = search(meld3, med, null);
-    System.out.println(rs);
     assertEquals(Set.of("2", "9", "10", "12"), rs.getSubjectIds());
     assertEquals(new BigDecimal("25.83929138811024"), rs.getNumberValue("2", "meld", null));
     assertEquals(new BigDecimal("19.69683703591735"), rs.getNumberValue("9", "meld", null));
@@ -303,8 +306,9 @@ public class MELDTest {
       throws InstantiationException {
     Que q =
         new Que(
-                CONFIG, age, old, crea, bili, inr, creaAdj, biliAdj, inrAdj, diaInt, diaCon, diaAdj,
-                med, meld, meld0, meld1, meld2, meld3)
+                CONFIG, age, old, young, crea, creaHigh, creaLow, bili, inr, creaAdj, biliAdj,
+                inrAdj, diaInt, diaCon, diaAdj, med, meld, meld0, meld1, meld2, meld3)
+            .pro(young)
             .pro(old)
             .inc(inc);
     if (ageInc != null) q.inc(ageInc);
