@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import care.smith.top.model.PhenotypeQuery;
+import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
@@ -56,6 +57,8 @@ public class FullBMIAgeTest extends AbstractTest {
     phesExpected.remove("BMI27_30");
     phesExpected.remove("BMI19_27");
     phesExpected.remove("Male");
+    phesExpected.remove("Heavy");
+    phesExpected.remove("Light");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
     assertEquals(new BigDecimal(21), Values.getNumberValue(getValue("Age", phes)));
@@ -85,8 +88,9 @@ public class FullBMIAgeTest extends AbstractTest {
                 .type(TypeEnum.QUERYCRITERION);
     QueryCriterion cri2 =
         (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId());
+    ProjectionEntry pro = new ProjectionEntry().subjectId(light.getId());
     PhenotypeQuery query =
-        new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2).addProjectionItem(cri1);
+        new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2).addProjectionItem(pro);
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test3.yml");
     assertNotNull(configFile);
@@ -97,6 +101,6 @@ public class FullBMIAgeTest extends AbstractTest {
     adapter.close();
 
     assertEquals(Set.of("1"), rs.getSubjectIds());
-    assertEquals(1, rs.getPhenotypes("1").size());
+    assertEquals(15, rs.getPhenotypes("1").size());
   }
 }

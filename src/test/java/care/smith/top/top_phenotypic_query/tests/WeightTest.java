@@ -64,12 +64,12 @@ public class WeightTest {
     assertEquals(Set.of("2", "4"), rs.getSubjectIds());
 
     SubjectPhenotypes phes2 = rs.getPhenotypes("2");
-    assertEquals(Set.of("weight"), phes2.getPhenotypeNames());
+    assertEquals(Set.of("weight", "weight_values_heavy", "heavy"), phes2.getPhenotypeNames());
     assertEquals(
         BigDecimal.valueOf(110), Values.getNumberValue(phes2.getValues("weight", null).get(0)));
 
     SubjectPhenotypes phes4 = rs.getPhenotypes("4");
-    assertEquals(Set.of("weight"), phes4.getPhenotypeNames());
+    assertEquals(Set.of("weight", "weight_values_heavy", "heavy"), phes4.getPhenotypeNames());
     assertEquals(
         BigDecimal.valueOf(180), Values.getNumberValue(phes4.getValues("weight", null).get(0)));
   }

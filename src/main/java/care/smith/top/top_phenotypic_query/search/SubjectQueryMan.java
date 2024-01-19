@@ -1,6 +1,8 @@
 package care.smith.top.top_phenotypic_query.search;
 
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.PhenotypeQuery;
+import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
@@ -283,6 +285,17 @@ public class SubjectQueryMan {
       e.add(birthdateExclusion, birthdateExclusion.getSuperPhenotype());
     if (ageExclusion != null) e.add(ageExclusion, ageExclusion.getSuperPhenotype());
     return e;
+  }
+
+  public void calculateSingleRestrictionsInProjection(
+      ResultSet rs, PhenotypeQuery query, Entities phenotypes) {
+    if (query.getProjection() != null) {
+      for (ProjectionEntry pro : query.getProjection()) {
+        Phenotype phe = phenotypes.getPhenotype(pro.getSubjectId());
+        if (adapter.getConfig().isSubjectAttribute(phe) && Phenotypes.isSingleRestriction(phe))
+          new CompositeSearch(query, pro, rs, phenotypes).execute();
+      }
+    }
   }
 
   @Override

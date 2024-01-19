@@ -89,6 +89,8 @@ public class SingleQueryMan {
 
     main = executeSingleVariables(main, true);
 
+    sbjQueryMan.calculateSingleRestrictionsInProjection(main, query, phenotypes);
+
     //    log.debug(main.toString());
 
     return main;
