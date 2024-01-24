@@ -200,6 +200,11 @@ public class Entities {
     return (txt.getLang() == null) ? txt.getText() : txt.getText() + PROP_VAL_SEP + txt.getLang();
   }
 
+  public static String getTitleInLangOrFirst(Entity e, String lang) {
+    String title = getTitle(e, lang);
+    return (title == null) ? getFirstTitle(e) : title;
+  }
+
   public static String getTitle(Entity e, String lang) {
     return getText(e.getTitles(), lang);
   }

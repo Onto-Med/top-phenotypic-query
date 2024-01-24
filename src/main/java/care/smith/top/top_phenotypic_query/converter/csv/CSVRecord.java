@@ -10,4 +10,8 @@ public class CSVRecord extends ArrayList<String> {
     if (entry == null) add("");
     else add(entry);
   }
+
+  public void addEntry() {
+    add("");
+  }
 }
