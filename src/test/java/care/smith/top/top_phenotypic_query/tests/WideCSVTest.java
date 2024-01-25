@@ -69,7 +69,7 @@ public class WideCSVTest {
   };
 
   @Test
-  public void testData() throws InstantiationException {
+  public void test1() throws InstantiationException {
     ResultSet rs = new ResultSet();
 
     rs.addValueWithRestriction("1", young, Val.of(15));
@@ -101,11 +101,11 @@ public class WideCSVTest {
         "2", dabi, null, Val.of(true, DateUtil.parse("2010-01-01"), DateUtil.parse("2011-01-31")));
 
     String dataRequired =
-        "Id;Dabigatran;Young;Age;Male;Sex;Old;Overweight;Female;BMI;Weight;Height"
+        "Id;Dabigatran;Age;Age::Old;Age::Young;Sex;Sex::Female;Sex::Male;BMI;BMI::Overweight;Weight;Height"
             + System.lineSeparator()
-            + "1;false;true;15;true;male;false;false;false;18.52;58|2008-01-01T00:00:00,59|2009-01-01T00:00:00,60|2010-01-01T00:00:00;1.8"
+            + "1;false;15;false;true;male;false;true;18.52;false;58|2008-01-01T00:00:00,59|2009-01-01T00:00:00,60|2010-01-01T00:00:00;1.8"
             + System.lineSeparator()
-            + "2;true|2010-01-01T00:00:00|2011-01-31T00:00:00;false;35;false;female;true;true;true;29.38;80;1.65"
+            + "2;true|2010-01-01T00:00:00|2011-01-31T00:00:00;35;true;false;female;true;false;29.38;true;80;1.65"
             + System.lineSeparator();
 
     Que q =
@@ -116,6 +116,55 @@ public class WideCSVTest {
             .inc(old)
             .inc(overweight)
             .exc(female);
+
+    String dataActual = new CSV().toStringWideTable(rs, q.getEntities(), q.getQuery());
+
+    System.out.println(dataActual);
+
+    assertEquals(dataRequired, dataActual);
+  }
+
+  @Test
+  public void test2() throws InstantiationException {
+    ResultSet rs = new ResultSet();
+
+    rs.addValueWithRestriction("1", young, Val.of(15));
+    rs.addValueWithRestriction("1", male, Val.of("male"));
+    rs.addValue(
+        "1",
+        weight,
+        Res.geLe(DateUtil.parse("2008-01-01"), DateUtil.parse("2008-12-31")),
+        Val.of(58, DateUtil.parse("2008-01-01")));
+    rs.addValue(
+        "1",
+        weight,
+        Res.geLe(DateUtil.parse("2009-01-01"), DateUtil.parse("2009-12-31")),
+        Val.of(59, DateUtil.parse("2009-01-01")));
+    rs.addValue(
+        "1",
+        weight,
+        Res.geLe(DateUtil.parse("2010-01-01"), DateUtil.parse("2010-12-31")),
+        Val.of(60, DateUtil.parse("2010-01-01")));
+    rs.addValue("1", height, null, Val.of(1.8));
+    rs.addValue("1", bmi, null, Val.of(18.52));
+
+    rs.addValueWithRestriction("2", old, Val.of(35));
+    rs.addValueWithRestriction("2", female, Val.of("female"));
+    rs.addValue("2", weight, null, Val.of(80));
+    rs.addValue("2", height, null, Val.of(1.65));
+    rs.addValueWithRestriction("2", overweight, Val.of(29.38));
+    rs.addValue(
+        "2", dabi, null, Val.of(true, DateUtil.parse("2010-01-01"), DateUtil.parse("2011-01-31")));
+
+    String dataRequired =
+        "Id;BMI;BMI::Overweight;Sex;Sex::Female;Weight;Height"
+            + System.lineSeparator()
+            + "1;18.52;false;male;false;58|2008-01-01T00:00:00,59|2009-01-01T00:00:00,60|2010-01-01T00:00:00;1.8"
+            + System.lineSeparator()
+            + "2;29.38;true;female;true;80;1.65"
+            + System.lineSeparator();
+
+    Que q = new Que("config/Default_SQL_Adapter.yml", entities).inc(overweight).exc(female);
 
     String dataActual = new CSV().toStringWideTable(rs, q.getEntities(), q.getQuery());
 

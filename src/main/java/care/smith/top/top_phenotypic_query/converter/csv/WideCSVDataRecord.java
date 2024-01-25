@@ -5,7 +5,6 @@ import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class WideCSVDataRecord extends CSVRecordCompositeEntries {
@@ -13,7 +12,7 @@ public class WideCSVDataRecord extends CSVRecordCompositeEntries {
   private static final long serialVersionUID = 1L;
 
   public WideCSVDataRecord(
-      SubjectPhenotypes values, Collection<WideCSVHead> header, String entryPartsDelimiter) {
+      SubjectPhenotypes values, List<WideCSVHead> header, String entryPartsDelimiter) {
     super(entryPartsDelimiter);
     addEntry(values.getSubjectId());
     for (WideCSVHead head : header) addValues(values, head);
