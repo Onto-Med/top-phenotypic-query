@@ -2,6 +2,7 @@ package care.smith.top.top_phenotypic_query.converter.csv;
 
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
@@ -88,6 +89,23 @@ public class CSV {
   public String toString(ResultSet rs) {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     write(rs, out);
+    return out.toString(charset);
+  }
+
+  public void writeWideTable(
+      ResultSet rs, Entity[] entities, PhenotypeQuery query, OutputStream out) {
+    WideCSVHeader header =
+        new WideCSVHeader(Entities.of(entities).deriveAdditionalProperties(), query);
+    CSVWriter writer = new CSVWriter(out, entriesDelimiter, charset);
+    writer.write(header.getTitles());
+    for (SubjectPhenotypes values : rs.getPhenotypes())
+      writer.write(new WideCSVDataRecord(values, header.getHeader(), entryPartsDelimiter));
+    writer.flush();
+  }
+
+  public String toStringWideTable(ResultSet rs, Entity[] entities, PhenotypeQuery query) {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    writeWideTable(rs, entities, query, out);
     return out.toString(charset);
   }
 }

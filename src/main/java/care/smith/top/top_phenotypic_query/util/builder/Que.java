@@ -56,6 +56,10 @@ public class Que {
     return query;
   }
 
+  public Entity[] getEntities() {
+    return entities;
+  }
+
   public Que inc(Phenotype p) {
     return cri(true, p, null, null);
   }

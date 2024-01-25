@@ -41,30 +41,33 @@ public class MELDTest {
   private static Phenotype age =
       new Phe("age").itemType(ItemType.SUBJECT_AGE).titleEn("Age").number().get();
 
-  private static Phenotype old = new Phe("old").restriction(age, Res.ge(12)).get();
-  private static Phenotype young = new Phe("young").restriction(age, Res.lt(12)).get();
+  private static Phenotype old = new Phe("old").titleEn("Old").restriction(age, Res.ge(12)).get();
+  private static Phenotype young =
+      new Phe("young").titleEn("Young").restriction(age, Res.lt(12)).get();
 
   private static Phenotype crea =
       new Phe("crea", "http://loinc.org", "2160-0")
           .itemType(ItemType.OBSERVATION)
-          .titleEn("Creatinine [Mass/volume] in Serum or Plasma")
+          .titleEn("Creatinine")
           .number("mg/dL")
           .get();
 
-  private static Phenotype creaHigh = new Phe("creaHigh").restriction(crea, Res.gt(2)).get();
-  private static Phenotype creaLow = new Phe("creaLow").restriction(crea, Res.le(2)).get();
+  private static Phenotype creaHigh =
+      new Phe("creaHigh").titleEn("Crea High").restriction(crea, Res.gt(2)).get();
+  private static Phenotype creaLow =
+      new Phe("creaLow").titleEn("Crea Low").restriction(crea, Res.le(2)).get();
 
   private static Phenotype bili =
       new Phe("bili", "http://loinc.org", "42719-5")
           .itemType(ItemType.OBSERVATION)
-          .titleEn("Bilirubin.total [Mass/volume] in Blood")
+          .titleEn("Bilirubin")
           .number("mg/dL")
           .get();
 
   private static Phenotype inr =
       new Phe("inr", "http://loinc.org", "6301-6", "34714-6", "38875-1")
           .itemType(ItemType.OBSERVATION)
-          .titleEn("International Normalized Ratio")
+          .titleEn("INR")
           .number()
           .get();
 
@@ -97,21 +100,25 @@ public class MELDTest {
   private static Phenotype med =
       new Phe("med", "http://fhir.de/CodeSystem/bfarm/atc", "B01AA", "B01AF")
           .itemType(ItemType.MEDICATION)
+          .titleEn("Med")
           .bool()
           .get();
 
   private static Phenotype biliAdj =
       new Phe("biliAdj")
+          .titleEn("Bili Adj")
           .expression(If.of(Lt.of(Exp.of(bili), Exp.of(1)), Exp.of(1), Exp.of(bili)))
           .get();
 
   private static Phenotype inrAdj =
       new Phe("inrAdj")
+          .titleEn("Inr Adj")
           .expression(If.of(Lt.of(Exp.of(inr), Exp.of(1)), Exp.of(1), Exp.of(inr)))
           .get();
 
   private static Phenotype diaAdj =
       new Phe("diaAdj")
+          .titleEn("Dia Adj")
           .expression(
               Or.of(
                   Exists.of(Filter.of(Exp.of(diaCon), Exp.of(7), Exp.of(crea))),
@@ -120,6 +127,7 @@ public class MELDTest {
 
   private static Phenotype creaAdj =
       new Phe("creaAdj")
+          .titleEn("Crea Adj")
           .expression(
               Switch.of(
                   Gt.of(Exp.of(crea), Exp.of(4)),
@@ -133,6 +141,7 @@ public class MELDTest {
 
   private static Phenotype meld =
       new Phe("meld")
+          .titleEn("MELD")
           .expression(
               Sum.of(
                   Multiply.of(Exp.of(9.57), Ln.of(creaAdj)),
@@ -141,10 +150,14 @@ public class MELDTest {
                   Exp.of(6.43)))
           .get();
 
-  private static Phenotype meld0 = new Phe("meld0").restriction(meld, Res.lt(7.5)).get();
-  private static Phenotype meld1 = new Phe("meld1").restriction(meld, Res.geLt(7.5, 10)).get();
-  private static Phenotype meld2 = new Phe("meld2").restriction(meld, Res.geLt(10, 15)).get();
-  private static Phenotype meld3 = new Phe("meld3").restriction(meld, Res.ge(15)).get();
+  private static Phenotype meld0 =
+      new Phe("meld0").titleEn("MELD0").restriction(meld, Res.lt(7.5)).get();
+  private static Phenotype meld1 =
+      new Phe("meld1").titleEn("MELD1").restriction(meld, Res.geLt(7.5, 10)).get();
+  private static Phenotype meld2 =
+      new Phe("meld2").titleEn("MELD2").restriction(meld, Res.geLt(10, 15)).get();
+  private static Phenotype meld3 =
+      new Phe("meld3").titleEn("MELD3").restriction(meld, Res.ge(15)).get();
 
   @BeforeAll
   static void beforeAll() {
@@ -313,6 +326,13 @@ public class MELDTest {
             .inc(inc);
     if (ageInc != null) q.inc(ageInc);
     if (exc != null) q.exc(exc);
-    return q.execute();
+
+    ResultSet rs = q.execute();
+
+    //    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    //    System.out.println(new CSV().toStringWideTable(rs, q.getEntities(), q.getQuery()));
+    //    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+    return rs;
   }
 }
