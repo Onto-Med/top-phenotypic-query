@@ -7,18 +7,18 @@ import care.smith.top.top_phenotypic_query.util.Values;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WideCSVDataRecord extends CSVRecordCompositeEntries {
+public class SubjectsCSVDataRecord extends CSVRecordCompositeEntries {
 
   private static final long serialVersionUID = 1L;
 
-  public WideCSVDataRecord(
-      SubjectPhenotypes values, List<WideCSVHead> header, String entryPartsDelimiter) {
+  public SubjectsCSVDataRecord(
+      SubjectPhenotypes values, List<SubjectsCSVHead> header, String entryPartsDelimiter) {
     super(entryPartsDelimiter);
     addEntry(values.getSubjectId());
-    for (WideCSVHead head : header) addValues(values, head);
+    for (SubjectsCSVHead head : header) addValues(values, head);
   }
 
-  private void addValues(SubjectPhenotypes values, WideCSVHead head) {
+  private void addValues(SubjectPhenotypes values, SubjectsCSVHead head) {
     PhenotypeValues pheVals = values.getValues(head.getId());
     if (pheVals == null) {
       addEmpty(head);
@@ -39,7 +39,7 @@ public class WideCSVDataRecord extends CSVRecordCompositeEntries {
     else addEntry(strVals);
   }
 
-  private void addEmpty(WideCSVHead head) {
+  private void addEmpty(SubjectsCSVHead head) {
     if (head.isBoolean()) addEntry("false");
     else addEntry();
   }

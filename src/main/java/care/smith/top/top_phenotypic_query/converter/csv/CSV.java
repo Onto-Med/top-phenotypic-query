@@ -57,7 +57,7 @@ public class CSV {
     return this;
   }
 
-  public void write(Entity[] phenotypes, OutputStream out) {
+  public void writeMetadata(Entity[] phenotypes, OutputStream out) {
     CSVWriter writer = new CSVWriter(out, entriesDelimiter, charset);
     writer.write(CSVMetadataRecord.FIELDS);
     for (Phenotype phe : Entities.of(phenotypes).deriveAdditionalProperties().getPhenotypes())
@@ -65,47 +65,53 @@ public class CSV {
     writer.flush();
   }
 
-  public String toString(Entity[] phenotypes) {
+  public String toStringMetadata(Entity[] phenotypes) {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    write(phenotypes, out);
+    writeMetadata(phenotypes, out);
     return out.toString(charset);
   }
 
-  public void write(ResultSet rs, OutputStream out) {
+  public void writePhenotypes(ResultSet rs, Entity[] phenotypes, OutputStream out) {
     CSVWriter writer = new CSVWriter(out, entriesDelimiter, charset);
-    writer.write(CSVDataRecord.FIELDS);
+    writer.write(PhenotypesCSVDataRecord.FIELDS);
+    Entities entities = Entities.of(phenotypes).deriveAdditionalProperties();
     for (SubjectPhenotypes sbjPhes : rs.values()) {
       for (PhenotypeValues pheVals : sbjPhes.values()) {
         for (List<Value> vals : pheVals.values()) {
-          for (Value val : vals)
+          for (Value val : vals) {
+            Phenotype phe = entities.getPhenotype(pheVals.getPhenotypeName());
+            String title =
+                (phe == null) ? pheVals.getPhenotypeName() : Entities.getDefaultTitleFull(phe);
             writer.write(
-                new CSVDataRecord(sbjPhes.getSubjectId(), pheVals.getPhenotypeName(), val));
+                new PhenotypesCSVDataRecord(
+                    sbjPhes.getSubjectId(), pheVals.getPhenotypeName(), title, val));
+          }
         }
       }
     }
     writer.flush();
   }
 
-  public String toString(ResultSet rs) {
+  public String toStringPhenotypes(ResultSet rs, Entity[] phenotypes) {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    write(rs, out);
+    writePhenotypes(rs, phenotypes, out);
     return out.toString(charset);
   }
 
-  public void writeWideTable(
+  public void writeSubjects(
       ResultSet rs, Entity[] entities, PhenotypeQuery query, OutputStream out) {
-    WideCSVHeader header =
-        new WideCSVHeader(Entities.of(entities).deriveAdditionalProperties(), query);
+    SubjectsCSVHeader header =
+        new SubjectsCSVHeader(Entities.of(entities).deriveAdditionalProperties(), query);
     CSVWriter writer = new CSVWriter(out, entriesDelimiter, charset);
     writer.write(header.getTitles());
     for (SubjectPhenotypes values : rs.getPhenotypes())
-      writer.write(new WideCSVDataRecord(values, header.getHeader(), entryPartsDelimiter));
+      writer.write(new SubjectsCSVDataRecord(values, header.getHeader(), entryPartsDelimiter));
     writer.flush();
   }
 
-  public String toStringWideTable(ResultSet rs, Entity[] entities, PhenotypeQuery query) {
+  public String toStringSubjects(ResultSet rs, Entity[] entities, PhenotypeQuery query) {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    writeWideTable(rs, entities, query, out);
+    writeSubjects(rs, entities, query, out);
     return out.toString(charset);
   }
 }

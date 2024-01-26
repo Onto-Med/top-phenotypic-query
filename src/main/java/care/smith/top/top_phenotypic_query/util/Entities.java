@@ -176,7 +176,9 @@ public class Entities {
   }
 
   public static String getFirstTitle(Entity e) {
-    return e.getTitles().get(0).getText();
+    return (e.getTitles() == null || e.getTitles().isEmpty())
+        ? e.getId()
+        : e.getTitles().get(0).getText();
   }
 
   public static List<String> getTitles(Entity e) {
@@ -205,11 +207,12 @@ public class Entities {
     return (title == null) ? getFirstTitle(e) : title;
   }
 
-  public static String getDefaultTitleWithSuperPhenotypeName(Phenotype p) {
-    String title = getDefaultTitle(p);
-    return (p.getSuperPhenotype() == null)
-        ? title
-        : getDefaultTitle(p.getSuperPhenotype()) + ANN_SEP + title;
+  public static String getDefaultTitleFull(Phenotype p) {
+    String t = getDefaultTitle(p);
+    if (p.getSuperPhenotype() == null) {
+      if (Phenotypes.isPhenotype(p) && p.getUnit() != null) return t + "[" + p.getUnit() + "]";
+      else return t;
+    } else return getDefaultTitle(p.getSuperPhenotype()) + ANN_SEP + t;
   }
 
   public static String getTitle(Entity e, String lang) {

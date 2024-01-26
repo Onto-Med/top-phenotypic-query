@@ -117,7 +117,7 @@ public class WideCSVTest {
             .inc(overweight)
             .exc(female);
 
-    String dataActual = new CSV().toStringWideTable(rs, q.getEntities(), q.getQuery());
+    String dataActual = new CSV().toStringSubjects(rs, q.getEntities(), q.getQuery());
 
     System.out.println(dataActual);
 
@@ -166,7 +166,7 @@ public class WideCSVTest {
 
     Que q = new Que("config/Default_SQL_Adapter.yml", entities).inc(overweight).exc(female);
 
-    String dataActual = new CSV().toStringWideTable(rs, q.getEntities(), q.getQuery());
+    String dataActual = new CSV().toStringSubjects(rs, q.getEntities(), q.getQuery());
 
     System.out.println(dataActual);
 

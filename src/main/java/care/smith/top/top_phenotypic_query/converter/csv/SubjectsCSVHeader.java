@@ -12,22 +12,22 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.TreeSet;
 
-public class WideCSVHeader extends LinkedHashMap<WideCSVHead, TreeSet<WideCSVHead>> {
+public class SubjectsCSVHeader extends LinkedHashMap<SubjectsCSVHead, TreeSet<SubjectsCSVHead>> {
 
   private static final long serialVersionUID = 1L;
   private Entities phenotypes;
   private PhenotypeQuery query;
-  private List<WideCSVHead> header = new ArrayList<>();
+  private List<SubjectsCSVHead> header = new ArrayList<>();
   private List<String> titles = new ArrayList<>();
 
-  protected WideCSVHeader(Entities phenotypes, PhenotypeQuery query) {
+  protected SubjectsCSVHeader(Entities phenotypes, PhenotypeQuery query) {
     this.phenotypes = phenotypes;
     this.query = query;
     this.titles.add("Id");
     run();
   }
 
-  protected List<WideCSVHead> getHeader() {
+  protected List<SubjectsCSVHead> getHeader() {
     return header;
   }
 
@@ -48,28 +48,28 @@ public class WideCSVHeader extends LinkedHashMap<WideCSVHead, TreeSet<WideCSVHea
     if (query.getCriteria() != null)
       for (QueryCriterion cri : query.getCriteria()) putHeadVars(cri.getSubjectId());
 
-    for (WideCSVHead superHead : keySet()) {
+    for (SubjectsCSVHead superHead : keySet()) {
       header.add(superHead);
       titles.add(superHead.getTitle());
-      for (WideCSVHead subHead : get(superHead)) {
+      for (SubjectsCSVHead subHead : get(superHead)) {
         header.add(subHead);
         titles.add(subHead.getTitle());
       }
     }
   }
 
-  private WideCSVHead getHead(Phenotype p) {
-    return new WideCSVHead(
-        p.getId(), Entities.getDefaultTitleWithSuperPhenotypeName(p), p.getDataType());
+  private SubjectsCSVHead getHead(Phenotype p) {
+    return new SubjectsCSVHead(
+        p.getId(), Entities.getDefaultTitleFull(p), p.getDataType());
   }
 
   private void putHead(Phenotype p) {
-    WideCSVHead h = getHead(p);
+    SubjectsCSVHead h = getHead(p);
     if (Phenotypes.isPhenotype(p)) {
       if (!containsKey(h)) put(h, new TreeSet<>());
     } else if (Phenotypes.isRestriction(p)) {
-      WideCSVHead superHead = getHead(p.getSuperPhenotype());
-      TreeSet<WideCSVHead> subHeader = get(superHead);
+      SubjectsCSVHead superHead = getHead(p.getSuperPhenotype());
+      TreeSet<SubjectsCSVHead> subHeader = get(superHead);
       if (subHeader == null) {
         subHeader = new TreeSet<>();
         put(superHead, subHeader);

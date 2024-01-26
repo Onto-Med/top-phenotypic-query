@@ -5,7 +5,7 @@ import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Values;
 import java.util.List;
 
-public class CSVDataRecord extends CSVRecord {
+public class PhenotypesCSVDataRecord extends CSVRecord {
 
   private static final long serialVersionUID = 1L;
 
@@ -13,6 +13,7 @@ public class CSVDataRecord extends CSVRecord {
       List.of(
           "subject",
           "phenotype",
+          "title",
           "date_time",
           "start_date_time",
           "end_date_time",
@@ -21,9 +22,10 @@ public class CSVDataRecord extends CSVRecord {
           "date_time_value",
           "boolean_value");
 
-  public CSVDataRecord(String sbj, String phe, Value val) {
+  public PhenotypesCSVDataRecord(String sbj, String phe, String title, Value val) {
     addEntry(sbj);
     addEntry(phe);
+    addEntry(title);
     addValueTimestamp(val);
     addNumberValue(val);
     addStringValue(val);

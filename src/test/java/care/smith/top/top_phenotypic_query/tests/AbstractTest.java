@@ -9,6 +9,7 @@ import care.smith.top.model.EntityType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction;
 import care.smith.top.model.ItemType;
+import care.smith.top.model.LocalisableText;
 import care.smith.top.model.NumberRestriction;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
@@ -132,7 +133,8 @@ public abstract class AbstractTest {
                 .dataType(dataType)
                 .itemType(ItemType.OBSERVATION)
                 .id(name)
-                .entityType(EntityType.SINGLE_PHENOTYPE);
+                .entityType(EntityType.SINGLE_PHENOTYPE)
+                .addTitlesItem(new LocalisableText().text(name));
     if (unit != null) phenotype.setUnit(unit);
     addCode(phenotype, codeSystem, code);
     return phenotype;
@@ -145,7 +147,11 @@ public abstract class AbstractTest {
   static Phenotype getPhenotype(String name, Expression exp, String codeSystem, String code) {
     Phenotype phenotype =
         (Phenotype)
-            new Phenotype().expression(exp).id(name).entityType(EntityType.COMPOSITE_PHENOTYPE);
+            new Phenotype()
+                .expression(exp)
+                .id(name)
+                .entityType(EntityType.COMPOSITE_PHENOTYPE)
+                .addTitlesItem(new LocalisableText().text(name));
     addCode(phenotype, codeSystem, code);
     return phenotype;
   }
@@ -343,7 +349,8 @@ public abstract class AbstractTest {
             .dataType(DataType.BOOLEAN)
             //            .expression(exp)
             .entityType(getRestrictionType(parent))
-            .id(name);
+            .id(name)
+            .addTitlesItem(new LocalisableText().text(name));
   }
 
   private static NumberRestriction getNumberRestriction() {

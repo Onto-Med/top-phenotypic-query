@@ -3,13 +3,13 @@ package care.smith.top.top_phenotypic_query.converter.csv;
 import care.smith.top.model.DataType;
 import java.util.Objects;
 
-public class WideCSVHead implements Comparable<WideCSVHead> {
+public class SubjectsCSVHead implements Comparable<SubjectsCSVHead> {
 
   private String id;
   private String title;
   private DataType dataType;
 
-  public WideCSVHead(String id, String title, DataType dataType) {
+  public SubjectsCSVHead(String id, String title, DataType dataType) {
     this.id = id;
     this.title = title;
     this.dataType = dataType;
@@ -28,7 +28,7 @@ public class WideCSVHead implements Comparable<WideCSVHead> {
   }
 
   @Override
-  public int compareTo(WideCSVHead o) {
+  public int compareTo(SubjectsCSVHead o) {
     return getTitle().compareTo(o.getTitle());
   }
 
@@ -42,7 +42,7 @@ public class WideCSVHead implements Comparable<WideCSVHead> {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    WideCSVHead other = (WideCSVHead) obj;
+    SubjectsCSVHead other = (SubjectsCSVHead) obj;
     return Objects.equals(id, other.id);
   }
 
