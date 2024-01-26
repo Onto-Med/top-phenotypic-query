@@ -11,14 +11,14 @@ public class CSVWriter {
   private OutputStreamWriter writer;
   private String entriesDelimiter;
 
-  public CSVWriter(OutputStream out, String entriesDelimiter, Charset charset) {
+  protected CSVWriter(OutputStream out, String entriesDelimiter, Charset charset) {
     if ("|".equals(entriesDelimiter.trim()))
       throw new IllegalArgumentException("The pipe symbol '|' must not be used as delimiter!");
     this.entriesDelimiter = entriesDelimiter;
     this.writer = new OutputStreamWriter(out, charset);
   }
 
-  public void write(List<String> record) {
+  protected void write(List<String> record) {
     try {
       writer.write(String.join(entriesDelimiter, record) + System.lineSeparator());
     } catch (IOException e) {
@@ -26,7 +26,7 @@ public class CSVWriter {
     }
   }
 
-  public void flush() {
+  protected void flush() {
     try {
       writer.flush();
     } catch (IOException e) {

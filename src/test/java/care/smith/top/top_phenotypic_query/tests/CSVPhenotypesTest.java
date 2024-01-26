@@ -17,7 +17,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Res;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 import org.junit.jupiter.api.Test;
 
-public class CSVTest {
+public class CSVPhenotypesTest {
 
   private static Phenotype age =
       new Phe("age", "http://loinc.org", "30525-0").titleEn("Age").number("a").get();

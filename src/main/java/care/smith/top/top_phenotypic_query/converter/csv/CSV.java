@@ -73,7 +73,7 @@ public class CSV {
 
   public void writePhenotypes(ResultSet rs, Entity[] phenotypes, OutputStream out) {
     CSVWriter writer = new CSVWriter(out, entriesDelimiter, charset);
-    writer.write(PhenotypesCSVDataRecord.FIELDS);
+    writer.write(CSVPhenotypesDataRecord.FIELDS);
     Entities entities = Entities.of(phenotypes).deriveAdditionalProperties();
     for (SubjectPhenotypes sbjPhes : rs.values()) {
       for (PhenotypeValues pheVals : sbjPhes.values()) {
@@ -83,7 +83,7 @@ public class CSV {
             String title =
                 (phe == null) ? pheVals.getPhenotypeName() : Entities.getDefaultTitleFull(phe);
             writer.write(
-                new PhenotypesCSVDataRecord(
+                new CSVPhenotypesDataRecord(
                     sbjPhes.getSubjectId(), pheVals.getPhenotypeName(), title, val));
           }
         }
@@ -100,12 +100,12 @@ public class CSV {
 
   public void writeSubjects(
       ResultSet rs, Entity[] entities, PhenotypeQuery query, OutputStream out) {
-    SubjectsCSVHeader header =
-        new SubjectsCSVHeader(Entities.of(entities).deriveAdditionalProperties(), query);
+    CSVSubjectsHeader header =
+        new CSVSubjectsHeader(Entities.of(entities).deriveAdditionalProperties(), query);
     CSVWriter writer = new CSVWriter(out, entriesDelimiter, charset);
     writer.write(header.getTitles());
     for (SubjectPhenotypes values : rs.getPhenotypes())
-      writer.write(new SubjectsCSVDataRecord(values, header.getHeader(), entryPartsDelimiter));
+      writer.write(new CSVSubjectsDataRecord(values, header.getHeader(), entryPartsDelimiter));
     writer.flush();
   }
 
