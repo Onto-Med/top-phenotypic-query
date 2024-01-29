@@ -6,12 +6,12 @@ public class CSVRecord extends ArrayList<String> {
 
   private static final long serialVersionUID = 1L;
 
-  public void addEntry(String entry) {
+  protected void addEntry(String entry) {
     if (entry == null) add("");
     else add(entry);
   }
 
-  public void addEntry() {
+  protected void addEntry() {
     add("");
   }
 }

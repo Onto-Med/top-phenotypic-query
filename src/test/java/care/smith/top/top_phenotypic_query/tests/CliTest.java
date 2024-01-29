@@ -56,7 +56,7 @@ class CliTest extends AbstractTest {
     assertNotEquals(0, Files.size(output));
 
     try (ZipFile zip = new ZipFile(output.toFile())) {
-      assertEquals(2, Collections.list(zip.entries()).size());
+      assertEquals(3, Collections.list(zip.entries()).size());
     } catch (IOException e) {
       fail(e);
     }

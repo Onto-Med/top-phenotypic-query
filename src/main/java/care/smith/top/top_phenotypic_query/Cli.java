@@ -86,7 +86,7 @@ public class Cli implements Callable<Integer> {
       ResultSet rs = finder.execute();
       adapter.close();
 
-      writeResultSetToZip(rs, entities, outputFile, force);
+      writeResultSetToZip(rs, entities, query, outputFile, force);
     } catch (Exception e) {
       e.printStackTrace();
       return 1;
@@ -94,18 +94,22 @@ public class Cli implements Callable<Integer> {
     return 0;
   }
 
-  void writeResultSetToZip(ResultSet resultSet, Entity[] entities, File zipFile, boolean force)
+  void writeResultSetToZip(
+      ResultSet resultSet, Entity[] entities, PhenotypeQuery query, File zipFile, boolean force)
       throws IOException {
     if (zipFile.exists() && !force) throw new FileAlreadyExistsException(zipFile.getAbsolutePath());
 
     ZipOutputStream zipStream = new ZipOutputStream(new FileOutputStream(zipFile));
     CSV csvConverter = new CSV();
 
-    zipStream.putNextEntry(new ZipEntry("data.csv"));
-    csvConverter.write(resultSet, zipStream);
+    zipStream.putNextEntry(new ZipEntry("data_phenotypes.csv"));
+    csvConverter.writePhenotypes(resultSet, entities, zipStream);
+
+    zipStream.putNextEntry(new ZipEntry("data_subjects.csv"));
+    csvConverter.writeSubjects(resultSet, entities, query, zipStream);
 
     zipStream.putNextEntry(new ZipEntry("metadata.csv"));
-    csvConverter.write(entities, zipStream);
+    csvConverter.writeMetadata(entities, zipStream);
 
     zipStream.close();
   }

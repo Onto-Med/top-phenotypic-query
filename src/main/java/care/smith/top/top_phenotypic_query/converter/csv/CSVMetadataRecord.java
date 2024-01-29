@@ -11,7 +11,7 @@ public class CSVMetadataRecord extends CSVRecordCompositeEntries {
 
   private static final long serialVersionUID = 1L;
 
-  public static List<String> FIELDS =
+  protected static List<String> FIELDS =
       List.of(
           "phenotype",
           "parent",
@@ -26,7 +26,7 @@ public class CSVMetadataRecord extends CSVRecordCompositeEntries {
           "restriction",
           "expression");
 
-  public CSVMetadataRecord(Phenotype phe, String entryPartsDelimiter) {
+  protected CSVMetadataRecord(Phenotype phe, String entryPartsDelimiter) {
     super(entryPartsDelimiter);
     add(phe.getId());
     addParent(phe);
