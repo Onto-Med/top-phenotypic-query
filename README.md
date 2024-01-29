@@ -88,9 +88,10 @@ adapter.close();
 
 ### Export a Query Result to CSV
 
-Below code will create a file `export.zip` that contains `data.csv` and `metadata.csv`.
+Below code will create a file `export.zip` that contains `metadata.csv`, `data_phenotypes.csv` and `data_subjects.csv`.
 
 ```java
+Query query = new Query; // some phenotypic query
 Entity[] phenotypes = new Entity[]; // some phenotype definitions
 ResultSet rs; // some resultset
 
@@ -98,14 +99,23 @@ File zipFile = Files.createFile("export.zip").toFile();
 ZipOutputStream zipStream = new ZipOutputStream(new FileOutputStream(zipFile));
 
 CSV csvConverter = new CSV();
-zipStream.putNextEntry(new ZipEntry("data.csv"));
-csvConverter.write(rs, zipStream);
-
 zipStream.putNextEntry(new ZipEntry("metadata.csv"));
-csvConverter.write(phenotypes, zipStream);
+csvConverter.writeMetadata(phenotypes, zipStream);
+
+zipStream.putNextEntry(new ZipEntry("data_phenotypes.csv"));
+csvConverter.writePhenotypes(rs, phenotypes, zipStream);
+
+zipStream.putNextEntry(new ZipEntry("data_subjects.csv"));
+csvConverter.writeSubjects(rs, phenotypes, query, zipStream);
 
 zipStream.close();
 ```
+
+* `metadata.csv`: Describing metadata of all phenotype classes contained in the result set.
+* `data_phenotypes.csv`: Each phenotype is represented as a single row with the corresponding value in one of the
+  columns 'number_value', 'text_value', 'date_time_value' or 'boolean_value'.
+* `data_subjects.csv`: Subjects (individuals) in the result set are represented as single rows with columns for each
+  phenotype. Phenotypes may occure more than once for a subject and are therefore given as comma separated values.
 
 ### Import or Export a Phenotype Model from Various Formats
 
