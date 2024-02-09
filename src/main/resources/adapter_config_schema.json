@@ -165,10 +165,10 @@
           "description": "Token for HTTP bearer authentication"
         }
       },
-      "baseId": {
-        "type": "string"
-      },
       "required": ["url"]
+    },
+    "baseId": {
+      "type": "string"
     },
     "subjectQuery": {
       "type": "object",
