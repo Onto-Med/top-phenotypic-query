@@ -1148,6 +1148,27 @@ public class C2RTest {
   }
 
   @Test
+  public void test4() {
+    Phenotype p = new Phe("p").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("p", null, Val.of("A"));
+    Entities phens = Entities.of(p);
+    C2R c2r = new C2R().phenotypes(phens).values(vals);
+
+    Expression e = In.of(p, "B", "A", "C");
+    assertTrue(Expressions.getBooleanValue(c2r.calculate(e)));
+
+    e = In.of(p, "B", "C");
+    assertFalse(Expressions.getBooleanValue(c2r.calculate(e)));
+
+    e = Eq.of(p, "A");
+    assertTrue(Expressions.getBooleanValue(c2r.calculate(e)));
+
+    e = Eq.of(p, "B");
+    assertFalse(Expressions.getBooleanValue(c2r.calculate(e)));
+  }
+
+  @Test
   public void testAge() {
     C2R c = new C2R();
     Expression e =
