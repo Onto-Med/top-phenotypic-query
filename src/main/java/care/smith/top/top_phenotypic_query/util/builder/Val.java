@@ -160,6 +160,10 @@ public class Val {
     return vals.stream().map(v -> of(v)).collect(Collectors.toList());
   }
 
+  public static List<Value> of(String... strings) {
+    return Stream.of(strings).map(s -> of(s)).collect(Collectors.toList());
+  }
+
   public static List<Value> of(Number... nums) {
     return Stream.of(nums).map(n -> of(n)).collect(Collectors.toList());
   }

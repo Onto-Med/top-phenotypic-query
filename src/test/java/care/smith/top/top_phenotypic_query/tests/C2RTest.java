@@ -1177,6 +1177,27 @@ public class C2RTest {
     e = In.of(Exp.of(2, 10), Exp.of(5, 7));
     assertFalse(Expressions.getBooleanValue(c.calculate(e)));
 
+    c = new C2R().defaultAggregateFunction(Avg.get());
+    e = In.of(Exp.of(2, 10), Exp.of(5), Exp.of(6), Exp.of(7));
+    assertTrue(Expressions.getBooleanValue(c.calculate(e)));
+
+    c = new C2R().defaultAggregateFunction(Avg.get());
+    e = In.of(Exp.of(2, 10), Exp.of(5), Exp.of(7));
+    assertFalse(Expressions.getBooleanValue(c.calculate(e)));
+
+    Phenotype p = new Phe("p").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("p", null, Val.of(2));
+    vals.addValue("p", null, Val.of(10));
+    Entities phens = Entities.of(p);
+    C2R c2r = new C2R().phenotypes(phens).values(vals).defaultAggregateFunction(Avg.get());
+
+    e = In.of(p, 5, 6, 7);
+    assertTrue(Expressions.getBooleanValue(c2r.calculate(e)));
+
+    e = In.of(p, 5, 7);
+    assertFalse(Expressions.getBooleanValue(c2r.calculate(e)));
+
     c = new C2R();
     e = In.of(Exp.of(1, 2), Exp.of(Res.of(Quantifier.ALL, 1, 2, 3)));
     assertTrue(Expressions.getBooleanValue(c.calculate(e)));

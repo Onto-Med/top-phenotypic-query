@@ -61,6 +61,14 @@ public class Li extends FunctionEntity {
     return of(Exp.toList(args));
   }
 
+  public static Expression of(String... args) {
+    return of(Exp.toList(args));
+  }
+
+  public static Expression of(Number... args) {
+    return of(Exp.toList(args));
+  }
+
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);

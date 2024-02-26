@@ -2,6 +2,7 @@ package care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison;
 
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
@@ -53,6 +54,14 @@ public class Eq extends FunctionEntity {
 
   public static Expression of(Expression... args) {
     return of(List.of(args));
+  }
+
+  public static Expression of(Phenotype phe, String val) {
+    return of(Exp.of(phe), Exp.of(val));
+  }
+
+  public static Expression of(Phenotype phe, Number val) {
+    return of(Exp.of(phe), Exp.of(val));
   }
 
   @Override
