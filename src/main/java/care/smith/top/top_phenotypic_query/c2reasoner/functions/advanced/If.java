@@ -47,7 +47,7 @@ public class If extends FunctionEntity {
   private static If INSTANCE = new If();
 
   private If() {
-    super("if", NotationEnum.PREFIX, 3, 3);
+    super("if", NotationEnum.PREFIX, 2, 3);
   }
 
   public static If get() {
@@ -71,6 +71,7 @@ public class If extends FunctionEntity {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     Expression cond = Aggregator.calcAndAggr(getFunction(), DataType.BOOLEAN, args.get(0), c2r);
     if (Expressions.hasValueTrue(cond)) return c2r.calculate(args.get(1));
-    return c2r.calculate(args.get(2));
+    if (args.size() == 3) return c2r.calculate(args.get(2));
+    return null;
   }
 }

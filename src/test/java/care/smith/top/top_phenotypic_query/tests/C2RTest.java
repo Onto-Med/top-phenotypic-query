@@ -41,6 +41,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYe
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.CutFirst;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.CutLast;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Empty;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Li;
@@ -195,7 +196,7 @@ public class C2RTest {
   }
 
   @Test
-  public void testIf() {
+  public void testIf1() {
     Phenotype t = new Phe("t").bool().get();
     Phenotype f = new Phe("f").bool().get();
     Phenotype x = new Phe("x").number().get();
@@ -215,6 +216,27 @@ public class C2RTest {
 
     assertEquals(List.of(BigDecimal.valueOf(1)), Expressions.getNumberValues(c.calculate(c1)));
     assertEquals(List.of(BigDecimal.valueOf(2)), Expressions.getNumberValues(c.calculate(c2)));
+  }
+
+  @Test
+  public void testIf2() {
+    Phenotype t = new Phe("t").bool().get();
+    Phenotype f = new Phe("f").bool().get();
+    Phenotype x = new Phe("x").number().get();
+    Phenotype c1 = new Phe("c1").expression(If.of(t, x)).get();
+    Phenotype c2 = new Phe("c2").expression(Empty.of(If.of(f, x))).get();
+
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("t", null, Val.ofTrue());
+    vals.addValue("f", null, Val.ofFalse());
+    vals.addValue("x", null, Val.of(1));
+
+    Entities phens = Entities.of(t, f, x, c1, c2);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(List.of(BigDecimal.valueOf(1)), Expressions.getNumberValues(c.calculate(c1)));
+    assertTrue(Expressions.hasValueTrue(c.calculate(c2)));
   }
 
   @Test

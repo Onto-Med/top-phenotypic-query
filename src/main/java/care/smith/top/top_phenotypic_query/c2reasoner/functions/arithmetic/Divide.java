@@ -56,8 +56,12 @@ public class Divide extends FunctionEntity {
     return of(List.of(args));
   }
 
-  public static Expression of(Phenotype... args) {
-    return of(Exp.toList(args));
+  public static Expression of(Phenotype phe1, Phenotype phe2) {
+    return of(Exp.of(phe1), Exp.of(phe2));
+  }
+
+  public static Expression of(Phenotype phe, Number val) {
+    return of(Exp.of(phe), Exp.of(val));
   }
 
   @Override
