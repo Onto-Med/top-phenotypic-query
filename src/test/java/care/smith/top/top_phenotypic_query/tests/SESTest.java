@@ -12,6 +12,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Max;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Add;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divide;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Multiply;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Round;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Subtract;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Sum;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
@@ -31,7 +32,6 @@ import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import java.math.BigDecimal;
-import java.util.Set;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -165,21 +165,21 @@ public class SESTest {
                   Exp.of(4.85),
                   And.of(In.of(schuleSES, 4, 5), Eq.of(ausbildungSES, 7)),
                   Exp.of(5.3),
-                  And.of(Eq.of(schuleSES, 0), In.of(ausbildungSES, 1, 2)),
+                  And.of(Eq.of(schuleSES, -1), In.of(ausbildungSES, 1, 2)),
                   Exp.of(1.0),
-                  And.of(Eq.of(schuleSES, 0), In.of(ausbildungSES, 3, 4, 5)),
+                  And.of(Eq.of(schuleSES, -1), In.of(ausbildungSES, 3, 4, 5)),
                   Exp.of(3.0),
-                  And.of(Eq.of(schuleSES, 0), Eq.of(ausbildungSES, 6)),
+                  And.of(Eq.of(schuleSES, -1), Eq.of(ausbildungSES, 6)),
                   Exp.of(6.1),
-                  And.of(Eq.of(schuleSES, 0), Eq.of(ausbildungSES, 7)),
+                  And.of(Eq.of(schuleSES, -1), Eq.of(ausbildungSES, 7)),
                   Exp.of(7.0),
-                  And.of(Eq.of(ausbildungSES, 0), In.of(schuleSES, 1, 2)),
+                  And.of(Eq.of(ausbildungSES, -1), In.of(schuleSES, 1, 2)),
                   Exp.of(1.0),
-                  And.of(Eq.of(ausbildungSES, 0), Eq.of(schuleSES, 3)),
+                  And.of(Eq.of(ausbildungSES, -1), Eq.of(schuleSES, 3)),
                   Exp.of(1.7),
-                  And.of(Eq.of(ausbildungSES, 0), In.of(schuleSES, 4, 5)),
+                  And.of(Eq.of(ausbildungSES, -1), In.of(schuleSES, 4, 5)),
                   Exp.of(2.8),
-                  And.of(Eq.of(ausbildungSES, 0), In.of(schuleSES, 6, 7)),
+                  And.of(Eq.of(ausbildungSES, -1), In.of(schuleSES, 6, 7)),
                   Exp.of(3.7),
                   Exp.of(-1)))
           .get();
@@ -607,7 +607,7 @@ public class SESTest {
           .expression(
               If.of(
                   And.of(Ge.of(bedgew, 1), Gt.of(haushaltseinkommenSES, -1)),
-                  Divide.of(haushaltseinkommenSES, bedgew),
+                  Round.of(Divide.of(haushaltseinkommenSES, bedgew), 2),
                   Exp.of(-1)))
           .get();
 
@@ -682,6 +682,8 @@ public class SESTest {
           .titleDe("einkommenSES")
           .expression(
               Switch.of(
+                  Lt.of(aequivalenzeinkommenSES, 0),
+                  Exp.of(-1),
                   Exp.of(aequivalenzeinkommenSES_1_0),
                   Exp.of(1.0),
                   Exp.of(aequivalenzeinkommenSES_1_5),
@@ -747,7 +749,7 @@ public class SESTest {
   @BeforeAll
   static void beforeAll() {
     WRITER
-        .insertSbj(0, "2001-01-01", "male")
+        .insertSbj(1, "2001-01-01", "male")
         .insertPhe(schule, 2)
         .insertPhe(ausbildung3, 1)
         .insertPhe(erwerbstaetigkeit, 2)
@@ -759,6 +761,192 @@ public class SESTest {
         .insertPhe(haushaltsgroesse, 3)
         .insertPhe(juenger15, 1);
 
+    WRITER
+        .insertSbj(2, "1995-05-05", "female")
+        .insertPhe(schule, 1)
+        .insertPhe(ausbildung2, 1)
+        .insertPhe(erwerbstaetigkeit, 2)
+        .insertPhe(berufEigener, "G1")
+        .insertPhe(familienstand, 2)
+        .insertPhe(einkommenHaushalt, 2000)
+        .insertPhe(einkommenEigenes, 1500)
+        .insertPhe(haushaltsgroesse, 1)
+        .insertPhe(juenger15, 0);
+
+    WRITER
+        .insertSbj(3, "2001-01-01", "female")
+        .insertPhe(schule, 6)
+        .insertPhe(ausbildung6, 1)
+        .insertPhe(erwerbstaetigkeit, 2)
+        .insertPhe(berufEigener, "E")
+        .insertPhe(familienstand, 1)
+        .insertPhe(berufPartner, "F5")
+        .insertPhe(einkommensgruppeHaushalt, "T")
+        .insertPhe(einkommensgruppeEigenes, "P")
+        .insertPhe(haushaltsgroesse, 3)
+        .insertPhe(juenger15, 1);
+
+    WRITER
+        .insertSbj(4, "2001-01-01", "male")
+        .insertPhe(erwerbstaetigkeit, 2)
+        .insertPhe(berufEigener, "B1")
+        .insertPhe(familienstand, 1)
+        .insertPhe(berufPartner, "C1")
+        .insertPhe(einkommenHaushalt, 3000)
+        .insertPhe(einkommenEigenes, 2000)
+        .insertPhe(haushaltsgroesse, 3)
+        .insertPhe(juenger15, 1);
+
+    WRITER
+        .insertSbj(5, "2001-01-01", "male")
+        .insertPhe(schule, 2)
+        .insertPhe(ausbildung3, 1)
+        .insertPhe(einkommenHaushalt, 3000)
+        .insertPhe(einkommenEigenes, 2000)
+        .insertPhe(haushaltsgroesse, 3)
+        .insertPhe(juenger15, 1);
+
+    WRITER
+        .insertSbj(6, "2001-01-01", "male")
+        .insertPhe(schule, 2)
+        .insertPhe(ausbildung3, 1)
+        .insertPhe(erwerbstaetigkeit, 2)
+        .insertPhe(berufEigener, "B1")
+        .insertPhe(familienstand, 1)
+        .insertPhe(berufPartner, "C1");
+
+    WRITER
+        .insertSbj(7, "1995-05-05", "female")
+        .insertPhe(ausbildung4, 1)
+        .insertPhe(erwerbstaetigkeit, 2)
+        .insertPhe(berufEigener, "G1")
+        .insertPhe(familienstand, 2)
+        .insertPhe(einkommenHaushalt, 2000)
+        .insertPhe(einkommenEigenes, 1500)
+        .insertPhe(haushaltsgroesse, 1)
+        .insertPhe(juenger15, 0);
+
+    WRITER
+        .insertSbj(8, "1995-05-05", "female")
+        .insertPhe(schule, 4)
+        .insertPhe(erwerbstaetigkeit, 2)
+        .insertPhe(berufEigener, "G1")
+        .insertPhe(familienstand, 2)
+        .insertPhe(einkommenHaushalt, 2000)
+        .insertPhe(einkommenEigenes, 1500)
+        .insertPhe(haushaltsgroesse, 1)
+        .insertPhe(juenger15, 0);
+
+    WRITER
+        .insertSbj(9, "2001-01-01", "male")
+        .insertPhe(schule, 2)
+        .insertPhe(ausbildung3, 1)
+        .insertPhe(erwerbstaetigkeit, 98)
+        .insertPhe(berufEigener, "B1")
+        .insertPhe(familienstand, 1)
+        .insertPhe(berufPartner, "C1")
+        .insertPhe(einkommenHaushalt, 3000)
+        .insertPhe(einkommenEigenes, 2000)
+        .insertPhe(haushaltsgroesse, 3)
+        .insertPhe(juenger15, 1);
+
+    WRITER
+        .insertSbj(10, "2001-01-01", "male")
+        .insertPhe(schule, 2)
+        .insertPhe(ausbildung3, 1)
+        .insertPhe(berufEigener, "B1")
+        .insertPhe(familienstand, 1)
+        .insertPhe(berufPartner, "C1")
+        .insertPhe(einkommenHaushalt, 3000)
+        .insertPhe(einkommenEigenes, 2000)
+        .insertPhe(haushaltsgroesse, 3)
+        .insertPhe(juenger15, 1);
+
+    WRITER
+        .insertSbj(11, "1995-05-05", "female")
+        .insertPhe(schule, 1)
+        .insertPhe(ausbildung2, 1)
+        .insertPhe(berufEigener, "G1")
+        .insertPhe(einkommenHaushalt, 2000)
+        .insertPhe(einkommenEigenes, 1500)
+        .insertPhe(haushaltsgroesse, 1)
+        .insertPhe(juenger15, 0);
+
+    WRITER
+        .insertSbj(12, "2001-01-01", "male")
+        .insertPhe(schule, 2)
+        .insertPhe(ausbildung3, 1)
+        .insertPhe(erwerbstaetigkeit, 2)
+        .insertPhe(berufEigener, "B1")
+        .insertPhe(familienstand, 1)
+        .insertPhe(berufPartner, "C1")
+        .insertPhe(einkommenHaushalt, 3000)
+        .insertPhe(einkommenEigenes, 2000);
+
+    WRITER
+        .insertSbj(13, "2001-01-01", "male")
+        .insertPhe(schule, 2)
+        .insertPhe(ausbildung3, 1)
+        .insertPhe(erwerbstaetigkeit, 2)
+        .insertPhe(berufEigener, "B1")
+        .insertPhe(familienstand, 1)
+        .insertPhe(berufPartner, "C1")
+        .insertPhe(einkommenHaushalt, 3000)
+        .insertPhe(einkommenEigenes, 2000)
+        .insertPhe(haushaltsgroesse, 99)
+        .insertPhe(juenger15, 98);
+
+    WRITER
+        .insertSbj(14, "2001-01-01", "male")
+        .insertPhe(schule, 2)
+        .insertPhe(ausbildung3, 1)
+        .insertPhe(erwerbstaetigkeit, 2)
+        .insertPhe(berufEigener, "B1")
+        .insertPhe(familienstand, 1)
+        .insertPhe(berufPartner, "C1")
+        .insertPhe(einkommenHaushalt, 3000)
+        .insertPhe(einkommenEigenes, 2000)
+        .insertPhe(haushaltsgroesse, 2)
+        .insertPhe(juenger15, 3);
+
+    WRITER
+        .insertSbj(15, "2001-01-01", "male")
+        .insertPhe(schule, 2)
+        .insertPhe(ausbildung3, 1)
+        .insertPhe(erwerbstaetigkeit, 2)
+        .insertPhe(berufEigener, "B1")
+        .insertPhe(familienstand, 1)
+        .insertPhe(berufPartner, "C1")
+        .insertPhe(einkommenHaushalt, 3000)
+        .insertPhe(einkommenEigenes, 2000)
+        .insertPhe(haushaltsgroesse, 13)
+        .insertPhe(juenger15, 3);
+
+    WRITER
+        .insertSbj(16, "2001-01-01", "male")
+        .insertPhe(schule, 2)
+        .insertPhe(ausbildung3, 1)
+        .insertPhe(erwerbstaetigkeit, 2)
+        .insertPhe(berufEigener, "B1")
+        .insertPhe(familienstand, 1)
+        .insertPhe(berufPartner, "C1")
+        .insertPhe(einkommenHaushalt, 3000)
+        .insertPhe(einkommenEigenes, 2000)
+        .insertPhe(haushaltsgroesse, 3);
+
+    WRITER
+        .insertSbj(17, "2001-01-01", "male")
+        .insertPhe(schule, 2)
+        .insertPhe(ausbildung3, 1)
+        .insertPhe(erwerbstaetigkeit, 2)
+        .insertPhe(berufEigener, "B1")
+        .insertPhe(familienstand, 1)
+        .insertPhe(berufPartner, "C1")
+        .insertPhe(einkommenHaushalt, 3000)
+        .insertPhe(einkommenEigenes, 2000)
+        .insertPhe(haushaltsgroesse, 2)
+        .insertPhe(juenger15, 2);
+
     WRITER.printSbj();
     WRITER.printPhe();
   }
@@ -769,10 +957,254 @@ public class SESTest {
   }
 
   @Test
-  void test() throws InstantiationException {
+  void test1() throws InstantiationException {
     ResultSet rs = search();
-    assertEquals(Set.of("0"), rs.getSubjectIds());
-    assertEquals(new BigDecimal("13.3"), rs.getNumberValue("0", "SES", null));
+    assertEquals(new BigDecimal("3.0"), rs.getNumberValue("1", "bildungSES", null));
+    assertEquals(new BigDecimal("5.8"), rs.getNumberValue("1", "berufSES", null));
+    assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("1", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("3.000"), rs.getNumberValue("1", "h0000071", null));
+    assertEquals(new BigDecimal("1.000"), rs.getNumberValue("1", "h0000072", null));
+    assertEquals(new BigDecimal("1.8000"), rs.getNumberValue("1", "bedgew", null));
+    assertEquals(
+        new BigDecimal("1666.67"), rs.getNumberValue("1", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("5.0"), rs.getNumberValue("1", "einkommenSES", null));
+    assertEquals(new BigDecimal("13.8"), rs.getNumberValue("1", "SES", null));
+  }
+
+  @Test
+  void test2() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("1.0"), rs.getNumberValue("2", "bildungSES", null));
+    assertEquals(new BigDecimal("2.9"), rs.getNumberValue("2", "berufSES", null));
+    assertEquals(new BigDecimal("1500.000"), rs.getNumberValue("2", "einkommenEigenesSES", null));
+    assertEquals(new BigDecimal("1.000"), rs.getNumberValue("2", "h0000071", null));
+    assertEquals(new BigDecimal("0.000"), rs.getNumberValue("2", "h0000072", null));
+    assertEquals(new BigDecimal("1.0000"), rs.getNumberValue("2", "bedgew", null));
+    assertEquals(
+        new BigDecimal("1500.00"), rs.getNumberValue("2", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("4.0"), rs.getNumberValue("2", "einkommenSES", null));
+    assertEquals(new BigDecimal("7.9"), rs.getNumberValue("2", "SES", null));
+  }
+
+  @Test
+  void test3() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("6.1"), rs.getNumberValue("3", "bildungSES", null));
+    assertEquals(new BigDecimal("3.7"), rs.getNumberValue("3", "berufSES", null));
+    assertEquals(new BigDecimal("450"), rs.getNumberValue("3", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("3.000"), rs.getNumberValue("3", "h0000071", null));
+    assertEquals(new BigDecimal("1.000"), rs.getNumberValue("3", "h0000072", null));
+    assertEquals(new BigDecimal("1.8000"), rs.getNumberValue("3", "bedgew", null));
+    assertEquals(new BigDecimal("250.00"), rs.getNumberValue("3", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("1.0"), rs.getNumberValue("3", "einkommenSES", null));
+    assertEquals(new BigDecimal("10.8"), rs.getNumberValue("3", "SES", null));
+  }
+
+  @Test
+  void test4() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("4", "bildungSES", null));
+    assertEquals(new BigDecimal("5.8"), rs.getNumberValue("4", "berufSES", null));
+    assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("4", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("3.000"), rs.getNumberValue("4", "h0000071", null));
+    assertEquals(new BigDecimal("1.000"), rs.getNumberValue("4", "h0000072", null));
+    assertEquals(new BigDecimal("1.8000"), rs.getNumberValue("4", "bedgew", null));
+    assertEquals(
+        new BigDecimal("1666.67"), rs.getNumberValue("4", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("5.0"), rs.getNumberValue("4", "einkommenSES", null));
+    assertEquals(new BigDecimal("15.06666666666667"), rs.getNumberValue("4", "SES", null));
+  }
+
+  @Test
+  void test5() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("3.0"), rs.getNumberValue("5", "bildungSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("5", "berufSES", null));
+    assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("5", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("3.000"), rs.getNumberValue("5", "h0000071", null));
+    assertEquals(new BigDecimal("1.000"), rs.getNumberValue("5", "h0000072", null));
+    assertEquals(new BigDecimal("1.8000"), rs.getNumberValue("5", "bedgew", null));
+    assertEquals(
+        new BigDecimal("1666.67"), rs.getNumberValue("5", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("5.0"), rs.getNumberValue("5", "einkommenSES", null));
+    assertEquals(new BigDecimal("11.33333333333333"), rs.getNumberValue("5", "SES", null));
+  }
+
+  @Test
+  void test6() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("3.0"), rs.getNumberValue("6", "bildungSES", null));
+    assertEquals(new BigDecimal("5.8"), rs.getNumberValue("6", "berufSES", null));
+    assertEquals(null, rs.getNumberValue("6", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("6", "h0000071", null));
+    assertEquals(null, rs.getNumberValue("6", "h0000072", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("6", "bedgew", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("6", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("6", "einkommenSES", null));
+    assertEquals(new BigDecimal("12.4"), rs.getNumberValue("6", "SES", null));
+  }
+
+  @Test
+  void test7() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("3.0"), rs.getNumberValue("7", "bildungSES", null));
+    assertEquals(new BigDecimal("2.9"), rs.getNumberValue("7", "berufSES", null));
+    assertEquals(new BigDecimal("1500.000"), rs.getNumberValue("7", "einkommenEigenesSES", null));
+    assertEquals(new BigDecimal("1.000"), rs.getNumberValue("7", "h0000071", null));
+    assertEquals(new BigDecimal("0.000"), rs.getNumberValue("7", "h0000072", null));
+    assertEquals(new BigDecimal("1.0000"), rs.getNumberValue("7", "bedgew", null));
+    assertEquals(
+        new BigDecimal("1500.00"), rs.getNumberValue("7", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("4.0"), rs.getNumberValue("7", "einkommenSES", null));
+    assertEquals(new BigDecimal("9.9"), rs.getNumberValue("7", "SES", null));
+  }
+
+  @Test
+  void test8() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("2.8"), rs.getNumberValue("8", "bildungSES", null));
+    assertEquals(new BigDecimal("2.9"), rs.getNumberValue("8", "berufSES", null));
+    assertEquals(new BigDecimal("1500.000"), rs.getNumberValue("8", "einkommenEigenesSES", null));
+    assertEquals(new BigDecimal("1.000"), rs.getNumberValue("8", "h0000071", null));
+    assertEquals(new BigDecimal("0.000"), rs.getNumberValue("8", "h0000072", null));
+    assertEquals(new BigDecimal("1.0000"), rs.getNumberValue("8", "bedgew", null));
+    assertEquals(
+        new BigDecimal("1500.00"), rs.getNumberValue("8", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("4.0"), rs.getNumberValue("8", "einkommenSES", null));
+    assertEquals(new BigDecimal("9.7"), rs.getNumberValue("8", "SES", null));
+  }
+
+  @Test
+  void test9() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("3.0"), rs.getNumberValue("9", "bildungSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("9", "berufEigenerSES", null));
+    assertEquals(new BigDecimal("3.5"), rs.getNumberValue("9", "berufSES", null));
+    assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("9", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("3.000"), rs.getNumberValue("9", "h0000071", null));
+    assertEquals(new BigDecimal("1.000"), rs.getNumberValue("9", "h0000072", null));
+    assertEquals(new BigDecimal("1.8000"), rs.getNumberValue("9", "bedgew", null));
+    assertEquals(
+        new BigDecimal("1666.67"), rs.getNumberValue("9", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("5.0"), rs.getNumberValue("9", "einkommenSES", null));
+    assertEquals(new BigDecimal("11.5"), rs.getNumberValue("9", "SES", null));
+  }
+
+  @Test
+  void test10() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("3.0"), rs.getNumberValue("10", "bildungSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("10", "berufEigenerSES", null));
+    assertEquals(new BigDecimal("3.5"), rs.getNumberValue("10", "berufSES", null));
+    assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("10", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("3.000"), rs.getNumberValue("10", "h0000071", null));
+    assertEquals(new BigDecimal("1.000"), rs.getNumberValue("10", "h0000072", null));
+    assertEquals(new BigDecimal("1.8000"), rs.getNumberValue("10", "bedgew", null));
+    assertEquals(
+        new BigDecimal("1666.67"), rs.getNumberValue("10", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("5.0"), rs.getNumberValue("10", "einkommenSES", null));
+    assertEquals(new BigDecimal("11.5"), rs.getNumberValue("10", "SES", null));
+  }
+
+  @Test
+  void test11() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("1.0"), rs.getNumberValue("11", "bildungSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("11", "berufSES", null));
+    assertEquals(new BigDecimal("1500.000"), rs.getNumberValue("11", "einkommenEigenesSES", null));
+    assertEquals(new BigDecimal("1.000"), rs.getNumberValue("11", "h0000071", null));
+    assertEquals(new BigDecimal("0.000"), rs.getNumberValue("11", "h0000072", null));
+    assertEquals(new BigDecimal("1.0000"), rs.getNumberValue("11", "bedgew", null));
+    assertEquals(
+        new BigDecimal("1500.00"), rs.getNumberValue("11", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("4.0"), rs.getNumberValue("11", "einkommenSES", null));
+    assertEquals(new BigDecimal("7.333333333333333"), rs.getNumberValue("11", "SES", null));
+  }
+
+  @Test
+  void test12() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("3.0"), rs.getNumberValue("12", "bildungSES", null));
+    assertEquals(new BigDecimal("5.8"), rs.getNumberValue("12", "berufSES", null));
+    assertEquals(null, rs.getNumberValue("12", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("12", "h0000071", null));
+    assertEquals(null, rs.getNumberValue("12", "h0000072", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("12", "bedgew", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("12", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("12", "einkommenSES", null));
+    assertEquals(new BigDecimal("12.4"), rs.getNumberValue("12", "SES", null));
+  }
+
+  @Test
+  void test13() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("3.0"), rs.getNumberValue("13", "bildungSES", null));
+    assertEquals(new BigDecimal("5.8"), rs.getNumberValue("13", "berufSES", null));
+    assertEquals(null, rs.getNumberValue("13", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("13", "h0000071", null));
+    assertEquals(null, rs.getNumberValue("13", "h0000072", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("13", "bedgew", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("13", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("13", "einkommenSES", null));
+    assertEquals(new BigDecimal("12.4"), rs.getNumberValue("13", "SES", null));
+  }
+
+  @Test
+  void test14() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("3.0"), rs.getNumberValue("14", "bildungSES", null));
+    assertEquals(new BigDecimal("5.8"), rs.getNumberValue("14", "berufSES", null));
+    assertEquals(null, rs.getNumberValue("14", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("14", "h0000071", null));
+    assertEquals(null, rs.getNumberValue("14", "h0000072", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("14", "bedgew", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("14", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("14", "einkommenSES", null));
+    assertEquals(new BigDecimal("12.4"), rs.getNumberValue("14", "SES", null));
+  }
+
+  @Test
+  void test15() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("3.0"), rs.getNumberValue("15", "bildungSES", null));
+    assertEquals(new BigDecimal("5.8"), rs.getNumberValue("15", "berufSES", null));
+    assertEquals(null, rs.getNumberValue("15", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("15", "h0000071", null));
+    assertEquals(null, rs.getNumberValue("15", "h0000072", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("15", "bedgew", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("15", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("-1"), rs.getNumberValue("15", "einkommenSES", null));
+    assertEquals(new BigDecimal("12.4"), rs.getNumberValue("15", "SES", null));
+  }
+
+  @Test
+  void test16() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("3.0"), rs.getNumberValue("16", "bildungSES", null));
+    assertEquals(new BigDecimal("5.8"), rs.getNumberValue("16", "berufSES", null));
+    assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("16", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("3.000"), rs.getNumberValue("16", "h0000071", null));
+    assertEquals(new BigDecimal("0"), rs.getNumberValue("16", "h0000072", null));
+    assertEquals(new BigDecimal("2.0000"), rs.getNumberValue("16", "bedgew", null));
+    assertEquals(
+        new BigDecimal("1500.00"), rs.getNumberValue("16", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("4.0"), rs.getNumberValue("16", "einkommenSES", null));
+    assertEquals(new BigDecimal("12.8"), rs.getNumberValue("16", "SES", null));
+  }
+
+  @Test
+  void test17() throws InstantiationException {
+    ResultSet rs = search();
+    assertEquals(new BigDecimal("3.0"), rs.getNumberValue("17", "bildungSES", null));
+    assertEquals(new BigDecimal("5.8"), rs.getNumberValue("17", "berufSES", null));
+    assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("17", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("3.000"), rs.getNumberValue("17", "h0000071", null));
+    assertEquals(new BigDecimal("2.000"), rs.getNumberValue("17", "h0000072", null));
+    assertEquals(new BigDecimal("1.6000"), rs.getNumberValue("17", "bedgew", null));
+    assertEquals(
+        new BigDecimal("1875.00"), rs.getNumberValue("17", "aequivalenzeinkommenSES", null));
+    assertEquals(new BigDecimal("5.5"), rs.getNumberValue("17", "einkommenSES", null));
+    assertEquals(new BigDecimal("14.3"), rs.getNumberValue("17", "SES", null));
   }
 
   private ResultSet search() throws InstantiationException {
