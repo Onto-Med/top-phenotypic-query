@@ -20,8 +20,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Not;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Or;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Eq;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Ge;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Gt;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Lt;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Le;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Empty;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
@@ -36,7 +35,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class SESTest {
+public class SES2Test {
 
   private static final DataAdapterConfig CONFIG =
       DataAdapterConfig.getInstanceFromResource("config/Default_SQL_Adapter.yml");
@@ -55,8 +54,7 @@ public class SESTest {
   private static Phenotype schuleSES =
       new Phe("schuleSES")
           .titleDe("schuleSES")
-          .expression(
-              If.of(Or.of(Empty.of(schule), In.of(schule, 95, 98, 99)), Exp.of(-1), Exp.of(schule)))
+          .expression(If.of(Not.of(In.of(schule, 95, 98, 99)), Exp.of(schule)))
           .get();
 
   private static Phenotype ausbildung1 =
@@ -126,8 +124,7 @@ public class SESTest {
                   Eq.of(ausbildung2, 1),
                   Exp.of(2),
                   Eq.of(ausbildung1, 1),
-                  Exp.of(1),
-                  Exp.of(-1)))
+                  Exp.of(1)))
           .get();
 
   private static Phenotype bildungSES =
@@ -165,29 +162,28 @@ public class SESTest {
                   Exp.of(4.85),
                   And.of(In.of(schuleSES, 4, 5), Eq.of(ausbildungSES, 7)),
                   Exp.of(5.3),
-                  And.of(Eq.of(schuleSES, -1), In.of(ausbildungSES, 1, 2)),
+                  And.of(Empty.of(schuleSES), In.of(ausbildungSES, 1, 2)),
                   Exp.of(1.0),
-                  And.of(Eq.of(schuleSES, -1), In.of(ausbildungSES, 3, 4, 5)),
+                  And.of(Empty.of(schuleSES), In.of(ausbildungSES, 3, 4, 5)),
                   Exp.of(3.0),
-                  And.of(Eq.of(schuleSES, -1), Eq.of(ausbildungSES, 6)),
+                  And.of(Empty.of(schuleSES), Eq.of(ausbildungSES, 6)),
                   Exp.of(6.1),
-                  And.of(Eq.of(schuleSES, -1), Eq.of(ausbildungSES, 7)),
+                  And.of(Empty.of(schuleSES), Eq.of(ausbildungSES, 7)),
                   Exp.of(7.0),
-                  And.of(Eq.of(ausbildungSES, -1), In.of(schuleSES, 1, 2)),
+                  And.of(Empty.of(ausbildungSES), In.of(schuleSES, 1, 2)),
                   Exp.of(1.0),
-                  And.of(Eq.of(ausbildungSES, -1), Eq.of(schuleSES, 3)),
+                  And.of(Empty.of(ausbildungSES), Eq.of(schuleSES, 3)),
                   Exp.of(1.7),
-                  And.of(Eq.of(ausbildungSES, -1), In.of(schuleSES, 4, 5)),
+                  And.of(Empty.of(ausbildungSES), In.of(schuleSES, 4, 5)),
                   Exp.of(2.8),
-                  And.of(Eq.of(ausbildungSES, -1), In.of(schuleSES, 6, 7)),
-                  Exp.of(3.7),
-                  Exp.of(-1)))
+                  And.of(Empty.of(ausbildungSES), In.of(schuleSES, 6, 7)),
+                  Exp.of(3.7)))
           .get();
 
   private static Phenotype bildungSESvorhanden =
       new Phe("bildungSESvorhanden")
           .titleDe("bildungSESvorhanden")
-          .restriction(bildungSES, Res.gt(-1))
+          .expression(Exists.of(bildungSES))
           .get();
 
   // Beruf eigener
@@ -229,59 +225,55 @@ public class SESTest {
       new Phe("berufEigenerSES")
           .titleDe("berufEigenerSES")
           .expression(
-              Switch.of(
-                  Or.of(
-                      And.of(Not.of(erwerbstaetig), Not.of(frueherErwerbstaetig)),
-                      Empty.of(berufEigener),
-                      In.of(berufEigener, "97", "98", "99")),
-                  Exp.of(-1),
-                  In.of(berufEigener, "A", "A1", "A3"),
-                  Exp.of(1.0),
-                  Eq.of(berufEigener, "A2"),
-                  Exp.of(1.1),
-                  Eq.of(berufEigener, "B"),
-                  Exp.of(6.2),
-                  Eq.of(berufEigener, "B1"),
-                  Exp.of(5.8),
-                  Eq.of(berufEigener, "B2"),
-                  Exp.of(6.8),
-                  Eq.of(berufEigener, "B3"),
-                  Exp.of(7.0),
-                  Eq.of(berufEigener, "C"),
-                  Exp.of(3.9),
-                  Eq.of(berufEigener, "C1"),
-                  Exp.of(3.5),
-                  In.of(berufEigener, "C2", "E2"),
-                  Exp.of(3.6),
-                  In.of(berufEigener, "C3", "C4", "E3"),
-                  Exp.of(4.2),
-                  Eq.of(berufEigener, "D"),
-                  Exp.of(5.0),
-                  In.of(berufEigener, "D1", "G", "G1", "G2", "G3", "H"),
-                  Exp.of(2.9),
-                  Eq.of(berufEigener, "D2"),
-                  Exp.of(4.1),
-                  Eq.of(berufEigener, "D3"),
-                  Exp.of(5.2),
-                  Eq.of(berufEigener, "D4"),
-                  Exp.of(6.4),
-                  Eq.of(berufEigener, "E"),
-                  Exp.of(3.7),
-                  In.of(berufEigener, "E1", "F5"),
-                  Exp.of(2.4),
-                  Eq.of(berufEigener, "E4"),
-                  Exp.of(4.7),
-                  Eq.of(berufEigener, "F"),
-                  Exp.of(1.9),
-                  Eq.of(berufEigener, "F1"),
-                  Exp.of(1.3),
-                  Eq.of(berufEigener, "F2"),
-                  Exp.of(1.8),
-                  Eq.of(berufEigener, "F3"),
-                  Exp.of(2.1),
-                  Eq.of(berufEigener, "F4"),
-                  Exp.of(2.0),
-                  Exp.of(-1)))
+              If.of(
+                  Or.of(erwerbstaetig, frueherErwerbstaetig),
+                  Switch.of(
+                      In.of(berufEigener, "A", "A1", "A3"),
+                      Exp.of(1.0),
+                      Eq.of(berufEigener, "A2"),
+                      Exp.of(1.1),
+                      Eq.of(berufEigener, "B"),
+                      Exp.of(6.2),
+                      Eq.of(berufEigener, "B1"),
+                      Exp.of(5.8),
+                      Eq.of(berufEigener, "B2"),
+                      Exp.of(6.8),
+                      Eq.of(berufEigener, "B3"),
+                      Exp.of(7.0),
+                      Eq.of(berufEigener, "C"),
+                      Exp.of(3.9),
+                      Eq.of(berufEigener, "C1"),
+                      Exp.of(3.5),
+                      In.of(berufEigener, "C2", "E2"),
+                      Exp.of(3.6),
+                      In.of(berufEigener, "C3", "C4", "E3"),
+                      Exp.of(4.2),
+                      Eq.of(berufEigener, "D"),
+                      Exp.of(5.0),
+                      In.of(berufEigener, "D1", "G", "G1", "G2", "G3", "H"),
+                      Exp.of(2.9),
+                      Eq.of(berufEigener, "D2"),
+                      Exp.of(4.1),
+                      Eq.of(berufEigener, "D3"),
+                      Exp.of(5.2),
+                      Eq.of(berufEigener, "D4"),
+                      Exp.of(6.4),
+                      Eq.of(berufEigener, "E"),
+                      Exp.of(3.7),
+                      In.of(berufEigener, "E1", "F5"),
+                      Exp.of(2.4),
+                      Eq.of(berufEigener, "E4"),
+                      Exp.of(4.7),
+                      Eq.of(berufEigener, "F"),
+                      Exp.of(1.9),
+                      Eq.of(berufEigener, "F1"),
+                      Exp.of(1.3),
+                      Eq.of(berufEigener, "F2"),
+                      Exp.of(1.8),
+                      Eq.of(berufEigener, "F3"),
+                      Exp.of(2.1),
+                      Eq.of(berufEigener, "F4"),
+                      Exp.of(2.0))))
           .get();
 
   // Beruf Partner
@@ -317,59 +309,55 @@ public class SESTest {
       new Phe("berufPartnerSES")
           .titleDe("berufPartnerSES")
           .expression(
-              Switch.of(
-                  Or.of(
-                      And.of(Not.of(verheiratet), Not.of(lebenZusammen)),
-                      Empty.of(berufPartner),
-                      In.of(berufPartner, "97", "98", "99")),
-                  Exp.of(-1),
-                  In.of(berufPartner, "A", "A1", "A3"),
-                  Exp.of(1.0),
-                  Eq.of(berufPartner, "A2"),
-                  Exp.of(1.1),
-                  Eq.of(berufPartner, "B"),
-                  Exp.of(6.2),
-                  Eq.of(berufPartner, "B1"),
-                  Exp.of(5.8),
-                  Eq.of(berufPartner, "B2"),
-                  Exp.of(6.8),
-                  Eq.of(berufPartner, "B3"),
-                  Exp.of(7.0),
-                  Eq.of(berufPartner, "C"),
-                  Exp.of(3.9),
-                  Eq.of(berufPartner, "C1"),
-                  Exp.of(3.5),
-                  In.of(berufPartner, "C2", "E2"),
-                  Exp.of(3.6),
-                  In.of(berufPartner, "C3", "C4", "E3"),
-                  Exp.of(4.2),
-                  Eq.of(berufPartner, "D"),
-                  Exp.of(5.0),
-                  In.of(berufPartner, "D1", "G", "G1", "G2", "G3", "H"),
-                  Exp.of(2.9),
-                  Eq.of(berufPartner, "D2"),
-                  Exp.of(4.1),
-                  Eq.of(berufPartner, "D3"),
-                  Exp.of(5.2),
-                  Eq.of(berufPartner, "D4"),
-                  Exp.of(6.4),
-                  Eq.of(berufPartner, "E"),
-                  Exp.of(3.7),
-                  In.of(berufPartner, "E1", "F5"),
-                  Exp.of(2.4),
-                  Eq.of(berufPartner, "E4"),
-                  Exp.of(4.7),
-                  Eq.of(berufPartner, "F"),
-                  Exp.of(1.9),
-                  Eq.of(berufPartner, "F1"),
-                  Exp.of(1.3),
-                  Eq.of(berufPartner, "F2"),
-                  Exp.of(1.8),
-                  Eq.of(berufPartner, "F3"),
-                  Exp.of(2.1),
-                  Eq.of(berufPartner, "F4"),
-                  Exp.of(2.0),
-                  Exp.of(-1)))
+              If.of(
+                  Or.of(verheiratet, lebenZusammen),
+                  Switch.of(
+                      In.of(berufPartner, "A", "A1", "A3"),
+                      Exp.of(1.0),
+                      Eq.of(berufPartner, "A2"),
+                      Exp.of(1.1),
+                      Eq.of(berufPartner, "B"),
+                      Exp.of(6.2),
+                      Eq.of(berufPartner, "B1"),
+                      Exp.of(5.8),
+                      Eq.of(berufPartner, "B2"),
+                      Exp.of(6.8),
+                      Eq.of(berufPartner, "B3"),
+                      Exp.of(7.0),
+                      Eq.of(berufPartner, "C"),
+                      Exp.of(3.9),
+                      Eq.of(berufPartner, "C1"),
+                      Exp.of(3.5),
+                      In.of(berufPartner, "C2", "E2"),
+                      Exp.of(3.6),
+                      In.of(berufPartner, "C3", "C4", "E3"),
+                      Exp.of(4.2),
+                      Eq.of(berufPartner, "D"),
+                      Exp.of(5.0),
+                      In.of(berufPartner, "D1", "G", "G1", "G2", "G3", "H"),
+                      Exp.of(2.9),
+                      Eq.of(berufPartner, "D2"),
+                      Exp.of(4.1),
+                      Eq.of(berufPartner, "D3"),
+                      Exp.of(5.2),
+                      Eq.of(berufPartner, "D4"),
+                      Exp.of(6.4),
+                      Eq.of(berufPartner, "E"),
+                      Exp.of(3.7),
+                      In.of(berufPartner, "E1", "F5"),
+                      Exp.of(2.4),
+                      Eq.of(berufPartner, "E4"),
+                      Exp.of(4.7),
+                      Eq.of(berufPartner, "F"),
+                      Exp.of(1.9),
+                      Eq.of(berufPartner, "F1"),
+                      Exp.of(1.3),
+                      Eq.of(berufPartner, "F2"),
+                      Exp.of(1.8),
+                      Eq.of(berufPartner, "F3"),
+                      Exp.of(2.1),
+                      Eq.of(berufPartner, "F4"),
+                      Exp.of(2.0))))
           .get();
 
   private static Phenotype berufSES =
@@ -381,7 +369,7 @@ public class SESTest {
   private static Phenotype berufSESvorhanden =
       new Phe("berufSESvorhanden")
           .titleDe("berufSESvorhanden")
-          .restriction(berufSES, Res.gt(-1))
+          .expression(Exists.of(berufSES))
           .get();
 
   // Einkommen Haushalt
@@ -456,8 +444,7 @@ public class SESTest {
                   Eq.of(einkommensgruppeHaushalt, "D"),
                   Exp.of(15000),
                   Eq.of(einkommensgruppeHaushalt, "Y"),
-                  Exp.of(20000),
-                  Exp.of(-1)))
+                  Exp.of(20000)))
           .get();
 
   // Einkommen eigenes
@@ -532,8 +519,7 @@ public class SESTest {
                   Eq.of(einkommensgruppeEigenes, "D"),
                   Exp.of(15000),
                   Eq.of(einkommensgruppeEigenes, "Y"),
-                  Exp.of(20000),
-                  Exp.of(-1)))
+                  Exp.of(20000)))
           .get();
 
   private static Phenotype haushaltsgroesse =
@@ -564,51 +550,41 @@ public class SESTest {
       new Phe("h0000072")
           .titleDe("h0000072")
           .expression(
-              Switch.of(
-                  Or.of(Lt.of(haushaltsgroesse, juenger15), Gt.of(haushaltsgroesse, 12)),
-                  Exp.of(-1),
-                  Or.of(Empty.of(juenger15), In.of(juenger15, 98, 99)),
-                  Exp.of(0),
-                  Exp.of(juenger15)))
+              If.of(
+                  And.of(Ge.of(haushaltsgroesse, juenger15), Le.of(haushaltsgroesse, 12)),
+                  If.of(
+                      Or.of(Empty.of(juenger15), In.of(juenger15, 98, 99)),
+                      Exp.of(0),
+                      Exp.of(juenger15))))
           .get();
 
   private static Phenotype h0000071 =
       new Phe("h0000071")
           .titleDe("h0000071")
           .expression(
-              Switch.of(
-                  Or.of(
-                      Empty.of(haushaltsgroesse),
-                      Lt.of(haushaltsgroesse, juenger15),
-                      Gt.of(haushaltsgroesse, 12)),
-                  Exp.of(-1),
-                  Eq.of(haushaltsgroesse, h0000072),
-                  Add.of(haushaltsgroesse, 1),
-                  Exp.of(haushaltsgroesse)))
+              If.of(
+                  And.of(Ge.of(haushaltsgroesse, juenger15), Le.of(haushaltsgroesse, 12)),
+                  If.of(
+                      Eq.of(haushaltsgroesse, h0000072),
+                      Add.of(haushaltsgroesse, 1),
+                      Exp.of(haushaltsgroesse))))
           .get();
 
   private static Phenotype bedgew =
       new Phe("bedgew")
           .titleDe("bedgew")
           .expression(
-              If.of(
-                  And.of(Ge.of(h0000071, 1), Ge.of(h0000072, 0)),
-                  Sum.of(
-                      Exp.of(1.0),
-                      Multiply.of(h0000072, 0.3),
-                      Multiply.of(
-                          Subtract.of(Subtract.of(h0000071, h0000072), Exp.of(1.0)), Exp.of(0.5))),
-                  Exp.of(-1)))
+              Sum.of(
+                  Exp.of(1.0),
+                  Multiply.of(h0000072, 0.3),
+                  Multiply.of(
+                      Subtract.of(Subtract.of(h0000071, h0000072), Exp.of(1.0)), Exp.of(0.5))))
           .get();
 
   private static Phenotype aequivalenzeinkommenSES =
       new Phe("aequivalenzeinkommenSES")
           .titleDe("aequivalenzeinkommenSES")
-          .expression(
-              If.of(
-                  And.of(Ge.of(bedgew, 1), Gt.of(haushaltseinkommenSES, -1)),
-                  Round.of(Divide.of(haushaltseinkommenSES, bedgew), 2),
-                  Exp.of(-1)))
+          .expression(Round.of(Divide.of(haushaltseinkommenSES, bedgew), 2))
           .get();
 
   private static Phenotype aequivalenzeinkommenSES_1_0 =
@@ -682,8 +658,6 @@ public class SESTest {
           .titleDe("einkommenSES")
           .expression(
               Switch.of(
-                  Lt.of(aequivalenzeinkommenSES, 0),
-                  Exp.of(-1),
                   Exp.of(aequivalenzeinkommenSES_1_0),
                   Exp.of(1.0),
                   Exp.of(aequivalenzeinkommenSES_1_5),
@@ -709,14 +683,13 @@ public class SESTest {
                   Exp.of(aequivalenzeinkommenSES_6_5),
                   Exp.of(6.5),
                   Exp.of(aequivalenzeinkommenSES_7_0),
-                  Exp.of(7.0),
-                  Exp.of(-1)))
+                  Exp.of(7.0)))
           .get();
 
   private static Phenotype einkommenSESvorhanden =
       new Phe("einkommenSESvorhanden")
           .titleDe("einkommenSESvorhanden")
-          .restriction(einkommenSES, Res.gt(-1))
+          .expression(Exists.of(einkommenSES))
           .get();
 
   // SES
@@ -1022,7 +995,7 @@ public class SESTest {
   @Test
   void test4() throws InstantiationException {
     ResultSet rs = search();
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("4", "bildungSES", null));
+    assertEquals(null, rs.getNumberValue("4", "bildungSES", null));
     assertEquals(new BigDecimal("5.8"), rs.getNumberValue("4", "berufSES", null));
     assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("4", "einkommenHaushaltSES", null));
     assertEquals(new BigDecimal("3.000"), rs.getNumberValue("4", "h0000071", null));
@@ -1038,7 +1011,7 @@ public class SESTest {
   void test5() throws InstantiationException {
     ResultSet rs = search();
     assertEquals(new BigDecimal("3.0"), rs.getNumberValue("5", "bildungSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("5", "berufSES", null));
+    assertEquals(null, rs.getNumberValue("5", "berufSES", null));
     assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("5", "einkommenHaushaltSES", null));
     assertEquals(new BigDecimal("3.000"), rs.getNumberValue("5", "h0000071", null));
     assertEquals(new BigDecimal("1.000"), rs.getNumberValue("5", "h0000072", null));
@@ -1055,11 +1028,11 @@ public class SESTest {
     assertEquals(new BigDecimal("3.0"), rs.getNumberValue("6", "bildungSES", null));
     assertEquals(new BigDecimal("5.8"), rs.getNumberValue("6", "berufSES", null));
     assertEquals(null, rs.getNumberValue("6", "einkommenHaushaltSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("6", "h0000071", null));
+    assertEquals(null, rs.getNumberValue("6", "h0000071", null));
     assertEquals(null, rs.getNumberValue("6", "h0000072", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("6", "bedgew", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("6", "aequivalenzeinkommenSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("6", "einkommenSES", null));
+    assertEquals(null, rs.getNumberValue("6", "bedgew", null));
+    assertEquals(null, rs.getNumberValue("6", "aequivalenzeinkommenSES", null));
+    assertEquals(null, rs.getNumberValue("6", "einkommenSES", null));
     assertEquals(new BigDecimal("12.4"), rs.getNumberValue("6", "SES", null));
   }
 
@@ -1097,7 +1070,7 @@ public class SESTest {
   void test9() throws InstantiationException {
     ResultSet rs = search();
     assertEquals(new BigDecimal("3.0"), rs.getNumberValue("9", "bildungSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("9", "berufEigenerSES", null));
+    assertEquals(null, rs.getNumberValue("9", "berufEigenerSES", null));
     assertEquals(new BigDecimal("3.5"), rs.getNumberValue("9", "berufSES", null));
     assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("9", "einkommenHaushaltSES", null));
     assertEquals(new BigDecimal("3.000"), rs.getNumberValue("9", "h0000071", null));
@@ -1113,7 +1086,7 @@ public class SESTest {
   void test10() throws InstantiationException {
     ResultSet rs = search();
     assertEquals(new BigDecimal("3.0"), rs.getNumberValue("10", "bildungSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("10", "berufEigenerSES", null));
+    assertEquals(null, rs.getNumberValue("10", "berufEigenerSES", null));
     assertEquals(new BigDecimal("3.5"), rs.getNumberValue("10", "berufSES", null));
     assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("10", "einkommenHaushaltSES", null));
     assertEquals(new BigDecimal("3.000"), rs.getNumberValue("10", "h0000071", null));
@@ -1129,7 +1102,7 @@ public class SESTest {
   void test11() throws InstantiationException {
     ResultSet rs = search();
     assertEquals(new BigDecimal("1.0"), rs.getNumberValue("11", "bildungSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("11", "berufSES", null));
+    assertEquals(null, rs.getNumberValue("11", "berufSES", null));
     assertEquals(new BigDecimal("1500.000"), rs.getNumberValue("11", "einkommenEigenesSES", null));
     assertEquals(new BigDecimal("1.000"), rs.getNumberValue("11", "h0000071", null));
     assertEquals(new BigDecimal("0.000"), rs.getNumberValue("11", "h0000072", null));
@@ -1146,11 +1119,11 @@ public class SESTest {
     assertEquals(new BigDecimal("3.0"), rs.getNumberValue("12", "bildungSES", null));
     assertEquals(new BigDecimal("5.8"), rs.getNumberValue("12", "berufSES", null));
     assertEquals(null, rs.getNumberValue("12", "einkommenHaushaltSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("12", "h0000071", null));
+    assertEquals(null, rs.getNumberValue("12", "h0000071", null));
     assertEquals(null, rs.getNumberValue("12", "h0000072", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("12", "bedgew", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("12", "aequivalenzeinkommenSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("12", "einkommenSES", null));
+    assertEquals(null, rs.getNumberValue("12", "bedgew", null));
+    assertEquals(null, rs.getNumberValue("12", "aequivalenzeinkommenSES", null));
+    assertEquals(null, rs.getNumberValue("12", "einkommenSES", null));
     assertEquals(new BigDecimal("12.4"), rs.getNumberValue("12", "SES", null));
   }
 
@@ -1160,11 +1133,11 @@ public class SESTest {
     assertEquals(new BigDecimal("3.0"), rs.getNumberValue("13", "bildungSES", null));
     assertEquals(new BigDecimal("5.8"), rs.getNumberValue("13", "berufSES", null));
     assertEquals(null, rs.getNumberValue("13", "einkommenHaushaltSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("13", "h0000071", null));
+    assertEquals(null, rs.getNumberValue("13", "h0000071", null));
     assertEquals(null, rs.getNumberValue("13", "h0000072", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("13", "bedgew", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("13", "aequivalenzeinkommenSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("13", "einkommenSES", null));
+    assertEquals(null, rs.getNumberValue("13", "bedgew", null));
+    assertEquals(null, rs.getNumberValue("13", "aequivalenzeinkommenSES", null));
+    assertEquals(null, rs.getNumberValue("13", "einkommenSES", null));
     assertEquals(new BigDecimal("12.4"), rs.getNumberValue("13", "SES", null));
   }
 
@@ -1174,11 +1147,11 @@ public class SESTest {
     assertEquals(new BigDecimal("3.0"), rs.getNumberValue("14", "bildungSES", null));
     assertEquals(new BigDecimal("5.8"), rs.getNumberValue("14", "berufSES", null));
     assertEquals(null, rs.getNumberValue("14", "einkommenHaushaltSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("14", "h0000071", null));
+    assertEquals(null, rs.getNumberValue("14", "h0000071", null));
     assertEquals(null, rs.getNumberValue("14", "h0000072", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("14", "bedgew", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("14", "aequivalenzeinkommenSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("14", "einkommenSES", null));
+    assertEquals(null, rs.getNumberValue("14", "bedgew", null));
+    assertEquals(null, rs.getNumberValue("14", "aequivalenzeinkommenSES", null));
+    assertEquals(null, rs.getNumberValue("14", "einkommenSES", null));
     assertEquals(new BigDecimal("12.4"), rs.getNumberValue("14", "SES", null));
   }
 
@@ -1188,11 +1161,11 @@ public class SESTest {
     assertEquals(new BigDecimal("3.0"), rs.getNumberValue("15", "bildungSES", null));
     assertEquals(new BigDecimal("5.8"), rs.getNumberValue("15", "berufSES", null));
     assertEquals(null, rs.getNumberValue("15", "einkommenHaushaltSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("15", "h0000071", null));
+    assertEquals(null, rs.getNumberValue("15", "h0000071", null));
     assertEquals(null, rs.getNumberValue("15", "h0000072", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("15", "bedgew", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("15", "aequivalenzeinkommenSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("15", "einkommenSES", null));
+    assertEquals(null, rs.getNumberValue("15", "bedgew", null));
+    assertEquals(null, rs.getNumberValue("15", "aequivalenzeinkommenSES", null));
+    assertEquals(null, rs.getNumberValue("15", "einkommenSES", null));
     assertEquals(new BigDecimal("12.4"), rs.getNumberValue("15", "SES", null));
   }
 
@@ -1229,8 +1202,8 @@ public class SESTest {
   @Test
   void test18() throws InstantiationException {
     ResultSet rs = search();
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("18", "bildungSES", null));
-    assertEquals(new BigDecimal("-1"), rs.getNumberValue("18", "berufSES", null));
+    assertEquals(null, rs.getNumberValue("18", "bildungSES", null));
+    assertEquals(null, rs.getNumberValue("18", "berufSES", null));
     assertEquals(null, rs.getNumberValue("18", "einkommenHaushaltSES", null));
     assertEquals(null, rs.getNumberValue("18", "h0000071", null));
     assertEquals(null, rs.getNumberValue("18", "h0000072", null));
