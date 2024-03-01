@@ -551,11 +551,9 @@ public class SES2Test {
           .titleDe("h0000072")
           .expression(
               If.of(
-                  And.of(Ge.of(haushaltsgroesse, juenger15), Le.of(haushaltsgroesse, 12)),
-                  If.of(
-                      Or.of(Empty.of(juenger15), In.of(juenger15, 98, 99)),
-                      Exp.of(0),
-                      Exp.of(juenger15))))
+                  Or.of(Empty.of(juenger15), In.of(juenger15, 98, 99)),
+                  Exp.of(0),
+                  Exp.of(juenger15)))
           .get();
 
   private static Phenotype h0000071 =
@@ -563,7 +561,7 @@ public class SES2Test {
           .titleDe("h0000071")
           .expression(
               If.of(
-                  And.of(Ge.of(haushaltsgroesse, juenger15), Le.of(haushaltsgroesse, 12)),
+                  And.of(Ge.of(haushaltsgroesse, h0000072), Le.of(haushaltsgroesse, 12)),
                   If.of(
                       Eq.of(haushaltsgroesse, h0000072),
                       Add.of(haushaltsgroesse, 1),
@@ -715,8 +713,7 @@ public class SES2Test {
                   Sum.of(
                       Exp.of(bildungSES),
                       Exp.of(berufSES),
-                      Avg.of(Exp.of(bildungSES), Exp.of(berufSES), Exp.of(2))),
-                  Exp.of(-1)))
+                      Avg.of(Exp.of(bildungSES), Exp.of(berufSES), Exp.of(2)))))
           .get();
 
   @BeforeAll
@@ -1118,9 +1115,9 @@ public class SES2Test {
     ResultSet rs = search();
     assertEquals(new BigDecimal("3.0"), rs.getNumberValue("12", "bildungSES", null));
     assertEquals(new BigDecimal("5.8"), rs.getNumberValue("12", "berufSES", null));
-    assertEquals(null, rs.getNumberValue("12", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("12", "einkommenHaushaltSES", null));
     assertEquals(null, rs.getNumberValue("12", "h0000071", null));
-    assertEquals(null, rs.getNumberValue("12", "h0000072", null));
+    assertEquals(new BigDecimal("0"), rs.getNumberValue("12", "h0000072", null));
     assertEquals(null, rs.getNumberValue("12", "bedgew", null));
     assertEquals(null, rs.getNumberValue("12", "aequivalenzeinkommenSES", null));
     assertEquals(null, rs.getNumberValue("12", "einkommenSES", null));
@@ -1132,9 +1129,9 @@ public class SES2Test {
     ResultSet rs = search();
     assertEquals(new BigDecimal("3.0"), rs.getNumberValue("13", "bildungSES", null));
     assertEquals(new BigDecimal("5.8"), rs.getNumberValue("13", "berufSES", null));
-    assertEquals(null, rs.getNumberValue("13", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("13", "einkommenHaushaltSES", null));
     assertEquals(null, rs.getNumberValue("13", "h0000071", null));
-    assertEquals(null, rs.getNumberValue("13", "h0000072", null));
+    assertEquals(new BigDecimal("0"), rs.getNumberValue("13", "h0000072", null));
     assertEquals(null, rs.getNumberValue("13", "bedgew", null));
     assertEquals(null, rs.getNumberValue("13", "aequivalenzeinkommenSES", null));
     assertEquals(null, rs.getNumberValue("13", "einkommenSES", null));
@@ -1146,9 +1143,9 @@ public class SES2Test {
     ResultSet rs = search();
     assertEquals(new BigDecimal("3.0"), rs.getNumberValue("14", "bildungSES", null));
     assertEquals(new BigDecimal("5.8"), rs.getNumberValue("14", "berufSES", null));
-    assertEquals(null, rs.getNumberValue("14", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("14", "einkommenHaushaltSES", null));
     assertEquals(null, rs.getNumberValue("14", "h0000071", null));
-    assertEquals(null, rs.getNumberValue("14", "h0000072", null));
+    assertEquals(new BigDecimal("3.000"), rs.getNumberValue("14", "h0000072", null));
     assertEquals(null, rs.getNumberValue("14", "bedgew", null));
     assertEquals(null, rs.getNumberValue("14", "aequivalenzeinkommenSES", null));
     assertEquals(null, rs.getNumberValue("14", "einkommenSES", null));
@@ -1160,9 +1157,9 @@ public class SES2Test {
     ResultSet rs = search();
     assertEquals(new BigDecimal("3.0"), rs.getNumberValue("15", "bildungSES", null));
     assertEquals(new BigDecimal("5.8"), rs.getNumberValue("15", "berufSES", null));
-    assertEquals(null, rs.getNumberValue("15", "einkommenHaushaltSES", null));
+    assertEquals(new BigDecimal("3000.000"), rs.getNumberValue("15", "einkommenHaushaltSES", null));
     assertEquals(null, rs.getNumberValue("15", "h0000071", null));
-    assertEquals(null, rs.getNumberValue("15", "h0000072", null));
+    assertEquals(new BigDecimal("3.000"), rs.getNumberValue("15", "h0000072", null));
     assertEquals(null, rs.getNumberValue("15", "bedgew", null));
     assertEquals(null, rs.getNumberValue("15", "aequivalenzeinkommenSES", null));
     assertEquals(null, rs.getNumberValue("15", "einkommenSES", null));
@@ -1210,7 +1207,7 @@ public class SES2Test {
     assertEquals(null, rs.getNumberValue("18", "bedgew", null));
     assertEquals(null, rs.getNumberValue("18", "aequivalenzeinkommenSES", null));
     assertEquals(null, rs.getNumberValue("18", "einkommenSES", null));
-    assertEquals(new BigDecimal(-1), rs.getNumberValue("18", "SES", null));
+    assertEquals(null, rs.getNumberValue("18", "SES", null));
   }
 
   @Test
