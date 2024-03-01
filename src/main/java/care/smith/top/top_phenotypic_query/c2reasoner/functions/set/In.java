@@ -2,6 +2,7 @@ package care.smith.top.top_phenotypic_query.c2reasoner.functions.set;
 
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
+import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
 import care.smith.top.model.Restriction;
 import care.smith.top.model.RestrictionOperator;
@@ -14,6 +15,7 @@ import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,13 +34,25 @@ import java.util.Map;
  * <tr>
  *   <td>&lt;value-exp&gt; &lt;restr-exp&gt;</td>
  *   <td>
- *     &lt;value-exp&gt;: number<br>
- *     &lt;restr-exp&gt;: number
+ *     &lt;value-exp&gt;: number or string<br>
+ *     &lt;restr-exp&gt;: same as &lt;value-exp&gt;
  *   </td>
  *   <td>boolean</td>
  *   <td>
  *     <i>In</i>(Body_Temperature, Increased)<br>
  *     The function returns 'true' if the actual temperature value lies in the increased range.
+ *   </td>
+ * </tr>
+ * <tr>
+ *   <td>&lt;value-exp&gt; &lt;range-value&gt; &lt;range-value&gt;+</td>
+ *   <td>
+ *     &lt;value-exp&gt;: number or string<br>
+ *     &lt;range-value&gt;: same as &lt;value-exp&gt;
+ *   </td>
+ *   <td>boolean</td>
+ *   <td>
+ *     <i>In</i>(Blood_Group, A, B)<br>
+ *     The function returns 'true' if the actual blood group is A or B.
  *   </td>
  * </tr>
  * </table>
@@ -50,7 +64,8 @@ public class In extends FunctionEntity {
   private static final In INSTANCE = new In();
 
   private In() {
-    super("in", NotationEnum.PREFIX, 2, 2);
+    super("in", NotationEnum.PREFIX);
+    minArgumentNumber(2);
   }
 
   public static In get() {
@@ -65,9 +80,26 @@ public class In extends FunctionEntity {
     return of(List.of(args));
   }
 
+  public static Expression of(Phenotype phe, List<Expression> range) {
+    List<Expression> args = new ArrayList<>();
+    args.add(Exp.of(phe));
+    args.addAll(range);
+    return of(args);
+  }
+
+  public static Expression of(Phenotype phe, String... range) {
+    return of(phe, Exp.toList(range));
+  }
+
+  public static Expression of(Phenotype phe, Number... range) {
+    return of(phe, Exp.toList(range));
+  }
+
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
+    int argsSize = args.size();
+    if (argsSize > 2) args = List.of(args.get(0), Li.of(args.subList(1, argsSize)));
     args = c2r.calculate(args);
     if (args == null) return Exp.ofFalse();
     Exceptions.checkArgumentsHaveSameType(getFunction(), args);

@@ -112,6 +112,10 @@ public class DefaultSqlWriter {
       this.sbjId = sbjId;
     }
 
+    public SbjPhe insertPhe(Phenotype phe, Number value) {
+      return insertPhe(LocalDateTime.now(), phe, value);
+    }
+
     public SbjPhe insertPhe(LocalDateTime date, Phenotype phe, Number value) {
       return insertPhe(DateUtil.format(date), phe, value);
     }
@@ -161,6 +165,10 @@ public class DefaultSqlWriter {
                   value.toString())
               + ")");
       return this;
+    }
+
+    public SbjPhe insertPhe(Phenotype phe, String value) {
+      return insertPhe(LocalDateTime.now(), phe, value);
     }
 
     public SbjPhe insertPhe(LocalDateTime date, Phenotype phe, String value) {

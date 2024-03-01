@@ -33,6 +33,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Divid
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Ln;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Multiply;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Power;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Round;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Subtract;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic.Sum;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.And;
@@ -174,6 +175,7 @@ public class C2R {
     addFunction(RefValues.get());
     addFunction(ForEach.get());
     addFunction(Duration.get());
+    addFunction(Round.get());
   }
 
   public MathContext getMathContext() {

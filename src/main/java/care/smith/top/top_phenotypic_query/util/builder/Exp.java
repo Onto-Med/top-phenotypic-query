@@ -53,6 +53,10 @@ public class Exp {
     return of(Val.of(val));
   }
 
+  public static Expression of(String... strings) {
+    return of(Val.of(strings));
+  }
+
   public static Expression of(Number... numbers) {
     return of(Val.of(numbers));
   }
@@ -75,6 +79,14 @@ public class Exp {
 
   public static List<Expression> toList(Phenotype... entities) {
     return Stream.of(entities).map(e -> of(e)).collect(Collectors.toList());
+  }
+
+  public static List<Expression> toList(String... strings) {
+    return Stream.of(strings).map(s -> of(s)).collect(Collectors.toList());
+  }
+
+  public static List<Expression> toList(Number... nums) {
+    return Stream.of(nums).map(n -> of(n)).collect(Collectors.toList());
   }
 
   public static Expression ofTrue() {

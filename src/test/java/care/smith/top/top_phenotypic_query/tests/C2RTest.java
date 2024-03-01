@@ -41,6 +41,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.date_time.PlusYe
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.CutFirst;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.CutLast;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Empty;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Li;
@@ -195,7 +196,7 @@ public class C2RTest {
   }
 
   @Test
-  public void testIf() {
+  public void testIf1() {
     Phenotype t = new Phe("t").bool().get();
     Phenotype f = new Phe("f").bool().get();
     Phenotype x = new Phe("x").number().get();
@@ -215,6 +216,27 @@ public class C2RTest {
 
     assertEquals(List.of(BigDecimal.valueOf(1)), Expressions.getNumberValues(c.calculate(c1)));
     assertEquals(List.of(BigDecimal.valueOf(2)), Expressions.getNumberValues(c.calculate(c2)));
+  }
+
+  @Test
+  public void testIf2() {
+    Phenotype t = new Phe("t").bool().get();
+    Phenotype f = new Phe("f").bool().get();
+    Phenotype x = new Phe("x").number().get();
+    Phenotype c1 = new Phe("c1").expression(If.of(t, x)).get();
+    Phenotype c2 = new Phe("c2").expression(Empty.of(If.of(f, x))).get();
+
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("t", null, Val.ofTrue());
+    vals.addValue("f", null, Val.ofFalse());
+    vals.addValue("x", null, Val.of(1));
+
+    Entities phens = Entities.of(t, f, x, c1, c2);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(List.of(BigDecimal.valueOf(1)), Expressions.getNumberValues(c.calculate(c1)));
+    assertTrue(Expressions.hasValueTrue(c.calculate(c2)));
   }
 
   @Test
@@ -1148,6 +1170,27 @@ public class C2RTest {
   }
 
   @Test
+  public void test4() {
+    Phenotype p = new Phe("p").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("p", null, Val.of("A"));
+    Entities phens = Entities.of(p);
+    C2R c2r = new C2R().phenotypes(phens).values(vals);
+
+    Expression e = In.of(p, "B", "A", "C");
+    assertTrue(Expressions.getBooleanValue(c2r.calculate(e)));
+
+    e = In.of(p, "B", "C");
+    assertFalse(Expressions.getBooleanValue(c2r.calculate(e)));
+
+    e = Eq.of(p, "A");
+    assertTrue(Expressions.getBooleanValue(c2r.calculate(e)));
+
+    e = Eq.of(p, "B");
+    assertFalse(Expressions.getBooleanValue(c2r.calculate(e)));
+  }
+
+  @Test
   public void testAge() {
     C2R c = new C2R();
     Expression e =
@@ -1176,6 +1219,27 @@ public class C2RTest {
     c = new C2R().defaultAggregateFunction(Avg.get());
     e = In.of(Exp.of(2, 10), Exp.of(5, 7));
     assertFalse(Expressions.getBooleanValue(c.calculate(e)));
+
+    c = new C2R().defaultAggregateFunction(Avg.get());
+    e = In.of(Exp.of(2, 10), Exp.of(5), Exp.of(6), Exp.of(7));
+    assertTrue(Expressions.getBooleanValue(c.calculate(e)));
+
+    c = new C2R().defaultAggregateFunction(Avg.get());
+    e = In.of(Exp.of(2, 10), Exp.of(5), Exp.of(7));
+    assertFalse(Expressions.getBooleanValue(c.calculate(e)));
+
+    Phenotype p = new Phe("p").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("p", null, Val.of(2));
+    vals.addValue("p", null, Val.of(10));
+    Entities phens = Entities.of(p);
+    C2R c2r = new C2R().phenotypes(phens).values(vals).defaultAggregateFunction(Avg.get());
+
+    e = In.of(p, 5, 6, 7);
+    assertTrue(Expressions.getBooleanValue(c2r.calculate(e)));
+
+    e = In.of(p, 5, 7);
+    assertFalse(Expressions.getBooleanValue(c2r.calculate(e)));
 
     c = new C2R();
     e = In.of(Exp.of(1, 2), Exp.of(Res.of(Quantifier.ALL, 1, 2, 3)));

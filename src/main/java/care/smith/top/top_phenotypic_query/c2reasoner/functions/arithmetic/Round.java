@@ -1,5 +1,6 @@
-package care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison;
+package care.smith.top.top_phenotypic_query.c2reasoner.functions.arithmetic;
 
+import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
@@ -8,13 +9,14 @@ import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
-import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
- * The function <b>Le</b> realizes the comparison operator '&le;' (less or equal) and returns 'true'
- * if the first argument is less than or equal to the second argument, otherwise 'false'.
+ * The function <b>Round</b> rounds the given number (1st argument) to the desired number of decimal
+ * places (2nd argument).
  *
  * <table class="striped"><caption>Arguments:</caption>
  * <tr>
@@ -24,27 +26,30 @@ import java.util.List;
  *   <th><b>Example</b></th>
  * </tr>
  * <tr>
- *   <td>&lt;exp&gt; &lt;exp&gt;</td>
- *   <td>&lt;exp&gt;: number</td>
- *   <td>boolean</td>
+ *   <td>&lt;num-exp&gt; &lt;dec-exp&gt;</td>
  *   <td>
- *     6 &le; 2<br>
- *     The function returns 'false'.
+ *     &lt;num-exp&gt;: number<br>
+ *     &lt;dec-exp&gt;: number
+ *   </td>
+ *   <td>number</td>
+ *   <td>
+ *     Round(1666.6666, 2)<br>
+ *     The function returns 1666.67.
  *   </td>
  * </tr>
  * </table>
  *
  * @author TOP group
  */
-public class Le extends FunctionEntity {
+public class Round extends FunctionEntity {
 
-  private static Le INSTANCE = new Le();
+  private static Round INSTANCE = new Round();
 
-  private Le() {
-    super("<=", NotationEnum.INFIX, 2, 2);
+  private Round() {
+    super("Round", NotationEnum.PREFIX, 2, 2);
   }
 
-  public static Le get() {
+  public static Round get() {
     return INSTANCE;
   }
 
@@ -60,12 +65,12 @@ public class Le extends FunctionEntity {
     return of(Exp.of(phe1), Exp.of(phe2));
   }
 
-  public static Expression of(Phenotype phe, String val) {
+  public static Expression of(Phenotype phe, Number val) {
     return of(Exp.of(phe), Exp.of(val));
   }
 
-  public static Expression of(Phenotype phe, Number val) {
-    return of(Exp.of(phe), Exp.of(val));
+  public static Expression of(Expression exp, Number val) {
+    return of(exp, Exp.of(val));
   }
 
   @Override
@@ -73,9 +78,12 @@ public class Le extends FunctionEntity {
     Exceptions.checkArgumentsNumber(getFunction(), args);
     args = c2r.calculateCheckValues(args);
     if (args == null) return null;
-    Exceptions.checkArgumentsHaveSameType(getFunction(), args);
-    args = Aggregator.aggregate(args, c2r);
-    return Exp.of(
-        Values.compare(Expressions.getValue(args.get(0)), Expressions.getValue(args.get(1))) <= 0);
+    Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
+
+    BigDecimal arg1 = Expressions.getNumberValue(Aggregator.aggregate(args.get(0), c2r));
+    BigDecimal arg2 = Expressions.getNumberValue(args.get(1));
+    BigDecimal res = arg1.setScale(arg2.intValue(), RoundingMode.HALF_UP);
+
+    return Exp.of(res);
   }
 }

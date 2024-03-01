@@ -60,6 +60,18 @@ public class Gt extends FunctionEntity {
     return of(Exp.toList(args));
   }
 
+  public static Expression of(Phenotype phe1, Phenotype phe2) {
+    return of(Exp.of(phe1), Exp.of(phe2));
+  }
+
+  public static Expression of(Phenotype phe, String val) {
+    return of(Exp.of(phe), Exp.of(val));
+  }
+
+  public static Expression of(Phenotype phe, Number val) {
+    return of(Exp.of(phe), Exp.of(val));
+  }
+
   @Override
   public Expression calculate(List<Expression> args, C2R c2r) {
     Exceptions.checkArgumentsNumber(getFunction(), args);
