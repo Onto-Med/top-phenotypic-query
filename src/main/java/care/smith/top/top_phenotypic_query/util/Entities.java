@@ -12,6 +12,8 @@ import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -309,6 +311,14 @@ public class Entities {
 
     public NoCodesException(String phenotypes) {
       super("The following single phenotypes have no codes: " + phenotypes + "!");
+    }
+  }
+
+  public static void writeJSON(String file, Entity... entities) {
+    try {
+      new ObjectMapper().writeValue(new File(file), entities);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 }
