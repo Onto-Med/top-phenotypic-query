@@ -3,8 +3,8 @@ package care.smith.top.top_phenotypic_query.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import care.smith.top.model.Category;
+import care.smith.top.model.DataType;
 import care.smith.top.model.ItemType;
-import care.smith.top.model.LocalisableText;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
@@ -28,6 +28,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.tests.default_sql_writer.DefaultSqlWriter;
 import care.smith.top.top_phenotypic_query.util.Entities;
+import care.smith.top.top_phenotypic_query.util.builder.Cat;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
@@ -44,11 +45,21 @@ public class SES3Test {
 
   private static final DefaultSqlWriter WRITER = new DefaultSqlWriter(CONFIG);
 
-  // Bildung
+  /////////////////////////// BILDUNG ///////////////////////////
+
+  private static Category bildungKategorie =
+      new Cat("bildungKategorie").titleDe("Bildung").titleEn("Education").get();
+
+  private static Category bildungParameterKategorie =
+      new Cat("bildungParameterKategorie")
+          .superCategory(bildungKategorie)
+          .titleDe("Parameter")
+          .titleEn("Parameters")
+          .get();
 
   private static Phenotype schule =
       new Phe("schule", "SOZIO", "F0041")
-          .itemType(ItemType.OBSERVATION)
+          .category(bildungParameterKategorie)
           .titleDe("Schulabschluss")
           .titleEn("School-leaving qualification")
           .descriptionDe("Welchen hoechsten allgemein bildenden Schulabschluss haben Sie?")
@@ -112,7 +123,7 @@ public class SES3Test {
 
   private static Phenotype ausbildung1 =
       new Phe("ausbildung1", "SOZIO", "F0045")
-          .itemType(ItemType.OBSERVATION)
+          .category(bildungParameterKategorie)
           .titleDe("Ausbildungsabschluss 1")
           .titleEn("Vocational qualification 1")
           .descriptionDe(
@@ -124,7 +135,7 @@ public class SES3Test {
 
   private static Phenotype ausbildung2 =
       new Phe("ausbildung2", "SOZIO", "F0046")
-          .itemType(ItemType.OBSERVATION)
+          .category(bildungParameterKategorie)
           .titleDe("Ausbildungsabschluss 2")
           .titleEn("Vocational qualification 2")
           .descriptionDe(
@@ -136,7 +147,7 @@ public class SES3Test {
 
   private static Phenotype ausbildung3 =
       new Phe("ausbildung3", "SOZIO", "F0047")
-          .itemType(ItemType.OBSERVATION)
+          .category(bildungParameterKategorie)
           .titleDe("Ausbildungsabschluss 3")
           .titleEn("Vocational qualification 3")
           .descriptionDe(
@@ -148,7 +159,7 @@ public class SES3Test {
 
   private static Phenotype ausbildung4 =
       new Phe("ausbildung4", "SOZIO", "F0048")
-          .itemType(ItemType.OBSERVATION)
+          .category(bildungParameterKategorie)
           .titleDe("Ausbildungsabschluss 4")
           .titleEn("Vocational qualification 4")
           .descriptionDe(
@@ -160,7 +171,7 @@ public class SES3Test {
 
   private static Phenotype ausbildung5 =
       new Phe("ausbildung5", "SOZIO", "F0049")
-          .itemType(ItemType.OBSERVATION)
+          .category(bildungParameterKategorie)
           .titleDe("Ausbildungsabschluss 5")
           .titleEn("Vocational qualification 5")
           .descriptionDe(
@@ -172,7 +183,7 @@ public class SES3Test {
 
   private static Phenotype ausbildung6 =
       new Phe("ausbildung6", "SOZIO", "F0050")
-          .itemType(ItemType.OBSERVATION)
+          .category(bildungParameterKategorie)
           .titleDe("Ausbildungsabschluss 6")
           .titleEn("Vocational qualification 6")
           .descriptionDe(
@@ -184,7 +195,7 @@ public class SES3Test {
 
   private static Phenotype ausbildung7 =
       new Phe("ausbildung7", "SOZIO", "F0051")
-          .itemType(ItemType.OBSERVATION)
+          .category(bildungParameterKategorie)
           .titleDe("Ausbildungsabschluss 7")
           .titleEn("Vocational qualification 7")
           .descriptionDe("Welchen beruflichen Ausbildungsabschluss haben Sie? - Hochschulabschluss")
@@ -194,6 +205,7 @@ public class SES3Test {
 
   private static Phenotype ausbildung =
       new Phe("ausbildung")
+          .category(bildungKategorie)
           .titleDe("Ausbildungsabschluss")
           .titleEn("Vocational qualification")
           .descriptionDe("Hoechster Ausbildungsabschluss")
@@ -213,12 +225,13 @@ public class SES3Test {
                   Eq.of(ausbildung2, 1),
                   Exp.of(2),
                   Eq.of(ausbildung1, 1),
-                  Exp.of(1)))
-          .number()
+                  Exp.of(1)),
+              DataType.NUMBER)
           .get();
 
   private static Phenotype bildungSES =
       new Phe("bildungSES")
+          .category(bildungKategorie)
           .titleDe("Bildung (SES)")
           .titleEn("Education (SES)")
           .expression(
@@ -268,8 +281,8 @@ public class SES3Test {
                   Or.of(schule4, schule5),
                   Exp.of(2.8),
                   Or.of(schule6, schule7),
-                  Exp.of(3.7)))
-          .number()
+                  Exp.of(3.7)),
+              DataType.NUMBER)
           .get();
 
   private static Phenotype bildungSES_1_0 =
@@ -374,36 +387,21 @@ public class SES3Test {
           .restriction(bildungSES, Res.of(7.0))
           .get();
 
-  private static Category bildungParameterKategorie =
-      (Category)
-          new Category()
-              .addPhenotypesItem(schule)
-              .addPhenotypesItem(ausbildung1)
-              .addPhenotypesItem(ausbildung2)
-              .addPhenotypesItem(ausbildung3)
-              .addPhenotypesItem(ausbildung4)
-              .addPhenotypesItem(ausbildung5)
-              .addPhenotypesItem(ausbildung6)
-              .addPhenotypesItem(ausbildung7)
-              .id("bildungParameterKategorie")
-              .addTitlesItem(new LocalisableText().text("Parameter").lang("de"))
-              .addTitlesItem(new LocalisableText().text("Parameters").lang("en"));
+  /////////////////////////// EIGENER BERUF ///////////////////////////
 
-  private static Category bildungKategorie =
-      (Category)
-          new Category()
-              .addSubCategoriesItem(bildungParameterKategorie)
-              .addPhenotypesItem(ausbildung)
-              .addPhenotypesItem(bildungSES)
-              .id("bildungKategorie")
-              .addTitlesItem(new LocalisableText().text("Bildung").lang("de"))
-              .addTitlesItem(new LocalisableText().text("Education").lang("en"));
+  private static Category berufKategorie =
+      new Cat("berufKategorie").titleDe("Beruf").titleEn("Profession").get();
 
-  // Beruf eigener
+  private static Category berufParameterKategorie =
+      new Cat("berufParameterKategorie")
+          .superCategory(berufKategorie)
+          .titleDe("Parameter")
+          .titleEn("Parameters")
+          .get();
 
   private static Phenotype erwerbstaetigkeit =
       new Phe("erwerbstaetigkeit", "SOZIO", "F0055")
-          .itemType(ItemType.OBSERVATION)
+          .category(berufParameterKategorie)
           .titleDe("Erwerbstaetigkeit")
           .titleEn("Employment")
           .descriptionDe(
@@ -425,7 +423,7 @@ public class SES3Test {
 
   private static Phenotype fruehereErwerbstaetigkeit =
       new Phe("fruehereErwerbstaetigkeit", "SOZIO", "F0070")
-          .itemType(ItemType.OBSERVATION)
+          .category(berufParameterKategorie)
           .titleDe("Fruehere Erwerbstaetigkeit")
           .titleEn("Former employment")
           .descriptionDe(
@@ -443,12 +441,124 @@ public class SES3Test {
 
   private static Phenotype berufEigener =
       new Phe("berufEigener", "SOZIO", "F0072")
-          .itemType(ItemType.OBSERVATION)
-          .titleDe("Beruf")
-          .titleEn("Profession")
+          .category(berufParameterKategorie)
+          .titleDe("Eigener Beruf")
+          .titleEn("Own profession")
           .descriptionDe("Zu welcher Gruppe gehoert Ihr Beruf?")
           .descriptionEn("To which group does your profession belong?")
           .string()
+          .get();
+  private static Phenotype berufEigener_1_0 =
+      new Phe("berufEigener_1_0")
+          .titleEn("1.0")
+          .descriptionDe(
+              "Landwirt o. n. A., Landwirt unter 10 ha, Genossenschaftsbauer (ehem. LPG)")
+          .descriptionEn(
+              "Farmer n/a, farmer under 10 ha, cooperative farmer (former agricultural production cooperative)")
+          .restriction(berufEigener, Res.of("A", "A1", "A3"))
+          .get();
+  private static Phenotype berufEigener_1_1 =
+      new Phe("berufEigener_1_1")
+          .titleEn("1.1")
+          .descriptionDe("Landwirt 10 ha und mehr")
+          .descriptionEn("Farmer 10 ha and more")
+          .restriction(berufEigener, Res.of("A2"))
+          .get();
+  private static Phenotype berufEigener_1_3 =
+      new Phe("berufEigener_1_3")
+          .titleEn("1.3")
+          .descriptionDe("Ungelernter Arbeiter")
+          .descriptionEn("Unskilled worker")
+          .restriction(berufEigener, Res.of("F1"))
+          .get();
+  private static Phenotype berufEigener_1_8 =
+      new Phe("berufEigener_1_8")
+          .titleEn("1.8")
+          .descriptionDe("Angelernter Arbeiter")
+          .descriptionEn("Semi-skilled worker")
+          .restriction(berufEigener, Res.of("F2"))
+          .get();
+  private static Phenotype berufEigener_1_9 =
+      new Phe("berufEigener_1_9")
+          .titleEn("1.9")
+          .descriptionDe("Arbeiter o. n. A.")
+          .descriptionEn("Worker n/a")
+          .restriction(berufEigener, Res.of("F"))
+          .get();
+  private static Phenotype berufEigener_2_0 =
+      new Phe("berufEigener_2_0")
+          .titleEn("2.0")
+          .descriptionDe("Vorarbeiter, Kolonnenführer")
+          .descriptionEn("Foreman, column leader")
+          .restriction(berufEigener, Res.of("F4"))
+          .get();
+  private static Phenotype berufEigener_2_1 =
+      new Phe("berufEigener_2_1")
+          .titleEn("2.1")
+          .descriptionDe("Facharbeiter")
+          .descriptionEn("Skilled worker")
+          .restriction(berufEigener, Res.of("F3"))
+          .get();
+  private static Phenotype berufEigener_2_4 =
+      new Phe("berufEigener_2_4")
+          .titleEn("2.4")
+          .descriptionDe("Meister, Polier, Brigadier, Angestellter mit ausführender Tätigkeit")
+          .descriptionEn("Master, foreman, brigadier, employee with executive activity")
+          .restriction(berufEigener, Res.of("E1", "F5"))
+          .get();
+  private static Phenotype berufEigener_2_9 =
+      new Phe("berufEigener_2_9")
+          .titleEn("2.9")
+          .descriptionDe(
+              "Beamter im einfachen Dienst, Auszubildender, mithelfender Familienangehöriger")
+          .descriptionEn("Civil servant in the civil service, trainee, assisting family member")
+          .restriction(berufEigener, Res.of("D1", "G", "G1", "G2", "G3", "H"))
+          .get();
+  private static Phenotype berufEigener_3_5 =
+      new Phe("berufEigener_3_5")
+          .titleEn("3.5")
+          .descriptionDe("Selbständiger, keine Mitarbeiter")
+          .descriptionEn("Self-employed, no employees")
+          .restriction(berufEigener, Res.of("C1"))
+          .get();
+  private static Phenotype berufEigener_3_6 =
+      new Phe("berufEigener_3_6")
+          .titleEn("3.6")
+          .descriptionDe(
+              "Angestellter mit qualifizierter Tätigkeit, Selbständiger mit 1 bis 4 Mitarbeitern")
+          .descriptionEn(
+              "Employee with qualified activity, self-employed person with 1 to 4 employees")
+          .restriction(berufEigener, Res.of("C2", "E2"))
+          .get();
+  private static Phenotype berufEigener_3_7 =
+      new Phe("berufEigener_3_7")
+          .titleEn("3.7")
+          .descriptionDe("Angestellter o. n. A.")
+          .descriptionEn("Employee n/a")
+          .restriction(berufEigener, Res.of("E"))
+          .get();
+  private static Phenotype berufEigener_3_9 =
+      new Phe("berufEigener_3_9")
+          .titleEn("3.9")
+          .descriptionDe("Selbständiger in Handel, Gewerbe etc.")
+          .descriptionEn("Self-employed in trade, commerce, etc.")
+          .restriction(berufEigener, Res.of("C"))
+          .get();
+  private static Phenotype berufEigener_4_1 =
+      new Phe("berufEigener_4_1")
+          .titleEn("4.1")
+          .descriptionDe("Beamter im mittleren Dienst")
+          .descriptionEn("Intermediate civil servant")
+          .restriction(berufEigener, Res.of("D2"))
+          .get();
+  private static Phenotype berufEigener_4_2 =
+      new Phe("berufEigener_4_2")
+          .titleEn("4.2")
+          .descriptionDe(
+              "Angestellter mit verantwortlicher Tätigkeit, Selbständiger mit 5 oder mehr Mitarbeitern/PGH-Mitglied")
+          .descriptionEn(
+              "Employee with a responsible job, self-employed person with 5 or more employees/member of production cooperative of the skilled crafts sector")
+          .restriction(berufEigener, Res.of("C3", "C4", "E3"))
           .get();
 
   private static Phenotype berufEigenerSES =
@@ -1181,7 +1291,9 @@ public class SES3Test {
   @Test
   void test() {
     Entities.writeJSON(
-        "test_files/ses_education2.json",
+        "test_files/ses_education5.json",
+        bildungParameterKategorie,
+        bildungKategorie,
         schule,
         schule1,
         schule2,
@@ -1498,6 +1610,38 @@ public class SES3Test {
     Que q =
         new Que(
                 CONFIG,
+                bildungParameterKategorie,
+                bildungKategorie,
+                schule,
+                schule1,
+                schule2,
+                schule3,
+                schule4,
+                schule5,
+                schule6,
+                schule7,
+                ausbildung,
+                ausbildung1,
+                ausbildung2,
+                ausbildung3,
+                ausbildung4,
+                ausbildung5,
+                ausbildung6,
+                ausbildung7,
+                bildungSES,
+                bildungSES_1_0,
+                bildungSES_1_7,
+                bildungSES_2_8,
+                bildungSES_3_0,
+                bildungSES_3_6,
+                bildungSES_3_7,
+                bildungSES_4_55,
+                bildungSES_4_8,
+                bildungSES_4_85,
+                bildungSES_5_0,
+                bildungSES_5_3,
+                bildungSES_6_1,
+                bildungSES_7_0,
                 aequivalenzeinkommenSES,
                 aequivalenzeinkommenSES_1_0,
                 aequivalenzeinkommenSES_1_5,
@@ -1512,14 +1656,6 @@ public class SES3Test {
                 aequivalenzeinkommenSES_6_0,
                 aequivalenzeinkommenSES_6_5,
                 aequivalenzeinkommenSES_7_0,
-                ausbildung1,
-                ausbildung2,
-                ausbildung3,
-                ausbildung4,
-                ausbildung5,
-                ausbildung6,
-                ausbildung7,
-                ausbildung,
                 bedgew,
                 berufEigener,
                 berufEigenerSES,
@@ -1527,7 +1663,6 @@ public class SES3Test {
                 berufPartnerSES,
                 berufSES,
                 berufSESvorhanden,
-                bildungSES,
                 einkommenEigenes,
                 einkommenEigenesSES,
                 einkommenHaushalt,
@@ -1548,7 +1683,6 @@ public class SES3Test {
                 juenger15,
                 lebenZusammen,
                 partnerschaft,
-                schule,
                 SES,
                 verheiratet)
             .pro(SES);

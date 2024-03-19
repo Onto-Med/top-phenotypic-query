@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
+import care.smith.top.model.Category;
 import care.smith.top.model.Code;
 import care.smith.top.model.CodeSystem;
 import care.smith.top.model.DataType;
@@ -154,6 +155,16 @@ public class Phe {
 
   public Phe expression(Expression e) {
     p.expression(e).entityType(EntityType.COMPOSITE_PHENOTYPE);
+    return this;
+  }
+
+  public Phe expression(Expression e, DataType dt) {
+    p.dataType(dt).expression(e).entityType(EntityType.COMPOSITE_PHENOTYPE);
+    return this;
+  }
+
+  public Phe category(Category cat) {
+    p.addSuperCategoriesItem(cat);
     return this;
   }
 
