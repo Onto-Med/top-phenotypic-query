@@ -120,6 +120,14 @@ public class SES3Test {
           .descriptionEn("General or specialized entrance qualification for universities")
           .restriction(schule, Res.of(7))
           .get();
+  private static Phenotype schule12 =
+      new Phe("schule12").titleEn("1|2").restriction(schule, Res.of(1, 2)).get();
+  private static Phenotype schule123 =
+      new Phe("schule123").titleEn("1|2|3").restriction(schule, Res.of(1, 2, 3)).get();
+  private static Phenotype schule45 =
+      new Phe("schule45").titleEn("4|5").restriction(schule, Res.of(4, 5)).get();
+  private static Phenotype schule67 =
+      new Phe("schule67").titleEn("6|7").restriction(schule, Res.of(6, 7)).get();
 
   private static Phenotype ausbildung1 =
       new Phe("ausbildung1", "SOZIO", "F0045")
@@ -228,6 +236,71 @@ public class SES3Test {
                   Exp.of(1)),
               DataType.NUMBER)
           .get();
+  private static Phenotype ausbildungS1 =
+      new Phe("ausbildungS1")
+          .titleEn("1")
+          .descriptionDe(
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Noch in beruflicher Ausbildung (Auszubildende/r, Student/in)")
+          .descriptionEn(
+              "What vocational qualification do you have? - Still in vocational training (trainee, student)")
+          .restriction(ausbildung, Res.of(1))
+          .get();
+  private static Phenotype ausbildungS2 =
+      new Phe("ausbildungS2")
+          .titleEn("2")
+          .descriptionDe(
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Keinen beruflichen Abschluss und bin nicht in beruflicher Ausbildung")
+          .descriptionEn(
+              "What vocational qualification do you have? - No vocational qualification and I am not in vocational training")
+          .restriction(ausbildung, Res.of(2))
+          .get();
+  private static Phenotype ausbildungS3 =
+      new Phe("ausbildungS3")
+          .titleEn("3")
+          .descriptionDe(
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Beruflich-betriebliche Berufsausbildung (Lehre) abgeschlossen")
+          .descriptionEn(
+              "What vocational qualification do you have? - Completed in-company vocational training (apprenticeship)")
+          .restriction(ausbildung, Res.of(3))
+          .get();
+  private static Phenotype ausbildungS4 =
+      new Phe("ausbildungS4")
+          .titleEn("4")
+          .descriptionDe(
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Beruflich-schulische Ausbildung (Berufsfachschule, Handelsschule) abgeschlossen")
+          .descriptionEn(
+              "What vocational qualification do you have? - Completed school-based vocational training (vocational school, commercial school)")
+          .restriction(ausbildung, Res.of(4))
+          .get();
+  private static Phenotype ausbildungS5 =
+      new Phe("ausbildungS5")
+          .titleEn("5")
+          .descriptionDe(
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Ausbildung an einer Fachschule, Meister-, Technikerschule, Berufs- oder Fachakademie abgeschlossen")
+          .descriptionEn(
+              "What vocational qualification do you have? - Completed training at a college, master school, technical school, vocational or specialised academy")
+          .restriction(ausbildung, Res.of(5))
+          .get();
+  private static Phenotype ausbildungS6 =
+      new Phe("ausbildungS6")
+          .titleEn("6")
+          .descriptionDe(
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Fachhochschulabschluss")
+          .descriptionEn(
+              "What vocational qualification do you have? - University of Applied Sciences qualification")
+          .restriction(ausbildung, Res.of(6))
+          .get();
+  private static Phenotype ausbildungS7 =
+      new Phe("ausbildungS7")
+          .titleEn("7")
+          .descriptionDe("Welchen beruflichen Ausbildungsabschluss haben Sie? - Hochschulabschluss")
+          .descriptionEn("What vocational qualification do you have? - University qualification")
+          .restriction(ausbildung, Res.of(7))
+          .get();
+  private static Phenotype ausbildung12 =
+      new Phe("ausbildung12").titleEn("1|2").restriction(ausbildung, Res.of(1, 2)).get();
+  private static Phenotype ausbildung345 =
+      new Phe("ausbildung345").titleEn("3|4|5").restriction(ausbildung, Res.of(3, 4, 5)).get();
 
   private static Phenotype bildungSES =
       new Phe("bildungSES")
@@ -236,51 +309,51 @@ public class SES3Test {
           .titleEn("Education (SES)")
           .expression(
               Switch.of(
-                  And.of(Or.of(schule1, schule2), In.of(ausbildung, 1, 2)),
+                  And.of(schule12, ausbildung12),
                   Exp.of(1.0),
-                  And.of(Exp.of(schule3), In.of(ausbildung, 1, 2)),
+                  And.of(schule3, ausbildung12),
                   Exp.of(1.7),
-                  And.of(Or.of(schule4, schule5), In.of(ausbildung, 1, 2)),
+                  And.of(schule45, ausbildung12),
                   Exp.of(2.8),
-                  And.of(Or.of(schule1, schule2, schule3), In.of(ausbildung, 3, 4, 5)),
+                  And.of(schule123, ausbildung345),
                   Exp.of(3.0),
-                  And.of(Or.of(schule4, schule5), In.of(ausbildung, 3, 4, 5)),
+                  And.of(schule45, ausbildung345),
                   Exp.of(3.6),
-                  And.of(Or.of(schule6, schule7), In.of(ausbildung, 1, 2)),
+                  And.of(schule67, ausbildung12),
                   Exp.of(3.7),
-                  And.of(Or.of(schule6, schule7), In.of(ausbildung, 3, 4, 5)),
+                  And.of(schule67, ausbildung345),
                   Exp.of(4.8),
-                  And.of(Or.of(schule6, schule7), Eq.of(ausbildung, 6)),
+                  And.of(schule67, ausbildungS6),
                   Exp.of(6.1),
-                  And.of(Or.of(schule6, schule7), Eq.of(ausbildung, 7)),
+                  And.of(schule67, ausbildungS7),
                   Exp.of(7.0),
-                  And.of(Or.of(schule1, schule2), Eq.of(ausbildung, 6)),
+                  And.of(schule12, ausbildungS6),
                   Exp.of(3.55),
-                  And.of(Or.of(schule1, schule2), Eq.of(ausbildung, 7)),
+                  And.of(schule12, ausbildungS7),
                   Exp.of(4.0),
-                  And.of(Exp.of(schule3), Eq.of(ausbildung, 6)),
+                  And.of(schule3, ausbildungS6),
                   Exp.of(4.55),
-                  And.of(Exp.of(schule3), Eq.of(ausbildung, 7)),
+                  And.of(schule3, ausbildungS7),
                   Exp.of(5.0),
-                  And.of(Or.of(schule4, schule5), Eq.of(ausbildung, 6)),
+                  And.of(schule45, ausbildungS6),
                   Exp.of(4.85),
-                  And.of(Or.of(schule4, schule5), Eq.of(ausbildung, 7)),
+                  And.of(schule45, ausbildungS7),
                   Exp.of(5.3),
-                  In.of(ausbildung, 1, 2),
+                  Exp.of(ausbildung12),
                   Exp.of(1.0),
-                  In.of(ausbildung, 3, 4, 5),
+                  Exp.of(ausbildung345),
                   Exp.of(3.0),
-                  Eq.of(ausbildung, 6),
+                  Exp.of(ausbildungS6),
                   Exp.of(6.1),
-                  Eq.of(ausbildung, 7),
+                  Exp.of(ausbildungS7),
                   Exp.of(7.0),
-                  Or.of(schule1, schule2),
+                  Exp.of(schule12),
                   Exp.of(1.0),
                   Exp.of(schule3),
                   Exp.of(1.7),
-                  Or.of(schule4, schule5),
+                  Exp.of(schule45),
                   Exp.of(2.8),
-                  Or.of(schule6, schule7),
+                  Exp.of(schule67),
                   Exp.of(3.7)),
               DataType.NUMBER)
           .get();
@@ -418,7 +491,7 @@ public class SES3Test {
               "1 - Ja, ich bin vollzeiterwerbstaetig mit 35 Stunden und mehr/Woche oder 2 - Ja, ich bin teilzeiterwerbstaetig mit 15 bis 34 Stunden/Woche")
           .descriptionEn(
               "1 - Yes, I am in full-time employment with 35 hours or more/week or 2 - Yes, I am in part-time employment with 15 to 34 hours/week")
-          .restriction(erwerbstaetigkeit, Res.geLe(1, 2))
+          .restriction(erwerbstaetigkeit, Res.of(1, 2))
           .get();
 
   private static Phenotype fruehereErwerbstaetigkeit =
@@ -488,7 +561,7 @@ public class SES3Test {
   private static Phenotype berufEigener_2_0 =
       new Phe("berufEigener_2_0")
           .titleEn("2.0")
-          .descriptionDe("Vorarbeiter, Kolonnenführer")
+          .descriptionDe("Vorarbeiter, Kolonnenfuehrer")
           .descriptionEn("Foreman, column leader")
           .restriction(berufEigener, Res.of("F4"))
           .get();
@@ -502,7 +575,7 @@ public class SES3Test {
   private static Phenotype berufEigener_2_4 =
       new Phe("berufEigener_2_4")
           .titleEn("2.4")
-          .descriptionDe("Meister, Polier, Brigadier, Angestellter mit ausführender Tätigkeit")
+          .descriptionDe("Meister, Polier, Brigadier, Angestellter mit ausfuehrender Taetigkeit")
           .descriptionEn("Master, foreman, brigadier, employee with executive activity")
           .restriction(berufEigener, Res.of("E1", "F5"))
           .get();
@@ -510,14 +583,14 @@ public class SES3Test {
       new Phe("berufEigener_2_9")
           .titleEn("2.9")
           .descriptionDe(
-              "Beamter im einfachen Dienst, Auszubildender, mithelfender Familienangehöriger")
+              "Beamter im einfachen Dienst, Auszubildender, mithelfender Familienangehoeriger")
           .descriptionEn("Civil servant in the civil service, trainee, assisting family member")
           .restriction(berufEigener, Res.of("D1", "G", "G1", "G2", "G3", "H"))
           .get();
   private static Phenotype berufEigener_3_5 =
       new Phe("berufEigener_3_5")
           .titleEn("3.5")
-          .descriptionDe("Selbständiger, keine Mitarbeiter")
+          .descriptionDe("Selbstaendiger, keine Mitarbeiter")
           .descriptionEn("Self-employed, no employees")
           .restriction(berufEigener, Res.of("C1"))
           .get();
@@ -525,7 +598,7 @@ public class SES3Test {
       new Phe("berufEigener_3_6")
           .titleEn("3.6")
           .descriptionDe(
-              "Angestellter mit qualifizierter Tätigkeit, Selbständiger mit 1 bis 4 Mitarbeitern")
+              "Angestellter mit qualifizierter Taetigkeit, Selbstaendiger mit 1 bis 4 Mitarbeitern")
           .descriptionEn(
               "Employee with qualified activity, self-employed person with 1 to 4 employees")
           .restriction(berufEigener, Res.of("C2", "E2"))
@@ -540,7 +613,7 @@ public class SES3Test {
   private static Phenotype berufEigener_3_9 =
       new Phe("berufEigener_3_9")
           .titleEn("3.9")
-          .descriptionDe("Selbständiger in Handel, Gewerbe etc.")
+          .descriptionDe("Selbstaendiger in Handel, Gewerbe etc.")
           .descriptionEn("Self-employed in trade, commerce, etc.")
           .restriction(berufEigener, Res.of("C"))
           .get();
@@ -555,177 +628,561 @@ public class SES3Test {
       new Phe("berufEigener_4_2")
           .titleEn("4.2")
           .descriptionDe(
-              "Angestellter mit verantwortlicher Tätigkeit, Selbständiger mit 5 oder mehr Mitarbeitern/PGH-Mitglied")
+              "Angestellter mit verantwortlicher Taetigkeit, Selbstaendiger mit 5 oder mehr Mitarbeitern/PGH-Mitglied")
           .descriptionEn(
               "Employee with a responsible job, self-employed person with 5 or more employees/member of production cooperative of the skilled crafts sector")
           .restriction(berufEigener, Res.of("C3", "C4", "E3"))
           .get();
+  private static Phenotype berufEigener_4_7 =
+      new Phe("berufEigener_4_7")
+          .titleEn("4.7")
+          .descriptionDe("Angestellter mit umfassender Fuehrungstaetigkeit")
+          .descriptionEn("Employee with extensive management responsibilities")
+          .restriction(berufEigener, Res.of("E4"))
+          .get();
+  private static Phenotype berufEigener_5_0 =
+      new Phe("berufEigener_5_0")
+          .titleEn("5.0")
+          .descriptionDe("Beamter o. n. A.")
+          .descriptionEn("Civil servant n/a")
+          .restriction(berufEigener, Res.of("D"))
+          .get();
+  private static Phenotype berufEigener_5_2 =
+      new Phe("berufEigener_5_2")
+          .titleEn("5.2")
+          .descriptionDe("Beamter im gehobenen Dienst")
+          .descriptionEn("Senior civil servant")
+          .restriction(berufEigener, Res.of("D3"))
+          .get();
+  private static Phenotype berufEigener_5_8 =
+      new Phe("berufEigener_5_8")
+          .titleEn("5.8")
+          .descriptionDe("Freiberufler (Akademiker) ohne Mitarbeiter")
+          .descriptionEn("Freelancer (academic) without employees")
+          .restriction(berufEigener, Res.of("B1"))
+          .get();
+  private static Phenotype berufEigener_6_2 =
+      new Phe("berufEigener_6_2")
+          .titleEn("6.2")
+          .descriptionDe("Akademiker im freien Beruf")
+          .descriptionEn("Academic in a freelance profession")
+          .restriction(berufEigener, Res.of("B"))
+          .get();
+  private static Phenotype berufEigener_6_4 =
+      new Phe("berufEigener_6_4")
+          .titleEn("6.4")
+          .descriptionDe("Beamter im hoeheren Dienst")
+          .descriptionEn("Civil servant in higher service")
+          .restriction(berufEigener, Res.of("D4"))
+          .get();
+  private static Phenotype berufEigener_6_8 =
+      new Phe("berufEigener_6_8")
+          .titleEn("6.8")
+          .descriptionDe("Freiberufler (Akademiker) mit 1 bis 4 Mitarbeitern")
+          .descriptionEn("Freelancer (academic) with 1 to 4 employees")
+          .restriction(berufEigener, Res.of("B2"))
+          .get();
+  private static Phenotype berufEigener_7_0 =
+      new Phe("berufEigener_7_0")
+          .titleEn("7.0")
+          .descriptionDe("Freiberufler (Akademiker) mit 5 oder mehr Mitarbeitern")
+          .descriptionEn("Freelancer (academic) with 5 or more employees")
+          .restriction(berufEigener, Res.of("B3"))
+          .get();
 
   private static Phenotype berufEigenerSES =
       new Phe("berufEigenerSES")
-          .titleDe("berufEigenerSES")
+          .category(berufKategorie)
+          .titleDe("Eigener Beruf (SES)")
+          .titleEn("Own profession (SES)")
           .expression(
               If.of(
                   Or.of(erwerbstaetig, frueherErwerbstaetig),
                   Switch.of(
-                      In.of(berufEigener, "A", "A1", "A3"),
+                      Exp.of(berufEigener_1_0),
                       Exp.of(1.0),
-                      Eq.of(berufEigener, "A2"),
+                      Exp.of(berufEigener_1_1),
                       Exp.of(1.1),
-                      Eq.of(berufEigener, "B"),
-                      Exp.of(6.2),
-                      Eq.of(berufEigener, "B1"),
-                      Exp.of(5.8),
-                      Eq.of(berufEigener, "B2"),
-                      Exp.of(6.8),
-                      Eq.of(berufEigener, "B3"),
-                      Exp.of(7.0),
-                      Eq.of(berufEigener, "C"),
-                      Exp.of(3.9),
-                      Eq.of(berufEigener, "C1"),
-                      Exp.of(3.5),
-                      In.of(berufEigener, "C2", "E2"),
-                      Exp.of(3.6),
-                      In.of(berufEigener, "C3", "C4", "E3"),
-                      Exp.of(4.2),
-                      Eq.of(berufEigener, "D"),
-                      Exp.of(5.0),
-                      In.of(berufEigener, "D1", "G", "G1", "G2", "G3", "H"),
-                      Exp.of(2.9),
-                      Eq.of(berufEigener, "D2"),
-                      Exp.of(4.1),
-                      Eq.of(berufEigener, "D3"),
-                      Exp.of(5.2),
-                      Eq.of(berufEigener, "D4"),
-                      Exp.of(6.4),
-                      Eq.of(berufEigener, "E"),
-                      Exp.of(3.7),
-                      In.of(berufEigener, "E1", "F5"),
-                      Exp.of(2.4),
-                      Eq.of(berufEigener, "E4"),
-                      Exp.of(4.7),
-                      Eq.of(berufEigener, "F"),
-                      Exp.of(1.9),
-                      Eq.of(berufEigener, "F1"),
+                      Exp.of(berufEigener_1_3),
                       Exp.of(1.3),
-                      Eq.of(berufEigener, "F2"),
+                      Exp.of(berufEigener_1_8),
                       Exp.of(1.8),
-                      Eq.of(berufEigener, "F3"),
+                      Exp.of(berufEigener_1_9),
+                      Exp.of(1.9),
+                      Exp.of(berufEigener_2_0),
+                      Exp.of(2.0),
+                      Exp.of(berufEigener_2_1),
                       Exp.of(2.1),
-                      Eq.of(berufEigener, "F4"),
-                      Exp.of(2.0))))
+                      Exp.of(berufEigener_2_4),
+                      Exp.of(2.4),
+                      Exp.of(berufEigener_2_9),
+                      Exp.of(2.9),
+                      Exp.of(berufEigener_3_5),
+                      Exp.of(3.5),
+                      Exp.of(berufEigener_3_6),
+                      Exp.of(3.6),
+                      Exp.of(berufEigener_3_7),
+                      Exp.of(3.7),
+                      Exp.of(berufEigener_3_9),
+                      Exp.of(3.9),
+                      Exp.of(berufEigener_4_1),
+                      Exp.of(4.1),
+                      Exp.of(berufEigener_4_2),
+                      Exp.of(4.2),
+                      Exp.of(berufEigener_4_7),
+                      Exp.of(4.7),
+                      Exp.of(berufEigener_5_0),
+                      Exp.of(5.0),
+                      Exp.of(berufEigener_5_2),
+                      Exp.of(5.2),
+                      Exp.of(berufEigener_5_8),
+                      Exp.of(5.8),
+                      Exp.of(berufEigener_6_2),
+                      Exp.of(6.2),
+                      Exp.of(berufEigener_6_4),
+                      Exp.of(6.4),
+                      Exp.of(berufEigener_6_8),
+                      Exp.of(6.8),
+                      Exp.of(berufEigener_7_0),
+                      Exp.of(7.0))))
           .get();
 
-  // Beruf Partner
+  /////////////////////////// BERUF PARTNER ///////////////////////////
 
   private static Phenotype familienstand =
       new Phe("familienstand", "SOZIO", "F0026")
-          .itemType(ItemType.OBSERVATION)
-          .titleDe("familienstand")
+          .category(berufParameterKategorie)
+          .titleDe("Familienstand")
+          .titleEn("Marital status")
+          .descriptionDe("Welchen Familienstand haben Sie?")
+          .descriptionEn("What is your marital status?")
           .number()
           .get();
-
   private static Phenotype verheiratet =
-      new Phe("verheiratet").titleDe("verheiratet").restriction(familienstand, Res.of(1)).get();
+      new Phe("verheiratet")
+          .titleDe("Verheiratet")
+          .titleEn("Married")
+          .restriction(familienstand, Res.of(1))
+          .get();
 
   private static Phenotype partnerschaft =
       new Phe("partnerschaft", "SOZIO", "F0035")
-          .itemType(ItemType.OBSERVATION)
-          .titleDe("partnerschaft")
+          .category(berufParameterKategorie)
+          .titleDe("Partnerschaft")
+          .titleEn("Partnership")
+          .descriptionDe("Leben Sie mit einem Partner zusammen?")
+          .descriptionEn("Do you live together with a partner?")
           .number()
           .get();
-
   private static Phenotype lebenZusammen =
-      new Phe("lebenZusammen").titleDe("lebenZusammen").restriction(partnerschaft, Res.of(1)).get();
+      new Phe("lebenZusammen")
+          .titleDe("Ja")
+          .titleEn("Yes")
+          .restriction(partnerschaft, Res.of(1))
+          .get();
 
   private static Phenotype berufPartner =
       new Phe("berufPartner", "SOZIO", "F0078")
-          .itemType(ItemType.OBSERVATION)
-          .titleDe("berufPartner")
+          .category(berufParameterKategorie)
+          .titleDe("Beruf des Partners")
+          .titleEn("Partner's profession")
+          .descriptionDe("Zu welcher Gruppe gehoert der Beruf Ihres Partners?")
+          .descriptionEn("To which group does your partner's profession belong?")
           .string()
+          .get();
+  private static Phenotype berufPartner_1_0 =
+      new Phe("berufPartner_1_0")
+          .titleEn("1.0")
+          .descriptionDe(
+              "Landwirt o. n. A., Landwirt unter 10 ha, Genossenschaftsbauer (ehem. LPG)")
+          .descriptionEn(
+              "Farmer n/a, farmer under 10 ha, cooperative farmer (former agricultural production cooperative)")
+          .restriction(berufPartner, Res.of("A", "A1", "A3"))
+          .get();
+  private static Phenotype berufPartner_1_1 =
+      new Phe("berufPartner_1_1")
+          .titleEn("1.1")
+          .descriptionDe("Landwirt 10 ha und mehr")
+          .descriptionEn("Farmer 10 ha and more")
+          .restriction(berufPartner, Res.of("A2"))
+          .get();
+  private static Phenotype berufPartner_1_3 =
+      new Phe("berufPartner_1_3")
+          .titleEn("1.3")
+          .descriptionDe("Ungelernter Arbeiter")
+          .descriptionEn("Unskilled worker")
+          .restriction(berufPartner, Res.of("F1"))
+          .get();
+  private static Phenotype berufPartner_1_8 =
+      new Phe("berufPartner_1_8")
+          .titleEn("1.8")
+          .descriptionDe("Angelernter Arbeiter")
+          .descriptionEn("Semi-skilled worker")
+          .restriction(berufPartner, Res.of("F2"))
+          .get();
+  private static Phenotype berufPartner_1_9 =
+      new Phe("berufPartner_1_9")
+          .titleEn("1.9")
+          .descriptionDe("Arbeiter o. n. A.")
+          .descriptionEn("Worker n/a")
+          .restriction(berufPartner, Res.of("F"))
+          .get();
+  private static Phenotype berufPartner_2_0 =
+      new Phe("berufPartner_2_0")
+          .titleEn("2.0")
+          .descriptionDe("Vorarbeiter, Kolonnenfuehrer")
+          .descriptionEn("Foreman, column leader")
+          .restriction(berufPartner, Res.of("F4"))
+          .get();
+  private static Phenotype berufPartner_2_1 =
+      new Phe("berufPartner_2_1")
+          .titleEn("2.1")
+          .descriptionDe("Facharbeiter")
+          .descriptionEn("Skilled worker")
+          .restriction(berufPartner, Res.of("F3"))
+          .get();
+  private static Phenotype berufPartner_2_4 =
+      new Phe("berufPartner_2_4")
+          .titleEn("2.4")
+          .descriptionDe("Meister, Polier, Brigadier, Angestellter mit ausfuehrender Taetigkeit")
+          .descriptionEn("Master, foreman, brigadier, employee with executive activity")
+          .restriction(berufPartner, Res.of("E1", "F5"))
+          .get();
+  private static Phenotype berufPartner_2_9 =
+      new Phe("berufPartner_2_9")
+          .titleEn("2.9")
+          .descriptionDe(
+              "Beamter im einfachen Dienst, Auszubildender, mithelfender Familienangehoeriger")
+          .descriptionEn("Civil servant in the civil service, trainee, assisting family member")
+          .restriction(berufPartner, Res.of("D1", "G", "G1", "G2", "G3", "H"))
+          .get();
+  private static Phenotype berufPartner_3_5 =
+      new Phe("berufPartner_3_5")
+          .titleEn("3.5")
+          .descriptionDe("Selbstaendiger, keine Mitarbeiter")
+          .descriptionEn("Self-employed, no employees")
+          .restriction(berufPartner, Res.of("C1"))
+          .get();
+  private static Phenotype berufPartner_3_6 =
+      new Phe("berufPartner_3_6")
+          .titleEn("3.6")
+          .descriptionDe(
+              "Angestellter mit qualifizierter Taetigkeit, Selbstaendiger mit 1 bis 4 Mitarbeitern")
+          .descriptionEn(
+              "Employee with qualified activity, self-employed person with 1 to 4 employees")
+          .restriction(berufPartner, Res.of("C2", "E2"))
+          .get();
+  private static Phenotype berufPartner_3_7 =
+      new Phe("berufPartner_3_7")
+          .titleEn("3.7")
+          .descriptionDe("Angestellter o. n. A.")
+          .descriptionEn("Employee n/a")
+          .restriction(berufPartner, Res.of("E"))
+          .get();
+  private static Phenotype berufPartner_3_9 =
+      new Phe("berufPartner_3_9")
+          .titleEn("3.9")
+          .descriptionDe("Selbstaendiger in Handel, Gewerbe etc.")
+          .descriptionEn("Self-employed in trade, commerce, etc.")
+          .restriction(berufPartner, Res.of("C"))
+          .get();
+  private static Phenotype berufPartner_4_1 =
+      new Phe("berufPartner_4_1")
+          .titleEn("4.1")
+          .descriptionDe("Beamter im mittleren Dienst")
+          .descriptionEn("Intermediate civil servant")
+          .restriction(berufPartner, Res.of("D2"))
+          .get();
+  private static Phenotype berufPartner_4_2 =
+      new Phe("berufPartner_4_2")
+          .titleEn("4.2")
+          .descriptionDe(
+              "Angestellter mit verantwortlicher Taetigkeit, Selbstaendiger mit 5 oder mehr Mitarbeitern/PGH-Mitglied")
+          .descriptionEn(
+              "Employee with a responsible job, self-employed person with 5 or more employees/member of production cooperative of the skilled crafts sector")
+          .restriction(berufPartner, Res.of("C3", "C4", "E3"))
+          .get();
+  private static Phenotype berufPartner_4_7 =
+      new Phe("berufPartner_4_7")
+          .titleEn("4.7")
+          .descriptionDe("Angestellter mit umfassender Fuehrungstaetigkeit")
+          .descriptionEn("Employee with extensive management responsibilities")
+          .restriction(berufPartner, Res.of("E4"))
+          .get();
+  private static Phenotype berufPartner_5_0 =
+      new Phe("berufPartner_5_0")
+          .titleEn("5.0")
+          .descriptionDe("Beamter o. n. A.")
+          .descriptionEn("Civil servant n/a")
+          .restriction(berufPartner, Res.of("D"))
+          .get();
+  private static Phenotype berufPartner_5_2 =
+      new Phe("berufPartner_5_2")
+          .titleEn("5.2")
+          .descriptionDe("Beamter im gehobenen Dienst")
+          .descriptionEn("Senior civil servant")
+          .restriction(berufPartner, Res.of("D3"))
+          .get();
+  private static Phenotype berufPartner_5_8 =
+      new Phe("berufPartner_5_8")
+          .titleEn("5.8")
+          .descriptionDe("Freiberufler (Akademiker) ohne Mitarbeiter")
+          .descriptionEn("Freelancer (academic) without employees")
+          .restriction(berufPartner, Res.of("B1"))
+          .get();
+  private static Phenotype berufPartner_6_2 =
+      new Phe("berufPartner_6_2")
+          .titleEn("6.2")
+          .descriptionDe("Akademiker im freien Beruf")
+          .descriptionEn("Academic in a freelance profession")
+          .restriction(berufPartner, Res.of("B"))
+          .get();
+  private static Phenotype berufPartner_6_4 =
+      new Phe("berufPartner_6_4")
+          .titleEn("6.4")
+          .descriptionDe("Beamter im hoeheren Dienst")
+          .descriptionEn("Civil servant in higher service")
+          .restriction(berufPartner, Res.of("D4"))
+          .get();
+  private static Phenotype berufPartner_6_8 =
+      new Phe("berufPartner_6_8")
+          .titleEn("6.8")
+          .descriptionDe("Freiberufler (Akademiker) mit 1 bis 4 Mitarbeitern")
+          .descriptionEn("Freelancer (academic) with 1 to 4 employees")
+          .restriction(berufPartner, Res.of("B2"))
+          .get();
+  private static Phenotype berufPartner_7_0 =
+      new Phe("berufPartner_7_0")
+          .titleEn("7.0")
+          .descriptionDe("Freiberufler (Akademiker) mit 5 oder mehr Mitarbeitern")
+          .descriptionEn("Freelancer (academic) with 5 or more employees")
+          .restriction(berufPartner, Res.of("B3"))
           .get();
 
   private static Phenotype berufPartnerSES =
       new Phe("berufPartnerSES")
-          .titleDe("berufPartnerSES")
+          .category(berufKategorie)
+          .titleDe("Beruf des Partners (SES)")
+          .titleEn("Partner's profession (SES)")
           .expression(
               If.of(
                   Or.of(verheiratet, lebenZusammen),
                   Switch.of(
-                      In.of(berufPartner, "A", "A1", "A3"),
+                      Exp.of(berufPartner_1_0),
                       Exp.of(1.0),
-                      Eq.of(berufPartner, "A2"),
+                      Exp.of(berufPartner_1_1),
                       Exp.of(1.1),
-                      Eq.of(berufPartner, "B"),
-                      Exp.of(6.2),
-                      Eq.of(berufPartner, "B1"),
-                      Exp.of(5.8),
-                      Eq.of(berufPartner, "B2"),
-                      Exp.of(6.8),
-                      Eq.of(berufPartner, "B3"),
-                      Exp.of(7.0),
-                      Eq.of(berufPartner, "C"),
-                      Exp.of(3.9),
-                      Eq.of(berufPartner, "C1"),
-                      Exp.of(3.5),
-                      In.of(berufPartner, "C2", "E2"),
-                      Exp.of(3.6),
-                      In.of(berufPartner, "C3", "C4", "E3"),
-                      Exp.of(4.2),
-                      Eq.of(berufPartner, "D"),
-                      Exp.of(5.0),
-                      In.of(berufPartner, "D1", "G", "G1", "G2", "G3", "H"),
-                      Exp.of(2.9),
-                      Eq.of(berufPartner, "D2"),
-                      Exp.of(4.1),
-                      Eq.of(berufPartner, "D3"),
-                      Exp.of(5.2),
-                      Eq.of(berufPartner, "D4"),
-                      Exp.of(6.4),
-                      Eq.of(berufPartner, "E"),
-                      Exp.of(3.7),
-                      In.of(berufPartner, "E1", "F5"),
-                      Exp.of(2.4),
-                      Eq.of(berufPartner, "E4"),
-                      Exp.of(4.7),
-                      Eq.of(berufPartner, "F"),
-                      Exp.of(1.9),
-                      Eq.of(berufPartner, "F1"),
+                      Exp.of(berufPartner_1_3),
                       Exp.of(1.3),
-                      Eq.of(berufPartner, "F2"),
+                      Exp.of(berufPartner_1_8),
                       Exp.of(1.8),
-                      Eq.of(berufPartner, "F3"),
+                      Exp.of(berufPartner_1_9),
+                      Exp.of(1.9),
+                      Exp.of(berufPartner_2_0),
+                      Exp.of(2.0),
+                      Exp.of(berufPartner_2_1),
                       Exp.of(2.1),
-                      Eq.of(berufPartner, "F4"),
-                      Exp.of(2.0))))
+                      Exp.of(berufPartner_2_4),
+                      Exp.of(2.4),
+                      Exp.of(berufPartner_2_9),
+                      Exp.of(2.9),
+                      Exp.of(berufPartner_3_5),
+                      Exp.of(3.5),
+                      Exp.of(berufPartner_3_6),
+                      Exp.of(3.6),
+                      Exp.of(berufPartner_3_7),
+                      Exp.of(3.7),
+                      Exp.of(berufPartner_3_9),
+                      Exp.of(3.9),
+                      Exp.of(berufPartner_4_1),
+                      Exp.of(4.1),
+                      Exp.of(berufPartner_4_2),
+                      Exp.of(4.2),
+                      Exp.of(berufPartner_4_7),
+                      Exp.of(4.7),
+                      Exp.of(berufPartner_5_0),
+                      Exp.of(5.0),
+                      Exp.of(berufPartner_5_2),
+                      Exp.of(5.2),
+                      Exp.of(berufPartner_5_8),
+                      Exp.of(5.8),
+                      Exp.of(berufPartner_6_2),
+                      Exp.of(6.2),
+                      Exp.of(berufPartner_6_4),
+                      Exp.of(6.4),
+                      Exp.of(berufPartner_6_8),
+                      Exp.of(6.8),
+                      Exp.of(berufPartner_7_0),
+                      Exp.of(7.0))))
           .get();
 
   private static Phenotype berufSES =
       new Phe("berufSES")
-          .titleDe("berufSES")
+          .category(berufKategorie)
+          .titleDe("Beruf (SES)")
+          .titleEn("Profession (SES)")
           .expression(Max.of(berufEigenerSES, berufPartnerSES))
           .get();
 
-  private static Phenotype berufSESvorhanden =
-      new Phe("berufSESvorhanden")
-          .titleDe("berufSESvorhanden")
-          .expression(Exists.of(berufSES))
-          .get();
+  /////////////////////////// EINKOMMEN HAUSHALT ///////////////////////////
 
-  // Einkommen Haushalt
+  private static Category einkommenKategorie =
+      new Cat("einkommenKategorie").titleDe("Einkommen").titleEn("Income").get();
+
+  private static Category einkommenParameterKategorie =
+      new Cat("einkommenParameterKategorie")
+          .superCategory(einkommenKategorie)
+          .titleDe("Parameter")
+          .titleEn("Parameters")
+          .get();
 
   private static Phenotype einkommenHaushalt =
       new Phe("einkommenHaushalt", "SOZIO", "F0083")
-          .itemType(ItemType.OBSERVATION)
-          .titleDe("einkommenHaushalt")
+          .category(einkommenParameterKategorie)
+          .titleDe("Haushaltseinkommen")
+          .titleEn("Household income")
+          .descriptionDe(
+              "Wie hoch ist das monatliche Nettoeinkommen Ihres Haushalts insgesamt? Ich meine dabei die Summe, die sich aus Lohn, Gehalt, Einkommen aus selbstständiger Tätigkeit, Rente oder Pension ergibt. Rechnen Sie bitte auch die Einkünfte aus öffentlichen Beihilfen, Einkommen aus Vermietung, Verpachtung, Wohngeld, Kindergeld und sonstige Einkünfte hinzu und ziehen Sie dann Steuern und Sozialversicherungsbeträge ab. Falls jemand in Ihrem Haushalt in selbstständiger Tätigkeit arbeitet, bitte berücksichtigen Sie für diese Person die durchschnittlichen Nettobezüge abzüglich der Betriebsausgaben.")
+          .descriptionEn(
+              "What is the total monthly net income of your household? I am referring to the sum resulting from wages, salary, income from self-employment, pension or annuity. Please also include income from public benefits, income from renting, leasing, housing benefit, child benefit and other income and then deduct taxes and social security contributions. If someone in your household is self-employed, please take into account the average net income for this person minus operating expenses.")
           .number()
           .get();
 
   private static Phenotype einkommensgruppeHaushalt =
       new Phe("einkommensgruppeHaushalt", "SOZIO", "F0084")
-          .itemType(ItemType.OBSERVATION)
-          .titleDe("einkommensgruppeHaushalt")
+          .category(einkommenParameterKategorie)
+          .titleDe("Einkommensgruppe des Haushalts")
+          .titleEn("Income group of the household")
+          .descriptionDe(
+              "Bei dieser Frage geht es darum, Gruppen in der Bevölkerung mit z. B. hohem, mittlerem oder niedrigerem Einkommen auswerten zu können. Es würde uns deshalb sehr helfen wenn Sie die Einkommensgruppe nennen würden zu der Ihr Haushalt gehört.")
+          .descriptionEn(
+              "This question is about being able to analyse groups in the population with e.g. high, medium or low income. It would therefore be very helpful if you could state the income group to which your household belongs.")
           .string()
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_150 =
+      new Phe("einkommensgruppeHaushalt_150")
+          .titleEn("≤150")
+          .restriction(einkommensgruppeHaushalt, Res.of("B"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_150_400 =
+      new Phe("einkommensgruppeHaushalt_150_400")
+          .titleEn("150-400")
+          .restriction(einkommensgruppeHaushalt, Res.of("P"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_400_500 =
+      new Phe("einkommensgruppeHaushalt_400_500")
+          .titleEn("400-500")
+          .restriction(einkommensgruppeHaushalt, Res.of("T"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_500_750 =
+      new Phe("einkommensgruppeHaushalt_500_750")
+          .titleEn("500-750")
+          .restriction(einkommensgruppeHaushalt, Res.of("F"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_750_1000 =
+      new Phe("einkommensgruppeHaushalt_750_1000")
+          .titleEn("750-1000")
+          .restriction(einkommensgruppeHaushalt, Res.of("E"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_1000_1250 =
+      new Phe("einkommensgruppeHaushalt_1000_1250")
+          .titleEn("1000-1250")
+          .restriction(einkommensgruppeHaushalt, Res.of("H"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_1250_1500 =
+      new Phe("einkommensgruppeHaushalt_1250_1500")
+          .titleEn("1250-1500")
+          .restriction(einkommensgruppeHaushalt, Res.of("L"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_1500_1750 =
+      new Phe("einkommensgruppeHaushalt_1500_1750")
+          .titleEn("1500-1750")
+          .restriction(einkommensgruppeHaushalt, Res.of("N"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_1750_2000 =
+      new Phe("einkommensgruppeHaushalt_1750_2000")
+          .titleEn("1750-2000")
+          .restriction(einkommensgruppeHaushalt, Res.of("R"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_2000_2250 =
+      new Phe("einkommensgruppeHaushalt_2000_2250")
+          .titleEn("2000-2250")
+          .restriction(einkommensgruppeHaushalt, Res.of("M"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_2250_2500 =
+      new Phe("einkommensgruppeHaushalt_2250_2500")
+          .titleEn("2250-2500")
+          .restriction(einkommensgruppeHaushalt, Res.of("S"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_2500_2750 =
+      new Phe("einkommensgruppeHaushalt_2500_2750")
+          .titleEn("2500-2750")
+          .restriction(einkommensgruppeHaushalt, Res.of("K"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_2750_3000 =
+      new Phe("einkommensgruppeHaushalt_2750_3000")
+          .titleEn("2750-3000")
+          .restriction(einkommensgruppeHaushalt, Res.of("O"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_3000_3250 =
+      new Phe("einkommensgruppeHaushalt_3000_3250")
+          .titleEn("3000-3250")
+          .restriction(einkommensgruppeHaushalt, Res.of("C"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_3250_3500 =
+      new Phe("einkommensgruppeHaushalt_3250_3500")
+          .titleEn("3250-3500")
+          .restriction(einkommensgruppeHaushalt, Res.of("G"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_3500_3750 =
+      new Phe("einkommensgruppeHaushalt_3500_3750")
+          .titleEn("3500-3750")
+          .restriction(einkommensgruppeHaushalt, Res.of("U"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_3750_4000 =
+      new Phe("einkommensgruppeHaushalt_3750_4000")
+          .titleEn("3750-4000")
+          .restriction(einkommensgruppeHaushalt, Res.of("J"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_4000_4500 =
+      new Phe("einkommensgruppeHaushalt_4000_4500")
+          .titleEn("4000-4500")
+          .restriction(einkommensgruppeHaushalt, Res.of("V"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_4500_5000 =
+      new Phe("einkommensgruppeHaushalt_4500_5000")
+          .titleEn("4500-5000")
+          .restriction(einkommensgruppeHaushalt, Res.of("A"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_5000_5500 =
+      new Phe("einkommensgruppeHaushalt_5000_5500")
+          .titleEn("5000-5500")
+          .restriction(einkommensgruppeHaushalt, Res.of("Z"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_5500_6000 =
+      new Phe("einkommensgruppeHaushalt_5500_6000")
+          .titleEn("5500-6000")
+          .restriction(einkommensgruppeHaushalt, Res.of("X"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_6000_7500 =
+      new Phe("einkommensgruppeHaushalt_6000_7500")
+          .titleEn("6000-7500")
+          .restriction(einkommensgruppeHaushalt, Res.of("Q"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_7500_10000 =
+      new Phe("einkommensgruppeHaushalt_7500_10000")
+          .titleEn("7500-10000")
+          .restriction(einkommensgruppeHaushalt, Res.of("W"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_10000_20000 =
+      new Phe("einkommensgruppeHaushalt_10000_20000")
+          .titleEn("10000-20000")
+          .restriction(einkommensgruppeHaushalt, Res.of("D"))
+          .get();
+  private static Phenotype einkommensgruppeHaushalt_20000 =
+      new Phe("einkommensgruppeHaushalt_20000")
+          .titleEn(">20000")
+          .restriction(einkommensgruppeHaushalt, Res.of("Y"))
           .get();
 
   private static Phenotype einkommenHaushaltSES =
@@ -735,55 +1192,55 @@ public class SES3Test {
               Switch.of(
                   Exists.of(einkommenHaushalt),
                   Exp.of(einkommenHaushalt),
-                  Eq.of(einkommensgruppeHaushalt, "B"),
+                  Exp.of(einkommensgruppeHaushalt_150),
                   Exp.of(75),
-                  Eq.of(einkommensgruppeHaushalt, "P"),
+                  Exp.of(einkommensgruppeHaushalt_150_400),
                   Exp.of(275),
-                  Eq.of(einkommensgruppeHaushalt, "T"),
+                  Exp.of(einkommensgruppeHaushalt_400_500),
                   Exp.of(450),
-                  Eq.of(einkommensgruppeHaushalt, "F"),
+                  Exp.of(einkommensgruppeHaushalt_500_750),
                   Exp.of(625),
-                  Eq.of(einkommensgruppeHaushalt, "E"),
+                  Exp.of(einkommensgruppeHaushalt_750_1000),
                   Exp.of(875),
-                  Eq.of(einkommensgruppeHaushalt, "H"),
+                  Exp.of(einkommensgruppeHaushalt_1000_1250),
                   Exp.of(1125),
-                  Eq.of(einkommensgruppeHaushalt, "L"),
+                  Exp.of(einkommensgruppeHaushalt_1250_1500),
                   Exp.of(1375),
-                  Eq.of(einkommensgruppeHaushalt, "N"),
+                  Exp.of(einkommensgruppeHaushalt_1500_1750),
                   Exp.of(1625),
-                  Eq.of(einkommensgruppeHaushalt, "R"),
+                  Exp.of(einkommensgruppeHaushalt_1750_2000),
                   Exp.of(1875),
-                  Eq.of(einkommensgruppeHaushalt, "M"),
+                  Exp.of(einkommensgruppeHaushalt_2000_2250),
                   Exp.of(2125),
-                  Eq.of(einkommensgruppeHaushalt, "S"),
+                  Exp.of(einkommensgruppeHaushalt_2250_2500),
                   Exp.of(2375),
-                  Eq.of(einkommensgruppeHaushalt, "K"),
+                  Exp.of(einkommensgruppeHaushalt_2500_2750),
                   Exp.of(2625),
-                  Eq.of(einkommensgruppeHaushalt, "O"),
+                  Exp.of(einkommensgruppeHaushalt_2750_3000),
                   Exp.of(2875),
-                  Eq.of(einkommensgruppeHaushalt, "C"),
+                  Exp.of(einkommensgruppeHaushalt_3000_3250),
                   Exp.of(3125),
-                  Eq.of(einkommensgruppeHaushalt, "G"),
+                  Exp.of(einkommensgruppeHaushalt_3250_3500),
                   Exp.of(3375),
-                  Eq.of(einkommensgruppeHaushalt, "U"),
+                  Exp.of(einkommensgruppeHaushalt_3500_3750),
                   Exp.of(3625),
-                  Eq.of(einkommensgruppeHaushalt, "J"),
+                  Exp.of(einkommensgruppeHaushalt_3750_4000),
                   Exp.of(3875),
-                  Eq.of(einkommensgruppeHaushalt, "V"),
+                  Exp.of(einkommensgruppeHaushalt_4000_4500),
                   Exp.of(4250),
-                  Eq.of(einkommensgruppeHaushalt, "A"),
+                  Exp.of(einkommensgruppeHaushalt_4500_5000),
                   Exp.of(4750),
-                  Eq.of(einkommensgruppeHaushalt, "Z"),
+                  Exp.of(einkommensgruppeHaushalt_5000_5500),
                   Exp.of(5250),
-                  Eq.of(einkommensgruppeHaushalt, "X"),
+                  Exp.of(einkommensgruppeHaushalt_5500_6000),
                   Exp.of(5750),
-                  Eq.of(einkommensgruppeHaushalt, "Q"),
+                  Exp.of(einkommensgruppeHaushalt_6000_7500),
                   Exp.of(6750),
-                  Eq.of(einkommensgruppeHaushalt, "W"),
+                  Exp.of(einkommensgruppeHaushalt_7500_10000),
                   Exp.of(8750),
-                  Eq.of(einkommensgruppeHaushalt, "D"),
+                  Exp.of(einkommensgruppeHaushalt_10000_20000),
                   Exp.of(15000),
-                  Eq.of(einkommensgruppeHaushalt, "Y"),
+                  Exp.of(einkommensgruppeHaushalt_20000),
                   Exp.of(20000)))
           .get();
 
@@ -1024,12 +1481,6 @@ public class SES3Test {
                   Exp.of(7.0)))
           .get();
 
-  private static Phenotype einkommenSESvorhanden =
-      new Phe("einkommenSESvorhanden")
-          .titleDe("einkommenSESvorhanden")
-          .expression(Exists.of(einkommenSES))
-          .get();
-
   // SES
 
   private static Phenotype SES =
@@ -1037,22 +1488,19 @@ public class SES3Test {
           .titleDe("SES")
           .expression(
               Switch.of(
-                  And.of(
-                      Exists.of(bildungSES),
-                      Exp.of(berufSESvorhanden),
-                      Exp.of(einkommenSESvorhanden)),
+                  And.of(Exists.of(bildungSES), Exists.of(berufSES), Exists.of(einkommenSES)),
                   Sum.of(bildungSES, berufSES, einkommenSES),
-                  And.of(berufSESvorhanden, einkommenSESvorhanden),
+                  And.of(Exists.of(berufSES), Exists.of(einkommenSES)),
                   Sum.of(
                       Exp.of(berufSES),
                       Exp.of(einkommenSES),
                       Avg.of(Exp.of(berufSES), Exp.of(einkommenSES), Exp.of(2))),
-                  And.of(Exists.of(bildungSES), Exp.of(einkommenSESvorhanden)),
+                  And.of(Exists.of(bildungSES), Exists.of(einkommenSES)),
                   Sum.of(
                       Exp.of(bildungSES),
                       Exp.of(einkommenSES),
                       Avg.of(Exp.of(bildungSES), Exp.of(einkommenSES), Exp.of(2))),
-                  And.of(Exists.of(bildungSES), Exp.of(berufSESvorhanden)),
+                  And.of(Exists.of(bildungSES), Exists.of(berufSES)),
                   Sum.of(
                       Exp.of(bildungSES),
                       Exp.of(berufSES),
@@ -1288,42 +1736,122 @@ public class SES3Test {
     WRITER.close();
   }
 
+  //  @Test
+  //  void testEducation() {
+  //    Entities.writeJSON(
+  //        "test_files/ses_education6.json",
+  //        bildungParameterKategorie,
+  //        bildungKategorie,
+  //        schule,
+  //        schule1,
+  //        schule2,
+  //        schule3,
+  //        schule4,
+  //        schule5,
+  //        schule6,
+  //        schule7,
+  //        schule12,
+  //        schule123,
+  //        schule45,
+  //        schule67,
+  //        ausbildung,
+  //        ausbildung1,
+  //        ausbildung2,
+  //        ausbildung3,
+  //        ausbildung4,
+  //        ausbildung5,
+  //        ausbildung6,
+  //        ausbildung7,
+  //        ausbildungS1,
+  //        ausbildungS2,
+  //        ausbildungS3,
+  //        ausbildungS4,
+  //        ausbildungS5,
+  //        ausbildungS6,
+  //        ausbildungS7,
+  //        ausbildung12,
+  //        ausbildung345,
+  //        bildungSES,
+  //        bildungSES_1_0,
+  //        bildungSES_1_7,
+  //        bildungSES_2_8,
+  //        bildungSES_3_0,
+  //        bildungSES_3_6,
+  //        bildungSES_3_7,
+  //        bildungSES_4_55,
+  //        bildungSES_4_8,
+  //        bildungSES_4_85,
+  //        bildungSES_5_0,
+  //        bildungSES_5_3,
+  //        bildungSES_6_1,
+  //        bildungSES_7_0);
+  //  }
+
   @Test
-  void test() {
+  void testProfession() {
     Entities.writeJSON(
-        "test_files/ses_education5.json",
-        bildungParameterKategorie,
-        bildungKategorie,
-        schule,
-        schule1,
-        schule2,
-        schule3,
-        schule4,
-        schule5,
-        schule6,
-        schule7,
-        ausbildung,
-        ausbildung1,
-        ausbildung2,
-        ausbildung3,
-        ausbildung4,
-        ausbildung5,
-        ausbildung6,
-        ausbildung7,
-        bildungSES,
-        bildungSES_1_0,
-        bildungSES_1_7,
-        bildungSES_2_8,
-        bildungSES_3_0,
-        bildungSES_3_6,
-        bildungSES_3_7,
-        bildungSES_4_55,
-        bildungSES_4_8,
-        bildungSES_4_85,
-        bildungSES_5_0,
-        bildungSES_5_3,
-        bildungSES_6_1,
-        bildungSES_7_0);
+        "test_files/ses_profession.json",
+        berufParameterKategorie,
+        berufKategorie,
+        erwerbstaetigkeit,
+        erwerbstaetig,
+        fruehereErwerbstaetigkeit,
+        frueherErwerbstaetig,
+        familienstand,
+        verheiratet,
+        partnerschaft,
+        lebenZusammen,
+        berufEigener,
+        berufEigener_1_0,
+        berufEigener_1_1,
+        berufEigener_1_3,
+        berufEigener_1_8,
+        berufEigener_1_9,
+        berufEigener_2_0,
+        berufEigener_2_1,
+        berufEigener_2_4,
+        berufEigener_2_9,
+        berufEigener_3_5,
+        berufEigener_3_6,
+        berufEigener_3_7,
+        berufEigener_3_9,
+        berufEigener_4_1,
+        berufEigener_4_2,
+        berufEigener_4_7,
+        berufEigener_5_0,
+        berufEigener_5_2,
+        berufEigener_5_8,
+        berufEigener_6_2,
+        berufEigener_6_4,
+        berufEigener_6_8,
+        berufEigener_7_0,
+        berufEigenerSES,
+        berufPartner,
+        berufPartner_1_0,
+        berufPartner_1_1,
+        berufPartner_1_3,
+        berufPartner_1_8,
+        berufPartner_1_9,
+        berufPartner_2_0,
+        berufPartner_2_1,
+        berufPartner_2_4,
+        berufPartner_2_9,
+        berufPartner_3_5,
+        berufPartner_3_6,
+        berufPartner_3_7,
+        berufPartner_3_9,
+        berufPartner_4_1,
+        berufPartner_4_2,
+        berufPartner_4_7,
+        berufPartner_5_0,
+        berufPartner_5_2,
+        berufPartner_5_8,
+        berufPartner_6_2,
+        berufPartner_6_4,
+        berufPartner_6_8,
+        berufPartner_7_0,
+        berufPartnerSES,
+        berufSES);
   }
 
   @Test
@@ -1620,7 +2148,10 @@ public class SES3Test {
                 schule5,
                 schule6,
                 schule7,
-                ausbildung,
+                schule12,
+                schule123,
+                schule45,
+                schule67,
                 ausbildung1,
                 ausbildung2,
                 ausbildung3,
@@ -1628,6 +2159,16 @@ public class SES3Test {
                 ausbildung5,
                 ausbildung6,
                 ausbildung7,
+                ausbildung,
+                ausbildungS1,
+                ausbildungS2,
+                ausbildungS3,
+                ausbildungS4,
+                ausbildungS5,
+                ausbildungS6,
+                ausbildungS7,
+                ausbildung12,
+                ausbildung345,
                 bildungSES,
                 bildungSES_1_0,
                 bildungSES_1_7,
@@ -1642,6 +2183,67 @@ public class SES3Test {
                 bildungSES_5_3,
                 bildungSES_6_1,
                 bildungSES_7_0,
+                berufParameterKategorie,
+                berufKategorie,
+                erwerbstaetigkeit,
+                erwerbstaetig,
+                fruehereErwerbstaetigkeit,
+                frueherErwerbstaetig,
+                familienstand,
+                verheiratet,
+                partnerschaft,
+                lebenZusammen,
+                berufEigener,
+                berufEigener_1_0,
+                berufEigener_1_1,
+                berufEigener_1_3,
+                berufEigener_1_8,
+                berufEigener_1_9,
+                berufEigener_2_0,
+                berufEigener_2_1,
+                berufEigener_2_4,
+                berufEigener_2_9,
+                berufEigener_3_5,
+                berufEigener_3_6,
+                berufEigener_3_7,
+                berufEigener_3_9,
+                berufEigener_4_1,
+                berufEigener_4_2,
+                berufEigener_4_7,
+                berufEigener_5_0,
+                berufEigener_5_2,
+                berufEigener_5_8,
+                berufEigener_6_2,
+                berufEigener_6_4,
+                berufEigener_6_8,
+                berufEigener_7_0,
+                berufEigenerSES,
+                berufPartner,
+                berufPartner_1_0,
+                berufPartner_1_1,
+                berufPartner_1_3,
+                berufPartner_1_8,
+                berufPartner_1_9,
+                berufPartner_2_0,
+                berufPartner_2_1,
+                berufPartner_2_4,
+                berufPartner_2_9,
+                berufPartner_3_5,
+                berufPartner_3_6,
+                berufPartner_3_7,
+                berufPartner_3_9,
+                berufPartner_4_1,
+                berufPartner_4_2,
+                berufPartner_4_7,
+                berufPartner_5_0,
+                berufPartner_5_2,
+                berufPartner_5_8,
+                berufPartner_6_2,
+                berufPartner_6_4,
+                berufPartner_6_8,
+                berufPartner_7_0,
+                berufPartnerSES,
+                berufSES,
                 aequivalenzeinkommenSES,
                 aequivalenzeinkommenSES_1_0,
                 aequivalenzeinkommenSES_1_5,
@@ -1657,34 +2259,19 @@ public class SES3Test {
                 aequivalenzeinkommenSES_6_5,
                 aequivalenzeinkommenSES_7_0,
                 bedgew,
-                berufEigener,
-                berufEigenerSES,
-                berufPartner,
-                berufPartnerSES,
-                berufSES,
-                berufSESvorhanden,
                 einkommenEigenes,
                 einkommenEigenesSES,
                 einkommenHaushalt,
                 einkommenHaushaltSES,
                 einkommenSES,
-                einkommenSESvorhanden,
                 einkommensgruppeEigenes,
                 einkommensgruppeHaushalt,
-                erwerbstaetig,
-                erwerbstaetigkeit,
-                familienstand,
-                fruehereErwerbstaetigkeit,
-                frueherErwerbstaetig,
                 h0000071,
                 h0000072,
                 haushaltseinkommenSES,
                 haushaltsgroesse,
                 juenger15,
-                lebenZusammen,
-                partnerschaft,
-                SES,
-                verheiratet)
+                SES)
             .pro(SES);
 
     ResultSet rs = q.execute();
