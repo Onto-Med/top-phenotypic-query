@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import care.smith.top.model.Category;
 import care.smith.top.model.DataType;
-import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.If;
@@ -27,7 +26,6 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.In;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.tests.default_sql_writer.DefaultSqlWriter;
-import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.builder.Cat;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
@@ -307,6 +305,8 @@ public class SES3Test {
           .category(bildungKategorie)
           .titleDe("Bildung (SES)")
           .titleEn("Education (SES)")
+          .descriptionDe("Schulische und berufliche Qualifikation (Individualmerkmal)")
+          .descriptionEn("School and professional qualification (individual characteristic)")
           .expression(
               Switch.of(
                   And.of(schule12, ausbildung12),
@@ -1021,6 +1021,8 @@ public class SES3Test {
           .category(berufKategorie)
           .titleDe("Beruf (SES)")
           .titleEn("Profession (SES)")
+          .descriptionDe("Berufsstatus (Haushaltsmerkmal)")
+          .descriptionEn("Occupational status (household characteristic)")
           .expression(Max.of(berufEigenerSES, berufPartnerSES))
           .get();
 
@@ -1042,7 +1044,7 @@ public class SES3Test {
           .titleDe("Haushaltseinkommen")
           .titleEn("Household income")
           .descriptionDe(
-              "Wie hoch ist das monatliche Nettoeinkommen Ihres Haushalts insgesamt? Ich meine dabei die Summe, die sich aus Lohn, Gehalt, Einkommen aus selbstständiger Tätigkeit, Rente oder Pension ergibt. Rechnen Sie bitte auch die Einkünfte aus öffentlichen Beihilfen, Einkommen aus Vermietung, Verpachtung, Wohngeld, Kindergeld und sonstige Einkünfte hinzu und ziehen Sie dann Steuern und Sozialversicherungsbeträge ab. Falls jemand in Ihrem Haushalt in selbstständiger Tätigkeit arbeitet, bitte berücksichtigen Sie für diese Person die durchschnittlichen Nettobezüge abzüglich der Betriebsausgaben.")
+              "Wie hoch ist das monatliche Nettoeinkommen Ihres Haushalts insgesamt? Ich meine dabei die Summe, die sich aus Lohn, Gehalt, Einkommen aus selbststaendiger Taetigkeit, Rente oder Pension ergibt. Rechnen Sie bitte auch die Einkuenfte aus oeffentlichen Beihilfen, Einkommen aus Vermietung, Verpachtung, Wohngeld, Kindergeld und sonstige Einkuenfte hinzu und ziehen Sie dann Steuern und Sozialversicherungsbetraege ab. Falls jemand in Ihrem Haushalt in selbststaendiger Taetigkeit arbeitet, bitte beruecksichtigen Sie fuer diese Person die durchschnittlichen Nettobezuege abzueglich der Betriebsausgaben.")
           .descriptionEn(
               "What is the total monthly net income of your household? I am referring to the sum resulting from wages, salary, income from self-employment, pension or annuity. Please also include income from public benefits, income from renting, leasing, housing benefit, child benefit and other income and then deduct taxes and social security contributions. If someone in your household is self-employed, please take into account the average net income for this person minus operating expenses.")
           .number()
@@ -1054,14 +1056,14 @@ public class SES3Test {
           .titleDe("Einkommensgruppe des Haushalts")
           .titleEn("Income group of the household")
           .descriptionDe(
-              "Bei dieser Frage geht es darum, Gruppen in der Bevölkerung mit z. B. hohem, mittlerem oder niedrigerem Einkommen auswerten zu können. Es würde uns deshalb sehr helfen wenn Sie die Einkommensgruppe nennen würden zu der Ihr Haushalt gehört.")
+              "Bei dieser Frage geht es darum, Gruppen in der Bevoelkerung mit z. B. hohem, mittlerem oder niedrigerem Einkommen auswerten zu koennen. Es wuerde uns deshalb sehr helfen wenn Sie die Einkommensgruppe nennen wuerden zu der Ihr Haushalt gehoert.")
           .descriptionEn(
               "This question is about being able to analyse groups in the population with e.g. high, medium or low income. It would therefore be very helpful if you could state the income group to which your household belongs.")
           .string()
           .get();
   private static Phenotype einkommensgruppeHaushalt_150 =
       new Phe("einkommensgruppeHaushalt_150")
-          .titleEn("≤150")
+          .titleEn("<150")
           .restriction(einkommensgruppeHaushalt, Res.of("B"))
           .get();
   private static Phenotype einkommensgruppeHaushalt_150_400 =
@@ -1181,13 +1183,15 @@ public class SES3Test {
           .get();
   private static Phenotype einkommensgruppeHaushalt_20000 =
       new Phe("einkommensgruppeHaushalt_20000")
-          .titleEn(">20000")
+          .titleEn("≥20000")
           .restriction(einkommensgruppeHaushalt, Res.of("Y"))
           .get();
 
   private static Phenotype einkommenHaushaltSES =
       new Phe("einkommenHaushaltSES")
-          .titleDe("einkommenHaushaltSES")
+          .category(einkommenKategorie)
+          .titleDe("Haushaltseinkommen (SES)")
+          .titleEn("Household income (SES)")
           .expression(
               Switch.of(
                   Exists.of(einkommenHaushalt),
@@ -1244,91 +1248,239 @@ public class SES3Test {
                   Exp.of(20000)))
           .get();
 
-  // Einkommen eigenes
+  /////////////////////////// EIGENES EINKOMMEN ///////////////////////////
 
   private static Phenotype einkommenEigenes =
       new Phe("einkommenEigenes", "SOZIO", "F0086")
-          .itemType(ItemType.OBSERVATION)
-          .titleDe("einkommenEigenes")
+          .category(einkommenParameterKategorie)
+          .titleDe("Eigenes Einkommen")
+          .titleEn("Own income")
+          .descriptionDe(
+              "Wie hoch ist Ihr eigenes monatliches Nettoeinkommen? Ich meine dabei die Summe, die sich aus Lohn, Gehalt, Einkommen aus selbststaendiger Taetigkeit, Rente oder Pension ergibt. Rechnen Sie bitte auch die Einkuenfte aus oeffentlichen Beihilfen, Einkommen aus Vermietung, Verpachtung, Wohngeld, Kindergeld und sonstige Einkuenfte hinzu und ziehen Sie dann Steuern und Sozialversicherungsbetraege ab. Falls jemand in Ihrem Haushalt in selbststaendiger Taetigkeit arbeitet, bitte beruecksichtigen Sie fuer diese Person die durchschnittlichen Nettobezuege abzueglich der Betriebsausgaben.")
+          .descriptionEn(
+              "What is your own monthly net income? I am referring to the sum resulting from wages, salary, income from self-employment, pension or annuity. Please also include income from public benefits, income from renting, leasing, housing benefit, child benefit and other income and then deduct taxes and social security contributions. If someone in your household is self-employed, please take into account the average net income for this person minus operating expenses.")
           .number()
           .get();
 
   private static Phenotype einkommensgruppeEigenes =
       new Phe("einkommensgruppeEigenes", "SOZIO", "F0087")
-          .itemType(ItemType.OBSERVATION)
-          .titleDe("einkommensgruppeEigenes")
+          .category(einkommenParameterKategorie)
+          .titleDe("Eigene Einkommensgruppe")
+          .titleEn("Own income group")
+          .descriptionDe(
+              "Bei dieser Frage geht es darum, Gruppen in der Bevoelkerung mit z. B. hohem, mittlerem oder niedrigerem Einkommen auswerten zu koennen. Es wuerde uns deshalb sehr helfen wenn Sie die Einkommensgruppe nennen wuerden zu der Sie gehoeren.")
+          .descriptionEn(
+              "This question is about being able to analyse groups in the population with e.g. high, medium or low income. It would therefore be very helpful if you could state the income group to which you belong.")
           .string()
+          .get();
+  private static Phenotype einkommensgruppeEigenes_150 =
+      new Phe("einkommensgruppeEigenes_150")
+          .titleEn("<150")
+          .restriction(einkommensgruppeEigenes, Res.of("B"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_150_400 =
+      new Phe("einkommensgruppeEigenes_150_400")
+          .titleEn("150-400")
+          .restriction(einkommensgruppeEigenes, Res.of("P"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_400_500 =
+      new Phe("einkommensgruppeEigenes_400_500")
+          .titleEn("400-500")
+          .restriction(einkommensgruppeEigenes, Res.of("T"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_500_750 =
+      new Phe("einkommensgruppeEigenes_500_750")
+          .titleEn("500-750")
+          .restriction(einkommensgruppeEigenes, Res.of("F"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_750_1000 =
+      new Phe("einkommensgruppeEigenes_750_1000")
+          .titleEn("750-1000")
+          .restriction(einkommensgruppeEigenes, Res.of("E"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_1000_1250 =
+      new Phe("einkommensgruppeEigenes_1000_1250")
+          .titleEn("1000-1250")
+          .restriction(einkommensgruppeEigenes, Res.of("H"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_1250_1500 =
+      new Phe("einkommensgruppeEigenes_1250_1500")
+          .titleEn("1250-1500")
+          .restriction(einkommensgruppeEigenes, Res.of("L"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_1500_1750 =
+      new Phe("einkommensgruppeEigenes_1500_1750")
+          .titleEn("1500-1750")
+          .restriction(einkommensgruppeEigenes, Res.of("N"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_1750_2000 =
+      new Phe("einkommensgruppeEigenes_1750_2000")
+          .titleEn("1750-2000")
+          .restriction(einkommensgruppeEigenes, Res.of("R"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_2000_2250 =
+      new Phe("einkommensgruppeEigenes_2000_2250")
+          .titleEn("2000-2250")
+          .restriction(einkommensgruppeEigenes, Res.of("M"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_2250_2500 =
+      new Phe("einkommensgruppeEigenes_2250_2500")
+          .titleEn("2250-2500")
+          .restriction(einkommensgruppeEigenes, Res.of("S"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_2500_2750 =
+      new Phe("einkommensgruppeEigenes_2500_2750")
+          .titleEn("2500-2750")
+          .restriction(einkommensgruppeEigenes, Res.of("K"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_2750_3000 =
+      new Phe("einkommensgruppeEigenes_2750_3000")
+          .titleEn("2750-3000")
+          .restriction(einkommensgruppeEigenes, Res.of("O"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_3000_3250 =
+      new Phe("einkommensgruppeEigenes_3000_3250")
+          .titleEn("3000-3250")
+          .restriction(einkommensgruppeEigenes, Res.of("C"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_3250_3500 =
+      new Phe("einkommensgruppeEigenes_3250_3500")
+          .titleEn("3250-3500")
+          .restriction(einkommensgruppeEigenes, Res.of("G"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_3500_3750 =
+      new Phe("einkommensgruppeEigenes_3500_3750")
+          .titleEn("3500-3750")
+          .restriction(einkommensgruppeEigenes, Res.of("U"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_3750_4000 =
+      new Phe("einkommensgruppeEigenes_3750_4000")
+          .titleEn("3750-4000")
+          .restriction(einkommensgruppeEigenes, Res.of("J"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_4000_4500 =
+      new Phe("einkommensgruppeEigenes_4000_4500")
+          .titleEn("4000-4500")
+          .restriction(einkommensgruppeEigenes, Res.of("V"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_4500_5000 =
+      new Phe("einkommensgruppeEigenes_4500_5000")
+          .titleEn("4500-5000")
+          .restriction(einkommensgruppeEigenes, Res.of("A"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_5000_5500 =
+      new Phe("einkommensgruppeEigenes_5000_5500")
+          .titleEn("5000-5500")
+          .restriction(einkommensgruppeEigenes, Res.of("Z"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_5500_6000 =
+      new Phe("einkommensgruppeEigenes_5500_6000")
+          .titleEn("5500-6000")
+          .restriction(einkommensgruppeEigenes, Res.of("X"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_6000_7500 =
+      new Phe("einkommensgruppeEigenes_6000_7500")
+          .titleEn("6000-7500")
+          .restriction(einkommensgruppeEigenes, Res.of("Q"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_7500_10000 =
+      new Phe("einkommensgruppeEigenes_7500_10000")
+          .titleEn("7500-10000")
+          .restriction(einkommensgruppeEigenes, Res.of("W"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_10000_20000 =
+      new Phe("einkommensgruppeEigenes_10000_20000")
+          .titleEn("10000-20000")
+          .restriction(einkommensgruppeEigenes, Res.of("D"))
+          .get();
+  private static Phenotype einkommensgruppeEigenes_20000 =
+      new Phe("einkommensgruppeEigenes_20000")
+          .titleEn("≥20000")
+          .restriction(einkommensgruppeEigenes, Res.of("Y"))
           .get();
 
   private static Phenotype einkommenEigenesSES =
       new Phe("einkommenEigenesSES")
-          .titleDe("einkommenEigenesSES")
+          .category(einkommenKategorie)
+          .titleDe("Eigenes Einkommen (SES)")
+          .titleEn("Own income (SES)")
           .expression(
               Switch.of(
                   Exists.of(einkommenEigenes),
                   Exp.of(einkommenEigenes),
-                  Eq.of(einkommensgruppeEigenes, "B"),
+                  Exp.of(einkommensgruppeEigenes_150),
                   Exp.of(75),
-                  Eq.of(einkommensgruppeEigenes, "P"),
+                  Exp.of(einkommensgruppeEigenes_150_400),
                   Exp.of(275),
-                  Eq.of(einkommensgruppeEigenes, "T"),
+                  Exp.of(einkommensgruppeEigenes_400_500),
                   Exp.of(450),
-                  Eq.of(einkommensgruppeEigenes, "F"),
+                  Exp.of(einkommensgruppeEigenes_500_750),
                   Exp.of(625),
-                  Eq.of(einkommensgruppeEigenes, "E"),
+                  Exp.of(einkommensgruppeEigenes_750_1000),
                   Exp.of(875),
-                  Eq.of(einkommensgruppeEigenes, "H"),
+                  Exp.of(einkommensgruppeEigenes_1000_1250),
                   Exp.of(1125),
-                  Eq.of(einkommensgruppeEigenes, "L"),
+                  Exp.of(einkommensgruppeEigenes_1250_1500),
                   Exp.of(1375),
-                  Eq.of(einkommensgruppeEigenes, "N"),
+                  Exp.of(einkommensgruppeEigenes_1500_1750),
                   Exp.of(1625),
-                  Eq.of(einkommensgruppeEigenes, "R"),
+                  Exp.of(einkommensgruppeEigenes_1750_2000),
                   Exp.of(1875),
-                  Eq.of(einkommensgruppeEigenes, "M"),
+                  Exp.of(einkommensgruppeEigenes_2000_2250),
                   Exp.of(2125),
-                  Eq.of(einkommensgruppeEigenes, "S"),
+                  Exp.of(einkommensgruppeEigenes_2250_2500),
                   Exp.of(2375),
-                  Eq.of(einkommensgruppeEigenes, "K"),
+                  Exp.of(einkommensgruppeEigenes_2500_2750),
                   Exp.of(2625),
-                  Eq.of(einkommensgruppeEigenes, "O"),
+                  Exp.of(einkommensgruppeEigenes_2750_3000),
                   Exp.of(2875),
-                  Eq.of(einkommensgruppeEigenes, "C"),
+                  Exp.of(einkommensgruppeEigenes_3000_3250),
                   Exp.of(3125),
-                  Eq.of(einkommensgruppeEigenes, "G"),
+                  Exp.of(einkommensgruppeEigenes_3250_3500),
                   Exp.of(3375),
-                  Eq.of(einkommensgruppeEigenes, "U"),
+                  Exp.of(einkommensgruppeEigenes_3500_3750),
                   Exp.of(3625),
-                  Eq.of(einkommensgruppeEigenes, "J"),
+                  Exp.of(einkommensgruppeEigenes_3750_4000),
                   Exp.of(3875),
-                  Eq.of(einkommensgruppeEigenes, "V"),
+                  Exp.of(einkommensgruppeEigenes_4000_4500),
                   Exp.of(4250),
-                  Eq.of(einkommensgruppeEigenes, "A"),
+                  Exp.of(einkommensgruppeEigenes_4500_5000),
                   Exp.of(4750),
-                  Eq.of(einkommensgruppeEigenes, "Z"),
+                  Exp.of(einkommensgruppeEigenes_5000_5500),
                   Exp.of(5250),
-                  Eq.of(einkommensgruppeEigenes, "X"),
+                  Exp.of(einkommensgruppeEigenes_5500_6000),
                   Exp.of(5750),
-                  Eq.of(einkommensgruppeEigenes, "Q"),
+                  Exp.of(einkommensgruppeEigenes_6000_7500),
                   Exp.of(6750),
-                  Eq.of(einkommensgruppeEigenes, "W"),
+                  Exp.of(einkommensgruppeEigenes_7500_10000),
                   Exp.of(8750),
-                  Eq.of(einkommensgruppeEigenes, "D"),
+                  Exp.of(einkommensgruppeEigenes_10000_20000),
                   Exp.of(15000),
-                  Eq.of(einkommensgruppeEigenes, "Y"),
+                  Exp.of(einkommensgruppeEigenes_20000),
                   Exp.of(20000)))
           .get();
 
   private static Phenotype haushaltsgroesse =
       new Phe("haushaltsgroesse", "SOZIO", "F0079")
-          .itemType(ItemType.OBSERVATION)
-          .titleDe("haushaltsgroesse")
+          .category(einkommenParameterKategorie)
+          .titleDe("Haushaltsgroesse")
+          .titleEn("Household size")
+          .descriptionDe(
+              "Wie viele Personen leben staendig in Ihrem Haushalt, Sie selbst eingeschlossen? Denken Sie dabei bitte auch an alle im Haushalt lebenden Kinder.")
+          .descriptionEn(
+              "How many people permanently live in your household, including yourself? Please also think about any children living in the household.")
           .number()
           .get();
 
   private static Phenotype haushaltseinkommenSES =
       new Phe("haushaltseinkommenSES")
-          .titleDe("haushaltseinkommenSES")
+          .category(einkommenKategorie)
+          .titleDe("Einkommen")
+          .titleEn("Income")
+          .descriptionDe(
+              "Lebt genau eine Person im Haushalt, wird fuer die weiteren Berechnungen deren eigenes Einkommen herangezogen, andernfalls das Haushaltseinkommen.")
+          .descriptionEn(
+              "If exactly one person lives in the household, their own income is used for further calculations, otherwise the household income is used.")
           .expression(
               If.of(
                   Eq.of(haushaltsgroesse, 1),
@@ -1338,14 +1490,19 @@ public class SES3Test {
 
   private static Phenotype juenger15 =
       new Phe("juenger15", "SOZIO", "F0080")
-          .itemType(ItemType.OBSERVATION)
-          .titleDe("juenger15")
+          .category(einkommenParameterKategorie)
+          .titleDe("Personen unter 15")
+          .titleEn("Persons under 15")
+          .descriptionDe("Wie viele der Personen in Ihrem Haushalt sind juenger als 15 Jahre?")
+          .descriptionEn("How many of the people in your household are younger than 15?")
           .number()
           .get();
 
   private static Phenotype h0000072 =
       new Phe("h0000072")
-          .titleDe("h0000072")
+          .category(einkommenKategorie)
+          .titleDe("Personen unter 15 (angepasst)")
+          .titleEn("Persons under 15 (adjusted)")
           .expression(
               If.of(
                   Or.of(Empty.of(juenger15), In.of(juenger15, 98, 99)),
@@ -1355,7 +1512,9 @@ public class SES3Test {
 
   private static Phenotype h0000071 =
       new Phe("h0000071")
-          .titleDe("h0000071")
+          .category(einkommenKategorie)
+          .titleDe("Haushaltsgroesse (angepasst)")
+          .titleEn("Household size (adjusted)")
           .expression(
               If.of(
                   And.of(Ge.of(haushaltsgroesse, h0000072), Le.of(haushaltsgroesse, 12)),
@@ -1367,7 +1526,9 @@ public class SES3Test {
 
   private static Phenotype bedgew =
       new Phe("bedgew")
-          .titleDe("bedgew")
+          .category(einkommenKategorie)
+          .titleDe("Koeffizient fuer Aequivalenzeinkommen")
+          .titleEn("Coefficient for equivalised income")
           .expression(
               Sum.of(
                   Exp.of(1.0),
@@ -1378,79 +1539,86 @@ public class SES3Test {
 
   private static Phenotype aequivalenzeinkommenSES =
       new Phe("aequivalenzeinkommenSES")
-          .titleDe("aequivalenzeinkommenSES")
+          .category(einkommenKategorie)
+          .titleDe("Aequivalenzeinkommen")
+          .titleEn("Equivalised income")
+          .descriptionDe("Nettoaequivalenzeinkommen (Haushaltsmerkmal), Euro")
+          .descriptionEn("Net equivalent income (household characteristic), euro")
           .expression(Round.of(Divide.of(haushaltseinkommenSES, bedgew), 2))
           .get();
-
   private static Phenotype aequivalenzeinkommenSES_1_0 =
       new Phe("aequivalenzeinkommenSES_1_0")
-          .titleDe("aequivalenzeinkommenSES_1_0")
+          .titleEn("<800")
           .restriction(aequivalenzeinkommenSES, Res.lt(800))
           .get();
   private static Phenotype aequivalenzeinkommenSES_1_5 =
       new Phe("aequivalenzeinkommenSES_1_5")
-          .titleDe("aequivalenzeinkommenSES_1_5")
+          .titleEn("800-980")
           .restriction(aequivalenzeinkommenSES, Res.geLt(800, 980))
           .get();
   private static Phenotype aequivalenzeinkommenSES_2_0 =
       new Phe("aequivalenzeinkommenSES_2_0")
-          .titleDe("aequivalenzeinkommenSES_2_0")
+          .titleEn("980-1100")
           .restriction(aequivalenzeinkommenSES, Res.geLt(980, 1100))
           .get();
   private static Phenotype aequivalenzeinkommenSES_2_5 =
       new Phe("aequivalenzeinkommenSES_2_5")
-          .titleDe("aequivalenzeinkommenSES_2_5")
+          .titleEn("1100-1200")
           .restriction(aequivalenzeinkommenSES, Res.geLt(1100, 1200))
           .get();
   private static Phenotype aequivalenzeinkommenSES_3_0 =
       new Phe("aequivalenzeinkommenSES_3_0")
-          .titleDe("aequivalenzeinkommenSES_3_0")
+          .titleEn("1200-1333")
           .restriction(aequivalenzeinkommenSES, Res.geLt(1200, 1333.33))
           .get();
   private static Phenotype aequivalenzeinkommenSES_3_5 =
       new Phe("aequivalenzeinkommenSES_3_5")
-          .titleDe("aequivalenzeinkommenSES_3_5")
+          .titleEn("1333-1400")
           .restriction(aequivalenzeinkommenSES, Res.geLt(1333.33, 1400))
           .get();
   private static Phenotype aequivalenzeinkommenSES_4_0 =
       new Phe("aequivalenzeinkommenSES_4_0")
-          .titleDe("aequivalenzeinkommenSES_4_0")
+          .titleEn("1400-1533")
           .restriction(aequivalenzeinkommenSES, Res.geLt(1400, 1533.33))
           .get();
   private static Phenotype aequivalenzeinkommenSES_4_5 =
       new Phe("aequivalenzeinkommenSES_4_5")
-          .titleDe("aequivalenzeinkommenSES_4_5")
+          .titleEn("1533-1667")
           .restriction(aequivalenzeinkommenSES, Res.geLt(1533.33, 1666.67))
           .get();
   private static Phenotype aequivalenzeinkommenSES_5_0 =
       new Phe("aequivalenzeinkommenSES_5_0")
-          .titleDe("aequivalenzeinkommenSES_5_0")
+          .titleEn("1667-1867")
           .restriction(aequivalenzeinkommenSES, Res.geLt(1666.67, 1866.67))
           .get();
   private static Phenotype aequivalenzeinkommenSES_5_5 =
       new Phe("aequivalenzeinkommenSES_5_5")
-          .titleDe("aequivalenzeinkommenSES_5_5")
+          .titleEn("1867-2000")
           .restriction(aequivalenzeinkommenSES, Res.geLt(1866.67, 2000))
           .get();
   private static Phenotype aequivalenzeinkommenSES_6_0 =
       new Phe("aequivalenzeinkommenSES_6_0")
-          .titleDe("aequivalenzeinkommenSES_6_0")
+          .titleEn("2000-2333")
           .restriction(aequivalenzeinkommenSES, Res.geLt(2000, 2333.33))
           .get();
   private static Phenotype aequivalenzeinkommenSES_6_5 =
       new Phe("aequivalenzeinkommenSES_6_5")
-          .titleDe("aequivalenzeinkommenSES_6_5")
+          .titleEn("2333-3000")
           .restriction(aequivalenzeinkommenSES, Res.geLt(2333.33, 3000))
           .get();
   private static Phenotype aequivalenzeinkommenSES_7_0 =
       new Phe("aequivalenzeinkommenSES_7_0")
-          .titleDe("aequivalenzeinkommenSES_7_0")
+          .titleEn("≥3000")
           .restriction(aequivalenzeinkommenSES, Res.ge(3000))
           .get();
 
   private static Phenotype einkommenSES =
       new Phe("einkommenSES")
-          .titleDe("einkommenSES")
+          .category(einkommenKategorie)
+          .titleDe("Einkommen (SES)")
+          .titleEn("Income (SES)")
+          .descriptionDe("Nettoaequivalenzeinkommen (Haushaltsmerkmal), Punktwert")
+          .descriptionEn("Net equivalent income (household characteristic), point value")
           .expression(
               Switch.of(
                   Exp.of(aequivalenzeinkommenSES_1_0),
@@ -1481,11 +1649,13 @@ public class SES3Test {
                   Exp.of(7.0)))
           .get();
 
-  // SES
+  /////////////////////////// SES ///////////////////////////
 
   private static Phenotype SES =
       new Phe("SES")
-          .titleDe("SES")
+          .titleEn("SES")
+          .descriptionDe("Soziooekonomischer Status-Index, Punktsummenscore")
+          .descriptionEn("Socioeconomic status index, point sum score")
           .expression(
               Switch.of(
                   And.of(Exists.of(bildungSES), Exists.of(berufSES), Exists.of(einkommenSES)),
@@ -1506,6 +1676,46 @@ public class SES3Test {
                       Exp.of(berufSES),
                       Avg.of(Exp.of(bildungSES), Exp.of(berufSES), Exp.of(2)))))
           .get();
+  private static Phenotype SES_Q1 =
+      new Phe("SES_Q1")
+          .titleDe("1. Quintil")
+          .titleEn("1st quintile")
+          .restriction(SES, Res.le(9.2))
+          .get();
+  private static Phenotype SES_Q2 =
+      new Phe("SES_Q2")
+          .titleDe("2. Quintil")
+          .titleEn("2nd quintile")
+          .restriction(SES, Res.gtLe(9.2, 11.3))
+          .get();
+  private static Phenotype SES_Q3 =
+      new Phe("SES_Q3")
+          .titleDe("3. Quintil")
+          .titleEn("3rd quintile")
+          .restriction(SES, Res.gtLe(11.3, 13.2))
+          .get();
+  private static Phenotype SES_Q4 =
+      new Phe("SES_Q4")
+          .titleDe("4. Quintil")
+          .titleEn("4th quintile")
+          .restriction(SES, Res.gtLe(13.2, 15.3))
+          .get();
+  private static Phenotype SES_Q5 =
+      new Phe("SES_Q5")
+          .titleDe("5. Quintil")
+          .titleEn("5th quintile")
+          .restriction(SES, Res.gt(15.3))
+          .get();
+  private static Phenotype SES_Niedrig =
+      new Phe("SES_Niedrig").titleDe("Niedrig").titleEn("Low").restriction(SES, Res.le(9.2)).get();
+  private static Phenotype SES_Mittel =
+      new Phe("SES_Mittel")
+          .titleDe("Mittel")
+          .titleEn("Medium")
+          .restriction(SES, Res.gtLe(9.2, 15.3))
+          .get();
+  private static Phenotype SES_Hoch =
+      new Phe("SES_Hoch").titleDe("Hoch").titleEn("High").restriction(SES, Res.gt(15.3)).get();
 
   @BeforeAll
   static void beforeAll() {
@@ -1737,9 +1947,9 @@ public class SES3Test {
   }
 
   //  @Test
-  //  void testEducation() {
+  //  void test() {
   //    Entities.writeJSON(
-  //        "test_files/ses_education6.json",
+  //        "test_files/ses.json",
   //        bildungParameterKategorie,
   //        bildungKategorie,
   //        schule,
@@ -1754,7 +1964,6 @@ public class SES3Test {
   //        schule123,
   //        schule45,
   //        schule67,
-  //        ausbildung,
   //        ausbildung1,
   //        ausbildung2,
   //        ausbildung3,
@@ -1762,6 +1971,7 @@ public class SES3Test {
   //        ausbildung5,
   //        ausbildung6,
   //        ausbildung7,
+  //        ausbildung,
   //        ausbildungS1,
   //        ausbildungS2,
   //        ausbildungS3,
@@ -1784,75 +1994,157 @@ public class SES3Test {
   //        bildungSES_5_0,
   //        bildungSES_5_3,
   //        bildungSES_6_1,
-  //        bildungSES_7_0);
+  //        bildungSES_7_0,
+  //        berufParameterKategorie,
+  //        berufKategorie,
+  //        erwerbstaetigkeit,
+  //        erwerbstaetig,
+  //        fruehereErwerbstaetigkeit,
+  //        frueherErwerbstaetig,
+  //        familienstand,
+  //        verheiratet,
+  //        partnerschaft,
+  //        lebenZusammen,
+  //        berufEigener,
+  //        berufEigener_1_0,
+  //        berufEigener_1_1,
+  //        berufEigener_1_3,
+  //        berufEigener_1_8,
+  //        berufEigener_1_9,
+  //        berufEigener_2_0,
+  //        berufEigener_2_1,
+  //        berufEigener_2_4,
+  //        berufEigener_2_9,
+  //        berufEigener_3_5,
+  //        berufEigener_3_6,
+  //        berufEigener_3_7,
+  //        berufEigener_3_9,
+  //        berufEigener_4_1,
+  //        berufEigener_4_2,
+  //        berufEigener_4_7,
+  //        berufEigener_5_0,
+  //        berufEigener_5_2,
+  //        berufEigener_5_8,
+  //        berufEigener_6_2,
+  //        berufEigener_6_4,
+  //        berufEigener_6_8,
+  //        berufEigener_7_0,
+  //        berufEigenerSES,
+  //        berufPartner,
+  //        berufPartner_1_0,
+  //        berufPartner_1_1,
+  //        berufPartner_1_3,
+  //        berufPartner_1_8,
+  //        berufPartner_1_9,
+  //        berufPartner_2_0,
+  //        berufPartner_2_1,
+  //        berufPartner_2_4,
+  //        berufPartner_2_9,
+  //        berufPartner_3_5,
+  //        berufPartner_3_6,
+  //        berufPartner_3_7,
+  //        berufPartner_3_9,
+  //        berufPartner_4_1,
+  //        berufPartner_4_2,
+  //        berufPartner_4_7,
+  //        berufPartner_5_0,
+  //        berufPartner_5_2,
+  //        berufPartner_5_8,
+  //        berufPartner_6_2,
+  //        berufPartner_6_4,
+  //        berufPartner_6_8,
+  //        berufPartner_7_0,
+  //        berufPartnerSES,
+  //        berufSES,
+  //        einkommenKategorie,
+  //        einkommenParameterKategorie,
+  //        einkommenHaushalt,
+  //        einkommensgruppeHaushalt,
+  //        einkommensgruppeHaushalt_150,
+  //        einkommensgruppeHaushalt_150_400,
+  //        einkommensgruppeHaushalt_400_500,
+  //        einkommensgruppeHaushalt_500_750,
+  //        einkommensgruppeHaushalt_750_1000,
+  //        einkommensgruppeHaushalt_1000_1250,
+  //        einkommensgruppeHaushalt_1250_1500,
+  //        einkommensgruppeHaushalt_1500_1750,
+  //        einkommensgruppeHaushalt_1750_2000,
+  //        einkommensgruppeHaushalt_2000_2250,
+  //        einkommensgruppeHaushalt_2250_2500,
+  //        einkommensgruppeHaushalt_2500_2750,
+  //        einkommensgruppeHaushalt_2750_3000,
+  //        einkommensgruppeHaushalt_3000_3250,
+  //        einkommensgruppeHaushalt_3250_3500,
+  //        einkommensgruppeHaushalt_3500_3750,
+  //        einkommensgruppeHaushalt_3750_4000,
+  //        einkommensgruppeHaushalt_4000_4500,
+  //        einkommensgruppeHaushalt_4500_5000,
+  //        einkommensgruppeHaushalt_5000_5500,
+  //        einkommensgruppeHaushalt_5500_6000,
+  //        einkommensgruppeHaushalt_6000_7500,
+  //        einkommensgruppeHaushalt_7500_10000,
+  //        einkommensgruppeHaushalt_10000_20000,
+  //        einkommensgruppeHaushalt_20000,
+  //        einkommenHaushaltSES,
+  //        einkommenEigenes,
+  //        einkommensgruppeEigenes,
+  //        einkommensgruppeEigenes_150,
+  //        einkommensgruppeEigenes_150_400,
+  //        einkommensgruppeEigenes_400_500,
+  //        einkommensgruppeEigenes_500_750,
+  //        einkommensgruppeEigenes_750_1000,
+  //        einkommensgruppeEigenes_1000_1250,
+  //        einkommensgruppeEigenes_1250_1500,
+  //        einkommensgruppeEigenes_1500_1750,
+  //        einkommensgruppeEigenes_1750_2000,
+  //        einkommensgruppeEigenes_2000_2250,
+  //        einkommensgruppeEigenes_2250_2500,
+  //        einkommensgruppeEigenes_2500_2750,
+  //        einkommensgruppeEigenes_2750_3000,
+  //        einkommensgruppeEigenes_3000_3250,
+  //        einkommensgruppeEigenes_3250_3500,
+  //        einkommensgruppeEigenes_3500_3750,
+  //        einkommensgruppeEigenes_3750_4000,
+  //        einkommensgruppeEigenes_4000_4500,
+  //        einkommensgruppeEigenes_4500_5000,
+  //        einkommensgruppeEigenes_5000_5500,
+  //        einkommensgruppeEigenes_5500_6000,
+  //        einkommensgruppeEigenes_6000_7500,
+  //        einkommensgruppeEigenes_7500_10000,
+  //        einkommensgruppeEigenes_10000_20000,
+  //        einkommensgruppeEigenes_20000,
+  //        einkommenEigenesSES,
+  //        aequivalenzeinkommenSES,
+  //        aequivalenzeinkommenSES_1_0,
+  //        aequivalenzeinkommenSES_1_5,
+  //        aequivalenzeinkommenSES_2_0,
+  //        aequivalenzeinkommenSES_2_5,
+  //        aequivalenzeinkommenSES_3_0,
+  //        aequivalenzeinkommenSES_3_5,
+  //        aequivalenzeinkommenSES_4_0,
+  //        aequivalenzeinkommenSES_4_5,
+  //        aequivalenzeinkommenSES_5_0,
+  //        aequivalenzeinkommenSES_5_5,
+  //        aequivalenzeinkommenSES_6_0,
+  //        aequivalenzeinkommenSES_6_5,
+  //        aequivalenzeinkommenSES_7_0,
+  //        bedgew,
+  //        einkommenSES,
+  //        h0000071,
+  //        h0000072,
+  //        haushaltseinkommenSES,
+  //        haushaltsgroesse,
+  //        juenger15,
+  //        SES,
+  //        SES_Q1,
+  //        SES_Q2,
+  //        SES_Q3,
+  //        SES_Q4,
+  //        SES_Q5,
+  //        SES_Niedrig,
+  //        SES_Mittel,
+  //        SES_Hoch);
   //  }
-
-  @Test
-  void testProfession() {
-    Entities.writeJSON(
-        "test_files/ses_profession.json",
-        berufParameterKategorie,
-        berufKategorie,
-        erwerbstaetigkeit,
-        erwerbstaetig,
-        fruehereErwerbstaetigkeit,
-        frueherErwerbstaetig,
-        familienstand,
-        verheiratet,
-        partnerschaft,
-        lebenZusammen,
-        berufEigener,
-        berufEigener_1_0,
-        berufEigener_1_1,
-        berufEigener_1_3,
-        berufEigener_1_8,
-        berufEigener_1_9,
-        berufEigener_2_0,
-        berufEigener_2_1,
-        berufEigener_2_4,
-        berufEigener_2_9,
-        berufEigener_3_5,
-        berufEigener_3_6,
-        berufEigener_3_7,
-        berufEigener_3_9,
-        berufEigener_4_1,
-        berufEigener_4_2,
-        berufEigener_4_7,
-        berufEigener_5_0,
-        berufEigener_5_2,
-        berufEigener_5_8,
-        berufEigener_6_2,
-        berufEigener_6_4,
-        berufEigener_6_8,
-        berufEigener_7_0,
-        berufEigenerSES,
-        berufPartner,
-        berufPartner_1_0,
-        berufPartner_1_1,
-        berufPartner_1_3,
-        berufPartner_1_8,
-        berufPartner_1_9,
-        berufPartner_2_0,
-        berufPartner_2_1,
-        berufPartner_2_4,
-        berufPartner_2_9,
-        berufPartner_3_5,
-        berufPartner_3_6,
-        berufPartner_3_7,
-        berufPartner_3_9,
-        berufPartner_4_1,
-        berufPartner_4_2,
-        berufPartner_4_7,
-        berufPartner_5_0,
-        berufPartner_5_2,
-        berufPartner_5_8,
-        berufPartner_6_2,
-        berufPartner_6_4,
-        berufPartner_6_8,
-        berufPartner_7_0,
-        berufPartnerSES,
-        berufSES);
-  }
 
   @Test
   void test1() throws InstantiationException {
@@ -2244,6 +2536,64 @@ public class SES3Test {
                 berufPartner_7_0,
                 berufPartnerSES,
                 berufSES,
+                einkommenKategorie,
+                einkommenParameterKategorie,
+                einkommenHaushalt,
+                einkommensgruppeHaushalt,
+                einkommensgruppeHaushalt_150,
+                einkommensgruppeHaushalt_150_400,
+                einkommensgruppeHaushalt_400_500,
+                einkommensgruppeHaushalt_500_750,
+                einkommensgruppeHaushalt_750_1000,
+                einkommensgruppeHaushalt_1000_1250,
+                einkommensgruppeHaushalt_1250_1500,
+                einkommensgruppeHaushalt_1500_1750,
+                einkommensgruppeHaushalt_1750_2000,
+                einkommensgruppeHaushalt_2000_2250,
+                einkommensgruppeHaushalt_2250_2500,
+                einkommensgruppeHaushalt_2500_2750,
+                einkommensgruppeHaushalt_2750_3000,
+                einkommensgruppeHaushalt_3000_3250,
+                einkommensgruppeHaushalt_3250_3500,
+                einkommensgruppeHaushalt_3500_3750,
+                einkommensgruppeHaushalt_3750_4000,
+                einkommensgruppeHaushalt_4000_4500,
+                einkommensgruppeHaushalt_4500_5000,
+                einkommensgruppeHaushalt_5000_5500,
+                einkommensgruppeHaushalt_5500_6000,
+                einkommensgruppeHaushalt_6000_7500,
+                einkommensgruppeHaushalt_7500_10000,
+                einkommensgruppeHaushalt_10000_20000,
+                einkommensgruppeHaushalt_20000,
+                einkommenHaushaltSES,
+                einkommenEigenes,
+                einkommensgruppeEigenes,
+                einkommensgruppeEigenes_150,
+                einkommensgruppeEigenes_150_400,
+                einkommensgruppeEigenes_400_500,
+                einkommensgruppeEigenes_500_750,
+                einkommensgruppeEigenes_750_1000,
+                einkommensgruppeEigenes_1000_1250,
+                einkommensgruppeEigenes_1250_1500,
+                einkommensgruppeEigenes_1500_1750,
+                einkommensgruppeEigenes_1750_2000,
+                einkommensgruppeEigenes_2000_2250,
+                einkommensgruppeEigenes_2250_2500,
+                einkommensgruppeEigenes_2500_2750,
+                einkommensgruppeEigenes_2750_3000,
+                einkommensgruppeEigenes_3000_3250,
+                einkommensgruppeEigenes_3250_3500,
+                einkommensgruppeEigenes_3500_3750,
+                einkommensgruppeEigenes_3750_4000,
+                einkommensgruppeEigenes_4000_4500,
+                einkommensgruppeEigenes_4500_5000,
+                einkommensgruppeEigenes_5000_5500,
+                einkommensgruppeEigenes_5500_6000,
+                einkommensgruppeEigenes_6000_7500,
+                einkommensgruppeEigenes_7500_10000,
+                einkommensgruppeEigenes_10000_20000,
+                einkommensgruppeEigenes_20000,
+                einkommenEigenesSES,
                 aequivalenzeinkommenSES,
                 aequivalenzeinkommenSES_1_0,
                 aequivalenzeinkommenSES_1_5,
@@ -2259,19 +2609,21 @@ public class SES3Test {
                 aequivalenzeinkommenSES_6_5,
                 aequivalenzeinkommenSES_7_0,
                 bedgew,
-                einkommenEigenes,
-                einkommenEigenesSES,
-                einkommenHaushalt,
-                einkommenHaushaltSES,
                 einkommenSES,
-                einkommensgruppeEigenes,
-                einkommensgruppeHaushalt,
                 h0000071,
                 h0000072,
                 haushaltseinkommenSES,
                 haushaltsgroesse,
                 juenger15,
-                SES)
+                SES,
+                SES_Q1,
+                SES_Q2,
+                SES_Q3,
+                SES_Q4,
+                SES_Q5,
+                SES_Niedrig,
+                SES_Mittel,
+                SES_Hoch)
             .pro(SES);
 
     ResultSet rs = q.execute();
