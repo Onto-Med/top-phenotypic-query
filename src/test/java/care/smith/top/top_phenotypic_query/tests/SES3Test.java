@@ -744,7 +744,8 @@ public class SES3Test {
                       Exp.of(berufEigener_6_8),
                       Exp.of(6.8),
                       Exp.of(berufEigener_7_0),
-                      Exp.of(7.0))))
+                      Exp.of(7.0))),
+              DataType.NUMBER)
           .get();
 
   /////////////////////////// BERUF PARTNER ///////////////////////////
@@ -1013,7 +1014,8 @@ public class SES3Test {
                       Exp.of(berufPartner_6_8),
                       Exp.of(6.8),
                       Exp.of(berufPartner_7_0),
-                      Exp.of(7.0))))
+                      Exp.of(7.0))),
+              DataType.NUMBER)
           .get();
 
   private static Phenotype berufSES =
@@ -1023,7 +1025,7 @@ public class SES3Test {
           .titleEn("Profession (SES)")
           .descriptionDe("Berufsstatus (Haushaltsmerkmal)")
           .descriptionEn("Occupational status (household characteristic)")
-          .expression(Max.of(berufEigenerSES, berufPartnerSES))
+          .expression(Max.of(berufEigenerSES, berufPartnerSES), DataType.NUMBER)
           .get();
 
   /////////////////////////// EINKOMMEN HAUSHALT ///////////////////////////
@@ -1245,7 +1247,8 @@ public class SES3Test {
                   Exp.of(einkommensgruppeHaushalt_10000_20000),
                   Exp.of(15000),
                   Exp.of(einkommensgruppeHaushalt_20000),
-                  Exp.of(20000)))
+                  Exp.of(20000)),
+              DataType.NUMBER)
           .get();
 
   /////////////////////////// EIGENES EINKOMMEN ///////////////////////////
@@ -1457,7 +1460,8 @@ public class SES3Test {
                   Exp.of(einkommensgruppeEigenes_10000_20000),
                   Exp.of(15000),
                   Exp.of(einkommensgruppeEigenes_20000),
-                  Exp.of(20000)))
+                  Exp.of(20000)),
+              DataType.NUMBER)
           .get();
 
   private static Phenotype haushaltsgroesse =
@@ -1485,7 +1489,8 @@ public class SES3Test {
               If.of(
                   Eq.of(haushaltsgroesse, 1),
                   Exp.of(einkommenEigenesSES),
-                  Exp.of(einkommenHaushaltSES)))
+                  Exp.of(einkommenHaushaltSES)),
+              DataType.NUMBER)
           .get();
 
   private static Phenotype juenger15 =
@@ -1507,7 +1512,8 @@ public class SES3Test {
               If.of(
                   Or.of(Empty.of(juenger15), In.of(juenger15, 98, 99)),
                   Exp.of(0),
-                  Exp.of(juenger15)))
+                  Exp.of(juenger15)),
+              DataType.NUMBER)
           .get();
 
   private static Phenotype h0000071 =
@@ -1521,7 +1527,8 @@ public class SES3Test {
                   If.of(
                       Eq.of(haushaltsgroesse, h0000072),
                       Add.of(haushaltsgroesse, 1),
-                      Exp.of(haushaltsgroesse))))
+                      Exp.of(haushaltsgroesse))),
+              DataType.NUMBER)
           .get();
 
   private static Phenotype bedgew =
@@ -1534,7 +1541,8 @@ public class SES3Test {
                   Exp.of(1.0),
                   Multiply.of(h0000072, 0.3),
                   Multiply.of(
-                      Subtract.of(Subtract.of(h0000071, h0000072), Exp.of(1.0)), Exp.of(0.5))))
+                      Subtract.of(Subtract.of(h0000071, h0000072), Exp.of(1.0)), Exp.of(0.5))),
+              DataType.NUMBER)
           .get();
 
   private static Phenotype aequivalenzeinkommenSES =
@@ -1544,7 +1552,7 @@ public class SES3Test {
           .titleEn("Equivalised income")
           .descriptionDe("Nettoaequivalenzeinkommen (Haushaltsmerkmal), Euro")
           .descriptionEn("Net equivalent income (household characteristic), euro")
-          .expression(Round.of(Divide.of(haushaltseinkommenSES, bedgew), 2))
+          .expression(Round.of(Divide.of(haushaltseinkommenSES, bedgew), 2), DataType.NUMBER)
           .get();
   private static Phenotype aequivalenzeinkommenSES_1_0 =
       new Phe("aequivalenzeinkommenSES_1_0")
@@ -1646,7 +1654,8 @@ public class SES3Test {
                   Exp.of(aequivalenzeinkommenSES_6_5),
                   Exp.of(6.5),
                   Exp.of(aequivalenzeinkommenSES_7_0),
-                  Exp.of(7.0)))
+                  Exp.of(7.0)),
+              DataType.NUMBER)
           .get();
 
   /////////////////////////// SES ///////////////////////////
@@ -1674,7 +1683,8 @@ public class SES3Test {
                   Sum.of(
                       Exp.of(bildungSES),
                       Exp.of(berufSES),
-                      Avg.of(Exp.of(bildungSES), Exp.of(berufSES), Exp.of(2)))))
+                      Avg.of(Exp.of(bildungSES), Exp.of(berufSES), Exp.of(2)))),
+              DataType.NUMBER)
           .get();
   private static Phenotype SES_Q1 =
       new Phe("SES_Q1")

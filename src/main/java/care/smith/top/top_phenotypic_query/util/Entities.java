@@ -321,4 +321,12 @@ public class Entities {
       e.printStackTrace();
     }
   }
+
+  public static void writePrettyJSON(String file, Entity... entities) {
+    try {
+      new ObjectMapper().writerWithDefaultPrettyPrinter().writeValue(new File(file), entities);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }
