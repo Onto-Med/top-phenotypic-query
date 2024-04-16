@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>care.smith.top</groupId>
 	<artifactId>top-phenotypic-query</artifactId>
-	<version>0.7.7</version>
+	<version>0.7.8</version>
 	<name>TOP Phenotypic Query</name>
 
     <properties>
@@ -71,8 +71,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.1.214</version>
-            <scope>test</scope>
+            <version>2.2.224</version>
         </dependency>
         <dependency>
             <groupId>org.fhir</groupId>
