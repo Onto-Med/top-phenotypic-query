@@ -15,8 +15,19 @@ import java.util.Set;
 public class Expressions {
 
   public static boolean hasValues(Expression exp) {
-    return exp != null && exp.getValues() != null && !exp.getValues().isEmpty();
+    if (exp == null || exp.getValues() == null || exp.getValues().isEmpty()) return false;
+    for (Value v : exp.getValues()) {
+      if (Values.hasBooleanType(v) && Values.getBooleanValue(v) != null) return true;
+      if (Values.hasDateTimeType(v) && Values.getDateTimeValue(v) != null) return true;
+      if (Values.hasNumberType(v) && Values.getNumberValue(v) != null) return true;
+      if (Values.hasStringType(v) && Values.getStringValue(v) != null) return true;
+    }
+    return false;
   }
+
+  //  public static boolean hasValues(Expression exp) {
+  //	  return exp != null && exp.getValues() != null && !exp.getValues().isEmpty();
+  //  }
 
   public static boolean hasSingleValue(Expression exp) {
     return exp != null && exp.getValues() != null && exp.getValues().size() == 1;
