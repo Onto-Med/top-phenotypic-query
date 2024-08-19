@@ -1,0 +1,70 @@
+id: OMOP_SQL_Adapter
+adapter: care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter
+connection:
+  url: jdbc:postgresql://localhost:9024/ohdsi
+  user: postgres
+  password: postgres
+subjectQuery:
+  baseQuery: "SELECT iq.person_id as person_id, iq.birth_date as birth_date, iq.gender_concept_id as gender_concept_id FROM( SELECT person_id, make_date ( year_of_birth, month_of_birth, day_of_birth) AS birth_date, gender_concept_id FROM synpuf_cdm.person) AS iq \nWHERE TRUE"
+  sexListPart: "\nAND gender_concept_id IN ({values})"
+  birthdateIntervalPart: "\nAND birth_date {operator} {value}"
+  output:
+    id: person_id
+    sex: gender_concept_id
+    birthdate: birth_date
+phenotypeQueries:
+#  Assessment1:
+#    baseQuery: "SELECT person_id, created_at, {phenotype} FROM synpuf_cdm.measurement\nWHERE {phenotype} IS NOT NULL"
+#    valueIntervalPart: "\nAND {phenotype} {operator} {value}"
+#    valueListPart: "\nAND {phenotype} IN ({values})"
+#    dateTimeIntervalPart: "\nAND created_at {operator} {value}"
+#    subjectsPart: "\nAND person_id IN ({values})"
+#    output:
+#      subject: person_id
+#      value: "{phenotype}"
+#      dateTime: created_at
+  condition:
+    baseQuery: "SELECT person_id, condition_start_datetime FROM synpuf_cdm.condition_occurrence, synpuf_cdm.concept\nWHERE concept_id = condition_concept_id and concept_code in (select SPLIT_PART(code, '|', 2) from UNNEST(array[ {codes} ]) as code)"
+    dateTimeIntervalPart: "\nAND condition_start_datetime {operator} {value}"
+    subjectsPart: "\nAND person_id IN ({values})"
+    output:
+      subject: person_id
+      dateTime: condition_start_datetime
+  medication:
+    baseQuery: "SELECT person_id, created_at FROM medication\nWHERE concat_ws('|', code_system, code) IN ({codes})"
+    dateTimeIntervalPart: "\nAND created_at {operator} {value}"
+    subjectsPart: "\nAND person_id IN ({values})"
+    output:
+      subject: person_id
+      dateTime: created_at
+  procedure:
+    baseQuery: "SELECT person_id, created_at FROM procedure\nWHERE concat_ws('|', code_system, code) IN ({codes})"
+    dateTimeIntervalPart: "\nAND created_at {operator} {value}"
+    subjectsPart: "\nAND person_id IN ({values})"
+    output:
+      subject: person_id
+      dateTime: created_at
+birthdateMapping:
+  code: http://loinc.org|21112-8
+ageMapping:
+  code: http://loinc.org|30525-0
+sexMapping:
+  code: http://snomed.info/sct|263495000
+  restrictionMappings:
+    - model: [ http://snomed.info/sct|248153007 ]
+      source: [ 8507 ]
+    - model: [ Male ]
+      source: [ 8507 ]
+    - model: [ http://snomed.info/sct|248152002 ]
+      source: [ 8532 ]
+    - model: [ Female ]
+      source: [ 8532 ]
+#codeMappings:
+#  - code: http://www.ama-assn.org/go/cpt|82565
+#    type: Assessment1
+#    phenotypeMappings:
+#      phenotype: creatinine
+#  - code: http://fhir.de/CodeSystem/bfarm/icd-10-gm|F05.0
+#    type: Condition
+#    phenotypeMappings:
+#      codes: "'http://fhir.de/CodeSystem/bfarm/icd-10-gm|F05'"
