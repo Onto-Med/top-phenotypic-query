@@ -64,7 +64,7 @@ public class Phenotypes {
   }
 
   public static List<Code> getUnrestrictedPhenotypeCodes(Phenotype p) {
-    return (isRestriction(p)) ? p.getSuperPhenotype().getCodes() : p.getCodes();
+    return (isRestriction(p)) ? getCodesWithSubtreeFlattened(p.getSuperPhenotype()) : getCodesWithSubtreeFlattened(p);
   }
 
   public static List<String> getUnrestrictedPhenotypeCodes(Phenotype p, String codeSystem) {
@@ -80,7 +80,7 @@ public class Phenotypes {
 
   public static List<String> getCodeUris(Phenotype p) {
     if (p.getCodes() == null) return new ArrayList<>();
-    return p.getCodes().stream().map(c -> getCodeUri(c)).collect(Collectors.toList());
+    return getCodesWithSubtreeFlattened(p).stream().map(c -> getCodeUri(c)).collect(Collectors.toList());
   }
 
   public static ItemType getItemType(Phenotype p) {
@@ -142,5 +142,16 @@ public class Phenotypes {
 
   public static boolean isRestrictedValuesKeyOfPhenotype(String key, String singlePhenotypeId) {
     return key.startsWith(singlePhenotypeId + "_values_");
+  }
+
+  private static List<Code> getCodesWithSubtreeFlattened(Phenotype p) {
+    ArrayList<Code> codes = new ArrayList<>();
+    p.getCodes().forEach(code -> collectCodeChildren(code, codes));
+    return codes;
+  }
+
+  private static void collectCodeChildren(Code code, List<Code> codes) {
+    if (!codes.contains(code)) codes.add(code);
+    code.getChildren().forEach(childCode -> collectCodeChildren(childCode, codes));
   }
 }
