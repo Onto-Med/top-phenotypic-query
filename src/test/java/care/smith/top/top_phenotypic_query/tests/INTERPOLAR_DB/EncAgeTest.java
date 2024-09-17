@@ -9,11 +9,9 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
-
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
-
 import org.junit.jupiter.api.Test;
 
 public class EncAgeTest {
