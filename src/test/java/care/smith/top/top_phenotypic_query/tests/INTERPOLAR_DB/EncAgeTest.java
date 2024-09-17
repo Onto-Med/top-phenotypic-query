@@ -44,14 +44,10 @@ public class EncAgeTest {
 
     assertEquals(
         birthdate11,
-        ((DateTimeValue) rs.getValues("11", "birth date", null).getFirst())
-            .getValue()
-            .toLocalDate());
+        ((DateTimeValue) rs.getValues("11", "birth date", null).get(0)).getValue().toLocalDate());
     assertEquals(
         birthdate21,
-        ((DateTimeValue) rs.getValues("21", "birth date", null).getFirst())
-            .getValue()
-            .toLocalDate());
+        ((DateTimeValue) rs.getValues("21", "birth date", null).get(0)).getValue().toLocalDate());
 
     int age11 = Period.between(birthdate11, LocalDate.now()).getYears();
     int age21 = Period.between(birthdate21, LocalDate.now()).getYears();
