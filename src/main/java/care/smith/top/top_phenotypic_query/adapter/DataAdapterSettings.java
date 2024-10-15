@@ -25,7 +25,7 @@ public abstract class DataAdapterSettings {
     if (search.hasSexRestriction()) {
       Restriction sexR = search.getSexRestriction();
       if (Restrictions.hasValues(sexR))
-        builder.sexList(getSexList(search.getSexMapping().getSourceRestriction(sexR), search));
+        builder.sexList(getSexList(search.getSexMapping().getConvertedRestriction(sexR), search));
     }
 
     if (search.hasBirthdateRestriction()) {
@@ -33,7 +33,7 @@ public abstract class DataAdapterSettings {
       if (Restrictions.hasInterval(birthdateR)) {
         Map<String, String> interval =
             getBirthdateInterval(
-                search.getBirthdateMapping().getSourceRestriction(birthdateR), search);
+                search.getBirthdateMapping().getConvertedRestriction(birthdateR), search);
         for (String key : interval.keySet()) builder.birthdateIntervalLimit(key, interval.get(key));
       }
     }
@@ -53,7 +53,7 @@ public abstract class DataAdapterSettings {
     if (search.hasRestriction()) {
       Restriction r = search.getRestriction();
       if (r.getQuantifier() != Quantifier.ALL) {
-        Restriction sourceR = search.getSourceRestriction();
+        Restriction sourceR = search.getConvertedRestriction();
         if (Restrictions.hasInterval(r)) addValueInterval(sourceR, builder, search);
         else if (Restrictions.hasValues(r)) addValueList(sourceR, builder, search);
       }

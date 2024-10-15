@@ -26,6 +26,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Or;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
+import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -63,6 +64,7 @@ public abstract class AbstractTest {
   protected static Phenotype light = getInterval("Light", weight, 0, 100);
   protected static Phenotype heavy = getInterval("Heavy", weight, 100, 500);
   protected static Phenotype height = getPhenotype("Height", "http://loinc.org", "3137-7", "m");
+  protected static Phenotype high = getInterval("High", height, 1.75, 2.00);
   protected static Phenotype bmi = getPhenotype("BMI", getBMIExpression());
   protected static Phenotype bmi19_25 = getInterval("BMI19_25", bmi, 19, 25);
   protected static Phenotype bmi19_27 = getInterval("BMI19_27", bmi, 19, 27);
@@ -70,6 +72,8 @@ public abstract class AbstractTest {
   protected static Phenotype bmi27_30 = getInterval("BMI27_30", bmi, 27, 30);
   protected static Phenotype finding = getPhenotype("Finding", getFindingExpression());
   protected static Phenotype overWeight = getRestriction("Overweight", finding, 1);
+  protected static Phenotype lightAndHigh =
+      new Phe("LightAndHigh").titleEn("LightAndHigh").expression(And.of(light, high)).get();
 
   protected static Entity[] phenotypes = {
     age,
@@ -88,7 +92,9 @@ public abstract class AbstractTest {
     finding,
     overWeight,
     light,
-    heavy
+    heavy,
+    high,
+    lightAndHigh
   };
 
   protected static ExpressionFunction defAgrFunc = Last.get().getFunction();

@@ -339,7 +339,7 @@ public class Restrictions {
   }
 
   public static Restriction convertValues(Restriction r, String inUnit, String outUnit) {
-    NumberRestriction nr = (NumberRestriction) r;
+    NumberRestriction nr = (NumberRestriction) copy(r);
     List<BigDecimal> vals =
         nr.getValues().stream()
             .map(v -> UCUM.convert(v, inUnit, outUnit))

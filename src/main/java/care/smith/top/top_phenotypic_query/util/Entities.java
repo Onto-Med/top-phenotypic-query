@@ -70,7 +70,7 @@ public class Entities {
   private boolean setInExpression(DataAdapterConfig config, Phenotype supP, Phenotype p) {
     CodeMapping codeMap = config.getCodeMappingIncludingSubjectParameters(supP);
     if (codeMap == null) return false;
-    Restriction sourceRestr = codeMap.getSourceRestriction(p.getRestriction(), supP);
+    Restriction sourceRestr = codeMap.getRestriction(p.getRestriction());
     p.setExpression(Exp.inRestriction(supP, sourceRestr));
     return true;
   }

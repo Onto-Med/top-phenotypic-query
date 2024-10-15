@@ -10,6 +10,7 @@ import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.converter.csv.CSV;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
@@ -59,6 +60,8 @@ public class FullBMIAgeTest extends AbstractTest {
     phesExpected.remove("Male");
     phesExpected.remove("Heavy");
     phesExpected.remove("Light");
+    phesExpected.remove("High");
+    phesExpected.remove("LightAndHigh");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
     assertEquals(new BigDecimal(21), Values.getNumberValue(getValue("Age", phes)));
@@ -102,5 +105,61 @@ public class FullBMIAgeTest extends AbstractTest {
 
     assertEquals(Set.of("1"), rs.getSubjectIds());
     assertEquals(15, rs.getPhenotypes("1").size());
+  }
+
+  @Test
+  public void test3() throws InstantiationException, SQLException, NoCodesException {
+    QueryCriterion cri1 =
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(true)
+                .defaultAggregationFunctionId(defAgrFunc.getId())
+                .subjectId(light.getId())
+                .dateTimeRestriction(getDTR(2000))
+                .type(TypeEnum.QUERYCRITERION);
+
+    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri1);
+
+    URL configFile =
+        Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test3.yml");
+    assertNotNull(configFile);
+    DataAdapter adapter = DataAdapter.getInstance(configFile.getPath());
+
+    PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
+    ResultSet rs = pf.execute();
+    adapter.close();
+
+    System.out.println(rs);
+
+    System.out.println(new CSV().toStringSubjects(rs, phenotypes, query));
+    System.out.println(new CSV().toStringPhenotypes(rs, phenotypes));
+  }
+
+  @Test
+  public void test4() throws InstantiationException, SQLException, NoCodesException {
+    QueryCriterion cri1 =
+        (QueryCriterion)
+            new QueryCriterion()
+                .inclusion(true)
+                .defaultAggregationFunctionId(defAgrFunc.getId())
+                .subjectId(lightAndHigh.getId())
+                .dateTimeRestriction(getDTR(2000))
+                .type(TypeEnum.QUERYCRITERION);
+
+    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri1);
+
+    URL configFile =
+        Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test3.yml");
+    assertNotNull(configFile);
+    DataAdapter adapter = DataAdapter.getInstance(configFile.getPath());
+
+    PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
+    ResultSet rs = pf.execute();
+    adapter.close();
+
+    System.out.println(rs);
+
+    System.out.println(new CSV().toStringSubjects(rs, phenotypes, query));
+    System.out.println(new CSV().toStringPhenotypes(rs, phenotypes));
   }
 }
