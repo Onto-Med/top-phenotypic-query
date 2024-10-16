@@ -54,10 +54,7 @@ public class Entities {
       }
       if (Phenotypes.isRestriction(p)) {
         if (Phenotypes.isSingle(p) && p.getRestriction() == null) p.setRestriction(Res.ofCodes(p));
-        if (config == null
-            || supP == null
-            || Phenotypes.isCompositePhenotype(supP)
-            || !setInExpression(config, supP, p)) p.setExpression(Exp.inRestriction(p));
+        if (supP != null) p.setExpression(Exp.inRestriction(supP, getRestriction(config, supP, p)));
       }
     }
     return this;
@@ -67,12 +64,12 @@ public class Entities {
     return deriveAdditionalProperties(null);
   }
 
-  private boolean setInExpression(DataAdapterConfig config, Phenotype supP, Phenotype p) {
-    CodeMapping codeMap = config.getCodeMappingIncludingSubjectParameters(supP);
-    if (codeMap == null) return false;
-    Restriction sourceRestr = codeMap.getRestriction(p.getRestriction());
-    p.setExpression(Exp.inRestriction(supP, sourceRestr));
-    return true;
+  private Restriction getRestriction(DataAdapterConfig config, Phenotype supP, Phenotype p) {
+    if (Phenotypes.isSinglePhenotype(supP) && config != null) {
+      CodeMapping codeMap = config.getCodeMappingIncludingSubjectParameters(supP);
+      if (codeMap != null) return codeMap.getRestriction(p.getRestriction());
+    }
+    return p.getRestriction();
   }
 
   public static Entities of(Entity... entities) {
