@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.converter.csv;
 
+import care.smith.top.model.DataType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.ProjectionEntry;
@@ -61,12 +62,19 @@ public class CSVSubjectsHeader extends LinkedHashMap<CSVSubjectsHead, TreeSet<CS
   }
 
   private CSVSubjectsHead getHead(Phenotype p) {
-    return new CSVSubjectsHead(
-        p.getId(),
-        Entities.getDefaultTitleFull(p),
-        p.getEntityType(),
-        p.getItemType(),
-        p.getDataType());
+    return getHead(p.getId(), Entities.getDefaultTitleFull(p), p.getDataType(), p);
+  }
+
+  private CSVSubjectsHead getRestrictedValuesHead(Phenotype singleRestriction) {
+    return getHead(
+        Phenotypes.getRestrictedValuesKey(singleRestriction),
+        Entities.getDefaultTitleFull(singleRestriction) + "(VALUES)",
+        singleRestriction.getSuperPhenotype().getDataType(),
+        singleRestriction);
+  }
+
+  private CSVSubjectsHead getHead(String id, String title, DataType dt, Phenotype p) {
+    return new CSVSubjectsHead(id, title, p.getEntityType(), p.getItemType(), dt);
   }
 
   private void putHead(Phenotype p) {
@@ -81,6 +89,7 @@ public class CSVSubjectsHeader extends LinkedHashMap<CSVSubjectsHead, TreeSet<CS
         put(superHead, subHeader);
       }
       subHeader.add(h);
+      if (Phenotypes.isSingleRestriction(p)) subHeader.add(getRestrictedValuesHead(p));
     }
   }
 

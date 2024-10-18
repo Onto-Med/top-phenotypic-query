@@ -118,11 +118,11 @@ public class CSVSubjectsTest {
         "2", dabi, null, Val.of(true, DateUtil.parse("2010-01-01"), DateUtil.parse("2011-01-31")));
 
     String dataRequired =
-        "Id;Birthdate;Dabigatran;Dabigatran(DATE);Age[a];Age::Old;Age::Young;Sex;Sex::Female;Sex::Male;BMI;BMI::Overweight;Weight[kg];Weight[kg](DATE);Height[m];Height[m](DATE)"
+        "Id;Birthdate;Dabigatran;Dabigatran(DATE);Age[a];Age::Old;Age::Old(VALUES);Age::Young;Age::Young(VALUES);Sex;Sex::Female;Sex::Female(VALUES);Sex::Male;Sex::Male(VALUES);BMI;BMI::Overweight;Weight[kg];Weight[kg](DATE);Height[m];Height[m](DATE)"
             + System.lineSeparator()
-            + "1;1950-03-02T00:00:00;false;;15;false;true;male;false;true;18.52;false;58,59,60;2008-01-01,2009-01-01,2010-01-01;1.8;null"
+            + "1;1950-03-02T00:00:00;false;;15;false;;true;;male;false;;true;;18.52;false;58,59,60;2008-01-01,2009-01-01,2010-01-01;1.8;null"
             + System.lineSeparator()
-            + "2;1970-05-06T00:00:00;true;2010-01-01;35;true;false;female;true;false;29.38;true;80;null;1.65;null"
+            + "2;1970-05-06T00:00:00;true;2010-01-01;35;true;;false;;female;true;;false;;29.38;true;80;null;1.65;null"
             + System.lineSeparator();
 
     Que q =
@@ -175,11 +175,11 @@ public class CSVSubjectsTest {
         "2", dabi, null, Val.of(true, DateUtil.parse("2010-01-01"), DateUtil.parse("2011-01-31")));
 
     String dataRequired =
-        "Id;BMI;BMI::Overweight;Sex;Sex::Female;Weight[kg];Weight[kg](DATE);Height[m];Height[m](DATE)"
+        "Id;BMI;BMI::Overweight;Sex;Sex::Female;Sex::Female(VALUES);Weight[kg];Weight[kg](DATE);Height[m];Height[m](DATE)"
             + System.lineSeparator()
-            + "1;18.52;false;male;false;58,59,60;2008-01-01,2009-01-01,2010-01-01;1.8;null"
+            + "1;18.52;false;male;false;;58,59,60;2008-01-01,2009-01-01,2010-01-01;1.8;null"
             + System.lineSeparator()
-            + "2;29.38;true;female;true;80;null;1.65;null"
+            + "2;29.38;true;female;true;;80;null;1.65;null"
             + System.lineSeparator();
 
     Que q = new Que("config/Default_SQL_Adapter.yml", entities).inc(overweight).exc(female);
