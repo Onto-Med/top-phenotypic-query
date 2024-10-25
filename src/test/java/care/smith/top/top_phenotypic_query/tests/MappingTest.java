@@ -44,7 +44,8 @@ public class MappingTest extends AbstractTest {
             .type(DataType.STRING);
     Restriction femaleSourceExpected =
         new StringRestriction().addValuesItem("female").type(DataType.STRING);
-    Restriction femaleSourceActual = config.getSexMapping().getConvertedRestriction(femaleModel, null);
+    Restriction femaleSourceActual =
+        config.getSexMapping().getConvertedRestriction(femaleModel, null);
     assertEquals(femaleSourceExpected, femaleSourceActual);
 
     Restriction ageModel =
