@@ -44,7 +44,8 @@ public class MappingTest extends AbstractTest {
             .type(DataType.STRING);
     Restriction femaleSourceExpected =
         new StringRestriction().addValuesItem("female").type(DataType.STRING);
-    Restriction femaleSourceActual = config.getSexMapping().getSourceRestriction(femaleModel, null);
+    Restriction femaleSourceActual =
+        config.getSexMapping().getConvertedRestriction(femaleModel, null);
     assertEquals(femaleSourceExpected, femaleSourceActual);
 
     Restriction ageModel =
@@ -65,7 +66,7 @@ public class MappingTest extends AbstractTest {
             .cardinality(1)
             .quantifier(Quantifier.EXACT)
             .type(DataType.NUMBER);
-    Restriction ageSourceActual = config.getAgeMapping().getSourceRestriction(ageModel, null);
+    Restriction ageSourceActual = config.getAgeMapping().getConvertedRestriction(ageModel, null);
     assertEquals(ageSourceExpected, ageSourceActual);
 
     CodeMapping heightMap = config.getCodeMapping("http://loinc.org|3137-7");
@@ -87,7 +88,7 @@ public class MappingTest extends AbstractTest {
             RestrictionOperator.LESS_THAN,
             2);
     CodeMapping heightMap = config.getCodeMapping("http://loinc.org|3137-7");
-    Restriction source = heightMap.getSourceRestriction(model, height);
+    Restriction source = heightMap.getConvertedRestriction(model, height);
     assertEquals(
         List.of(BigDecimal.valueOf(150), BigDecimal.valueOf(200)),
         Restrictions.getNumberValues(source));

@@ -59,13 +59,14 @@ public class SingleSearch extends PhenotypeSearch {
     return config.getCodeMapping(phenotype);
   }
 
-  public Restriction getSourceRestriction() {
+  public Restriction getConvertedRestriction() {
     return (getCodeMapping() == null)
         ? getRestriction()
-        : getCodeMapping().getSourceRestriction(getRestriction(), getSuperPhenotype());
+        : getCodeMapping().getConvertedRestriction(getRestriction(), getSuperPhenotype());
   }
 
   public String getModelUnit() {
+    if (Phenotypes.isRestriction(phenotype)) return getSuperPhenotype().getUnit();
     return phenotype.getUnit();
   }
 

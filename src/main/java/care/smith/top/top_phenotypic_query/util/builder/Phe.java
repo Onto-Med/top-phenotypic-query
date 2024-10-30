@@ -13,6 +13,10 @@ import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class Phe {
 
@@ -25,6 +29,7 @@ public class Phe {
 
   public Phe(String id) {
     p = (Phenotype) new Phenotype().itemType(ItemType.OBSERVATION).id(id);
+    p.addTitlesItem(new LocalisableText().text(id).lang("en"));
   }
 
   public Phe itemType(ItemType itemType) {
@@ -58,12 +63,19 @@ public class Phe {
   }
 
   public Phe title(String txt) {
-    p.addTitlesItem(new LocalisableText().text(txt));
-    return this;
+    return title(txt, null);
   }
 
   public Phe title(String txt, String lang) {
-    p.addTitlesItem(new LocalisableText().text(txt).lang(lang));
+    HashMap<String, String> titles = new LinkedHashMap<>();
+    for (LocalisableText t : p.getTitles()) titles.put(t.getLang(), t.getText());
+    titles.put(lang, txt);
+
+    List<LocalisableText> newTitles = new ArrayList<>();
+    for (String l : titles.keySet())
+      newTitles.add(new LocalisableText().lang(l).text(titles.get(l)));
+
+    p.setTitles(newTitles);
     return this;
   }
 

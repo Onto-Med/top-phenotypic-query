@@ -112,14 +112,14 @@ public class SQLAdapterSettings extends DataAdapterSettings {
     if (search.hasSexRestriction()) {
       Restriction sexR = search.getSexRestriction();
       if (Restrictions.hasValues(sexR))
-        paramNum = setValues(ps, search.getSexMapping().getSourceRestriction(sexR), paramNum);
+        paramNum = setValues(ps, search.getSexMapping().getConvertedRestriction(sexR), paramNum);
     }
 
     if (search.hasBirthdateRestriction()) {
       Restriction birthdateR = search.getBirthdateRestriction();
       if (Restrictions.hasInterval(birthdateR))
         setDateTimeValues(
-            ps, search.getBirthdateMapping().getSourceRestriction(birthdateR), paramNum);
+            ps, search.getBirthdateMapping().getConvertedRestriction(birthdateR), paramNum);
     }
 
     return ps;
@@ -140,7 +140,7 @@ public class SQLAdapterSettings extends DataAdapterSettings {
       Restriction r = search.getRestriction();
       if (r.getQuantifier() != Quantifier.ALL
           && (Restrictions.hasInterval(r) || Restrictions.hasValues(r)))
-        paramNum = setValues(ps, search.getSourceRestriction(), paramNum);
+        paramNum = setValues(ps, search.getConvertedRestriction(), paramNum);
     }
 
     if (search.hasDateTimeRestriction()) {

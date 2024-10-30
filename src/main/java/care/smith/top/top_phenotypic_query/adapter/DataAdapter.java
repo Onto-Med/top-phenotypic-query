@@ -78,7 +78,7 @@ public abstract class DataAdapter {
 
   public void checkQuantifier(SingleSearch search, ResultSet rs) {
     if (!search.hasRestriction()) return;
-    Restriction r = search.getSourceRestriction();
+    Restriction r = search.getConvertedRestriction();
     if (Restrictions.hasExistentialQuantifier(r)) {
       replacePhenotypes(search, rs);
       return;

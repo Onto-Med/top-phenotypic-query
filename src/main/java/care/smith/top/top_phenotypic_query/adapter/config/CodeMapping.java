@@ -60,17 +60,26 @@ public class CodeMapping {
     return !restrictionMappings.isEmpty();
   }
 
-  public Restriction getSourceRestriction(Restriction modelRestriction) {
-    return getSourceRestriction(modelRestriction, null);
+  public Restriction getConvertedRestriction(Restriction modelRestriction) {
+    return getConvertedRestriction(modelRestriction, null);
   }
 
-  public Restriction getSourceRestriction(Restriction modelRestriction, Phenotype phe) {
+  public Restriction getConvertedRestriction(Restriction modelRestriction, Phenotype phe) {
+    Restriction sourceRestriction = getSourceRestriction(modelRestriction);
+    if (sourceRestriction != null) return sourceRestriction;
+    if (unit == null) return modelRestriction;
+    return Restrictions.convertValues(modelRestriction, phe.getUnit(), unit);
+  }
+
+  public Restriction getRestriction(Restriction modelRestriction) {
+    Restriction sourceRestriction = getSourceRestriction(modelRestriction);
+    return (sourceRestriction != null) ? sourceRestriction : modelRestriction;
+  }
+
+  private Restriction getSourceRestriction(Restriction modelRestriction) {
     Restriction sourceRestriction =
         restrictionMappings.get(Restrictions.copyWithoutBasicAttributes(modelRestriction));
-    if (sourceRestriction == null) {
-      if (unit == null) return modelRestriction;
-      else return Restrictions.convertValues(modelRestriction, phe.getUnit(), unit);
-    }
+    if (sourceRestriction == null) return null;
     return Restrictions.setType(
         sourceRestriction
             .cardinality(modelRestriction.getCardinality())

@@ -10,11 +10,14 @@ import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.ProjectionEntry.TypeEnum;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
+import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
+import care.smith.top.top_phenotypic_query.converter.csv.CSV;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import care.smith.top.top_phenotypic_query.util.Values;
+import care.smith.top.top_phenotypic_query.util.builder.Que;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
@@ -59,6 +62,8 @@ public class FullBMIAgeTest extends AbstractTest {
     phesExpected.remove("Male");
     phesExpected.remove("Heavy");
     phesExpected.remove("Light");
+    phesExpected.remove("High");
+    phesExpected.remove("LightAndHigh");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
     assertEquals(new BigDecimal(21), Values.getNumberValue(getValue("Age", phes)));
@@ -102,5 +107,55 @@ public class FullBMIAgeTest extends AbstractTest {
 
     assertEquals(Set.of("1"), rs.getSubjectIds());
     assertEquals(15, rs.getPhenotypes("1").size());
+  }
+
+  @Test
+  public void test3() throws InstantiationException, SQLException, NoCodesException {
+    DataAdapterConfig config =
+        DataAdapterConfig.getInstanceFromResource("config/SQL_Adapter_Test3.yml");
+
+    Que q = new Que(config, phenotypes).inc(lightAndHigh);
+    ResultSet rs = q.execute();
+
+    String dataActual = new CSV().toStringSubjects(rs, phenotypes, q.getQuery());
+
+    System.out.println(rs);
+
+    System.out.println(dataActual);
+
+    String dataRequired =
+        "Id;LightAndHigh;Weight;Weight(DATE);Weight::Light;Weight::Light(VALUES);Height[m];Height[m](DATE);Height::High;Height::High(VALUES)"
+            + System.lineSeparator()
+            + "2;true;;;true;85;;;true;1.8000000000000000"
+            + System.lineSeparator()
+            + "4;true;;;true;85,90;;;true;1.8000000000000000"
+            + System.lineSeparator();
+
+    assertEquals(dataRequired, dataActual);
+  }
+
+  @Test
+  public void test4() throws InstantiationException, SQLException, NoCodesException {
+    DataAdapterConfig config =
+        DataAdapterConfig.getInstanceFromResource("config/SQL_Adapter_Test3.yml");
+
+    Que q = new Que(config, phenotypes).inc(lightAndHigh).pro(weight).pro(height);
+    ResultSet rs = q.execute();
+
+    String dataActual = new CSV().toStringSubjects(rs, phenotypes, q.getQuery());
+
+    System.out.println(rs);
+
+    System.out.println(dataActual);
+
+    String dataRequired =
+        "Id;Weight;Weight(DATE);Weight::Light;Weight::Light(VALUES);Height[m];Height[m](DATE);Height::High;Height::High(VALUES);LightAndHigh"
+            + System.lineSeparator()
+            + "2;85;2000-12-01;true;85;1.8000000000000000;2000-12-01;true;1.8000000000000000;true"
+            + System.lineSeparator()
+            + "4;85,90;2000-12-01,2000-11-01;true;85,90;1.8000000000000000,1.6000000000000000;2000-12-01,2000-11-01;true;1.8000000000000000;true"
+            + System.lineSeparator();
+
+    assertEquals(dataRequired, dataActual);
   }
 }
