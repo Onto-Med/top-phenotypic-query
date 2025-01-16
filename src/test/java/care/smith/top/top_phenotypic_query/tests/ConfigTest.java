@@ -35,7 +35,7 @@ public class ConfigTest {
     String actual =
         conf.getSubjectQuery()
             .getQueryBuilder()
-            .baseQuery()
+            .baseQuery("")
             .sexList("'m', 'w'")
             .birthdateIntervalLimit(">=", "'1990-01-01'::date")
             .birthdateIntervalLimit("<", "'2000-01-01'::date")
@@ -60,7 +60,7 @@ public class ConfigTest {
     String actual =
         conf.getPhenotypeQuery("Assessment1")
             .getQueryBuilder(mapping)
-            .baseQuery()
+            .baseQuery("")
             .valueIntervalLimit(">=", "100")
             .valueIntervalLimit("<", "200")
             .dateTimeIntervalLimit(">=", "'1990-01-01'::date")
@@ -86,7 +86,7 @@ public class ConfigTest {
     String actual =
         conf.getPhenotypeQuery("Assessment1")
             .getQueryBuilder(mapping)
-            .baseQuery()
+            .baseQuery("")
             .valueList("'overweight'")
             .dateTimeIntervalLimit(">=", "'1990-01-01'::date")
             .dateTimeIntervalLimit("<", "'2000-01-01'::date")

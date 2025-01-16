@@ -9,4 +9,5 @@ public class Props {
   public static final String CODES = "codes";
   public static final String VAR_CODES = OPEN_BRACKET + CODES + CLOSED_BRACKET;
   public static final String DEFAULT_ITEM_TYPE = "default";
+  public static final String VAR_DATA_SOURCE = OPEN_BRACKET + "data_source" + CLOSED_BRACKET;
 }

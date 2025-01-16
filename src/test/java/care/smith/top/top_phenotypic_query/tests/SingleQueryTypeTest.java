@@ -139,7 +139,7 @@ public class SingleQueryTypeTest {
     DataAdapterConfig config = q.getConfig();
     Entities entities = q.getFinder().getPhenotypes();
 
-    SubjectQueryMan sbjMan = new SubjectQueryMan(adapter);
+    SubjectQueryMan sbjMan = new SubjectQueryMan(adapter, query);
     SingleQueryMan man = new SingleQueryMan(sbjMan, query, entities);
     for (QueryCriterion cri : query.getCriteria()) {
       Phenotype phe = entities.getPhenotype(cri.getSubjectId());

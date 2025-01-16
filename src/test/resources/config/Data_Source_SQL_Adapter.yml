@@ -1,0 +1,34 @@
+id: Data_Source_SQL_Adapter
+adapter: care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter
+connection:
+  url: jdbc:h2:mem:db?allowMultiQueries=true'
+  user: user
+  password: password
+subjectQuery:
+  baseQuery: "SELECT encounter_id, birth_date, sex FROM subject s, encounter e\nWHERE s.subject_id = e.subject_id\nAND s.data_source_id = e.data_source_id\nAND s.data_source_id = '{data_source}'"
+  sexListPart: "\nAND sex IN ({values})"
+  birthdateIntervalPart: "\nAND birth_date {operator} {value}"
+  output:
+    id: encounter_id
+    sex: sex
+    birthdate: birth_date
+phenotypeQueries:
+  default:
+    baseQuery: "SELECT encounter_id, date_time, start_date_time, end_date_time, unit, number_value, text_value, date_time_value, boolean_value FROM subject_resource\nWHERE code_system || '|' || code IN ({codes})\nAND data_source_id = '{data_source}'\nAND (number_value IS NOT NULL OR text_value IS NOT NULL OR date_time_value IS NOT NULL OR boolean_value IS NOT NULL)"
+    numberValueIntervalPart: "\nAND number_value {operator} {value}" 
+    numberValueListPart: "\nAND number_value IN ({values})"
+    dateTimeValueIntervalPart: "\nAND date_time_value {operator} {value}" 
+    dateTimeValueListPart: "\nAND date_time_value IN ({values})" 
+    textValueListPart: "\nAND text_value IN ({values})" 
+    booleanValueListPart: "\nAND boolean_value IN ({values})" 
+    dateTimeIntervalPart: "\nAND created_at {operator} {value}"
+    subjectsPart: "\nAND subject_id IN ({values})"
+    output:
+      subject: encounter_id
+      numberValue: number_value
+      textValue: text_value
+      dateTimeValue: date_time_value
+      booleanValue: boolean_value
+      dateTime: date_time
+      startDateTime: start_date_time
+      endDateTime: end_date_time

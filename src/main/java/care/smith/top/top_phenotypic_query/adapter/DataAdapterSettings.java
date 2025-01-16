@@ -20,7 +20,8 @@ import java.util.stream.Stream;
 public abstract class DataAdapterSettings {
 
   public String createSubjectPreparedQuery(SubjectSearch search) {
-    SubjectQueryBuilder builder = search.getSubjectQuery().getQueryBuilder().baseQuery();
+    SubjectQueryBuilder builder =
+        search.getSubjectQuery().getQueryBuilder().baseQuery(search.getQuery().getDataSource());
 
     if (search.hasSexRestriction()) {
       Restriction sexR = search.getSexRestriction();
@@ -48,7 +49,7 @@ public abstract class DataAdapterSettings {
 
     if (search.getPhenotypeQuery().getBaseQuery().contains(Props.VAR_CODES))
       addCodeList(search.getPhenotype(), builder, search);
-    else builder.baseQuery();
+    else builder.baseQuery(search.getQuery().getDataSource());
 
     if (search.hasRestriction()) {
       Restriction r = search.getRestriction();

@@ -75,7 +75,9 @@ class CliTest extends AbstractTest {
 
     MAPPER.writeValue(
         queryConfig.toFile(),
-        new PhenotypeQuery().addCriteriaItem(criterion).type(QueryType.PHENOTYPE));
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource(""))
+            .addCriteriaItem(criterion)
+            .type(QueryType.PHENOTYPE));
     return queryConfig;
   }
 

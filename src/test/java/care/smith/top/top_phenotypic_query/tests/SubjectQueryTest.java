@@ -31,10 +31,12 @@ public class SubjectQueryTest extends AbstractTest {
       getRestriction("Female", sex, "http://hl7.org/fhir/administrative-gender|female");
   static Entity[] phenotypes = {age, young, sex, female};
 
+  static String DATA_SOURCE = "data_source_1";
+
   @Test
   public void test1() throws InstantiationException, SQLException, NoCodesException {
     PhenotypeQuery query =
-        new PhenotypeQuery()
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource(DATA_SOURCE))
             .addCriteriaItem(
                 (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId()))
             .addCriteriaItem(
@@ -63,7 +65,7 @@ public class SubjectQueryTest extends AbstractTest {
   @Test
   public void test2() throws InstantiationException, SQLException, NoCodesException {
     PhenotypeQuery query =
-        new PhenotypeQuery()
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource(DATA_SOURCE))
             .addCriteriaItem(
                 (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId()))
             .addCriteriaItem(
@@ -87,7 +89,7 @@ public class SubjectQueryTest extends AbstractTest {
   @Test
   public void test3() throws InstantiationException, SQLException, NoCodesException {
     PhenotypeQuery query =
-        new PhenotypeQuery()
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource(DATA_SOURCE))
             .addCriteriaItem(
                 (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(female.getId()))
             .addCriteriaItem(
@@ -114,7 +116,7 @@ public class SubjectQueryTest extends AbstractTest {
   @Test
   public void test4() throws InstantiationException, SQLException, NoCodesException {
     PhenotypeQuery query =
-        new PhenotypeQuery()
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource(DATA_SOURCE))
             .addCriteriaItem(
                 (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(female.getId()))
             .addCriteriaItem(

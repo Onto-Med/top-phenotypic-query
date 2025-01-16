@@ -79,7 +79,7 @@ public class SQLAdapterSettings extends DataAdapterSettings {
   protected void addCodeList(Phenotype p, PhenotypeQueryBuilder builder, SingleSearch search) {
     String valuesAsString =
         generateQuestionMarks(Phenotypes.getUnrestrictedPhenotypeCodes(p).size());
-    builder.baseQuery(valuesAsString);
+    builder.baseQuery(valuesAsString, search.getQuery().getDataSource());
   }
 
   @Override

@@ -110,13 +110,13 @@ public class SubjectSearch extends PhenotypeSearch {
     return getSubjectQuery().getOutput();
   }
 
-  public static String getBaseQuery(DataAdapterConfig config) {
-    return config.getSubjectQuery().getQueryBuilder().baseQuery().build();
-  }
-
-  public static String getIdColumn(DataAdapterConfig config) {
-    return config.getSubjectQuery().getOutput().getId();
-  }
+  //  public static String getBaseQuery(DataAdapterConfig config) {
+  //    return config.getSubjectQuery().getQueryBuilder().baseQuery().build();
+  //  }
+  //
+  //  public static String getIdColumn(DataAdapterConfig config) {
+  //    return config.getSubjectQuery().getOutput().getId();
+  //  }
 
   public boolean hasSexRestriction() {
     return sex != null && Phenotypes.isSingleRestriction(sex);

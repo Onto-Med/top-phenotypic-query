@@ -27,7 +27,7 @@ public class Que {
 
   private DataAdapter adapter;
   private DataAdapterConfig config;
-  private PhenotypeQuery query = new PhenotypeQuery();
+  private PhenotypeQuery query = get();
   private Entity[] entities;
 
   private Logger log = LoggerFactory.getLogger(Que.class);
@@ -42,6 +42,10 @@ public class Que {
     this.adapter = DataAdapter.getInstance(config);
     this.config = config;
     this.entities = entities;
+  }
+
+  public static PhenotypeQuery get() {
+    return (PhenotypeQuery) new PhenotypeQuery().dataSource("data_source_1");
   }
 
   public DataAdapter getAdapter() {
