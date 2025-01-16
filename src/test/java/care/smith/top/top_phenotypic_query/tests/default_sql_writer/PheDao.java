@@ -2,6 +2,8 @@ package care.smith.top.top_phenotypic_query.tests.default_sql_writer;
 
 import care.smith.top.model.Code;
 import care.smith.top.model.Phenotype;
+import care.smith.top.top_phenotypic_query.util.DateUtil;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 public class PheDao {
@@ -19,6 +21,18 @@ public class PheDao {
 
   public static PheDao get(Phenotype phe, String date, Number numberValue) {
     return new PheDao().phenotype(phe).date(date).numberValue(numberValue);
+  }
+
+  public static PheDao get(Phenotype phe, LocalDateTime date, Number numberValue) {
+    return new PheDao().phenotype(phe).date(date).numberValue(numberValue);
+  }
+
+  public static PheDao get(Phenotype phe, String date, Boolean booleanValue) {
+    return new PheDao().phenotype(phe).date(date).booleanValue(booleanValue);
+  }
+
+  public static PheDao get(Phenotype phe, LocalDateTime date, Boolean booleanValue) {
+    return new PheDao().phenotype(phe).date(date).booleanValue(booleanValue);
   }
 
   public PheDao phenotype(Phenotype phe) {
@@ -61,6 +75,11 @@ public class PheDao {
 
   public PheDao date(String date) {
     this.date = date;
+    return this;
+  }
+
+  public PheDao date(LocalDateTime date) {
+    this.date = DateUtil.format(date);
     return this;
   }
 

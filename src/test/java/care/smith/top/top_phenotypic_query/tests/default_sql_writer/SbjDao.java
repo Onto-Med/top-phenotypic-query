@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.tests.default_sql_writer;
 
+import care.smith.top.top_phenotypic_query.util.DateUtil;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,10 @@ public class SbjDao {
   private List<EncDao> encounters = new ArrayList<>();
 
   public static SbjDao get(String subjectId, String birthDate, String sex) {
+    return new SbjDao().subjectId(subjectId).birthDate(birthDate).sex(sex);
+  }
+
+  public static SbjDao get(String subjectId, LocalDateTime birthDate, String sex) {
     return new SbjDao().subjectId(subjectId).birthDate(birthDate).sex(sex);
   }
 
@@ -28,6 +34,11 @@ public class SbjDao {
 
   public SbjDao birthDate(String birthDate) {
     this.birthDate = birthDate;
+    return this;
+  }
+
+  public SbjDao birthDate(LocalDateTime birthDate) {
+    this.birthDate = DateUtil.format(birthDate);
     return this;
   }
 
