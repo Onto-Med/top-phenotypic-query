@@ -15,6 +15,7 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.bool.Or;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Ge;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Gt;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.comparison.Lt;
+import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Exists;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.set.Filter;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
@@ -28,7 +29,6 @@ import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Set;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -41,12 +41,27 @@ public class MELDDataSourceTest {
 
   private static final DefaultSqlWriterDataSource WRITER = new DefaultSqlWriterDataSource(CONFIG);
 
+  private static Phenotype birthDate =
+      new Phe("birthDate")
+          .itemType(ItemType.SUBJECT_BIRTH_DATE)
+          .titleEn("Birth date")
+          .dateTime()
+          .get();
+
+  private static Phenotype enc =
+      new Phe("encounter").itemType(ItemType.ENCOUNTER).titleEn("Encounter").string().get();
+  private static Phenotype inp =
+      new Phe("inpatient").titleEn("Inpatient").restriction(enc, Res.of("INP")).get();
+  private static Phenotype amb =
+      new Phe("ambulatory").titleEn("Ambulatory").restriction(enc, Res.of("AMB")).get();
+
+  private static Phenotype encAge =
+      new Phe("encAge").titleEn("Encounter age").expression(EncAge.of(birthDate, enc)).get();
+  private static Phenotype encAgeGe17 =
+      new Phe("encAgeGe17").titleEn("Encounter age >= 17").restriction(encAge, Res.ge(17)).get();
+
   private static Phenotype age =
       new Phe("age").itemType(ItemType.SUBJECT_AGE).titleEn("Age").number().get();
-
-  private static Phenotype old = new Phe("old").titleEn("Old").restriction(age, Res.ge(12)).get();
-  private static Phenotype young =
-      new Phe("young").titleEn("Young").restriction(age, Res.lt(12)).get();
 
   private static Phenotype crea =
       new Phe("crea", "http://loinc.org", "2160-0")
@@ -169,18 +184,18 @@ public class MELDDataSourceTest {
     SbjDao sbjYoung =
         SbjDao.get("sbjYoung", "2001-01-01", "male")
             .encounter(
-                EncDao.get("sbjYoung_enc0")
+                EncDao.get("sbjYoung_enc0", "INP", "2019-01-01", "2020-01-02")
                     .phenotype(PheDao.get(crea, "2020-01-01", 0.1))
                     .phenotype(PheDao.get(crea, "2019-01-02", 2.1))
                     .phenotype(PheDao.get(bili, "2020-01-01", 0.2))
                     .phenotype(PheDao.get(inr, "2020-01-01", 0.3)))
             .encounter(
-                EncDao.get("sbjYoung_enc1")
+                EncDao.get("sbjYoung_enc1", "AMB", "2018-01-01", "2020-01-02")
                     .phenotype(PheDao.get(crea, "2020-01-01", 1.1))
                     .phenotype(PheDao.get(bili, "2020-01-01", 1.2))
                     .phenotype(PheDao.get(inr, "2020-01-01", 1.3)))
             .encounter(
-                EncDao.get("sbjYoung_enc2")
+                EncDao.get("sbjYoung_enc2", "INP", "2019-01-01", "2020-01-02")
                     .phenotype(PheDao.get(crea, "2020-01-01", 2.1))
                     .phenotype(PheDao.get(bili, "2020-01-01", 2.2))
                     .phenotype(PheDao.get(inr, "2020-01-01", 2.3)));
@@ -190,51 +205,51 @@ public class MELDDataSourceTest {
     SbjDao sbjOld =
         SbjDao.get("sbjOld", "1951-01-01", "female")
             .encounter(
-                EncDao.get("sbjOld_enc3")
+                EncDao.get("sbjOld_enc3", "AMB", "2018-01-01", "2020-01-02")
                     .phenotype(PheDao.get(crea, "2020-01-01", 3.1))
                     .phenotype(PheDao.get(bili, "2020-01-01", 3.2))
                     .phenotype(PheDao.get(inr, "2020-01-01", 3.3))
                     .phenotype(PheDao.get(med, "2020-01-01", true)))
             .encounter(
-                EncDao.get("sbjOld_enc4")
+                EncDao.get("sbjOld_enc4", "INP", "2019-01-01", "2020-01-02")
                     .phenotype(PheDao.get(crea, "2020-01-01", 0.1))
                     .phenotype(PheDao.get(bili, "2020-01-01", 0.2))
                     .phenotype(PheDao.get(inr, "2020-01-01", 0.3))
                     .phenotype(PheDao.get(diaInt, DateUtil.parse("2020-01-01").minusDays(8), true))
                     .phenotype(PheDao.get(diaInt, DateUtil.parse("2020-01-01").minusDays(6), true)))
             .encounter(
-                EncDao.get("sbjOld_enc5")
+                EncDao.get("sbjOld_enc5", "AMB", "2018-01-01", "2020-01-02")
                     .phenotype(PheDao.get(crea, "2020-01-01", 2.1))
                     .phenotype(PheDao.get(bili, "2020-01-01", 2.2)))
             .encounter(
-                EncDao.get("sbjOld_enc6")
+                EncDao.get("sbjOld_enc6", "INP", "2019-01-01", "2020-01-02")
                     .phenotype(PheDao.get(crea, "2020-01-01", 2.1))
                     .phenotype(PheDao.get(inr, "2020-01-01", 2.3)))
             .encounter(
-                EncDao.get("sbjOld_enc7")
+                EncDao.get("sbjOld_enc7", "AMB", "2018-01-01", "2020-01-02")
                     .phenotype(PheDao.get(bili, "2020-01-01", 2.2))
                     .phenotype(PheDao.get(inr, "2020-01-01", 2.3)))
             .encounter(
-                EncDao.get("sbjOld_enc8")
+                EncDao.get("sbjOld_enc8", "INP", "2019-01-01", "2020-01-02")
                     .phenotype(PheDao.get(bili, "2020-01-01", 3.2))
                     .phenotype(PheDao.get(inr, "2020-01-01", 3.3))
                     .phenotype(PheDao.get(diaInt, DateUtil.parse("2020-01-01").minusDays(5), true))
                     .phenotype(PheDao.get(diaInt, DateUtil.parse("2020-01-01").minusDays(6), true)))
             .encounter(
-                EncDao.get("sbjOld_enc9")
+                EncDao.get("sbjOld_enc9", "AMB", "2018-01-01", "2020-01-02")
                     .phenotype(PheDao.get(crea, "2020-01-01", 0.1))
                     .phenotype(PheDao.get(bili, "2020-01-01", 0.2))
                     .phenotype(PheDao.get(inr, "2020-01-01", 0.3))
                     .phenotype(PheDao.get(diaInt, DateUtil.parse("2020-01-01").minusDays(7), true))
                     .phenotype(PheDao.get(diaInt, DateUtil.parse("2020-01-01").minusDays(6), true)))
             .encounter(
-                EncDao.get("sbjOld_enc10")
+                EncDao.get("sbjOld_enc10", "INP", "2019-01-01", "2020-01-02")
                     .phenotype(PheDao.get(crea, "2020-01-01", 0.1))
                     .phenotype(PheDao.get(bili, "2020-01-01", 0.2))
                     .phenotype(PheDao.get(inr, "2020-01-01", 0.3))
                     .phenotype(PheDao.get(diaCon, DateUtil.parse("2020-01-01").minusDays(7), true)))
             .encounter(
-                EncDao.get("sbjOld_enc11")
+                EncDao.get("sbjOld_enc11", "AMB", "2018-01-01", "2020-01-02")
                     .phenotype(PheDao.get(crea, "2020-01-01", 0.1))
                     .phenotype(PheDao.get(bili, "2020-01-01", 0.2))
                     .phenotype(PheDao.get(inr, "2020-01-01", 0.3))
@@ -243,21 +258,21 @@ public class MELDDataSourceTest {
 
     WRITER.insertSbj(DATA_SOURCE_ID, sbjOld);
 
-    SbjDao sbj10y =
-        SbjDao.get("sbj10y", LocalDateTime.now().minusYears(10), "female")
+    SbjDao sbjVeryYoung =
+        SbjDao.get("sbjVeryYoung", "2015-01-01", "female")
             .encounter(
-                EncDao.get("sbj10y_enc12")
+                EncDao.get("sbjVeryYoung_enc12", "INP", "2019-01-01", "2020-01-02")
                     .phenotype(PheDao.get(crea, "2020-01-01", 0.1))
                     .phenotype(PheDao.get(bili, "2020-01-01", 0.2))
                     .phenotype(PheDao.get(inr, "2020-01-01", 0.3))
                     .phenotype(PheDao.get(diaCon, DateUtil.parse("2020-01-01").minusDays(7), true)))
             .encounter(
-                EncDao.get("sbj10y_enc13")
+                EncDao.get("sbjVeryYoung_enc13", "AMB", "2018-01-01", "2020-01-02")
                     .phenotype(PheDao.get(crea, "2020-01-01", 1.1))
                     .phenotype(PheDao.get(bili, "2020-01-01", 1.2))
                     .phenotype(PheDao.get(inr, "2020-01-01", 1.3)));
 
-    WRITER.insertSbj(DATA_SOURCE_ID, sbj10y);
+    WRITER.insertSbj(DATA_SOURCE_ID, sbjVeryYoung);
 
     WRITER.printSbj();
     WRITER.printEnc();
@@ -281,16 +296,16 @@ public class MELDDataSourceTest {
   @Test
   void testMELD2a() throws InstantiationException {
     ResultSet rs = search(meld2, null, null);
-    assertEquals(Set.of("sbjYoung_enc1", "sbj10y_enc13"), rs.getSubjectIds());
+    assertEquals(Set.of("sbjYoung_enc1", "sbjVeryYoung_enc13"), rs.getSubjectIds());
     assertEquals(
         new BigDecimal("10.96977366744444"), rs.getNumberValue("sbjYoung_enc1", "meld", null));
     assertEquals(
-        new BigDecimal("10.96977366744444"), rs.getNumberValue("sbj10y_enc13", "meld", null));
+        new BigDecimal("10.96977366744444"), rs.getNumberValue("sbjVeryYoung_enc13", "meld", null));
   }
 
   @Test
   void testMELD2b() throws InstantiationException {
-    ResultSet rs = search(meld2, null, old);
+    ResultSet rs = search(meld2, null, encAgeGe17);
     assertEquals(Set.of("sbjYoung_enc1"), rs.getSubjectIds());
     assertEquals(
         new BigDecimal("10.96977366744444"), rs.getNumberValue("sbjYoung_enc1", "meld", null));
@@ -300,7 +315,7 @@ public class MELDDataSourceTest {
   void testMELD3a() throws InstantiationException {
     ResultSet rs = search(meld3, null, null);
     assertEquals(
-        Set.of("sbjYoung_enc2", "sbjOld_enc3", "sbjOld_enc9", "sbjOld_enc10", "sbj10y_enc12"),
+        Set.of("sbjYoung_enc2", "sbjOld_enc3", "sbjOld_enc9", "sbjOld_enc10", "sbjVeryYoung_enc12"),
         rs.getSubjectIds());
     assertEquals(
         new BigDecimal("25.83929138811024"), rs.getNumberValue("sbjYoung_enc2", "meld", null));
@@ -311,14 +326,27 @@ public class MELDDataSourceTest {
     assertEquals(
         new BigDecimal("19.69683703591735"), rs.getNumberValue("sbjOld_enc10", "meld", null));
     assertEquals(
-        new BigDecimal("19.69683703591735"), rs.getNumberValue("sbj10y_enc12", "meld", null));
+        new BigDecimal("19.69683703591735"), rs.getNumberValue("sbjVeryYoung_enc12", "meld", null));
   }
 
   @Test
   void testMELD3b() throws InstantiationException {
+    ResultSet rs = search(meld3, amb, null);
+    assertEquals(Set.of("sbjYoung_enc2", "sbjOld_enc10", "sbjVeryYoung_enc12"), rs.getSubjectIds());
+    assertEquals(
+        new BigDecimal("25.83929138811024"), rs.getNumberValue("sbjYoung_enc2", "meld", null));
+    assertEquals(
+        new BigDecimal("19.69683703591735"), rs.getNumberValue("sbjOld_enc10", "meld", null));
+    assertEquals(
+        new BigDecimal("19.69683703591735"), rs.getNumberValue("sbjVeryYoung_enc12", "meld", null));
+  }
+
+  @Test
+  void testMELD3c() throws InstantiationException {
     ResultSet rs = search(meld3, med, null);
     assertEquals(
-        Set.of("sbjYoung_enc2", "sbjOld_enc9", "sbjOld_enc10", "sbj10y_enc12"), rs.getSubjectIds());
+        Set.of("sbjYoung_enc2", "sbjOld_enc9", "sbjOld_enc10", "sbjVeryYoung_enc12"),
+        rs.getSubjectIds());
     assertEquals(
         new BigDecimal("25.83929138811024"), rs.getNumberValue("sbjYoung_enc2", "meld", null));
     assertEquals(
@@ -326,12 +354,12 @@ public class MELDDataSourceTest {
     assertEquals(
         new BigDecimal("19.69683703591735"), rs.getNumberValue("sbjOld_enc10", "meld", null));
     assertEquals(
-        new BigDecimal("19.69683703591735"), rs.getNumberValue("sbj10y_enc12", "meld", null));
+        new BigDecimal("19.69683703591735"), rs.getNumberValue("sbjVeryYoung_enc12", "meld", null));
   }
 
   @Test
-  void testMELD3c() throws InstantiationException {
-    ResultSet rs = search(meld3, med, old);
+  void testMELD3d() throws InstantiationException {
+    ResultSet rs = search(meld3, med, encAgeGe17);
     assertEquals(Set.of("sbjYoung_enc2", "sbjOld_enc9", "sbjOld_enc10"), rs.getSubjectIds());
     assertEquals(
         new BigDecimal("25.83929138811024"), rs.getNumberValue("sbjYoung_enc2", "meld", null));
@@ -345,10 +373,35 @@ public class MELDDataSourceTest {
       throws InstantiationException {
     Que q =
         new Que(
-                CONFIG, age, old, young, crea, creaHigh, creaLow, bili, inr, creaAdj, biliAdj,
-                inrAdj, diaInt, diaCon, diaAdj, med, meld, meld0, meld1, meld2, meld3)
-            .pro(young)
-            .pro(old)
+                CONFIG,
+                birthDate,
+                enc,
+                inp,
+                amb,
+                encAge,
+                encAgeGe17,
+                age,
+                crea,
+                creaHigh,
+                creaLow,
+                bili,
+                inr,
+                creaAdj,
+                biliAdj,
+                inrAdj,
+                diaInt,
+                diaCon,
+                diaAdj,
+                med,
+                meld,
+                meld0,
+                meld1,
+                meld2,
+                meld3)
+            .pro(age)
+            .pro(encAge)
+            .pro(encAgeGe17)
+            .pro(enc)
             .inc(inc);
     if (ageInc != null) q.inc(ageInc);
     if (exc != null) q.exc(exc);
@@ -356,7 +409,7 @@ public class MELDDataSourceTest {
     ResultSet rs = q.execute();
 
     //    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    //    System.out.println(new CSV().toStringWideTable(rs, q.getEntities(), q.getQuery()));
+    //    System.out.println(new CSV().toStringSubjects(rs, q.getEntities(), q.getQuery()));
     //    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
     return rs;

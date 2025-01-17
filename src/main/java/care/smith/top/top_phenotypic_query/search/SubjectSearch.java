@@ -94,6 +94,12 @@ public class SubjectSearch extends PhenotypeSearch {
     return (birthdate != null) ? birthdate : getAgeToBirthdate();
   }
 
+  public Phenotype getBirthdateDerivedRestriction() {
+    return (birthdate != null && Phenotypes.isSingleRestriction(birthdate))
+        ? birthdate
+        : getAgeToBirthdate();
+  }
+
   public CodeMapping getSexMapping() {
     return config.getSexMapping();
   }
@@ -134,7 +140,7 @@ public class SubjectSearch extends PhenotypeSearch {
 
   public Restriction getBirthdateRestriction() {
     if (birthdate == null && age == null) return null;
-    return getBirthdateDerived().getRestriction();
+    return getBirthdateDerivedRestriction().getRestriction();
   }
 
   public DataAdapter getAdapter() {

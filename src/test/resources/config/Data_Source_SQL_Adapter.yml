@@ -20,9 +20,8 @@ phenotypeQueries:
     dateTimeValueIntervalPart: "\nAND date_time_value {operator} {value}" 
     dateTimeValueListPart: "\nAND date_time_value IN ({values})" 
     textValueListPart: "\nAND text_value IN ({values})" 
-    booleanValueListPart: "\nAND boolean_value IN ({values})" 
-    dateTimeIntervalPart: "\nAND created_at {operator} {value}"
-    subjectsPart: "\nAND subject_id IN ({values})"
+    booleanValueListPart: "\nAND boolean_value IN ({values})"
+    dateTimeIntervalPart: "\nAND date_time {operator} {value}"
     output:
       subject: encounter_id
       numberValue: number_value
@@ -30,5 +29,14 @@ phenotypeQueries:
       dateTimeValue: date_time_value
       booleanValue: boolean_value
       dateTime: date_time
+      startDateTime: start_date_time
+      endDateTime: end_date_time
+  encounter:
+    baseQuery: "SELECT encounter_id, type, start_date_time, end_date_time FROM encounter\nWHERE data_source_id = '{data_source}'"
+    textValueListPart: "\nAND type IN ({values})"
+    dateTimeIntervalPart: "\nAND start_date_time {operator} {value}"
+    output:
+      subject: encounter_id
+      textValue: type
       startDateTime: start_date_time
       endDateTime: end_date_time

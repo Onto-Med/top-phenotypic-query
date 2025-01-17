@@ -14,6 +14,15 @@ public class EncDao {
     return new EncDao().encounterId(encounterId);
   }
 
+  public static EncDao get(
+      String encounterId, String type, String startDateTime, String endDateTime) {
+    return new EncDao()
+        .encounterId(encounterId)
+        .type(type)
+        .startDateTime(startDateTime)
+        .endDateTime(endDateTime);
+  }
+
   public String getEncounterId() {
     return encounterId;
   }

@@ -3,9 +3,7 @@ package care.smith.top.top_phenotypic_query.tests.intern.run;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import care.smith.top.model.Entity;
-import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
-import care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter.EncAge;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
@@ -71,7 +69,7 @@ public class BlazeTestIntern {
   //    System.out.println(rs.getSubjectIds());
   //    System.out.println(rs.getSubjectIds().size());
   //  }
-
+  //
   //  @Test
   //  public void testEncPartOf() throws InstantiationException {
   //    Phenotype bd = new Phe("birthdate").dateTime().itemType(ItemType.SUBJECT_BIRTH_DATE).get();
@@ -84,20 +82,20 @@ public class BlazeTestIntern {
   //
   //    System.out.println(rs);
   //  }
-
-  @Test
-  public void testEncAge() throws InstantiationException {
-    Phenotype bd = new Phe("birthdate").dateTime().itemType(ItemType.SUBJECT_BIRTH_DATE).get();
-    Phenotype enc = new Phe("encounter").string().itemType(ItemType.ENCOUNTER).get();
-    Phenotype age = new Phe("age").expression(EncAge.of(bd, enc)).get();
-    Phenotype old = new Phe("old").restriction(age, Res.gt(82)).get();
-
-    ResultSet rs = new Que(CONFIG, bd, enc, age, old).inc(old).execute();
-
-    System.out.println(rs);
-
-    assertEquals(
-        Set.of("Patient/UKSH-0004", "Patient/VHF09998", "Patient/VHF09999", "Patient/VHF10000"),
-        rs.getSubjectIds());
-  }
+  //
+  //  @Test
+  //  public void testEncAge() throws InstantiationException {
+  //    Phenotype bd = new Phe("birthdate").dateTime().itemType(ItemType.SUBJECT_BIRTH_DATE).get();
+  //    Phenotype enc = new Phe("encounter").string().itemType(ItemType.ENCOUNTER).get();
+  //    Phenotype age = new Phe("age").expression(EncAge.of(bd, enc)).get();
+  //    Phenotype old = new Phe("old").restriction(age, Res.gt(82)).get();
+  //
+  //    ResultSet rs = new Que(CONFIG, bd, enc, age, old).inc(old).execute();
+  //
+  //    System.out.println(rs);
+  //
+  //    assertEquals(
+  //        Set.of("Patient/UKSH-0004", "Patient/VHF09998", "Patient/VHF09999", "Patient/VHF10000"),
+  //        rs.getSubjectIds());
+  //  }
 }
