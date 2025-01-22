@@ -78,7 +78,7 @@ public class DefaultSqlWriterDataSource {
 
   public void insertSbj(String dataSourceId, SbjDao sbj) {
     execute(
-        "INSERT INTO subject VALUES ("
+        "INSERT INTO subject (data_source_id, subject_id, birth_date, sex) VALUES ("
             + String.join(
                 ", ",
                 quote(dataSourceId),
