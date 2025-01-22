@@ -116,7 +116,6 @@ public class SubjectSearch extends PhenotypeSearch {
     return getSubjectQuery().getOutput();
   }
 
-
   public boolean hasSexRestriction() {
     return sex != null && Phenotypes.isSingleRestriction(sex);
   }

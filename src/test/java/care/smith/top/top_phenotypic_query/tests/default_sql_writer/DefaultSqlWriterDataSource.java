@@ -47,7 +47,7 @@ public class DefaultSqlWriterDataSource {
           + "    start_date_time     timestamp,\r\n"
           + "    end_date_time  	 timestamp,\r\n"
           + "    unit            	 text,\r\n"
-          + "    number_value    	 decimal,\r\n"
+          + "    number_value    	 numeric(20,3),\r\n"
           + "    text_value      	 text,\r\n"
           + "    date_time_value 	 timestamp,\r\n"
           + "    boolean_value   	 boolean,\r\n"
