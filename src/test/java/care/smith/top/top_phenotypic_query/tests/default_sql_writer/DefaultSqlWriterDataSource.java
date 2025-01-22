@@ -16,7 +16,7 @@ public class DefaultSqlWriterDataSource {
   private Connection con;
 
   private static final String CREATE_SBJ =
-      "CREATE TABLE subject (\r\n"
+      "CREATE TABLE IF NOT EXISTS subject (\r\n"
           + "    data_source_id	text NOT NULL,\r\n"
           + "    subject_id		text NOT NULL,\r\n"
           + "    birth_date		timestamp,\r\n"
@@ -25,7 +25,7 @@ public class DefaultSqlWriterDataSource {
           + ")";
 
   private static final String CREATE_ENC =
-      "CREATE TABLE encounter (\r\n"
+      "CREATE TABLE IF NOT EXISTS encounter (\r\n"
           + "    data_source_id	 text NOT NULL,\r\n"
           + "    subject_id      text NOT NULL,\r\n"
           + "    encounter_id    text NOT NULL,\r\n"
@@ -36,7 +36,7 @@ public class DefaultSqlWriterDataSource {
           + ")";
 
   private static final String CREATE_PHE =
-      "CREATE TABLE subject_resource (\r\n"
+      "CREATE TABLE IF NOT EXISTS subject_resource (\r\n"
           + "    data_source_id	 	 text NOT NULL,\r\n"
           + "    subject_id      	 text,\r\n"
           + "    encounter_id    	 text,\r\n"
@@ -70,7 +70,6 @@ public class DefaultSqlWriterDataSource {
       e.printStackTrace();
     }
 
-    execute("DROP ALL OBJECTS");
     execute(CREATE_SBJ);
     execute(CREATE_ENC);
     execute(CREATE_PHE);
@@ -96,7 +95,7 @@ public class DefaultSqlWriterDataSource {
 
   private void insertEnc(String dataSourceId, String subjectId, EncDao enc) {
     execute(
-        "INSERT INTO encounter VALUES ("
+        "INSERT INTO encounter (data_source_id, subject_id, encounter_id, type, start_date_time, end_date_time) VALUES ("
             + String.join(
                 ", ",
                 quote(dataSourceId),
@@ -114,7 +113,7 @@ public class DefaultSqlWriterDataSource {
       phe.date(DateUtil.format(LocalDateTime.now()));
 
     execute(
-        "INSERT INTO subject_resource VALUES ("
+        "INSERT INTO subject_resource (data_source_id, subject_id, encounter_id, subject_resource_id, code_system, code, date_time, start_date_time, end_date_time, unit, number_value, text_value, date_time_value, boolean_value) VALUES ("
             + String.join(
                 ", ",
                 quote(dataSourceId),
