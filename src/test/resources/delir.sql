@@ -44,17 +44,17 @@ CREATE TABLE procedure (
 );
 
 INSERT INTO subject VALUES
-    (1, '2002-01-01', 'female'),
-    (2, '1932-01-01', 'female'),
-    (3, '2003-01-01', 'male'),
-    (4, '1933-01-01', 'male'),
-    (5, '2004-01-01', 'female'),
-    (6, '1934-01-01', 'female'),
-    (7, '2005-01-01', 'male'),
-    (8, '1935-01-01', 'male'),
-    (9, '2006-01-01', 'female'),
-    (10, '1936-01-01', 'female'),
-    (11, '2000-01-01', 'female');
+    (1, current_date - '23' year, 'female'),
+    (2, current_date - '93' year, 'female'),
+    (3, current_date - '22' year, 'male'),
+    (4, current_date - '92' year, 'male'),
+    (5, current_date - '21' year, 'female'),
+    (6, current_date - '91' year, 'female'),
+    (7, current_date - '20' year, 'male'),
+    (8, current_date - '90' year, 'male'),
+    (9, current_date - '19' year, 'female'),
+    (10, current_date - '89' year, 'female'),
+    (11, current_date - '25' year, 'female');
 
 INSERT INTO observation (subject_id, created_at, code_system, code, unit, number_value) VALUES
     (1, '2000-05-20T12:43:00', 'http://loinc.org', '2951-2', 'mmol/L', 55),
