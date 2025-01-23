@@ -13,13 +13,13 @@ public class PhenotypeQueryBuilder extends QueryBuilder {
     this.mappings = mappings;
   }
 
-  public PhenotypeQueryBuilder baseQuery() {
-    add(query.getBaseQuery(), mappings);
+  public PhenotypeQueryBuilder baseQuery(String dataSource) {
+    add(replaceDataSource(query.getBaseQuery(), dataSource), mappings);
     return this;
   }
 
-  public PhenotypeQueryBuilder baseQuery(String codes) {
-    addCodes(query.getBaseQuery(), codes, mappings);
+  public PhenotypeQueryBuilder baseQuery(String codes, String dataSource) {
+    addCodes(replaceDataSource(query.getBaseQuery(), dataSource), codes, mappings);
     return this;
   }
 

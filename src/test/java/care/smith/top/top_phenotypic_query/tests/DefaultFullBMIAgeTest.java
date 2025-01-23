@@ -45,7 +45,7 @@ public class DefaultFullBMIAgeTest extends AbstractTest {
     phesExpected.remove("LightAndHigh");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
-    assertEquals(new BigDecimal(21), Values.getNumberValue(getValue("Age", phes)));
+    assertEquals(new BigDecimal(22), Values.getNumberValue(getValue("Age", phes)));
     assertFalse(Values.getBooleanValue(getValue("Old", phes)));
     assertTrue(Values.getBooleanValue(getValue("Young", phes)));
 
@@ -86,7 +86,7 @@ public class DefaultFullBMIAgeTest extends AbstractTest {
     phesExpected.remove("LightAndHigh");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
-    assertEquals(new BigDecimal(21), Values.getNumberValue(getValue("Age", phes)));
+    assertEquals(new BigDecimal(22), Values.getNumberValue(getValue("Age", phes)));
     assertFalse(Values.getBooleanValue(getValue("Old", phes)));
     assertTrue(Values.getBooleanValue(getValue("Young", phes)));
 

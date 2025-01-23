@@ -3,6 +3,7 @@ package care.smith.top.top_phenotypic_query.search;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.ProjectionEntry;
+import care.smith.top.model.Query;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
@@ -35,8 +36,11 @@ public class SubjectQueryMan {
   private Phenotype agePhenotypeVariable;
   private Set<Phenotype> ageRestrictionVariables = new HashSet<>();
 
-  public SubjectQueryMan(DataAdapter adapter) {
+  private Query query;
+
+  public SubjectQueryMan(DataAdapter adapter, Query query) {
     this.adapter = adapter;
+    this.query = query;
   }
 
   public void setSexCriterion(QueryCriterion criterion, Phenotype phenotype) {
@@ -83,7 +87,7 @@ public class SubjectQueryMan {
     Phenotype sex = getInclusion(sexInclusion, sexExclusion, sexPhenotypeVariable);
     Phenotype bd = getInclusion(birthdateInclusion, birthdateExclusion, birthdatePhenotypeVariable);
     Phenotype age = getInclusion(ageInclusion, ageExclusion, agePhenotypeVariable);
-    return adapter.execute(new SubjectSearch(null, sex, bd, age, adapter));
+    return adapter.execute(new SubjectSearch(query, sex, bd, age, adapter));
   }
 
   private Phenotype getInclusion(Phenotype inc, Phenotype exc, Phenotype var) {
@@ -94,24 +98,24 @@ public class SubjectQueryMan {
 
   public ResultSet executeSexExclusion() throws SQLException {
     if (sexExclusion == null) return null;
-    return adapter.execute(new SubjectSearch(null, sexExclusion, null, null, adapter));
+    return adapter.execute(new SubjectSearch(query, sexExclusion, null, null, adapter));
   }
 
   public ResultSet executeBirthdateExclusion() throws SQLException {
     if (birthdateExclusion == null) return null;
-    return adapter.execute(new SubjectSearch(null, null, birthdateExclusion, null, adapter));
+    return adapter.execute(new SubjectSearch(query, null, birthdateExclusion, null, adapter));
   }
 
   public ResultSet executeAgeExclusion() throws SQLException {
     if (ageExclusion == null) return null;
     return adapter.execute(
-        new SubjectSearch(null, null, getBirthdateParameter(), ageExclusion, adapter));
+        new SubjectSearch(query, null, getBirthdateParameter(), ageExclusion, adapter));
   }
 
   public ResultSet executeAllSubjectsQuery() throws SQLException {
     return adapter.execute(
         new SubjectSearch(
-            null, getSexParameter(), getBirthdateParameter(), getAgeParameter(), adapter));
+            query, getSexParameter(), getBirthdateParameter(), getAgeParameter(), adapter));
   }
 
   public ResultSet executeBirthdateRestrictionVariable() throws SQLException {
@@ -119,7 +123,7 @@ public class SubjectQueryMan {
     Phenotype bd = birthdateRestrictionVariables.iterator().next();
     if (hasBirthdateExclusion() && bd.getId().equals(birthdateExclusion.getId()))
       return new ResultSet();
-    return adapter.execute(new SubjectSearch(null, null, bd, null, adapter));
+    return adapter.execute(new SubjectSearch(query, null, bd, null, adapter));
   }
 
   public ResultSet executeAgeRestrictionVariable() throws SQLException {
@@ -127,14 +131,14 @@ public class SubjectQueryMan {
     Phenotype age = ageRestrictionVariables.iterator().next();
     if (hasAgeExclusion() && age.getId().equals(ageExclusion.getId())) return new ResultSet();
     Phenotype bd = getBirthdateParameter();
-    return adapter.execute(new SubjectSearch(null, null, bd, age, adapter));
+    return adapter.execute(new SubjectSearch(query, null, bd, age, adapter));
   }
 
   public ResultSet executeSexRestrictionVariable() throws SQLException {
     if (!hasSexRestrictionVariable()) return new ResultSet();
     Phenotype sex = sexRestrictionVariables.iterator().next();
     if (hasSexExclusion() && sex.getId().equals(sexExclusion.getId())) return new ResultSet();
-    return adapter.execute(new SubjectSearch(null, sex, null, null, adapter));
+    return adapter.execute(new SubjectSearch(query, sex, null, null, adapter));
   }
 
   public boolean hasInclusion() {

@@ -56,7 +56,10 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
         (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(h.getId());
     QueryCriterion cri2 =
         (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(w.getId());
-    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2);
+    PhenotypeQuery query =
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource(""))
+            .addCriteriaItem(cri1)
+            .addCriteriaItem(cri2);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
@@ -70,7 +73,10 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
         (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(h.getId());
     QueryCriterion cri2 =
         (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(w.getId());
-    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2);
+    PhenotypeQuery query =
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource(""))
+            .addCriteriaItem(cri1)
+            .addCriteriaItem(cri2);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
@@ -93,7 +99,8 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
                 .inclusion(true)
                 .subjectId(composite.getId())
                 .type(TypeEnum.QUERYCRITERION);
-    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri);
+    PhenotypeQuery query =
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource("")).addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
     ResultSet rs = pf.execute();
@@ -116,7 +123,8 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
                 .inclusion(true)
                 .subjectId(composite.getId())
                 .type(TypeEnum.QUERYCRITERION);
-    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri);
+    PhenotypeQuery query =
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource("")).addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
     ResultSet rs = pf.execute();
@@ -139,7 +147,8 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
                 .inclusion(false)
                 .subjectId(composite.getId())
                 .type(TypeEnum.QUERYCRITERION);
-    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri);
+    PhenotypeQuery query =
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource("")).addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
     ResultSet rs = pf.execute();
@@ -162,7 +171,8 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
                 .inclusion(false)
                 .subjectId(composite.getId())
                 .type(TypeEnum.QUERYCRITERION);
-    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri);
+    PhenotypeQuery query =
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource("")).addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
     ResultSet rs = pf.execute();

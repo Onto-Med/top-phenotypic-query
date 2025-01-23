@@ -9,6 +9,7 @@ import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapterSettings;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
+import care.smith.top.top_phenotypic_query.util.builder.Que;
 import java.sql.SQLException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,8 @@ public class PreparedStatementTest extends AbstractTest {
 
   @Test
   public void test1() throws SQLException {
-    SubjectSearch search = new SubjectSearch(null, femaleOrMale, birthDateYoung, null, adapter);
+    SubjectSearch search =
+        new SubjectSearch(Que.get(), femaleOrMale, birthDateYoung, null, adapter);
     SQLAdapterSettings settings = SQLAdapterSettings.get();
 
     String pqExpected =
@@ -53,7 +55,7 @@ public class PreparedStatementTest extends AbstractTest {
   @Test
   public void test2() throws InstantiationException, SQLException {
     QueryCriterion qc = (QueryCriterion) new QueryCriterion().dateTimeRestriction(getDTR(2000));
-    SingleSearch search = new SingleSearch(null, qc, heavy, adapter);
+    SingleSearch search = new SingleSearch(Que.get(), qc, heavy, adapter);
     SQLAdapterSettings settings = SQLAdapterSettings.get();
 
     String pqExpected =

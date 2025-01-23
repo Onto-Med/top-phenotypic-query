@@ -31,10 +31,12 @@ public class SubjectQueryTest extends AbstractTest {
       getRestriction("Female", sex, "http://hl7.org/fhir/administrative-gender|female");
   static Entity[] phenotypes = {age, young, sex, female};
 
+  static String DATA_SOURCE = "data_source_1";
+
   @Test
   public void test1() throws InstantiationException, SQLException, NoCodesException {
     PhenotypeQuery query =
-        new PhenotypeQuery()
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource(DATA_SOURCE))
             .addCriteriaItem(
                 (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId()))
             .addCriteriaItem(
@@ -53,8 +55,8 @@ public class SubjectQueryTest extends AbstractTest {
     assertEquals(Set.of("Age", "Young", "Sex", "Female", "birthdate"), phes.getPhenotypeNames());
     assertEquals(BigDecimal.valueOf(33), Values.getNumberValue(phes.getValues("Age", null).get(0)));
     assertEquals(
-        LocalDateTime.parse("1991-01-01T00:00:00"),
-        Values.getDateTimeValue(phes.getValues("birthdate", null).get(0)));
+        LocalDateTime.now().getYear() - 33,
+        Values.getDateTimeValue(phes.getValues("birthdate", null).get(0)).getYear());
     assertEquals("female", Values.getStringValue(phes.getValues("Sex", null).get(0)));
     assertTrue(Values.getBooleanValue(phes.getValues("Female", null).get(0)));
     assertTrue(Values.getBooleanValue(phes.getValues("Young", null).get(0)));
@@ -63,7 +65,7 @@ public class SubjectQueryTest extends AbstractTest {
   @Test
   public void test2() throws InstantiationException, SQLException, NoCodesException {
     PhenotypeQuery query =
-        new PhenotypeQuery()
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource(DATA_SOURCE))
             .addCriteriaItem(
                 (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId()))
             .addCriteriaItem(
@@ -87,7 +89,7 @@ public class SubjectQueryTest extends AbstractTest {
   @Test
   public void test3() throws InstantiationException, SQLException, NoCodesException {
     PhenotypeQuery query =
-        new PhenotypeQuery()
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource(DATA_SOURCE))
             .addCriteriaItem(
                 (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(female.getId()))
             .addCriteriaItem(
@@ -106,15 +108,15 @@ public class SubjectQueryTest extends AbstractTest {
     assertEquals(Set.of("Sex", "Female", "Young", "birthdate", "Age"), phes.getPhenotypeNames());
     assertEquals(BigDecimal.valueOf(32), Values.getNumberValue(phes.getValues("Age", null).get(0)));
     assertEquals(
-        LocalDateTime.parse("1992-01-01T00:00:00"),
-        Values.getDateTimeValue(phes.getValues("birthdate", null).get(0)));
+        LocalDateTime.now().getYear() - 32,
+        Values.getDateTimeValue(phes.getValues("birthdate", null).get(0)).getYear());
     assertTrue(Values.getBooleanValue(phes.getValues("Young", null).get(0)));
   }
 
   @Test
   public void test4() throws InstantiationException, SQLException, NoCodesException {
     PhenotypeQuery query =
-        new PhenotypeQuery()
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource(DATA_SOURCE))
             .addCriteriaItem(
                 (QueryCriterion) new QueryCriterion().inclusion(false).subjectId(female.getId()))
             .addCriteriaItem(

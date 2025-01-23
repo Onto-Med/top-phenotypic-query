@@ -39,7 +39,10 @@ public class FullBMIAgeTest extends AbstractTest {
                 .type(TypeEnum.QUERYCRITERION);
     QueryCriterion cri2 =
         (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId());
-    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2);
+    PhenotypeQuery query =
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource(""))
+            .addCriteriaItem(cri1)
+            .addCriteriaItem(cri2);
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test3.yml");
     assertNotNull(configFile);
@@ -66,7 +69,7 @@ public class FullBMIAgeTest extends AbstractTest {
     phesExpected.remove("LightAndHigh");
     assertEquals(phesExpected, phes.getPhenotypeNames());
 
-    assertEquals(new BigDecimal(21), Values.getNumberValue(getValue("Age", phes)));
+    assertEquals(new BigDecimal(22), Values.getNumberValue(getValue("Age", phes)));
     assertFalse(Values.getBooleanValue(getValue("Old", phes)));
     assertTrue(Values.getBooleanValue(getValue("Young", phes)));
 
@@ -95,7 +98,10 @@ public class FullBMIAgeTest extends AbstractTest {
         (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId());
     ProjectionEntry pro = new ProjectionEntry().subjectId(light.getId());
     PhenotypeQuery query =
-        new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2).addProjectionItem(pro);
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource(""))
+            .addCriteriaItem(cri1)
+            .addCriteriaItem(cri2)
+            .addProjectionItem(pro);
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test3.yml");
     assertNotNull(configFile);

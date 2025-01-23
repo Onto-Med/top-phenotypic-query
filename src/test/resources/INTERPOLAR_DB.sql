@@ -120,11 +120,11 @@ CREATE TABLE medication_request (
 );
 
 INSERT INTO patient VALUES
-    (1, '1940-01-01', 'female'),
-    (2, '1960-01-01', 'female'),
-    (3, '1980-01-01', 'male'),
-    (4, '2000-01-01', 'male'),
-    (5, '2020-01-01', 'female');
+    (1, current_date - '85' year, 'female'),
+    (2, current_date - '65' year, 'female'),
+    (3, current_date - '45' year, 'male'),
+    (4, current_date - '25' year, 'male'),
+    (5, current_date - '5' year, 'female');
 
 INSERT INTO encounter VALUES
     (11, 1, '2016-01-01', '2016-02-01', 'IMP'),

@@ -16,6 +16,7 @@ import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
+import care.smith.top.top_phenotypic_query.util.builder.Que;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -76,7 +77,7 @@ public class SqlAdapterTest extends AbstractTest {
                 .defaultAggregationFunctionId("last")
                 .subjectId(tall.getId());
 
-    SingleSearch search = new SingleSearch(null, cri, tall, adapter);
+    SingleSearch search = new SingleSearch(Que.get(), cri, tall, adapter);
     assertNotNull(search);
 
     ResultSet rs = search.execute();
@@ -103,7 +104,7 @@ public class SqlAdapterTest extends AbstractTest {
                 .defaultAggregationFunctionId("last")
                 .subjectId(corrupted.getId());
 
-    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri);
+    PhenotypeQuery query = Que.get().addCriteriaItem(cri);
 
     try (java.sql.ResultSet rs =
         ((SQLAdapter) adapter).executeQuery("SELECT count(*) FROM assessment1")) {

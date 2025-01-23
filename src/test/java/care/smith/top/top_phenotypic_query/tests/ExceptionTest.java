@@ -65,7 +65,8 @@ public class ExceptionTest {
                 .inclusion(true)
                 .subjectId(heavy.getId())
                 .type(TypeEnum.QUERYCRITERION);
-    PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri);
+    PhenotypeQuery query =
+        ((PhenotypeQuery) new PhenotypeQuery().dataSource("")).addCriteriaItem(cri);
 
     URL configFile = Thread.currentThread().getContextClassLoader().getResource(CONFIG);
     assertNotNull(configFile);

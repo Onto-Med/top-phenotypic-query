@@ -36,6 +36,10 @@ public class QueryBuilder {
     add(queryPart.replace(Props.VAR_CODES, codes), map);
   }
 
+  protected String replaceDataSource(String queryPart, String dataSource) {
+    return queryPart.replace(Props.VAR_DATA_SOURCE, dataSource);
+  }
+
   public static String replace(String s, Map<String, String> map) {
     if (map == null) return s;
     for (String key : map.keySet())

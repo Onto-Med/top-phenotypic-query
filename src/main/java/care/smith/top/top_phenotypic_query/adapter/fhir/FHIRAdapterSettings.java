@@ -71,7 +71,7 @@ public class FHIRAdapterSettings extends DataAdapterSettings {
 
   @Override
   protected void addCodeList(Phenotype p, PhenotypeQueryBuilder builder, SingleSearch search) {
-    builder.baseQuery(getCodeUrisAsString(p));
+    builder.baseQuery(getCodeUrisAsString(p), search.getQuery().getDataSource());
   }
 
   @Override

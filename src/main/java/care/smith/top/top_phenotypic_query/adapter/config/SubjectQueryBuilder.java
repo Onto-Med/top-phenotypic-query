@@ -8,8 +8,8 @@ public class SubjectQueryBuilder extends QueryBuilder {
     this.query = query;
   }
 
-  public SubjectQueryBuilder baseQuery() {
-    add(query.getBaseQuery());
+  public SubjectQueryBuilder baseQuery(String dataSource) {
+    add(replaceDataSource(query.getBaseQuery(), dataSource));
     return this;
   }
 

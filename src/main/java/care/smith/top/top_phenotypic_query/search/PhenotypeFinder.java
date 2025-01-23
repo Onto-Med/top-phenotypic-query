@@ -73,7 +73,7 @@ public class PhenotypeFinder {
   }
 
   private ResultSet executeSingleSearches() throws SQLException {
-    SubjectQueryMan sbjMan = new SubjectQueryMan(adapter);
+    SubjectQueryMan sbjMan = new SubjectQueryMan(adapter, query);
     SingleQueryMan man = new SingleQueryMan(sbjMan, query, phenotypes);
 
     if (query.getCriteria() != null) {
