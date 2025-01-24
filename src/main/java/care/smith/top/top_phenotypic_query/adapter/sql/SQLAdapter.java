@@ -49,7 +49,7 @@ public class SQLAdapter extends DataAdapter {
     initConnection();
   }
 
-  protected void initConnection() throws SQLException {
+  private void initConnection() throws SQLException {
     this.con =
         DriverManager.getConnection(
             config.getConnectionAttribute("url"),
