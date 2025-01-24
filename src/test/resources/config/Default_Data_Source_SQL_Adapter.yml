@@ -1,0 +1,6 @@
+id: Default_Data_Source_SQL_Adapter
+adapter: care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapterDataSource
+connection:
+  url: jdbc:h2:mem:data_source_db?allowMultiQueries=true'
+  user: user
+  password: password

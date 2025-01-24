@@ -41,11 +41,15 @@ public class SQLAdapter extends DataAdapter {
   private static final Logger log = LoggerFactory.getLogger(SQLAdapter.class);
 
   public SQLAdapter(DataAdapterConfig config) throws SQLException {
-    super(mergeDefault(config, "Default_SQL_Adapter"));
+    this(config, "Default_SQL_Adapter");
+  }
+
+  protected SQLAdapter(DataAdapterConfig config, String defConfResName) throws SQLException {
+    super(mergeDefault(config, defConfResName));
     initConnection();
   }
 
-  private void initConnection() throws SQLException {
+  protected void initConnection() throws SQLException {
     this.con =
         DriverManager.getConnection(
             config.getConnectionAttribute("url"),
