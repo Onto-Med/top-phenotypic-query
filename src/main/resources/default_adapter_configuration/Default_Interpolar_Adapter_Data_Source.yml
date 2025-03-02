@@ -84,6 +84,12 @@ phenotypeQueries:
     output:
       subject: enc_id
       dateTime: medreq_authoredon
+birthdateMapping:
+  code: http://loinc.org|21112-8
+ageMapping:
+  code: http://loinc.org|30525-0
+sexMapping:
+  code: http://loinc.org|46098-0
 codeMappings:
   - code: http://loinc.org|14933-6
     type: observation
