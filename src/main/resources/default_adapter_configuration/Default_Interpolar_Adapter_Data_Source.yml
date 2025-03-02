@@ -61,29 +61,31 @@ phenotypeQueries:
       subject: enc_id
       dateTime: con_recordeddate
   procedure:
-    baseQuery: "SELECT enc_id, proc_performeddatetime FROM db_log.procedure, db_log.encounter\nWHERE enc_diagnosis_condition_id  = 'Procedure/' || proc_id AND proc_code_system || '|' || proc_code_code IN ({codes})"
+    baseQuery: "SELECT enc_id, proc_performeddatetime FROM db_log.\"procedure\", db_log.encounter\nWHERE enc_diagnosis_condition_id  = 'Procedure/' || proc_id AND proc_code_system || '|' || proc_code_code IN ({codes})"
     dateTimeIntervalPart: "\nAND proc_performeddatetime {operator} {value}"
     output:
       subject: enc_id
       dateTime: proc_performeddatetime
+  medication:
+    union: [ medication_administration, medication_statement, medication_request ]
   medication_administration:
-    baseQuery: "SELECT RIGHT(medadm_encounter_id, LENGTH(medadm_encounter_id) - 10) AS enc_id, medadm_effectivedatetime FROM db_log.medicationadministration, db_log.medication\nWHERE medadm_medicationreference_id = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
+    baseQuery: "SELECT RIGHT(medadm_encounter_id, LENGTH(medadm_encounter_id) - 10) AS enc_id, medadm_effectivedatetime AS datetime FROM db_log.medicationadministration, db_log.medication\nWHERE medadm_medicationreference_id = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
     dateTimeIntervalPart: "\nAND medadm_effectivedatetime {operator} {value}"
     output:
       subject: enc_id
-      dateTime: medadm_effectivedatetime
+      dateTime: datetime
   medication_statement:
-    baseQuery: "SELECT SELECT RIGHT(medstat_encounter_id, LENGTH(medstat_encounter_id) - 10) AS enc_id, medstat_effectivedatetime FROM db_log.medicationstatement, db_log.medication\nWHERE medstat_medicationreference_id = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
+    baseQuery: "SELECT RIGHT(medstat_encounter_id, LENGTH(medstat_encounter_id) - 10) AS enc_id, medstat_effectivedatetime AS datetime FROM db_log.medicationstatement, db_log.medication\nWHERE medstat_medicationreference_id = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
     dateTimeIntervalPart: "\nAND medstat_effectivedatetime {operator} {value}"
     output:
       subject: enc_id
-      dateTime: medstat_effectivedatetime
+      dateTime: datetime
   medication_request:
-    baseQuery: "SELECT RIGHT(medreq_encounter_id, LENGTH(medreq_encounter_id) - 10) AS enc_id, medreq_authoredon FROM db_log.medicationrequest, db_log.medication\nWHERE medreq_medicationreference_id = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
+    baseQuery: "SELECT RIGHT(medreq_encounter_id, LENGTH(medreq_encounter_id) - 10) AS enc_id, medreq_authoredon AS datetime FROM db_log.medicationrequest, db_log.medication\nWHERE medreq_medicationreference_id = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
     dateTimeIntervalPart: "\nAND medreq_authoredon {operator} {value}"
     output:
       subject: enc_id
-      dateTime: medreq_authoredon
+      dateTime: datetime
 birthdateMapping:
   code: http://loinc.org|21112-8
 ageMapping:
