@@ -92,29 +92,3 @@ CREATE TABLE db_log.medicationrequest
     medreq_authoredon             timestamp NULL,
     PRIMARY KEY (medreq_id)
 );
-
-INSERT INTO db_log.patient
-VALUES ('HOSP-0001', current_date - '85' year, 'female'),
-       ('HOSP-0002', current_date - '65' year, 'female'),
-       ('HOSP-0003', current_date - '45' year, 'male'),
-       ('HOSP-0004', current_date - '25' year, 'male'),
-       ('HOSP-0005', current_date - '5' year, 'female');
-
-INSERT INTO db_log.encounter
-VALUES ('HOSP-0001-E-1', 'Patient/HOSP-0001', NULL, 'IMP', '2016-01-01', '2016-02-01'),
-       ('HOSP-0002-E-1', 'Patient/HOSP-0002', NULL, 'IMP', '2017-01-01', '2017-02-01'),
-       ('HOSP-0003-E-1', 'Patient/HOSP-0003', NULL, 'IMP', '2018-01-01', '2018-02-01'),
-       ('HOSP-0004-E-1', 'Patient/HOSP-0004', NULL, 'IMP', '2019-01-01', '2019-02-01'),
-       ('HOSP-0005-E-1', 'Patient/HOSP-0005', NULL, 'AMB', '2020-01-01', '2020-02-01');
-
-INSERT INTO db_log.observation
-VALUES ('HOSP-0001-E-1-OL-1', 'Encounter/HOSP-0001-E-1', 'Patient/HOSP-0001', 'http://loinc.org', '1234-5', '2016-01-16T12:43:00', 160, 'mg/dL'),
-       ('HOSP-0001-E-1-OL-1', 'Encounter/HOSP-0001-E-1', 'Patient/HOSP-0001', 'http://loinc.org', '2160-0', '2016-01-16T12:43:00', 160, 'mg/dL'),
-       ('HOSP-0002-E-1-OL-1', 'Encounter/HOSP-0002-E-1', 'Patient/HOSP-0002', 'http://loinc.org', '1234-5', '2017-01-17T06:35:00', 170, 'mg/dL'),
-       ('HOSP-0002-E-1-OL-1', 'Encounter/HOSP-0002-E-1', 'Patient/HOSP-0002', 'http://loinc.org', '678-9', '2017-01-17T06:35:00', 170, 'mg/dL'),
-       ('HOSP-0003-E-1-OL-1', 'Encounter/HOSP-0003-E-1', 'Patient/HOSP-0003', 'http://loinc.org', '678-9', '2018-01-18T12:43:00', 180, 'mg/dL'),
-       ('HOSP-0003-E-1-OL-1', 'Encounter/HOSP-0003-E-1', 'Patient/HOSP-0003', 'http://loinc.org', '38483-4', '2018-01-18T12:43:00', 180, 'mg/dL'),
-       ('HOSP-0004-E-1-OL-1', 'Encounter/HOSP-0004-E-1', 'Patient/HOSP-0004', 'http://loinc.org', '1234-5', '2019-01-19T06:35:00', 190, 'mg/dL'),
-       ('HOSP-0004-E-1-OL-1', 'Encounter/HOSP-0004-E-1', 'Patient/HOSP-0004', 'http://loinc.org', '678-9', '2019-01-19T06:35:00', 190, 'mg/dL'),
-       ('HOSP-0005-E-1-OL-1', 'Encounter/HOSP-0005-E-1', 'Patient/HOSP-0005', 'http://loinc.org', '2160-0', '2020-01-20T12:43:00', 200, 'mg/dL'),
-       ('HOSP-0005-E-1-OL-1', 'Encounter/HOSP-0005-E-1', 'Patient/HOSP-0005', 'http://loinc.org', '1234-5', '2020-01-20T12:43:00', 200, 'mg/dL');
