@@ -1,10 +1,12 @@
 package care.smith.top.top_phenotypic_query.converter.csv;
 
+import com.google.common.base.Strings;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CSVWriter {
 
@@ -20,7 +22,9 @@ public class CSVWriter {
 
   protected void write(List<String> record) {
     try {
-      writer.write(String.join(entriesDelimiter, record) + System.lineSeparator());
+      writer.write(
+          record.stream().map(this::escapeCsvField).collect(Collectors.joining(entriesDelimiter))
+              + System.lineSeparator());
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -32,5 +36,16 @@ public class CSVWriter {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  protected String escapeCsvField(String field) {
+    String escapedData = Strings.nullToEmpty(field).replaceAll("\\R", " ");
+    if (escapedData.contains(entriesDelimiter)
+        || escapedData.contains("\"")
+        || escapedData.contains("'")) {
+      escapedData = escapedData.replace("\"", "\"\"");
+      escapedData = "\"" + escapedData + "\"";
+    }
+    return escapedData;
   }
 }
