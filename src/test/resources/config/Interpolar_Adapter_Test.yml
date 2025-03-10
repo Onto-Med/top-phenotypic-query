@@ -1,5 +1,5 @@
 id: Interpolar_Adapter_Test
-adapter: care.smith.top.top_phenotypic_query.adapter.sql.InterpolarAdapterDataSource
+adapter: care.smith.top.top_phenotypic_query.adapter.sql.InterpolarAdapter
 connection:
   url: jdbc:h2:mem:db?allowMultiQueries=true'
   user: user
