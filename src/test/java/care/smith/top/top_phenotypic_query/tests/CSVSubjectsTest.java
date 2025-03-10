@@ -190,4 +190,24 @@ public class CSVSubjectsTest {
 
     assertEquals(dataRequired, dataActual);
   }
+
+  @Test
+  public void testSpecialCharacterHandling() throws InstantiationException {
+    Phenotype phenotype =
+        new Phe("phe1").bool().titleEn("Phenotype; with \" special| characters").get();
+    ResultSet rs = new ResultSet();
+    rs.addValue("1", phenotype, null, Val.of(true));
+
+    String expected =
+        "Id;\"Phenotype; with \"\" special| characters\";\"Phenotype; with \"\" special| characters(DATE)\""
+            + System.lineSeparator()
+            + "1;true;null"
+            + System.lineSeparator();
+
+    Que q = new Que("config/Default_SQL_Adapter.yml", phenotype).pro(phenotype);
+
+    String actual = new CSV().toStringSubjects(rs, q.getEntities(), q.getQuery());
+
+    assertEquals(expected, actual);
+  }
 }
