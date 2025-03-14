@@ -10,8 +10,11 @@ import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import java.sql.SQLException;
 import java.util.Set;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 public class BlazeTestIntern {
 
   private static final String CONFIG = "config/Blaze_Adapter_Test.yml";

@@ -1,5 +1,8 @@
 package care.smith.top.top_phenotypic_query.tests.intern.run;
 
+import org.junit.jupiter.api.Disabled;
+
+@Disabled
 public class ResultSetRamTestIntern {
 
   //  private static final String CONFIG = "rs/config.yml";

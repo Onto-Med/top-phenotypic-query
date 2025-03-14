@@ -51,6 +51,6 @@ public class Queries {
   }
 
   public static boolean isCriterion(ProjectionEntry entry) {
-    return entry.getType() == TypeEnum.QUERYCRITERION;
+    return entry.getType() == TypeEnum.QUERY_CRITERION;
   }
 }

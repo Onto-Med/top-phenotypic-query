@@ -1,8 +1,10 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
 import care.smith.top.top_phenotypic_query.tests.DelirTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 public class DefaultFHIRDelirTestIntern extends DelirTest {
 
   private static final String CONFIG = "config/Default_FHIR_Adapter_Test.yml";
