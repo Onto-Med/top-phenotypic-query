@@ -8,11 +8,10 @@ import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.tests.AbstractTest;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
-import org.junit.jupiter.api.Disabled;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
+import org.junit.jupiter.api.Disabled;
 
 @Disabled
 public class POLARTestIntern extends AbstractTest {
