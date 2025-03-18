@@ -98,13 +98,12 @@ public class Que {
 
   private Que cri(boolean inc, Phenotype p, DateTimeRestriction dtr, String defAggFunc) {
     query.addCriteriaItem(
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(inc)
-                .subjectId(p.getId())
-                .dateTimeRestriction(dtr)
-                .defaultAggregationFunctionId(defAggFunc)
-                .type(TypeEnum.QUERYCRITERION));
+        new QueryCriterion()
+            .inclusion(inc)
+            .subjectId(p.getId())
+            .dateTimeRestriction(dtr)
+            .defaultAggregationFunctionId(defAggFunc)
+            .type(TypeEnum.QUERY_CRITERION));
     return this;
   }
 
@@ -126,7 +125,7 @@ public class Que {
             .subjectId(p.getId())
             .dateTimeRestriction(dtr)
             .defaultAggregationFunctionId(defAggFunc)
-            .type(TypeEnum.PROJECTIONENTRY));
+            .type(TypeEnum.PROJECTION_ENTRY));
     return this;
   }
 

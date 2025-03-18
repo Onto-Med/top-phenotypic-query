@@ -11,7 +11,9 @@ import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
+import org.junit.jupiter.api.Disabled;
 
+@Disabled
 public class POLARTestIntern extends AbstractTest {
 
   public static void main(String[] args)

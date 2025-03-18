@@ -88,19 +88,16 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   public void test3() throws SQLException, NoCodesException {
     Expression exp = And.of(Exp.ofEntity("Weight"), Not.of(Exp.ofEntity("Height")));
     Phenotype composite =
-        (Phenotype)
-            new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
+        new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
 
     Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
     QueryCriterion cri =
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(true)
-                .subjectId(composite.getId())
-                .type(TypeEnum.QUERYCRITERION);
-    PhenotypeQuery query =
-        ((PhenotypeQuery) new PhenotypeQuery().dataSource("")).addCriteriaItem(cri);
+        new QueryCriterion()
+            .inclusion(true)
+            .subjectId(composite.getId())
+            .type(TypeEnum.QUERY_CRITERION);
+    PhenotypeQuery query = new PhenotypeQuery().dataSource("").addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
     ResultSet rs = pf.execute();
@@ -112,19 +109,16 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   public void test4() throws SQLException, NoCodesException {
     Expression exp = And.of(Exp.ofEntity("Height"), Not.of(Exp.ofEntity("Weight")));
     Phenotype composite =
-        (Phenotype)
-            new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
+        new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
 
     Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
     QueryCriterion cri =
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(true)
-                .subjectId(composite.getId())
-                .type(TypeEnum.QUERYCRITERION);
-    PhenotypeQuery query =
-        ((PhenotypeQuery) new PhenotypeQuery().dataSource("")).addCriteriaItem(cri);
+        new QueryCriterion()
+            .inclusion(true)
+            .subjectId(composite.getId())
+            .type(TypeEnum.QUERY_CRITERION);
+    PhenotypeQuery query = new PhenotypeQuery().dataSource("").addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
     ResultSet rs = pf.execute();
@@ -136,19 +130,16 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   public void test5() throws SQLException, NoCodesException {
     Expression exp = And.of(Exp.ofEntity("Weight"), Not.of(Exp.ofEntity("Height")));
     Phenotype composite =
-        (Phenotype)
-            new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
+        new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
 
     Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
     QueryCriterion cri =
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(false)
-                .subjectId(composite.getId())
-                .type(TypeEnum.QUERYCRITERION);
-    PhenotypeQuery query =
-        ((PhenotypeQuery) new PhenotypeQuery().dataSource("")).addCriteriaItem(cri);
+        new QueryCriterion()
+            .inclusion(false)
+            .subjectId(composite.getId())
+            .type(TypeEnum.QUERY_CRITERION);
+    PhenotypeQuery query = new PhenotypeQuery().dataSource("").addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
     ResultSet rs = pf.execute();
@@ -160,19 +151,16 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
   public void test6() throws SQLException, NoCodesException {
     Expression exp = And.of(Exp.ofEntity("Height"), Not.of(Exp.ofEntity("Weight")));
     Phenotype composite =
-        (Phenotype)
-            new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
+        new Phenotype().expression(exp).id("c").entityType(EntityType.COMPOSITE_PHENOTYPE);
 
     Entity[] phes = ObjectArrays.concat(phenotypes, new Entity[] {composite}, Entity.class);
 
     QueryCriterion cri =
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(false)
-                .subjectId(composite.getId())
-                .type(TypeEnum.QUERYCRITERION);
-    PhenotypeQuery query =
-        ((PhenotypeQuery) new PhenotypeQuery().dataSource("")).addCriteriaItem(cri);
+        new QueryCriterion()
+            .inclusion(false)
+            .subjectId(composite.getId())
+            .type(TypeEnum.QUERY_CRITERION);
+    PhenotypeQuery query = new PhenotypeQuery().dataSource("").addCriteriaItem(cri);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, phes, adapter);
     ResultSet rs = pf.execute();

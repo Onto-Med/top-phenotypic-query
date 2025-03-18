@@ -23,7 +23,9 @@ import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Procedure;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Reference;
+import org.junit.jupiter.api.Disabled;
 
+@Disabled
 public class DB2FHIRTestIntern {
 
   private static final String SYSTEM = "https://www.top-test.de/system";

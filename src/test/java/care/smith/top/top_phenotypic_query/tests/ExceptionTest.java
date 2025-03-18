@@ -60,13 +60,11 @@ public class ExceptionTest {
   public void test() throws InstantiationException {
 
     QueryCriterion cri =
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(true)
-                .subjectId(heavy.getId())
-                .type(TypeEnum.QUERYCRITERION);
-    PhenotypeQuery query =
-        ((PhenotypeQuery) new PhenotypeQuery().dataSource("")).addCriteriaItem(cri);
+        new QueryCriterion()
+            .inclusion(true)
+            .subjectId(heavy.getId())
+            .type(TypeEnum.QUERY_CRITERION);
+    PhenotypeQuery query = new PhenotypeQuery().dataSource("").addCriteriaItem(cri);
 
     URL configFile = Thread.currentThread().getContextClassLoader().getResource(CONFIG);
     assertNotNull(configFile);

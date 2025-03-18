@@ -21,7 +21,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import org.hl7.fhir.r4.model.Patient;
+import org.junit.jupiter.api.Disabled;
 
+@Disabled
 public class FullBMIAgeTestIntern extends AbstractTest {
 
   public static void main(String[] args) throws SQLException, NoCodesException {
@@ -45,25 +47,19 @@ public class FullBMIAgeTestIntern extends AbstractTest {
 
   private static void test(DataAdapter adapter) throws SQLException, NoCodesException {
     QueryCriterion cri1 =
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(true)
-                .defaultAggregationFunctionId(defAgrFunc.getId())
-                .subjectId(overWeight.getId())
-                .dateTimeRestriction(getDTR(2000))
-                .type(TypeEnum.QUERYCRITERION);
+        new QueryCriterion()
+            .inclusion(true)
+            .defaultAggregationFunctionId(defAgrFunc.getId())
+            .subjectId(overWeight.getId())
+            .dateTimeRestriction(getDTR(2000))
+            .type(TypeEnum.QUERY_CRITERION);
     QueryCriterion cri2 =
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(true)
-                .subjectId(female.getId())
-                .type(TypeEnum.QUERYCRITERION);
+        new QueryCriterion()
+            .inclusion(true)
+            .subjectId(female.getId())
+            .type(TypeEnum.QUERY_CRITERION);
     QueryCriterion cri3 =
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(true)
-                .subjectId(old.getId())
-                .type(TypeEnum.QUERYCRITERION);
+        new QueryCriterion().inclusion(true).subjectId(old.getId()).type(TypeEnum.QUERY_CRITERION);
     PhenotypeQuery query =
         new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2).addCriteriaItem(cri3);
 

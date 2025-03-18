@@ -66,18 +66,15 @@ class CliTest extends AbstractTest {
     Path queryConfig = Files.createTempFile("query_config", ".json");
 
     QueryCriterion criterion =
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(true)
-                .defaultAggregationFunctionId(defAgrFunc.getId())
-                .subjectId(young.getId())
-                .type(ProjectionEntry.TypeEnum.QUERYCRITERION);
+        new QueryCriterion()
+            .inclusion(true)
+            .defaultAggregationFunctionId(defAgrFunc.getId())
+            .subjectId(young.getId())
+            .type(ProjectionEntry.TypeEnum.QUERY_CRITERION);
 
     MAPPER.writeValue(
         queryConfig.toFile(),
-        ((PhenotypeQuery) new PhenotypeQuery().dataSource(""))
-            .addCriteriaItem(criterion)
-            .type(QueryType.PHENOTYPE));
+        new PhenotypeQuery().dataSource("").addCriteriaItem(criterion).type(QueryType.PHENOTYPE));
     return queryConfig;
   }
 

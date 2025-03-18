@@ -30,19 +30,15 @@ public class FullBMIAgeTest extends AbstractTest {
   @Test
   public void test1() throws InstantiationException, SQLException, NoCodesException {
     QueryCriterion cri1 =
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(true)
-                .defaultAggregationFunctionId(defAgrFunc.getId())
-                .subjectId(overWeight.getId())
-                .dateTimeRestriction(getDTR(2000))
-                .type(TypeEnum.QUERYCRITERION);
-    QueryCriterion cri2 =
-        (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId());
+        new QueryCriterion()
+            .inclusion(true)
+            .defaultAggregationFunctionId(defAgrFunc.getId())
+            .subjectId(overWeight.getId())
+            .dateTimeRestriction(getDTR(2000))
+            .type(TypeEnum.QUERY_CRITERION);
+    QueryCriterion cri2 = new QueryCriterion().inclusion(true).subjectId(female.getId());
     PhenotypeQuery query =
-        ((PhenotypeQuery) new PhenotypeQuery().dataSource(""))
-            .addCriteriaItem(cri1)
-            .addCriteriaItem(cri2);
+        new PhenotypeQuery().dataSource("").addCriteriaItem(cri1).addCriteriaItem(cri2);
     URL configFile =
         Thread.currentThread().getContextClassLoader().getResource("config/SQL_Adapter_Test3.yml");
     assertNotNull(configFile);
@@ -87,18 +83,17 @@ public class FullBMIAgeTest extends AbstractTest {
   @Test
   public void test2() throws InstantiationException, SQLException, NoCodesException {
     QueryCriterion cri1 =
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(true)
-                .defaultAggregationFunctionId(defAgrFunc.getId())
-                .subjectId(overWeight.getId())
-                .dateTimeRestriction(getDTR(2000))
-                .type(TypeEnum.QUERYCRITERION);
-    QueryCriterion cri2 =
-        (QueryCriterion) new QueryCriterion().inclusion(true).subjectId(female.getId());
+        new QueryCriterion()
+            .inclusion(true)
+            .defaultAggregationFunctionId(defAgrFunc.getId())
+            .subjectId(overWeight.getId())
+            .dateTimeRestriction(getDTR(2000))
+            .type(TypeEnum.QUERY_CRITERION);
+    QueryCriterion cri2 = new QueryCriterion().inclusion(true).subjectId(female.getId());
     ProjectionEntry pro = new ProjectionEntry().subjectId(light.getId());
     PhenotypeQuery query =
-        ((PhenotypeQuery) new PhenotypeQuery().dataSource(""))
+        new PhenotypeQuery()
+            .dataSource("")
             .addCriteriaItem(cri1)
             .addCriteriaItem(cri2)
             .addProjectionItem(pro);
