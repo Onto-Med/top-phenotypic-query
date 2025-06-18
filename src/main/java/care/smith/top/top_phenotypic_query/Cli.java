@@ -71,7 +71,9 @@ public class Cli implements Callable<Integer> {
       @Parameters(
               index = "3",
               paramLabel = "<output ZIP>",
-              description = "Location where resulting ZIP file will be stored.")
+              description =
+                  "Location where resulting ZIP file will be stored. If missing, output will be printed to stdout.",
+              arity = "0..1")
           File outputFile) {
     try {
       PhenotypeQuery query = MAPPER.readValue(queryConfigFile, PhenotypeQuery.class);
@@ -86,7 +88,11 @@ public class Cli implements Callable<Integer> {
       ResultSet rs = finder.execute();
       adapter.close();
 
-      writeResultSetToZip(rs, entities, query, outputFile, force);
+      if (outputFile != null) {
+        writeResultSetToZip(rs, entities, query, outputFile, force);
+      } else {
+        System.out.println(rs.toString());
+      }
     } catch (Exception e) {
       e.printStackTrace();
       return 1;

@@ -60,6 +60,12 @@ class CliTest extends AbstractTest {
     } catch (IOException e) {
       fail(e);
     }
+
+    assertEquals(
+        0,
+        new CommandLine(new Cli())
+            .execute(
+                "query", "-f", queryConfig.toString(), model.toString(), adapter_config.getPath()));
   }
 
   Path createQueryConfig() throws IOException {

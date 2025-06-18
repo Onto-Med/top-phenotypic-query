@@ -35,7 +35,7 @@ Input parameters:
 * JSON containing a TOP query (i.e., `care.smith.top.model.Query`)
 * JSON containing a phenotype model
 * YAML adapter configuration
-* output destination of the ZIP file that contains the result set
+* optional: output destination of the ZIP file that contains the result set (if not provided, output is written to STDOUT)
 
 The next sections provide information on how to add `top-phenotypic-query` as Maven dependency to your Java project and
 how to call it programmatically.
