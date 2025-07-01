@@ -35,6 +35,23 @@ public class PheDao {
     return new PheDao().phenotype(phe).date(date).booleanValue(booleanValue);
   }
 
+  public static PheDao get(String codeSystem, String code, String date, Number numberValue) {
+    return new PheDao().codeSystem(codeSystem).code(code).date(date).numberValue(numberValue);
+  }
+
+  public static PheDao get(String codeSystem, String code, LocalDateTime date, Number numberValue) {
+    return new PheDao().codeSystem(codeSystem).code(code).date(date).numberValue(numberValue);
+  }
+
+  public static PheDao get(String codeSystem, String code, String date, Boolean booleanValue) {
+    return new PheDao().codeSystem(codeSystem).code(code).date(date).booleanValue(booleanValue);
+  }
+
+  public static PheDao get(
+      String codeSystem, String code, LocalDateTime date, Boolean booleanValue) {
+    return new PheDao().codeSystem(codeSystem).code(code).date(date).booleanValue(booleanValue);
+  }
+
   public PheDao phenotype(Phenotype phe) {
     Code code = phe.getCodes().get(new Random().nextInt(phe.getCodes().size()));
     code(code.getCode());
