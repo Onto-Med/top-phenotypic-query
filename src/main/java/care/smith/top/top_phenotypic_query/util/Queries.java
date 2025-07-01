@@ -31,7 +31,7 @@ public class Queries {
         }
       }
 
-    if (!criExist || (criExist && (!sic && !cicWithoutNegation) || sbjMan.hasComplexParameters()))
+    if (!criExist || ((!sic && !cicWithoutNegation) || sbjMan.hasComplexParameters()))
       return QueryType.TYPE_1;
     if (sbjMan.hasInclusion()) return QueryType.TYPE_2;
     if (sinMan.hasInclusion()) return QueryType.TYPE_3;
@@ -39,8 +39,7 @@ public class Queries {
   }
 
   public enum QueryType {
-    TYPE_1, // all subjects query (ASQ) required, if no criteria exist (i.e., only projection) or
-    // criteria exist and:
+    TYPE_1, // all subjects query (ASQ) required, if no criteria exist (i.e., only projection) or:
     // a) no single IC and no composite IC without negation or
     // b) no subject single IC but an unrestricted subject variable or
     // c) no subject single IC but more than one subject restriction of the same unrestricted
