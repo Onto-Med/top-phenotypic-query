@@ -56,7 +56,6 @@ public class DefaultSqlWriter {
       e.printStackTrace();
     }
 
-    execute("DROP ALL OBJECTS");
     execute(CREATE_SBJ);
     execute(CREATE_PHE);
   }

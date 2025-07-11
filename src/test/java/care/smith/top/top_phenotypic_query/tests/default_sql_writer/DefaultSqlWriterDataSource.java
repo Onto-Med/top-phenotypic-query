@@ -70,7 +70,6 @@ public class DefaultSqlWriterDataSource {
       e.printStackTrace();
     }
 
-    execute("DROP ALL OBJECTS");
     execute(CREATE_SBJ);
     execute(CREATE_ENC);
     execute(CREATE_PHE);
