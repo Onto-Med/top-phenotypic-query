@@ -9,7 +9,7 @@ import care.smith.top.top_phenotypic_query.tests.AbstractTest;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Disabled;
 
@@ -17,11 +17,11 @@ import org.junit.jupiter.api.Disabled;
 public class POLARTestIntern extends AbstractTest {
 
   public static void main(String[] args)
-      throws SQLException,
-          MalformedURLException,
-          IOException,
-          InstantiationException,
+      throws IOException,
           InterruptedException,
+          URISyntaxException,
+          InstantiationException,
+          SQLException,
           NoCodesException {
     Entities entities =
         Entities.of(
@@ -32,11 +32,10 @@ public class POLARTestIntern extends AbstractTest {
     DataAdapter adapter = DataAdapter.getInstance("test_files/POLAR_SQL_Adapter_Test_intern.yml");
 
     QueryCriterion cri1 =
-        (QueryCriterion)
-            new QueryCriterion()
-                .inclusion(true)
-                .defaultAggregationFunctionId(defAgrFunc.getId())
-                .subjectId(entities.getPhenotypeWithTitle("Extended algorithm").getId());
+        new QueryCriterion()
+            .inclusion(true)
+            .defaultAggregationFunctionId(defAgrFunc.getId())
+            .subjectId(entities.getPhenotypeWithTitle("Extended algorithm").getId());
     PhenotypeQuery query = new PhenotypeQuery().addCriteriaItem(cri1);
 
     PhenotypeFinder pf = new PhenotypeFinder(query, entities, adapter);

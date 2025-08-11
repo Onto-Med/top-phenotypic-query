@@ -15,6 +15,7 @@ import care.smith.top.top_phenotypic_query.util.builder.Res;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -89,9 +90,14 @@ public class Entities {
   }
 
   public static Entities of(String repoUrl, String user, String password)
-      throws IOException, InterruptedException {
+      throws IOException, InterruptedException, URISyntaxException {
     String token = HTTP.getToken(user, password);
     return of(HTTP.readRepository(repoUrl, token), HTTP.readEntities(repoUrl, token));
+  }
+
+  public static Entities of(String repoUrl)
+      throws IOException, InterruptedException, URISyntaxException {
+    return of(HTTP.readRepository(repoUrl, null), HTTP.readEntities(repoUrl, null));
   }
 
   public Entities repository(Repository repo) {
