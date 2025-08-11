@@ -284,6 +284,19 @@ public class Entities {
     return entities.size();
   }
 
+  public Set<Phenotype> getBasicVariables(Phenotype phe) {
+    return Expressions.getVariables(phe.getExpression(), this).stream()
+        .map(
+            id -> {
+              Phenotype p = getPhenotype(id);
+              if (Phenotypes.isSinglePhenotype(p)) return p;
+              if (Phenotypes.isSingleRestriction(p)) return p.getSuperPhenotype();
+              else return null;
+            })
+        .filter(p -> p != null)
+        .collect(Collectors.toSet());
+  }
+
   @Override
   public String toString() {
     return "Entities [entities=" + entities.values() + "]";

@@ -57,6 +57,24 @@ public class CSV {
     return this;
   }
 
+  public void writeCodes(Entity[] phenotypes, OutputStream out) {
+    CSVWriter writer = new CSVWriter(out, entriesDelimiter, charset);
+    writer.write(CSVCodesRecord.FIELDS);
+    Entities entities = Entities.of(phenotypes).deriveAdditionalProperties();
+    for (Phenotype alg : entities.getCompositePhenotypes()) {
+      for (Phenotype par : entities.getBasicVariables(alg)) {
+        writer.write(new CSVCodesRecord(alg, par, entryPartsDelimiter));
+        writer.flush();
+      }
+    }
+  }
+
+  public String toStringCodes(Entity[] phenotypes) {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    writeCodes(phenotypes, out);
+    return out.toString(charset);
+  }
+
   public void writeMetadata(Entity[] phenotypes, OutputStream out) {
     CSVWriter writer = new CSVWriter(out, entriesDelimiter, charset);
     writer.write(CSVMetadataRecord.FIELDS);
