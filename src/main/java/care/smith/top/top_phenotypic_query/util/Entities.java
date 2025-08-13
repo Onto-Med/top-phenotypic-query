@@ -18,11 +18,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class Entities {
@@ -284,7 +286,8 @@ public class Entities {
     return entities.size();
   }
 
-  public Set<Phenotype> getBasicVariables(Phenotype phe) {
+  public TreeSet<Phenotype> getBasicVariables(Phenotype phe) {
+    Comparator<Phenotype> byId = Comparator.comparing(Phenotype::getId);
     return Expressions.getVariables(phe.getExpression(), this).stream()
         .map(
             id -> {
@@ -294,7 +297,7 @@ public class Entities {
               else return null;
             })
         .filter(p -> p != null)
-        .collect(Collectors.toSet());
+        .collect(Collectors.toCollection(() -> new TreeSet<>(byId)));
   }
 
   @Override

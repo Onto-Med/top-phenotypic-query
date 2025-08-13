@@ -118,26 +118,25 @@ public class Phenotypes {
   }
 
   public static Phenotype clone(Phenotype p) {
-    return (Phenotype)
-        new Phenotype()
-            .dataType(p.getDataType())
-            .expression(p.getExpression())
-            .itemType(p.getItemType())
-            .restriction(p.getRestriction())
-            .superPhenotype(p.getSuperPhenotype())
-            .unit(p.getUnit())
-            .author(p.getAuthor())
-            .codes(p.getCodes())
-            .createdAt(p.getCreatedAt())
-            .descriptions(p.getDescriptions())
-            .entityType(p.getEntityType())
-            .equivalentEntities(p.getEquivalentEntities())
-            .id(p.getId())
-            .refer(p.getRefer())
-            .repository(p.getRepository())
-            .synonyms(p.getSynonyms())
-            .titles(p.getTitles())
-            .version(p.getVersion());
+    return new Phenotype()
+        .dataType(p.getDataType())
+        .expression(p.getExpression())
+        .itemType(p.getItemType())
+        .restriction(p.getRestriction())
+        .superPhenotype(p.getSuperPhenotype())
+        .unit(p.getUnit())
+        .author(p.getAuthor())
+        .codes(p.getCodes())
+        .createdAt(p.getCreatedAt())
+        .descriptions(p.getDescriptions())
+        .entityType(p.getEntityType())
+        .equivalentEntities(p.getEquivalentEntities())
+        .id(p.getId())
+        .refer(p.getRefer())
+        .repository(p.getRepository())
+        .synonyms(p.getSynonyms())
+        .titles(p.getTitles())
+        .version(p.getVersion());
   }
 
   public static String getRestrictedValuesKey(Phenotype singleRestriction) {
