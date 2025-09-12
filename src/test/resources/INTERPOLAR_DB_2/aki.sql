@@ -9,7 +9,7 @@ VALUES ('HOSP-0001', '1960-01-01', 'female'),
        ('HOSP-0008', '2000-01-01', 'male'),
        ('HOSP-0009', '2020-01-01', 'female');
 
-INSERT INTO db_log.encounter (enc_id, enc_patient_id, enc_diagnosis_condition_id, enc_class_code, enc_period_start,
+INSERT INTO db_log.encounter (enc_id, enc_patient_ref, enc_diagnosis_condition_ref, enc_class_code, enc_period_start,
                               enc_period_end)
 VALUES ('HOSP-0001-E-11', 'Patient/HOSP-0001', '', 'IMP', '2017-01-01', '2017-02-01'),
        ('HOSP-0002-E-22', 'Patient/HOSP-0002', '', 'IMP', '2017-01-01', '2017-02-01'),
@@ -21,7 +21,7 @@ VALUES ('HOSP-0001-E-11', 'Patient/HOSP-0001', '', 'IMP', '2017-01-01', '2017-02
        ('HOSP-0008-E-88', 'Patient/HOSP-0008', '', 'IMP', '2019-01-01', '2019-02-01'),
        ('HOSP-0009-E-99', 'Patient/HOSP-0009', '', 'AMB', '2020-01-01', '2020-02-01');
 
-INSERT INTO db_log.observation (obs_id, obs_encounter_id, obs_patient_id, obs_code_system, obs_code_code,
+INSERT INTO db_log.observation (obs_id, obs_encounter_ref, obs_patient_ref, obs_code_system, obs_code_code,
                                 obs_effectivedatetime, obs_valuequantity_value)
 VALUES ('HOSP-0001-E-11-OL-1', 'Encounter/HOSP-0001-E-11', 'Patient/HOSP-0001', 'http://loinc.org', '2160-0',
         '2020-01-05', 31),

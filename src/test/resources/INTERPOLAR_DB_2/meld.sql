@@ -9,7 +9,7 @@ VALUES ('HOSP-0001', '1960-01-01', 'female'),
        ('HOSP-0008', '2000-01-01', 'male'),
        ('HOSP-0009', '2020-01-01', 'female');
 
-INSERT INTO db_log.encounter (enc_id, enc_patient_id, enc_diagnosis_condition_id, enc_class_code, enc_period_start,
+INSERT INTO db_log.encounter (enc_id, enc_patient_ref, enc_diagnosis_condition_ref, enc_class_code, enc_period_start,
                               enc_period_end)
 VALUES ('HOSP-0001-E-11', 'Patient/HOSP-0001', '', 'IMP', '2017-01-01', '2017-02-01'),
        ('HOSP-0002-E-22', 'Patient/HOSP-0002', '', 'IMP', '2017-01-01', '2017-02-01'),
@@ -26,17 +26,17 @@ INSERT INTO db_log.medication (med_id, med_code_system, med_code_code)
 VALUES ('Medication-1', 'http://fhir.de/CodeSystem/bfarm/atc', 'B01AA'),
        ('Medication-1', 'http://fhir.de/CodeSystem/bfarm/atc', 'B01AF');
 
-INSERT INTO db_log.medicationadministration (medadm_id, medadm_encounter_id, medadm_patient_id,
-                                             medadm_effectivedatetime, medadm_medicationreference_id)
+INSERT INTO db_log.medicationadministration (medadm_id, medadm_encounter_ref, medadm_patient_ref,
+                                             medadm_effectivedatetime, medadm_medicationreference_ref)
 VALUES ('HOSP-0003-E-33-MA-1', 'Encounter/HOSP-0003-E-33', 'Patient/HOSP-0003', '2020-01-01',
         'Medication/Medication-1');
 
-INSERT INTO db_log."procedure" (proc_id, proc_patient_id, proc_code_system, proc_code_code, proc_performeddatetime)
+INSERT INTO db_log."procedure" (proc_id, proc_patient_ref, proc_code_system, proc_code_code, proc_performeddatetime)
 VALUES ('HOSP-0004-E-44-P-441', 'Patient/HOSP-0004', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 8),
        ('HOSP-0004-E-44-P-442', 'Patient/HOSP-0004', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 6),
        ('HOSP-0008-E-88-P-881', 'Patient/HOSP-0008', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 6);
 
-INSERT INTO db_log.observation (obs_id, obs_encounter_id, obs_patient_id, obs_code_system, obs_code_code,
+INSERT INTO db_log.observation (obs_id, obs_encounter_ref, obs_patient_ref, obs_code_system, obs_code_code,
                                 obs_effectivedatetime, obs_valuequantity_value)
 VALUES ('HOSP-0001-E-11-OL-1', 'Encounter/HOSP-0001-E-11', 'Patient/HOSP-0001', 'http://loinc.org', '2160-0',
         '2020-01-01', 1.1),
