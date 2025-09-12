@@ -105,11 +105,8 @@ public class AKITest {
                 aki2,
                 aki3)
             .pro(akiAll)
-            .cleanDB()
             .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/aki.sql")
             .execute();
-
-    System.out.println(rs);
 
     assertEquals(
         List.of(Val.of(3), Val.of(0), Val.of(2), Val.of(3)),

@@ -37,7 +37,6 @@ public class InterPolarDbTest {
             .pro(crea)
             .pro(age)
             .pro(sex)
-            .cleanDB()
             .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/test1.sql")
             .execute();
     System.out.println(rs);

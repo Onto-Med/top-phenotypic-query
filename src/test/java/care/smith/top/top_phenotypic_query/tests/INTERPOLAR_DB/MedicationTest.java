@@ -33,7 +33,6 @@ public class MedicationTest {
             .inc(med, Res.geLe(DateUtil.parse("2020-01-01"), DateUtil.parse("2021-01-01")))
             .inc(male)
             .inc(old)
-            .cleanDB()
             .executeSqlFromResources("INTERPOLAR_DB/db.sql", "INTERPOLAR_DB/medication.sql")
             .execute();
     assertEquals(Set.of("13", "23", "33"), rs.getSubjectIds());

@@ -33,11 +33,8 @@ public class EncAgeTest {
             .pro(bd)
             .pro(age)
             .pro(encAge)
-            .cleanDB()
             .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/encAge.sql")
             .execute();
-
-    System.out.println(rs);
 
     LocalDate birthdate11 = LocalDate.of(1940, Month.JANUARY, 1);
     LocalDate birthdate21 = LocalDate.of(1980, Month.JULY, 1);

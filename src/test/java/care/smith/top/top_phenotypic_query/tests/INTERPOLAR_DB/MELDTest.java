@@ -150,10 +150,7 @@ public class MELDTest {
     if (exc != null) q.exc(exc);
 
     ResultSet rs =
-        q.cleanDB()
-            .executeSqlFromResources("INTERPOLAR_DB/db.sql", "INTERPOLAR_DB/meld.sql")
-            .execute();
-    //    System.out.println(rs);
+        q.executeSqlFromResources("INTERPOLAR_DB/db.sql", "INTERPOLAR_DB/meld.sql").execute();
 
     return rs.getSubjectIds();
   }

@@ -30,7 +30,6 @@ public class DurationTest {
         new Que(CONFIG, enc, imp, dur)
             .inc(imp)
             .inc(dur)
-            .cleanDB()
             .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/duration.sql")
             .execute();
 

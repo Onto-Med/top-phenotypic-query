@@ -50,7 +50,6 @@ public class FilterTest {
     ResultSet rs =
         new Que(CONFIG, dabi, eGFR, eGFRgt30, check1)
             .inc(check1)
-            .cleanDB()
             .executeSqlFromResources("INTERPOLAR_DB/db.sql", "INTERPOLAR_DB/filter.sql")
             .execute();
     assertEquals(Set.of("2", "5"), rs.getSubjectIds());
@@ -58,7 +57,6 @@ public class FilterTest {
     rs =
         new Que(CONFIG, dabi, eGFR, eGFRgt30, check2)
             .inc(check2)
-            .cleanDB()
             .executeSqlFromResources("INTERPOLAR_DB/db.sql", "INTERPOLAR_DB/filter.sql")
             .execute();
     assertEquals(Set.of("2"), rs.getSubjectIds());
