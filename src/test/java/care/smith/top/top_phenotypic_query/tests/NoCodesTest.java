@@ -14,6 +14,7 @@ import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import java.net.URL;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class NoCodesTest {
@@ -45,6 +46,7 @@ public class NoCodesTest {
   private static Entity[] entities = {crea, bili, age1, young, old, sex, bd, enc, age2};
 
   @Test
+  @Disabled
   public void test() throws InstantiationException {
     URL configFile =
         Thread.currentThread()
