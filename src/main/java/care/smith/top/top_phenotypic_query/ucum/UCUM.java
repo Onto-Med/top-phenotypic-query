@@ -30,7 +30,8 @@ public class UCUM {
       return new BigDecimal(
           SERVICE.convert(new Decimal(value.toPlainString()), inUnit, outUnit).asDecimal());
     } catch (UcumException e) {
-      throw new IllegalArgumentException(e);
+      log.error(e.getMessage(), e);
+      return null;
     }
   }
 }
