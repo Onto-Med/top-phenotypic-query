@@ -55,10 +55,17 @@ public class Cli implements Callable<Integer> {
               description = "Overwrite existing output file.")
           boolean force,
       @Option(
+              names = {"-l", "--list"},
+              description = "Print a list of patient IDs that match the query criteria to STDOUT.")
+          boolean list,
+      @Option(
+              names = {"-n", "--count"},
+              description = "Print number of patients that match the query criteria to STDOUT.")
+          boolean count,
+      @Option(
               names = {"-o", "--output"},
               paramLabel = "<output ZIP>",
-              description =
-                  "Location where resulting ZIP file will be stored. If missing, output will be printed to stdout.")
+              description = "Location where resulting ZIP file will be stored.")
           File outputFile,
       @Option(
               names = {"-p", "--phenotype"},
@@ -111,10 +118,12 @@ public class Cli implements Callable<Integer> {
       ResultSet rs = finder.execute();
       adapter.close();
 
+      if (list) System.out.println(rs.getSubjectIds());
+      if (count) System.out.println(rs.getSubjectIds().size());
+      if (!list && !count) System.out.println(rs.toString());
+
       if (outputFile != null) {
         writeResultSetToZip(rs, entities, query, outputFile, force);
-      } else {
-        System.out.println(rs.toString());
       }
     } catch (Exception e) {
       e.printStackTrace();
