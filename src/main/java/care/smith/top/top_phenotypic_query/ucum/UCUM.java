@@ -25,12 +25,13 @@ public class UCUM {
   }
 
   public static BigDecimal convert(BigDecimal value, String inUnit, String outUnit) {
-    if (inUnit == null || outUnit == null) return value;
+    if (inUnit == null || outUnit == null || value == null) return value;
     try {
       return new BigDecimal(
           SERVICE.convert(new Decimal(value.toPlainString()), inUnit, outUnit).asDecimal());
     } catch (UcumException e) {
-      throw new IllegalArgumentException(e);
+      log.error(e.getMessage(), e);
+      return null;
     }
   }
 }

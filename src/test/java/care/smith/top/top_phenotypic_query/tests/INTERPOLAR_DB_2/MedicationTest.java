@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB;
+package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB_2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 public class MedicationTest {
 
-  private static final String CONFIG = "config/INTERPOLAR_DB_Adapter.yml";
+  private static final String CONFIG = "config/Interpolar_Adapter_Test.yml";
 
   private static Phenotype sex = new Phe("sex").itemType(ItemType.SUBJECT_SEX).string().get();
   private static Phenotype male = new Phe("male").restriction(sex, Res.of("male")).get();
@@ -33,8 +33,8 @@ public class MedicationTest {
             .inc(med, Res.geLe(DateUtil.parse("2020-01-01"), DateUtil.parse("2021-01-01")))
             .inc(male)
             .inc(old)
-            .executeSqlFromResources("INTERPOLAR_DB/db.sql", "INTERPOLAR_DB/medication.sql")
+            .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/medication.sql")
             .execute();
-    assertEquals(Set.of("13", "23", "33"), rs.getSubjectIds());
+    assertEquals(Set.of("HOSP-0013-E-1", "HOSP-0023-E-1", "HOSP-0033-E-1"), rs.getSubjectIds());
   }
 }

@@ -159,10 +159,6 @@ public class Que {
     return executeSql(Stream.of(files).map(f -> readResource(f)).toArray(String[]::new));
   }
 
-  public Que cleanDB() {
-    return executeSql("DROP ALL OBJECTS");
-  }
-
   public Que executeSql(String... statements) {
     try {
       Connection con =

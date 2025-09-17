@@ -41,8 +41,9 @@ public class PhenotypeFinder {
   }
 
   public ResultSet execute() throws SQLException, NoCodesException {
-    NoCodesException e = phenotypes.checkNoCodes();
-    if (e != null) throw e;
+    // TODO: find a better implementation to handle cases with missing codes
+    // NoCodesException e = phenotypes.checkNoCodes();
+    // if (e != null) throw e;
     return executeCompositeSearches(executeSingleSearches());
   }
 

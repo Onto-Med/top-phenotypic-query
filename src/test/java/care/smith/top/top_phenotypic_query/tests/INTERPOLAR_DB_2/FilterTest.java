@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB;
+package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB_2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 public class FilterTest {
 
-  private static final String CONFIG = "config/INTERPOLAR_DB_Adapter.yml";
+  private static final String CONFIG = "config/Interpolar_Adapter_Test.yml";
 
   private static Phenotype dabi =
       new Phe("Dabigatran", "http://fhir.de/CodeSystem/bfarm/atc", "B01AE07")
@@ -50,15 +50,15 @@ public class FilterTest {
     ResultSet rs =
         new Que(CONFIG, dabi, eGFR, eGFRgt30, check1)
             .inc(check1)
-            .executeSqlFromResources("INTERPOLAR_DB/db.sql", "INTERPOLAR_DB/filter.sql")
+            .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/filter.sql")
             .execute();
-    assertEquals(Set.of("2", "5"), rs.getSubjectIds());
+    assertEquals(Set.of("HOSP-0001-E-2", "HOSP-0001-E-5"), rs.getSubjectIds());
 
     rs =
         new Que(CONFIG, dabi, eGFR, eGFRgt30, check2)
             .inc(check2)
-            .executeSqlFromResources("INTERPOLAR_DB/db.sql", "INTERPOLAR_DB/filter.sql")
+            .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/filter.sql")
             .execute();
-    assertEquals(Set.of("2"), rs.getSubjectIds());
+    assertEquals(Set.of("HOSP-0001-E-2"), rs.getSubjectIds());
   }
 }

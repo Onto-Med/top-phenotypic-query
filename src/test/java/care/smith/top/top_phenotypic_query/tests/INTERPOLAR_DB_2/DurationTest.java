@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB;
+package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB_2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 public class DurationTest {
 
-  private static final String CONFIG = "config/INTERPOLAR_DB_Adapter.yml";
+  private static final String CONFIG = "config/Interpolar_Adapter_Test.yml";
 
   private static Phenotype enc = new Phe("encounter").itemType(ItemType.ENCOUNTER).string().get();
   private static Phenotype imp = new Phe("inpatient").restriction(enc, Res.of("IMP")).get();
@@ -30,9 +30,9 @@ public class DurationTest {
         new Que(CONFIG, enc, imp, dur)
             .inc(imp)
             .inc(dur)
-            .executeSqlFromResources("INTERPOLAR_DB/db.sql", "INTERPOLAR_DB/duration.sql")
+            .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/duration.sql")
             .execute();
 
-    assertEquals(Set.of("11", "13"), rs.getSubjectIds());
+    assertEquals(Set.of("HOSP-0001-E-11", "HOSP-0001-E-13"), rs.getSubjectIds());
   }
 }

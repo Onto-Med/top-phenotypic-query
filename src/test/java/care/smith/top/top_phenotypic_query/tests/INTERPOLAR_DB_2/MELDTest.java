@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB;
+package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB_2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 
 public class MELDTest {
 
-  private static final String CONFIG = "config/INTERPOLAR_DB_Adapter.yml";
+  private static final String CONFIG = "config/Interpolar_Adapter_Test.yml";
 
   private static Phenotype crea =
       new Phe("crea", "http://loinc.org", "2160-0")
@@ -109,22 +109,24 @@ public class MELDTest {
 
   @Test
   void meld1() throws InstantiationException {
-    assertEquals(Set.of("99"), search(meld0, null));
+    assertEquals(Set.of("HOSP-0009-E-99"), search(meld0, null));
   }
 
   @Test
   void meld2() throws InstantiationException {
-    assertEquals(Set.of("11"), search(meld2, null));
+    assertEquals(Set.of("HOSP-0001-E-11"), search(meld2, null));
   }
 
   @Test
   void meld3() throws InstantiationException {
-    assertEquals(Set.of("22", "33", "44", "88"), search(meld3, null));
+    assertEquals(
+        Set.of("HOSP-0002-E-22", "HOSP-0003-E-33", "HOSP-0004-E-44", "HOSP-0008-E-88"),
+        search(meld3, null));
   }
 
   @Test
   void meld4() throws InstantiationException {
-    assertEquals(Set.of("22", "44", "88"), search(meld3, med));
+    assertEquals(Set.of("HOSP-0002-E-22", "HOSP-0004-E-44", "HOSP-0008-E-88"), search(meld3, med));
   }
 
   private Set<String> search(Phenotype inc, Phenotype exc) throws InstantiationException {
@@ -150,7 +152,7 @@ public class MELDTest {
     if (exc != null) q.exc(exc);
 
     ResultSet rs =
-        q.executeSqlFromResources("INTERPOLAR_DB/db.sql", "INTERPOLAR_DB/meld.sql").execute();
+        q.executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/meld.sql").execute();
 
     return rs.getSubjectIds();
   }

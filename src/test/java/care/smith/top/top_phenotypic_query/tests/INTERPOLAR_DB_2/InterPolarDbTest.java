@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB;
+package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB_2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 public class InterPolarDbTest {
 
-  private static final String CONFIG = "config/INTERPOLAR_DB_Adapter.yml";
+  private static final String CONFIG = "config/Interpolar_Adapter_Test.yml";
 
   @Test
   void test1() throws InstantiationException {
@@ -26,7 +26,7 @@ public class InterPolarDbTest {
         new Phe("crea", "http://loinc.org", "2160-0", "38483-4")
             .itemType(ItemType.OBSERVATION)
             .titleEn("Creatinine [Mass/volume] in Serum or Plasma")
-            .number("mmol/L")
+            .number("mg/dL")
             .get();
 
     ResultSet rs =
@@ -37,11 +37,11 @@ public class InterPolarDbTest {
             .pro(crea)
             .pro(age)
             .pro(sex)
-            .executeSqlFromResources("INTERPOLAR_DB/db.sql", "INTERPOLAR_DB/test1.sql")
+            .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/test1.sql")
             .execute();
     System.out.println(rs);
 
-    assertEquals(Set.of("11", "33"), rs.getSubjectIds());
+    assertEquals(Set.of("HOSP-0001-E-11", "HOSP-0001-E-33"), rs.getSubjectIds());
   }
 
   //  @Test

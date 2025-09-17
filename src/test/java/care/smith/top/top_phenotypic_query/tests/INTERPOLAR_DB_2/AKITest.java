@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB;
+package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB_2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 public class AKITest {
 
-  private static final String CONFIG = "config/INTERPOLAR_DB_Adapter.yml";
+  private static final String CONFIG = "config/Interpolar_Adapter_Test.yml";
 
   @Test
   void aki() throws InstantiationException {
@@ -105,41 +105,41 @@ public class AKITest {
                 aki2,
                 aki3)
             .pro(akiAll)
-            .executeSqlFromResources("INTERPOLAR_DB/db.sql", "INTERPOLAR_DB/aki.sql")
+            .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/aki.sql")
             .execute();
 
     assertEquals(
         List.of(Val.of(3), Val.of(0), Val.of(2), Val.of(3)),
-        rs.get("11").getValues("AKIAll", null));
+        rs.get("HOSP-0001-E-11").getValues("AKIAll", null));
 
     assertEquals(
         List.of(Val.of(1), Val.of(0), Val.of(2), Val.of(3)),
-        rs.get("22").getValues("AKIAll", null));
+        rs.get("HOSP-0002-E-22").getValues("AKIAll", null));
 
     assertEquals(
         List.of(Val.of(1), Val.of(0), Val.of(2), Val.of(2)),
-        rs.get("33").getValues("AKIAll", null));
+        rs.get("HOSP-0003-E-33").getValues("AKIAll", null));
 
     assertEquals(
         List.of(Val.of(0), Val.of(0), Val.of(0), Val.of(3)),
-        rs.get("44").getValues("AKIAll", null));
+        rs.get("HOSP-0004-E-44").getValues("AKIAll", null));
 
     assertEquals(
         List.of(Val.of(0), Val.of(0), Val.of(0), Val.of(3)),
-        rs.get("55").getValues("AKIAll", null));
+        rs.get("HOSP-0005-E-55").getValues("AKIAll", null));
 
     assertEquals(
         List.of(Val.of(1), Val.of(0), Val.of(1), Val.of(1)),
-        rs.get("66").getValues("AKIAll", null));
+        rs.get("HOSP-0006-E-66").getValues("AKIAll", null));
 
     assertEquals(
         List.of(Val.of(0), Val.of(0), Val.of(0), Val.of(0)),
-        rs.get("77").getValues("AKIAll", null));
+        rs.get("HOSP-0007-E-77").getValues("AKIAll", null));
 
-    assertEquals(List.of(Val.of(0)), rs.get("88").getValues("AKIAll", null));
+    assertEquals(List.of(Val.of(0)), rs.get("HOSP-0008-E-88").getValues("AKIAll", null));
 
     assertEquals(
         List.of(Val.of(0), Val.of(0), Val.of(0), Val.of(0)),
-        rs.get("99").getValues("AKIAll", null));
+        rs.get("HOSP-0009-E-99").getValues("AKIAll", null));
   }
 }

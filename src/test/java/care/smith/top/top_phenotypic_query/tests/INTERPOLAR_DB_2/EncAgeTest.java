@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB;
+package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB_2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 public class EncAgeTest {
 
-  private static final String CONFIG = "config/INTERPOLAR_DB_Adapter.yml";
+  private static final String CONFIG = "config/Interpolar_Adapter_Test.yml";
 
   private static final Phenotype bd =
       new Phe("birth date").itemType(ItemType.SUBJECT_BIRTH_DATE).dateTime().get();
@@ -33,7 +33,7 @@ public class EncAgeTest {
             .pro(bd)
             .pro(age)
             .pro(encAge)
-            .executeSqlFromResources("INTERPOLAR_DB/db.sql", "INTERPOLAR_DB/encAge.sql")
+            .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/encAge.sql")
             .execute();
 
     LocalDate birthdate11 = LocalDate.of(1940, Month.JANUARY, 1);
@@ -41,22 +41,26 @@ public class EncAgeTest {
 
     assertEquals(
         birthdate11,
-        ((DateTimeValue) rs.getValues("11", "birth date", null).get(0)).getValue().toLocalDate());
+        ((DateTimeValue) rs.getValues("HOSP-0001-E-11", "birth date", null).get(0))
+            .getValue()
+            .toLocalDate());
     assertEquals(
         birthdate21,
-        ((DateTimeValue) rs.getValues("21", "birth date", null).get(0)).getValue().toLocalDate());
+        ((DateTimeValue) rs.getValues("HOSP-0002-E-21", "birth date", null).get(0))
+            .getValue()
+            .toLocalDate());
 
     int age11 = Period.between(birthdate11, LocalDate.now()).getYears();
     int age21 = Period.between(birthdate21, LocalDate.now()).getYears();
 
-    assertEquals(age11, rs.getNumberValue("11", "age", null).intValue());
-    assertEquals(60, rs.getNumberValue("11", "encounter age", null).intValue());
-    assertEquals(age11, rs.getNumberValue("12", "age", null).intValue());
-    assertEquals(70, rs.getNumberValue("12", "encounter age", null).intValue());
+    assertEquals(age11, rs.getNumberValue("HOSP-0001-E-11", "age", null).intValue());
+    assertEquals(60, rs.getNumberValue("HOSP-0001-E-11", "encounter age", null).intValue());
+    assertEquals(age11, rs.getNumberValue("HOSP-0001-E-12", "age", null).intValue());
+    assertEquals(70, rs.getNumberValue("HOSP-0001-E-12", "encounter age", null).intValue());
 
-    assertEquals(age21, rs.getNumberValue("21", "age", null).intValue());
-    assertEquals(9, rs.getNumberValue("21", "encounter age", null).intValue());
-    assertEquals(age21, rs.getNumberValue("22", "age", null).intValue());
-    assertEquals(39, rs.getNumberValue("22", "encounter age", null).intValue());
+    assertEquals(age21, rs.getNumberValue("HOSP-0002-E-21", "age", null).intValue());
+    assertEquals(9, rs.getNumberValue("HOSP-0002-E-21", "encounter age", null).intValue());
+    assertEquals(age21, rs.getNumberValue("HOSP-0002-E-22", "age", null).intValue());
+    assertEquals(39, rs.getNumberValue("HOSP-0002-E-22", "encounter age", null).intValue());
   }
 }

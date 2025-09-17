@@ -1,0 +1,320 @@
+# This adapter can be used for querying INTERPOLAR databases that are the result of the ETL process defined and
+# implemented in https://github.com/medizininformatik-initiative/INTERPOLAR.
+# The ETL process stores the data in a postgres database "cds_hub_db" under the schema "db_log" (see
+# https://github.com/medizininformatik-initiative/INTERPOLAR/blob/main/Dataflow.md).
+# Access to the db_log schema is accomplished by the postgres user 'db_log_user' as this user has read and write
+# permissions to the schema, see
+# https://github.com/medizininformatik-initiative/INTERPOLAR/blob/main/Postgres-cds_hub/DB_description.md#rechtekonzept
+# The adapter has been tested using the synthetic sample data set imported from
+# https://github.com/medizininformatik-initiative/kerndatensatz-testdaten.
+#
+# As the test data is missing encounter class codes, it is recommended to execute the following SQL update statements
+# after the import:
+#
+# UPDATE db_log.encounter
+# SET
+#	  enc_class_system='http://terminology.hl7.org/CodeSystem/v3-ActCode',
+#	  enc_class_display='inpatient encounter',
+#     enc_class_code='IMP'
+# WHERE enc_id < 'UKB-0009-E-1'
+#
+# UPDATE db_log.encounter
+# SET
+#     enc_class_system='http://terminology.hl7.org/CodeSystem/v3-ActCode',
+#     enc_class_display='ambulatory',
+#     enc_class_code='AMB'
+# WHERE enc_id >= 'UKB-0009-E-1'
+#
+baseId: encounter
+subjectQuery:
+  baseQuery: "SELECT enc_id, pat_birthdate, pat_gender FROM db_log.patient, db_log.encounter\nWHERE enc_patient_ref = 'Patient/' || pat_id"
+  sexListPart: "\nAND pat_gender IN ({values})"
+  birthdateIntervalPart: "\nAND pat_birthdate {operator} {value}"
+  output:
+    id: enc_id
+    sex: pat_gender
+    birthdate: pat_birthdate
+phenotypeQueries:
+  encounter:
+    baseQuery: "SELECT enc_id, enc_period_start, enc_period_end, enc_class_code FROM db_log.encounter\nWHERE TRUE"
+    textValueListPart: "\nAND enc_class_code IN ({values})"
+    startDateTimeIntervalPart: "\nAND enc_period_start {operator} {value}"
+    endDateTimeIntervalPart: "\nAND (enc_period_end IS NULL OR enc_period_end {operator} {value})"
+    output:
+      subject: enc_id
+      textValue: enc_class_code
+      startDateTime: enc_period_start
+      endDateTime: enc_period_end
+  observation:
+    baseQuery: "SELECT RIGHT(obs_encounter_ref, LENGTH(obs_encounter_ref) - 10) AS enc_id, obs_effectivedatetime, obs_valuequantity_value FROM db_log.observation\nWHERE obs_valuequantity_value IS NOT NULL AND obs_code_system || '|' || obs_code_code IN ({codes})"
+    numberValueIntervalPart: "\nAND obs_valuequantity_value {operator} {value}"
+    numberValueListPart: "\nAND obs_valuequantity_value IN ({values})"
+    dateTimeIntervalPart: "\nAND obs_effectivedatetime {operator} {value}"
+    output:
+      subject: enc_id
+      numberValue: obs_valuequantity_value
+      dateTime: obs_effectivedatetime
+  condition:
+    baseQuery: "SELECT enc_id, con_recordeddate FROM db_log.condition, db_log.encounter\nWHERE enc_diagnosis_condition_ref  = 'Condition/' || con_identifier_value AND con_code_system || '|' || con_code_code IN ({codes})"
+    dateTimeIntervalPart: "\nAND con_recordeddate {operator} {value}"
+    output:
+      subject: enc_id
+      dateTime: con_recordeddate
+  procedure:
+    baseQuery: "SELECT enc_id, proc_performeddatetime FROM db_log.\"procedure\", db_log.encounter\nWHERE enc_diagnosis_condition_ref  = 'Procedure/' || proc_id AND proc_code_system || '|' || proc_code_code IN ({codes})"
+    dateTimeIntervalPart: "\nAND proc_performeddatetime {operator} {value}"
+    output:
+      subject: enc_id
+      dateTime: proc_performeddatetime
+  medication:
+    union: [ medication_administration, medication_statement, medication_request ]
+  medication_administration:
+    baseQuery: "SELECT RIGHT(medadm_encounter_ref, LENGTH(medadm_encounter_ref) - 10) AS enc_id, medadm_effectivedatetime AS datetime FROM db_log.medicationadministration, db_log.medication\nWHERE medadm_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
+    dateTimeIntervalPart: "\nAND medadm_effectivedatetime {operator} {value}"
+    output:
+      subject: enc_id
+      dateTime: datetime
+  medication_statement:
+    baseQuery: "SELECT RIGHT(medstat_encounter_ref, LENGTH(medstat_encounter_ref) - 10) AS enc_id, medstat_effectivedatetime AS datetime FROM db_log.medicationstatement, db_log.medication\nWHERE medstat_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
+    dateTimeIntervalPart: "\nAND medstat_effectivedatetime {operator} {value}"
+    output:
+      subject: enc_id
+      dateTime: datetime
+  medication_request:
+    baseQuery: "SELECT RIGHT(medreq_encounter_ref, LENGTH(medreq_encounter_ref) - 10) AS enc_id, medreq_authoredon AS datetime FROM db_log.medicationrequest, db_log.medication\nWHERE medreq_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
+    dateTimeIntervalPart: "\nAND medreq_authoredon {operator} {value}"
+    output:
+      subject: enc_id
+      dateTime: datetime
+birthdateMapping:
+  code: http://loinc.org|21112-8
+ageMapping:
+  code: http://loinc.org|30525-0
+sexMapping:
+  code: http://loinc.org|46098-0
+codeMappings:
+  - code: http://loinc.org|14933-6
+    type: observation
+    unit: mg/dL
+  - code: http://loinc.org|8310-7
+    type: observation
+    unit: Cel
+  - code: http://loinc.org|2947-0
+    type: observation
+    unit: mmol/L
+  - code: http://loinc.org|1783-0
+    type: observation
+    unit: U/L
+  - code: http://loinc.org|15074-8
+    type: observation
+    unit: mg/dL
+  - code: http://loinc.org|8867-4
+    type: observation
+    unit: /min
+  - code: http://loinc.org|26508-2
+    type: observation
+    unit: '%'
+  - code: http://loinc.org|14798-3
+    type: observation
+    unit: ug/L
+  - code: http://loinc.org|42757-5
+    type: observation
+    unit: ng/mL
+  - code: http://loinc.org|2713-6
+    type: observation
+    unit: '%'
+  - code: http://loinc.org|54347-0
+    type: observation
+    unit: '%'
+  - code: http://loinc.org|3173-2
+    type: observation
+    unit: s
+  - code: http://loinc.org|14723-1
+    type: observation
+    unit: mg/dL
+  - code: http://loinc.org|6298-4
+    type: observation
+    unit: mmol/L
+  - code: http://loinc.org|2885-2
+    type: observation
+    unit: g/dL
+  - code: http://loinc.org|unknown
+    type: observation
+    unit: ms
+  - code: http://loinc.org|59826-8
+    type: observation
+    unit: mg/dL
+  - code: http://loinc.org|26464-8
+    type: observation
+    unit: 10*9/L
+  - code: http://loinc.org|15074-8
+    type: observation
+    unit: mmol/L
+  - code: http://loinc.org|3034-6
+    type: observation
+    unit: mg/dL
+  - code: http://loinc.org|8310-5
+    type: observation
+    unit: Cel
+  - code: http://loinc.org|3040-3
+    type: observation
+    unit: U/L
+  - code: http://loinc.org|54347-0
+    type: observation
+    unit: g/L
+  - code: http://loinc.org|76630-3
+    type: observation
+    unit: U/L
+  - code: http://loinc.org|4548-4
+    type: observation
+    unit: '%'
+  - code: http://loinc.org|39156-5
+    type: observation
+    unit: kg/m2
+  - code: http://loinc.org|1996-8
+    type: observation
+    unit: mmol/L
+  - code: http://loinc.org|15103-5
+    type: observation
+    unit: ng/mL
+  - code: http://loinc.org|unknown
+    type: observation
+    unit: '%'
+  - code: http://loinc.org|3015-5
+    type: observation
+    unit: uU/L
+  - code: http://loinc.org|26453-1
+    type: observation
+    unit: 10*12/L
+  - code: http://loinc.org|unknown
+    type: observation
+    unit: pg/dL
+  - code: http://loinc.org|8480-6
+    type: observation
+    unit: mm[Hg]
+  - code: http://loinc.org|2593-2
+    type: observation
+    unit: mmol/L
+  - code: http://loinc.org|2324-2
+    type: observation
+    unit: U/L
+  - code: http://loinc.org|14647-2
+    type: observation
+    unit: mg/dL
+  - code: http://loinc.org|6471-9
+    type: observation
+    unit: '%'
+  - code: http://loinc.org|28542-9
+    type: observation
+    unit: fL
+  - code: http://loinc.org|3142-7
+    type: observation
+    unit: kg
+  - code: http://loinc.org|26515-7
+    type: observation
+    unit: 10*9/L
+  - code: http://loinc.org|30428-7
+    type: observation
+    unit: fL
+  - code: http://loinc.org|8302-2
+    type: observation
+    unit: cm
+  - code: http://loinc.org|1920-8
+    type: observation
+    unit: U/L
+  - code: http://loinc.org|22748-8
+    type: observation
+    unit: mg/dL
+  - code: http://loinc.org|2529-6
+    type: observation
+    unit: U/L
+  - code: http://loinc.org|14646-4
+    type: observation
+    unit: mg/dL
+  - code: http://loinc.org|76485-2
+    type: observation
+    unit: mg/L
+  - code: http://loinc.org|2069-3
+    type: observation
+    unit: mmol/L
+  - code: http://loinc.org|54363-7
+    type: observation
+    unit: mg/dL
+  - code: http://loinc.org|13046-8
+    type: observation
+    unit: '%'
+  - code: http://loinc.org|2537-9
+    type: observation
+    unit: U/L
+  - code: http://loinc.org|10535-3
+    type: observation
+    unit: ng/mL
+  - code: http://loinc.org|32673-6
+    type: observation
+    unit: U/L
+  - code: http://loinc.org|13978-2
+    type: observation
+    unit: '%'
+  - code: http://loinc.org|13982-4
+    type: observation
+    unit: '%'
+  - code: http://loinc.org|59467-1
+    type: observation
+    unit: g/dL
+  - code: http://loinc.org|76625-3
+    type: observation
+    unit: U/L
+  - code: http://loinc.org|13969-1
+    type: observation
+    unit: ug/L
+  - code: http://loinc.org|59260-0
+    type: observation
+    unit: mmol/L
+  - code: http://loinc.org|13983-2
+    type: observation
+    unit: '%'
+  - code: http://loinc.org|20570-8
+    type: observation
+    unit: '%'
+  - code: http://loinc.org|14334-7
+    type: observation
+    unit: mmol/L
+  - code: http://loinc.org|70218-3
+    type: observation
+    unit: mg/dL
+  - code: http://loinc.org|13981-6
+    type: observation
+    unit: '%'
+  - code: http://loinc.org|8310-8
+    type: observation
+    unit: Cel
+  - code: http://loinc.org|8310-6
+    type: observation
+    unit: Cel
+  - code: http://loinc.org|14920-3
+    type: observation
+    unit: pg/mL
+  - code: http://loinc.org|8462-4
+    type: observation
+    unit: mm[Hg]
+  - code: http://loinc.org|48065-7
+    type: observation
+    unit: ug/L
+  - code: http://loinc.org|28539-5
+    type: observation
+    unit: pg
+  - code: http://loinc.org|8302-2
+    type: observation
+    unit: kg
+  - code: http://loinc.org|14798-3
+    type: observation
+    unit: ug/dL
+  - code: http://loinc.org|72903-8
+    type: observation
+    unit: mg/dL
+  - code: http://loinc.org|14928-6
+    type: observation
+    unit: pg/mL
+  - code: http://loinc.org|20150-9
+    type: observation
+    unit: '%'
