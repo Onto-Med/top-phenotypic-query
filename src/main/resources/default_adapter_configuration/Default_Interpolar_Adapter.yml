@@ -269,7 +269,7 @@ codeMappings:
     unit: ug/L
   - code: http://loinc.org|59260-0
     type: observation
-    unit: g/dL
+    unit: mmol/L
   - code: http://loinc.org|13983-2
     type: observation
     unit: '%'
