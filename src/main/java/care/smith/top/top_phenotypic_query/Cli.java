@@ -1,7 +1,6 @@
 package care.smith.top.top_phenotypic_query;
 
-import care.smith.top.model.Entity;
-import care.smith.top.model.PhenotypeQuery;
+import care.smith.top.model.*;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.converter.csv.CSV;
@@ -16,6 +15,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -53,28 +54,59 @@ public class Cli implements Callable<Integer> {
               names = {"-f", "--force"},
               description = "Overwrite existing output file.")
           boolean force,
+      @Option(
+              names = {"-l", "--list"},
+              description = "Print a list of patient IDs that match the query criteria to STDOUT.")
+          boolean list,
+      @Option(
+              names = {"-n", "--count"},
+              description = "Print number of patients that match the query criteria to STDOUT.")
+          boolean count,
+      @Option(
+              names = {"-o", "--output"},
+              paramLabel = "<output ZIP>",
+              description = "Location where resulting ZIP file will be stored.")
+          File outputFile,
+      @Option(
+              names = {"-p", "--phenotype"},
+              paramLabel = "<phenotype-id>",
+              description =
+                  "A phenotype ID to be used as inclusion criterion to query the data source. "
+                      + "To provide multiple phenotype IDs, add this option multiple times. The IDs must be present in the provided model. "
+                      + "Alternatively, you can provide a query configuration file (see other positional parameter).")
+          List<String> phenotypeIds,
       @Parameters(
               index = "0",
-              paramLabel = "<query config JSON>",
-              description = "Configuration of the query to be performed on the data source.")
-          File queryConfigFile,
-      @Parameters(
-              index = "1",
               paramLabel = "<phenotype model JSON>",
               description = "JSON file containing model of phenotype class definitions")
           File modelFile,
       @Parameters(
-              index = "2",
+              index = "1",
               paramLabel = "<adapter config YAML>",
               description = "Adapter configuration that specifies the data source.")
           File adapterConfigFile,
       @Parameters(
-              index = "3",
-              paramLabel = "<output ZIP>",
-              description = "Location where resulting ZIP file will be stored.")
-          File outputFile) {
+              index = "2",
+              paramLabel = "<query config JSON>",
+              description =
+                  "Configuration of the query to be performed on the data source. "
+                      + "Alternatively, you can provide a phenotype ID (see `--phenotype`)."
+                      + "This configuration file takes precedence over the `--phenotype` option.",
+              arity = "0..1")
+          File queryConfigFile) {
     try {
-      PhenotypeQuery query = MAPPER.readValue(queryConfigFile, PhenotypeQuery.class);
+      PhenotypeQuery query;
+      if (queryConfigFile != null) {
+        query = MAPPER.readValue(queryConfigFile, PhenotypeQuery.class);
+      } else if (phenotypeIds != null && !phenotypeIds.isEmpty()) {
+        query =
+            new PhenotypeQuery(UUID.randomUUID(), QueryType.PHENOTYPE, "placeholder")
+                .criteria(phenotypeIds.stream().map(this::idToCriterion).toList());
+      } else {
+        throw new IllegalArgumentException(
+            "Either a query configuration file or a phenotype ID must be provided!");
+      }
+
       Entity[] entities = MAPPER.readValue(modelFile, Entity[].class);
 
       DataAdapterConfig config =
@@ -86,12 +118,22 @@ public class Cli implements Callable<Integer> {
       ResultSet rs = finder.execute();
       adapter.close();
 
-      writeResultSetToZip(rs, entities, query, outputFile, force);
+      if (list) System.out.println(rs.getSubjectIds());
+      if (count) System.out.println(rs.getSubjectIds().size());
+      if (!list && !count) System.out.println(rs.toString());
+
+      if (outputFile != null) {
+        writeResultSetToZip(rs, entities, query, outputFile, force);
+      }
     } catch (Exception e) {
       e.printStackTrace();
       return 1;
     }
     return 0;
+  }
+
+  QueryCriterion idToCriterion(String id) {
+    return new QueryCriterion(true, id, ProjectionEntry.TypeEnum.QUERY_CRITERION);
   }
 
   void writeResultSetToZip(

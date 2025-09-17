@@ -48,10 +48,11 @@ class CliTest extends AbstractTest {
             .execute(
                 "query",
                 "-f",
-                queryConfig.toString(),
+                "-o",
+                output.toString(),
                 model.toString(),
                 adapter_config.getPath(),
-                output.toString()));
+                queryConfig.toString()));
 
     assertNotEquals(0, Files.size(output));
 
@@ -60,6 +61,12 @@ class CliTest extends AbstractTest {
     } catch (IOException e) {
       fail(e);
     }
+
+    assertEquals(
+        0,
+        new CommandLine(new Cli())
+            .execute(
+                "query", "-f", model.toString(), adapter_config.getPath(), queryConfig.toString()));
   }
 
   Path createQueryConfig() throws IOException {

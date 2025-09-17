@@ -26,16 +26,17 @@ follows:
 java -jar top-phenotypic-query-x.x.x.jar query --help
 
 # execute phenotypic queries based on a phenotype model, results are written to ZIP
-java -jar top-phenotypic-query-x.x.x.jar query <query config> <phenotype model> \
-  <adapter config> <ZIP output path>
+java -jar top-phenotypic-query-x.x.x.jar query <phenotype model> \
+  <adapter config> <query config> -o <ZIP output path>
 ```
 
 Input parameters:
 
-* JSON containing a TOP query (i.e., `care.smith.top.model.Query`)
 * JSON containing a phenotype model
 * YAML adapter configuration
-* output destination of the ZIP file that contains the result set
+* JSON containing a TOP query (i.e., `care.smith.top.model.Query`)
+  Alternatively, the `--phenotype` option can be used to build a query from the provided phenotype ID.
+* optional: output destination of the ZIP file that contains the result set (if not provided, output is written to STDOUT)
 
 The next sections provide information on how to add `top-phenotypic-query` as Maven dependency to your Java project and
 how to call it programmatically.
