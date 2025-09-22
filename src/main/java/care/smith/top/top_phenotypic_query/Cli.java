@@ -9,11 +9,7 @@ import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 import java.util.UUID;
@@ -43,9 +39,14 @@ public class Cli implements Callable<Integer> {
     System.exit(exitCode);
   }
 
+  private static boolean isValidOutputSpec(File outputFile, boolean slim) {
+    String filename = outputFile.getName().toUpperCase();
+    return slim && filename.endsWith(".CSV") || !slim && filename.endsWith(".ZIP");
+  }
+
   @Override
   public Integer call() throws Exception {
-    throw new ParameterException(new CommandLine(new Cli()), "Missing required subcommand.");
+    throw new ParameterException(new CommandLine(this), "Missing required subcommand.");
   }
 
   @Command(mixinStandardHelpOptions = true)
@@ -65,7 +66,9 @@ public class Cli implements Callable<Integer> {
       @Option(
               names = {"-o", "--output"},
               paramLabel = "<output ZIP>",
-              description = "Location where resulting ZIP file will be stored.")
+              description =
+                  "Location where resulting out file will be stored. "
+                      + "The file must have a .csv (for `--slim` option) or .zip extension.")
           File outputFile,
       @Option(
               names = {"-p", "--phenotype"},
@@ -75,6 +78,12 @@ public class Cli implements Callable<Integer> {
                       + "To provide multiple phenotype IDs, add this option multiple times. The IDs must be present in the provided model. "
                       + "Alternatively, you can provide a query configuration file (see other positional parameter).")
           List<String> phenotypeIds,
+      @Option(
+              names = {"-s", "--slim"},
+              description =
+                  "The output will contnsist of a single CSV file. "
+                      + "Consequently, the outputfile specified with `--output` must have a .csv extension.")
+          boolean slim,
       @Parameters(
               index = "0",
               paramLabel = "<phenotype model JSON>",
@@ -95,6 +104,12 @@ public class Cli implements Callable<Integer> {
               arity = "0..1")
           File queryConfigFile) {
     try {
+      if (outputFile != null && !isValidOutputSpec(outputFile, slim)) {
+        throw new ParameterException(
+            new CommandLine(this),
+            "The output file must have one of the following extensions: .csv (for slim output) or .zip");
+      }
+
       PhenotypeQuery query;
       if (queryConfigFile != null) {
         query = MAPPER.readValue(queryConfigFile, PhenotypeQuery.class);
@@ -103,7 +118,8 @@ public class Cli implements Callable<Integer> {
             new PhenotypeQuery(UUID.randomUUID(), QueryType.PHENOTYPE, "placeholder")
                 .criteria(phenotypeIds.stream().map(this::idToCriterion).toList());
       } else {
-        throw new IllegalArgumentException(
+        throw new ParameterException(
+            new CommandLine(this),
             "Either a query configuration file or a phenotype ID must be provided!");
       }
 
@@ -118,13 +134,13 @@ public class Cli implements Callable<Integer> {
       ResultSet rs = finder.execute();
       adapter.close();
 
+      if (outputFile != null) {
+        exportResultset(rs, entities, query, outputFile, slim, force);
+      }
+
       if (list) System.out.println(rs.getSubjectIds());
       if (count) System.out.println(rs.getSubjectIds().size());
       if (!list && !count) System.out.println(rs.toString());
-
-      if (outputFile != null) {
-        writeResultSetToZip(rs, entities, query, outputFile, force);
-      }
     } catch (Exception e) {
       e.printStackTrace();
       return 1;
@@ -136,23 +152,35 @@ public class Cli implements Callable<Integer> {
     return new QueryCriterion(true, id, ProjectionEntry.TypeEnum.QUERY_CRITERION);
   }
 
-  void writeResultSetToZip(
-      ResultSet resultSet, Entity[] entities, PhenotypeQuery query, File zipFile, boolean force)
+  void exportResultset(
+      ResultSet resultSet,
+      Entity[] entities,
+      PhenotypeQuery query,
+      File outputFile,
+      boolean slim,
+      boolean force)
       throws IOException {
-    if (zipFile.exists() && !force) throw new FileAlreadyExistsException(zipFile.getAbsolutePath());
+    if (outputFile.exists() && !force)
+      throw new FileAlreadyExistsException(outputFile.getAbsolutePath());
 
-    ZipOutputStream zipStream = new ZipOutputStream(new FileOutputStream(zipFile));
     CSV csvConverter = new CSV();
 
-    zipStream.putNextEntry(new ZipEntry("data_phenotypes.csv"));
-    csvConverter.writePhenotypes(resultSet, entities, zipStream);
+    if (slim) {
+      OutputStream outStream = new FileOutputStream(outputFile);
+      csvConverter.writeSubjects(resultSet, entities, query, outStream);
+    } else {
+      ZipOutputStream zipStream = new ZipOutputStream(new FileOutputStream(outputFile));
 
-    zipStream.putNextEntry(new ZipEntry("data_subjects.csv"));
-    csvConverter.writeSubjects(resultSet, entities, query, zipStream);
+      zipStream.putNextEntry(new ZipEntry("data_phenotypes.csv"));
+      csvConverter.writePhenotypes(resultSet, entities, zipStream);
 
-    zipStream.putNextEntry(new ZipEntry("metadata.csv"));
-    csvConverter.writeMetadata(entities, zipStream);
+      zipStream.putNextEntry(new ZipEntry("data_subjects.csv"));
+      csvConverter.writeSubjects(resultSet, entities, query, zipStream);
 
-    zipStream.close();
+      zipStream.putNextEntry(new ZipEntry("metadata.csv"));
+      csvConverter.writeMetadata(entities, zipStream);
+
+      zipStream.close();
+    }
   }
 }
