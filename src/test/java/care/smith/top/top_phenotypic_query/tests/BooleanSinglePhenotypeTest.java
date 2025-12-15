@@ -19,6 +19,7 @@ import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import com.google.common.collect.ObjectArrays;
+import jakarta.annotation.Nonnull;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Set;
@@ -33,7 +34,7 @@ public class BooleanSinglePhenotypeTest extends AbstractTest {
       getPhenotype("Weight", "http://loinc.org", "3141-9").dataType(DataType.BOOLEAN);
   private Phenotype h =
       getPhenotype("Height", "http://loinc.org", "3137-7", "m").dataType(DataType.BOOLEAN);
-  private Entity[] phenotypes = {w, h};
+  @Nonnull private Entity[] phenotypes = {w, h};
 
   @BeforeEach
   void start() throws InstantiationException {

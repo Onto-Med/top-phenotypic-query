@@ -9,7 +9,7 @@ import care.smith.top.top_phenotypic_query.tests.AbstractTest;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Disabled;
 
@@ -18,11 +18,11 @@ public class POLARTestIntern extends AbstractTest {
 
   public static void main(String[] args)
       throws SQLException,
-          MalformedURLException,
           IOException,
           InstantiationException,
           InterruptedException,
-          NoCodesException {
+          NoCodesException,
+          URISyntaxException {
     Entities entities =
         Entities.of(
             "http://top-prod.imise.uni-leipzig.de/api/polar/delir/entity",
