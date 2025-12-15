@@ -28,13 +28,19 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.util.Set;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MELDDefaultDataSourceTest {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(MELDDefaultDataSourceTest.class);
 
   private static final DataAdapterConfig CONFIG =
       DataAdapterConfig.getInstanceFromResource("config/Default_Data_Source_SQL_Adapter.yml");
@@ -274,9 +280,13 @@ public class MELDDefaultDataSourceTest {
 
     WRITER.insertSbj(DATA_SOURCE_ID, sbjVeryYoung);
 
-    WRITER.printSbj();
-    WRITER.printEnc();
-    WRITER.printPhe();
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    PrintStream stream = new PrintStream(baos);
+    WRITER.printSbj(stream);
+    WRITER.printEnc(stream);
+    WRITER.printPhe(stream);
+
+    LOGGER.trace(baos.toString());
   }
 
   @AfterAll

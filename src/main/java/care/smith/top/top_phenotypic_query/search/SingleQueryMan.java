@@ -73,7 +73,7 @@ public class SingleQueryMan {
   }
 
   private ResultSet executeType1Query() throws SQLException {
-    log.debug("TYPE 1 Single Query");
+    log.trace("TYPE 1 Single Query");
 
     ResultSet main = sbjQueryMan.executeAllSubjectsQuery();
     if (main.isEmpty()) return main;
@@ -91,13 +91,13 @@ public class SingleQueryMan {
 
     sbjQueryMan.calculateSingleRestrictionsInProjection(main, query, phenotypes);
 
-    //    log.debug(main.toString());
+    //    log.trace(main.toString());
 
     return main;
   }
 
   private ResultSet executeType2Query() throws SQLException {
-    log.debug("TYPE 2 Single Query");
+    log.trace("TYPE 2 Single Query");
 
     ResultSet main = sbjQueryMan.executeInclusion();
     if (main.isEmpty()) return main;
@@ -113,13 +113,13 @@ public class SingleQueryMan {
 
     main = executeSingleVariables(main, true);
 
-    //    log.debug(main.toString());
+    //    log.trace(main.toString());
 
     return main;
   }
 
   private ResultSet executeType3Query() throws SQLException {
-    log.debug("TYPE 3 Single Query");
+    log.trace("TYPE 3 Single Query");
 
     ResultSet main = executeSingleInclusions(new ResultSet());
     if (main.isEmpty()) return main;
@@ -134,13 +134,13 @@ public class SingleQueryMan {
 
     main = executeSubjectVariables(main, true);
 
-    //    log.debug(main.toString());
+    //    log.trace(main.toString());
 
     return main;
   }
 
   private ResultSet executeType4Query() throws SQLException {
-    log.debug("TYPE 4 Single Query");
+    log.trace("TYPE 4 Single Query");
 
     ResultSet main = executeSingleVariables(new ResultSet(), false);
 
@@ -152,7 +152,7 @@ public class SingleQueryMan {
     main = executeSubjectExclusions(main);
     if (main.isEmpty()) return main;
 
-    //    log.debug(main.toString());
+    //    log.trace(main.toString());
 
     return main;
   }

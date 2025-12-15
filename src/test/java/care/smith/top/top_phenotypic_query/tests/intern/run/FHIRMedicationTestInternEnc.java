@@ -20,9 +20,13 @@ import java.util.Set;
 import org.hl7.fhir.r4.model.Reference;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Disabled
 public class FHIRMedicationTestInternEnc {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(FHIRMedicationTestInternEnc.class);
 
   private static Client client = new Client();
 
@@ -96,7 +100,7 @@ public class FHIRMedicationTestInternEnc {
               .inc(male)
               .inc(old)
               .execute();
-      System.out.println(rs);
+      LOGGER.trace(rs.toString());
       assertEquals(
           Set.of(pat1c.getReference(), pat2c.getReference(), pat3c.getReference()),
           rs.getSubjectIds());

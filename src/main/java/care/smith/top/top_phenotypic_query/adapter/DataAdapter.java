@@ -97,7 +97,7 @@ public abstract class DataAdapter {
 
       boolean isOK = Expressions.getBooleanValue(resExp);
 
-      log.debug(
+      log.trace(
           "check quantifier: {}::{}::{}::{}",
           sbjId,
           search.getPhenotype().getId(),

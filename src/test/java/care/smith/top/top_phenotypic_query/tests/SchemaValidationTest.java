@@ -22,7 +22,7 @@ public class SchemaValidationTest {
   private static final String CONFIG_DIR = "/config/";
   private static final String SCHEMA_FILE = "/adapter_config_schema.json";
 
-  private final Logger logger = LoggerFactory.getLogger(getClass());
+  private static final Logger LOGGER = LoggerFactory.getLogger(SchemaValidationTest.class);
 
   @Test
   public void testSchemataAreValid() throws IOException {
@@ -37,7 +37,7 @@ public class SchemaValidationTest {
 
     File configDir = new File(Objects.requireNonNull(getClass().getResource(CONFIG_DIR)).getPath());
     for (File configFile : Objects.requireNonNull(configDir.listFiles())) {
-      logger.debug("Validating config file: {}", configFile.getName());
+      LOGGER.debug("Validating config file: {}", configFile.getName());
       Set<ValidationMessage> messages = schema.validate(mapper.readTree(configFile));
       Assertions.assertEquals(Collections.emptySet(), messages);
     }

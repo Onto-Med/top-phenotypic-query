@@ -24,8 +24,12 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FullBMIAgeTest extends AbstractTest {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(FullBMIAgeTest.class);
 
   @Test
   public void test1() throws InstantiationException, SQLException, NoCodesException {
@@ -120,9 +124,9 @@ public class FullBMIAgeTest extends AbstractTest {
 
     String dataActual = new CSV().toStringSubjects(rs, phenotypes, q.getQuery());
 
-    System.out.println(rs);
+    LOGGER.trace(rs.toString());
 
-    System.out.println(dataActual);
+    LOGGER.trace(dataActual);
 
     String dataRequired =
         "Id;LightAndHigh;Weight;Weight(DATE);Weight::Light;Weight::Light(VALUES);Height[m];Height[m](DATE);Height::High;Height::High(VALUES)"
@@ -145,9 +149,9 @@ public class FullBMIAgeTest extends AbstractTest {
 
     String dataActual = new CSV().toStringSubjects(rs, phenotypes, q.getQuery());
 
-    System.out.println(rs);
+    LOGGER.trace(rs.toString());
 
-    System.out.println(dataActual);
+    LOGGER.trace(dataActual);
 
     String dataRequired =
         "Id;Weight;Weight(DATE);Weight::Light;Weight::Light(VALUES);Height[m];Height[m](DATE);Height::High;Height::High(VALUES);LightAndHigh"

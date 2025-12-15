@@ -18,8 +18,12 @@ import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FilterTest {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(FilterTest.class);
 
   private static Phenotype dabi =
       new Phe("Dabigatran", "http://fhir.de/CodeSystem/bfarm/atc", "B01AE07")
@@ -50,7 +54,7 @@ public class FilterTest {
     C2R c = new C2R().phenotypes(phens).values(vals);
     Expression res = c.calculate(check);
 
-    System.out.println(vals);
+    LOGGER.trace(vals.toString());
 
     assertFalse(Expressions.getBooleanValue(res));
   }
@@ -68,7 +72,7 @@ public class FilterTest {
     C2R c = new C2R().phenotypes(phens).values(vals);
     Expression res = c.calculate(check);
 
-    System.out.println(vals);
+    LOGGER.trace(vals.toString());
 
     assertTrue(Expressions.getBooleanValue(res));
   }
@@ -86,7 +90,7 @@ public class FilterTest {
     C2R c = new C2R().phenotypes(phens).values(vals);
     Expression res = c.calculate(check);
 
-    System.out.println(vals);
+    LOGGER.trace(vals.toString());
 
     assertFalse(Expressions.getBooleanValue(res));
   }

@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.tests.default_sql_writer;
 
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -16,6 +17,10 @@ public class SqlTablePrinter {
   }
 
   protected void print(String table) {
+    print(table, System.out);
+  }
+
+  protected void print(String table, PrintStream stream) {
     try {
       Statement st =
           con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -41,13 +46,13 @@ public class SqlTablePrinter {
 
       String borderLine = getBorderLine(columnsNumber, columnsWidths);
 
-      System.out.println(borderLine);
-      printHeader(columnsNumber, columnsWidths, rsmd, borderLine);
+      stream.println(borderLine);
+      printHeader(columnsNumber, columnsWidths, rsmd, borderLine, stream);
       rs.first();
-      do printRecord(columnsNumber, columnsWidths, rs, borderLine);
+      do printRecord(columnsNumber, columnsWidths, rs, borderLine, stream);
       while (rs.next());
-      printHeader(columnsNumber, columnsWidths, rsmd, borderLine);
-      System.out.println();
+      printHeader(columnsNumber, columnsWidths, rsmd, borderLine, stream);
+      stream.println();
 
     } catch (SQLException e) {
       e.printStackTrace();
@@ -61,25 +66,31 @@ public class SqlTablePrinter {
   }
 
   private void printHeader(
-      int columnsNumber, int[] columnsWidths, ResultSetMetaData rsmd, String borderLine)
+      int columnsNumber,
+      int[] columnsWidths,
+      ResultSetMetaData rsmd,
+      String borderLine,
+      PrintStream stream)
       throws SQLException {
-    for (int i = 0; i < columnsNumber; i++) printValue(rsmd.getColumnName(i + 1), columnsWidths[i]);
-    System.out.println("|");
-    System.out.println(borderLine);
+    for (int i = 0; i < columnsNumber; i++)
+      printValue(rsmd.getColumnName(i + 1), columnsWidths[i], stream);
+    stream.println("|");
+    stream.println(borderLine);
   }
 
-  private void printRecord(int columnsNumber, int[] columnsWidths, ResultSet rs, String borderLine)
+  private void printRecord(
+      int columnsNumber, int[] columnsWidths, ResultSet rs, String borderLine, PrintStream stream)
       throws SQLException {
     for (int i = 0; i < columnsNumber; i++) {
       String value = rs.getString(i + 1);
       if (value == null) value = "";
-      printValue(value, columnsWidths[i]);
+      printValue(value, columnsWidths[i], stream);
     }
-    System.out.println("|");
-    System.out.println(borderLine);
+    stream.println("|");
+    stream.println(borderLine);
   }
 
-  private void printValue(String value, int columnWidth) {
-    System.out.print("|" + value + " ".repeat(columnWidth - value.length()));
+  private void printValue(String value, int columnWidth, PrintStream stream) {
+    stream.print("|" + value + " ".repeat(columnWidth - value.length()));
   }
 }

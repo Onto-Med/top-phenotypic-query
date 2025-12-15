@@ -30,12 +30,18 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SES2Test {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(SES2Test.class);
 
   private static final DataAdapterConfig CONFIG =
       DataAdapterConfig.getInstanceFromResource("config/Default_SQL_Adapter.yml");
@@ -936,8 +942,12 @@ public class SES2Test {
         .insertPhe(haushaltsgroesse, 1)
         .insertPhe(juenger15, 0);
 
-    WRITER.printSbj();
-    WRITER.printPhe();
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    PrintStream stream = new PrintStream(baos);
+    WRITER.printSbj(stream);
+    WRITER.printPhe(stream);
+
+    LOGGER.trace(baos.toString());
   }
 
   @AfterAll
@@ -1287,7 +1297,7 @@ public class SES2Test {
             .pro(SES);
 
     ResultSet rs = q.execute();
-    System.out.println(rs);
+    LOGGER.trace(rs.toString());
 
     //    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     //    System.out.println(new CSV().toStringWideTable(rs, q.getEntities(), q.getQuery()));

@@ -16,8 +16,12 @@ import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CSVSubjectsTest {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(CSVSubjectsTest.class);
 
   private static Phenotype bd =
       new Phe("birthdate")
@@ -137,7 +141,7 @@ public class CSVSubjectsTest {
 
     String dataActual = new CSV().toStringSubjects(rs, q.getEntities(), q.getQuery());
 
-    System.out.println(dataActual);
+    LOGGER.trace(dataActual);
 
     assertEquals(dataRequired, dataActual);
   }
@@ -186,7 +190,7 @@ public class CSVSubjectsTest {
 
     String dataActual = new CSV().toStringSubjects(rs, q.getEntities(), q.getQuery());
 
-    System.out.println(dataActual);
+    LOGGER.trace(dataActual);
 
     assertEquals(dataRequired, dataActual);
   }
@@ -199,7 +203,8 @@ public class CSVSubjectsTest {
     rs.addValue("1", phenotype, null, Val.of(true));
 
     String expected =
-        "Id;\"Phenotype; with \"\" special| characters\";\"Phenotype; with \"\" special| characters(DATE)\""
+        "Id;\"Phenotype; with \"\" special| characters\";\"Phenotype; with \"\" special|"
+            + " characters(DATE)\""
             + System.lineSeparator()
             + "1;true;null"
             + System.lineSeparator();

@@ -167,7 +167,7 @@ public class Que {
               config.getConnectionAttribute("user"),
               config.getConnectionAttribute("password"));
       for (String sql : statements) {
-        log.debug("execute sql statement:{}{}", System.lineSeparator(), sql);
+        log.trace("execute sql statement:{}{}", System.lineSeparator(), sql);
         Statement stmt = con.createStatement();
         stmt.execute(sql);
         stmt.close();

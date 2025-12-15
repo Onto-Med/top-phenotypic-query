@@ -31,12 +31,18 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SES3Test {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(SES3Test.class);
 
   private static final DataAdapterConfig CONFIG =
       DataAdapterConfig.getInstanceFromResource("config/Default_SQL_Adapter.yml");
@@ -107,7 +113,8 @@ public class SES3Test {
           .titleEn("6")
           .descriptionDe("Fachhochschulreife, Abschluss Fachoberschule")
           .descriptionEn(
-              "Entrance qualification for universities of applied sciences, qualification from technical college")
+              "Entrance qualification for universities of applied sciences, qualification from"
+                  + " technical college")
           .restriction(schule, Res.of(6))
           .get();
   private static Phenotype schule7 =
@@ -133,9 +140,11 @@ public class SES3Test {
           .titleDe("Ausbildungsabschluss 1")
           .titleEn("Vocational qualification 1")
           .descriptionDe(
-              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Noch in beruflicher Ausbildung (Auszubildende/r, Student/in)")
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Noch in beruflicher Ausbildung"
+                  + " (Auszubildende/r, Student/in)")
           .descriptionEn(
-              "What vocational qualification do you have? - Still in vocational training (trainee, student)")
+              "What vocational qualification do you have? - Still in vocational training (trainee,"
+                  + " student)")
           .number()
           .get();
 
@@ -145,9 +154,11 @@ public class SES3Test {
           .titleDe("Ausbildungsabschluss 2")
           .titleEn("Vocational qualification 2")
           .descriptionDe(
-              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Keinen beruflichen Abschluss und bin nicht in beruflicher Ausbildung")
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Keinen beruflichen Abschluss"
+                  + " und bin nicht in beruflicher Ausbildung")
           .descriptionEn(
-              "What vocational qualification do you have? - No vocational qualification and I am not in vocational training")
+              "What vocational qualification do you have? - No vocational qualification and I am"
+                  + " not in vocational training")
           .number()
           .get();
 
@@ -157,9 +168,11 @@ public class SES3Test {
           .titleDe("Ausbildungsabschluss 3")
           .titleEn("Vocational qualification 3")
           .descriptionDe(
-              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Beruflich-betriebliche Berufsausbildung (Lehre) abgeschlossen")
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Beruflich-betriebliche"
+                  + " Berufsausbildung (Lehre) abgeschlossen")
           .descriptionEn(
-              "What vocational qualification do you have? - Completed in-company vocational training (apprenticeship)")
+              "What vocational qualification do you have? - Completed in-company vocational"
+                  + " training (apprenticeship)")
           .number()
           .get();
 
@@ -169,9 +182,11 @@ public class SES3Test {
           .titleDe("Ausbildungsabschluss 4")
           .titleEn("Vocational qualification 4")
           .descriptionDe(
-              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Beruflich-schulische Ausbildung (Berufsfachschule, Handelsschule) abgeschlossen")
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Beruflich-schulische"
+                  + " Ausbildung (Berufsfachschule, Handelsschule) abgeschlossen")
           .descriptionEn(
-              "What vocational qualification do you have? - Completed school-based vocational training (vocational school, commercial school)")
+              "What vocational qualification do you have? - Completed school-based vocational"
+                  + " training (vocational school, commercial school)")
           .number()
           .get();
 
@@ -181,9 +196,12 @@ public class SES3Test {
           .titleDe("Ausbildungsabschluss 5")
           .titleEn("Vocational qualification 5")
           .descriptionDe(
-              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Ausbildung an einer Fachschule, Meister-, Technikerschule, Berufs- oder Fachakademie abgeschlossen")
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Ausbildung an einer"
+                  + " Fachschule, Meister-, Technikerschule, Berufs- oder Fachakademie"
+                  + " abgeschlossen")
           .descriptionEn(
-              "What vocational qualification do you have? - Completed training at a college, master school, technical school, vocational or specialised academy")
+              "What vocational qualification do you have? - Completed training at a college, master"
+                  + " school, technical school, vocational or specialised academy")
           .number()
           .get();
 
@@ -195,7 +213,8 @@ public class SES3Test {
           .descriptionDe(
               "Welchen beruflichen Ausbildungsabschluss haben Sie? - Fachhochschulabschluss")
           .descriptionEn(
-              "What vocational qualification do you have? - University of Applied Sciences qualification")
+              "What vocational qualification do you have? - University of Applied Sciences"
+                  + " qualification")
           .number()
           .get();
 
@@ -238,45 +257,56 @@ public class SES3Test {
       new Phe("ausbildungS1")
           .titleEn("1")
           .descriptionDe(
-              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Noch in beruflicher Ausbildung (Auszubildende/r, Student/in)")
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Noch in beruflicher Ausbildung"
+                  + " (Auszubildende/r, Student/in)")
           .descriptionEn(
-              "What vocational qualification do you have? - Still in vocational training (trainee, student)")
+              "What vocational qualification do you have? - Still in vocational training (trainee,"
+                  + " student)")
           .restriction(ausbildung, Res.of(1))
           .get();
   private static Phenotype ausbildungS2 =
       new Phe("ausbildungS2")
           .titleEn("2")
           .descriptionDe(
-              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Keinen beruflichen Abschluss und bin nicht in beruflicher Ausbildung")
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Keinen beruflichen Abschluss"
+                  + " und bin nicht in beruflicher Ausbildung")
           .descriptionEn(
-              "What vocational qualification do you have? - No vocational qualification and I am not in vocational training")
+              "What vocational qualification do you have? - No vocational qualification and I am"
+                  + " not in vocational training")
           .restriction(ausbildung, Res.of(2))
           .get();
   private static Phenotype ausbildungS3 =
       new Phe("ausbildungS3")
           .titleEn("3")
           .descriptionDe(
-              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Beruflich-betriebliche Berufsausbildung (Lehre) abgeschlossen")
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Beruflich-betriebliche"
+                  + " Berufsausbildung (Lehre) abgeschlossen")
           .descriptionEn(
-              "What vocational qualification do you have? - Completed in-company vocational training (apprenticeship)")
+              "What vocational qualification do you have? - Completed in-company vocational"
+                  + " training (apprenticeship)")
           .restriction(ausbildung, Res.of(3))
           .get();
   private static Phenotype ausbildungS4 =
       new Phe("ausbildungS4")
           .titleEn("4")
           .descriptionDe(
-              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Beruflich-schulische Ausbildung (Berufsfachschule, Handelsschule) abgeschlossen")
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Beruflich-schulische"
+                  + " Ausbildung (Berufsfachschule, Handelsschule) abgeschlossen")
           .descriptionEn(
-              "What vocational qualification do you have? - Completed school-based vocational training (vocational school, commercial school)")
+              "What vocational qualification do you have? - Completed school-based vocational"
+                  + " training (vocational school, commercial school)")
           .restriction(ausbildung, Res.of(4))
           .get();
   private static Phenotype ausbildungS5 =
       new Phe("ausbildungS5")
           .titleEn("5")
           .descriptionDe(
-              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Ausbildung an einer Fachschule, Meister-, Technikerschule, Berufs- oder Fachakademie abgeschlossen")
+              "Welchen beruflichen Ausbildungsabschluss haben Sie? - Ausbildung an einer"
+                  + " Fachschule, Meister-, Technikerschule, Berufs- oder Fachakademie"
+                  + " abgeschlossen")
           .descriptionEn(
-              "What vocational qualification do you have? - Completed training at a college, master school, technical school, vocational or specialised academy")
+              "What vocational qualification do you have? - Completed training at a college, master"
+                  + " school, technical school, vocational or specialised academy")
           .restriction(ausbildung, Res.of(5))
           .get();
   private static Phenotype ausbildungS6 =
@@ -285,7 +315,8 @@ public class SES3Test {
           .descriptionDe(
               "Welchen beruflichen Ausbildungsabschluss haben Sie? - Fachhochschulabschluss")
           .descriptionEn(
-              "What vocational qualification do you have? - University of Applied Sciences qualification")
+              "What vocational qualification do you have? - University of Applied Sciences"
+                  + " qualification")
           .restriction(ausbildung, Res.of(6))
           .get();
   private static Phenotype ausbildungS7 =
@@ -386,7 +417,8 @@ public class SES3Test {
           .descriptionDe(
               "Kein schulischer Abschluss oder Hauptschulabschluss und Ausbildung/Lehre/Fachschule")
           .descriptionEn(
-              "No school-leaving qualification or lower secondary school-leaving qualification and training/apprenticeship/technical college")
+              "No school-leaving qualification or lower secondary school-leaving qualification and"
+                  + " training/apprenticeship/technical college")
           .restriction(bildungSES, Res.of(3.0))
           .get();
   private static Phenotype bildungSES_3_6 =
@@ -394,7 +426,8 @@ public class SES3Test {
           .titleEn("3.6")
           .descriptionDe("Realschul- oder POS-Abschluss und Ausbildung/Lehre/Fachschule")
           .descriptionEn(
-              "Intermediate school-leaving qualification and training/apprenticeship/technical college")
+              "Intermediate school-leaving qualification and training/apprenticeship/technical"
+                  + " college")
           .restriction(bildungSES, Res.of(3.6))
           .get();
   private static Phenotype bildungSES_3_7 =
@@ -402,7 +435,8 @@ public class SES3Test {
           .titleEn("3.7")
           .descriptionDe("FH-Reife oder Abitur und kein beruflicher Abschluss")
           .descriptionEn(
-              "Entrance qualification for universities of applied sciences or universities and no vocational qualification")
+              "Entrance qualification for universities of applied sciences or universities and no"
+                  + " vocational qualification")
           .restriction(bildungSES, Res.of(3.7))
           .get();
   private static Phenotype bildungSES_4_55 =
@@ -410,7 +444,8 @@ public class SES3Test {
           .titleEn("4.55")
           .descriptionDe("Hauptschulabschluss und Fachhochschulabschluss")
           .descriptionEn(
-              "Secondary school-leaving qualification and university of applied sciences qualification")
+              "Secondary school-leaving qualification and university of applied sciences"
+                  + " qualification")
           .restriction(bildungSES, Res.of(4.55))
           .get();
   private static Phenotype bildungSES_4_8 =
@@ -418,7 +453,8 @@ public class SES3Test {
           .titleEn("4.8")
           .descriptionDe("FH-Reife oder Abitur und Ausbildung/Lehre/Fachschule")
           .descriptionEn(
-              "Entrance qualification for universities of applied sciences or universities and training/apprenticeship/technical college")
+              "Entrance qualification for universities of applied sciences or universities and"
+                  + " training/apprenticeship/technical college")
           .restriction(bildungSES, Res.of(4.8))
           .get();
   private static Phenotype bildungSES_4_85 =
@@ -426,7 +462,8 @@ public class SES3Test {
           .titleEn("4.85")
           .descriptionDe("Realschul- oder POS-Abschluss und Fachhochschulabschluss")
           .descriptionEn(
-              "Intermediate school-leaving qualification and university of applied sciences qualification")
+              "Intermediate school-leaving qualification and university of applied sciences"
+                  + " qualification")
           .restriction(bildungSES, Res.of(4.85))
           .get();
   private static Phenotype bildungSES_5_0 =
@@ -448,7 +485,8 @@ public class SES3Test {
           .titleEn("6.1")
           .descriptionDe("FH-Reife oder Abitur und Bachelor oder Diplom Fachhochschule")
           .descriptionEn(
-              "Entrance qualification for universities of applied sciences or universities and bachelor or university of applied sciences qualification")
+              "Entrance qualification for universities of applied sciences or universities and"
+                  + " bachelor or university of applied sciences qualification")
           .restriction(bildungSES, Res.of(6.1))
           .get();
   private static Phenotype bildungSES_7_0 =
@@ -456,7 +494,8 @@ public class SES3Test {
           .titleEn("7.0")
           .descriptionDe("FH-Reife oder Abitur und Master/Magister/Diplom, Promotion")
           .descriptionEn(
-              "Entrance qualification for universities of applied sciences or universities and university qualification, doctorate")
+              "Entrance qualification for universities of applied sciences or universities and"
+                  + " university qualification, doctorate")
           .restriction(bildungSES, Res.of(7.0))
           .get();
 
@@ -478,9 +517,12 @@ public class SES3Test {
           .titleDe("Erwerbstaetigkeit")
           .titleEn("Employment")
           .descriptionDe(
-              "Sind Sie zurzeit erwerbstaetig? Unter Erwerbstaetigkeit wird jede bezahlte bzw. mit einem Einkommen verbundene Taetigkeit verstanden, egal welchen zeitlichen Umfang sie hat.")
+              "Sind Sie zurzeit erwerbstaetig? Unter Erwerbstaetigkeit wird jede bezahlte bzw. mit"
+                  + " einem Einkommen verbundene Taetigkeit verstanden, egal welchen zeitlichen"
+                  + " Umfang sie hat.")
           .descriptionEn(
-              "Are you currently employed? Employment is defined as any paid or income-generating activity, regardless of the amount of time it takes.")
+              "Are you currently employed? Employment is defined as any paid or income-generating"
+                  + " activity, regardless of the amount of time it takes.")
           .number()
           .get();
   private static Phenotype erwerbstaetig =
@@ -488,9 +530,11 @@ public class SES3Test {
           .titleDe("Ja")
           .titleEn("Yes")
           .descriptionDe(
-              "1 - Ja, ich bin vollzeiterwerbstaetig mit 35 Stunden und mehr/Woche oder 2 - Ja, ich bin teilzeiterwerbstaetig mit 15 bis 34 Stunden/Woche")
+              "1 - Ja, ich bin vollzeiterwerbstaetig mit 35 Stunden und mehr/Woche oder 2 - Ja, ich"
+                  + " bin teilzeiterwerbstaetig mit 15 bis 34 Stunden/Woche")
           .descriptionEn(
-              "1 - Yes, I am in full-time employment with 35 hours or more/week or 2 - Yes, I am in part-time employment with 15 to 34 hours/week")
+              "1 - Yes, I am in full-time employment with 35 hours or more/week or 2 - Yes, I am in"
+                  + " part-time employment with 15 to 34 hours/week")
           .restriction(erwerbstaetigkeit, Res.of(1, 2))
           .get();
 
@@ -500,9 +544,11 @@ public class SES3Test {
           .titleDe("Fruehere Erwerbstaetigkeit")
           .titleEn("Former employment")
           .descriptionDe(
-              "Waren Sie frueher einmal voll- oder teilzeiterwerbstaetig mit einer Wochenarbeitszeit von mindestens 15 Wochenstunden?")
+              "Waren Sie frueher einmal voll- oder teilzeiterwerbstaetig mit einer"
+                  + " Wochenarbeitszeit von mindestens 15 Wochenstunden?")
           .descriptionEn(
-              "Were you previously employed full-time or part-time with a working week of at least 15 hours?")
+              "Were you previously employed full-time or part-time with a working week of at least"
+                  + " 15 hours?")
           .number()
           .get();
   private static Phenotype frueherErwerbstaetig =
@@ -527,7 +573,8 @@ public class SES3Test {
           .descriptionDe(
               "Landwirt o. n. A., Landwirt unter 10 ha, Genossenschaftsbauer (ehem. LPG)")
           .descriptionEn(
-              "Farmer n/a, farmer under 10 ha, cooperative farmer (former agricultural production cooperative)")
+              "Farmer n/a, farmer under 10 ha, cooperative farmer (former agricultural production"
+                  + " cooperative)")
           .restriction(berufEigener, Res.of("A", "A1", "A3"))
           .get();
   private static Phenotype berufEigener_1_1 =
@@ -628,9 +675,11 @@ public class SES3Test {
       new Phe("berufEigener_4_2")
           .titleEn("4.2")
           .descriptionDe(
-              "Angestellter mit verantwortlicher Taetigkeit, Selbstaendiger mit 5 oder mehr Mitarbeitern/PGH-Mitglied")
+              "Angestellter mit verantwortlicher Taetigkeit, Selbstaendiger mit 5 oder mehr"
+                  + " Mitarbeitern/PGH-Mitglied")
           .descriptionEn(
-              "Employee with a responsible job, self-employed person with 5 or more employees/member of production cooperative of the skilled crafts sector")
+              "Employee with a responsible job, self-employed person with 5 or more"
+                  + " employees/member of production cooperative of the skilled crafts sector")
           .restriction(berufEigener, Res.of("C3", "C4", "E3"))
           .get();
   private static Phenotype berufEigener_4_7 =
@@ -797,7 +846,8 @@ public class SES3Test {
           .descriptionDe(
               "Landwirt o. n. A., Landwirt unter 10 ha, Genossenschaftsbauer (ehem. LPG)")
           .descriptionEn(
-              "Farmer n/a, farmer under 10 ha, cooperative farmer (former agricultural production cooperative)")
+              "Farmer n/a, farmer under 10 ha, cooperative farmer (former agricultural production"
+                  + " cooperative)")
           .restriction(berufPartner, Res.of("A", "A1", "A3"))
           .get();
   private static Phenotype berufPartner_1_1 =
@@ -898,9 +948,11 @@ public class SES3Test {
       new Phe("berufPartner_4_2")
           .titleEn("4.2")
           .descriptionDe(
-              "Angestellter mit verantwortlicher Taetigkeit, Selbstaendiger mit 5 oder mehr Mitarbeitern/PGH-Mitglied")
+              "Angestellter mit verantwortlicher Taetigkeit, Selbstaendiger mit 5 oder mehr"
+                  + " Mitarbeitern/PGH-Mitglied")
           .descriptionEn(
-              "Employee with a responsible job, self-employed person with 5 or more employees/member of production cooperative of the skilled crafts sector")
+              "Employee with a responsible job, self-employed person with 5 or more"
+                  + " employees/member of production cooperative of the skilled crafts sector")
           .restriction(berufPartner, Res.of("C3", "C4", "E3"))
           .get();
   private static Phenotype berufPartner_4_7 =
@@ -1046,9 +1098,22 @@ public class SES3Test {
           .titleDe("Haushaltseinkommen")
           .titleEn("Household income")
           .descriptionDe(
-              "Wie hoch ist das monatliche Nettoeinkommen Ihres Haushalts insgesamt? Ich meine dabei die Summe, die sich aus Lohn, Gehalt, Einkommen aus selbststaendiger Taetigkeit, Rente oder Pension ergibt. Rechnen Sie bitte auch die Einkuenfte aus oeffentlichen Beihilfen, Einkommen aus Vermietung, Verpachtung, Wohngeld, Kindergeld und sonstige Einkuenfte hinzu und ziehen Sie dann Steuern und Sozialversicherungsbetraege ab. Falls jemand in Ihrem Haushalt in selbststaendiger Taetigkeit arbeitet, bitte beruecksichtigen Sie fuer diese Person die durchschnittlichen Nettobezuege abzueglich der Betriebsausgaben.")
+              "Wie hoch ist das monatliche Nettoeinkommen Ihres Haushalts insgesamt? Ich meine"
+                  + " dabei die Summe, die sich aus Lohn, Gehalt, Einkommen aus selbststaendiger"
+                  + " Taetigkeit, Rente oder Pension ergibt. Rechnen Sie bitte auch die Einkuenfte"
+                  + " aus oeffentlichen Beihilfen, Einkommen aus Vermietung, Verpachtung, Wohngeld,"
+                  + " Kindergeld und sonstige Einkuenfte hinzu und ziehen Sie dann Steuern und"
+                  + " Sozialversicherungsbetraege ab. Falls jemand in Ihrem Haushalt in"
+                  + " selbststaendiger Taetigkeit arbeitet, bitte beruecksichtigen Sie fuer diese"
+                  + " Person die durchschnittlichen Nettobezuege abzueglich der Betriebsausgaben.")
           .descriptionEn(
-              "What is the total monthly net income of your household? I am referring to the sum resulting from wages, salary, income from self-employment, pension or annuity. Please also include income from public benefits, income from renting, leasing, housing benefit, child benefit and other income and then deduct taxes and social security contributions. If someone in your household is self-employed, please take into account the average net income for this person minus operating expenses.")
+              "What is the total monthly net income of your household? I am referring to the sum"
+                  + " resulting from wages, salary, income from self-employment, pension or"
+                  + " annuity. Please also include income from public benefits, income from"
+                  + " renting, leasing, housing benefit, child benefit and other income and then"
+                  + " deduct taxes and social security contributions. If someone in your household"
+                  + " is self-employed, please take into account the average net income for this"
+                  + " person minus operating expenses.")
           .number()
           .get();
 
@@ -1058,9 +1123,14 @@ public class SES3Test {
           .titleDe("Einkommensgruppe des Haushalts")
           .titleEn("Income group of the household")
           .descriptionDe(
-              "Bei dieser Frage geht es darum, Gruppen in der Bevoelkerung mit z. B. hohem, mittlerem oder niedrigerem Einkommen auswerten zu koennen. Es wuerde uns deshalb sehr helfen wenn Sie die Einkommensgruppe nennen wuerden zu der Ihr Haushalt gehoert.")
+              "Bei dieser Frage geht es darum, Gruppen in der Bevoelkerung mit z. B. hohem,"
+                  + " mittlerem oder niedrigerem Einkommen auswerten zu koennen. Es wuerde uns"
+                  + " deshalb sehr helfen wenn Sie die Einkommensgruppe nennen wuerden zu der Ihr"
+                  + " Haushalt gehoert.")
           .descriptionEn(
-              "This question is about being able to analyse groups in the population with e.g. high, medium or low income. It would therefore be very helpful if you could state the income group to which your household belongs.")
+              "This question is about being able to analyse groups in the population with e.g."
+                  + " high, medium or low income. It would therefore be very helpful if you could"
+                  + " state the income group to which your household belongs.")
           .string()
           .get();
   private static Phenotype einkommensgruppeHaushalt_150 =
@@ -1259,9 +1329,22 @@ public class SES3Test {
           .titleDe("Eigenes Einkommen")
           .titleEn("Own income")
           .descriptionDe(
-              "Wie hoch ist Ihr eigenes monatliches Nettoeinkommen? Ich meine dabei die Summe, die sich aus Lohn, Gehalt, Einkommen aus selbststaendiger Taetigkeit, Rente oder Pension ergibt. Rechnen Sie bitte auch die Einkuenfte aus oeffentlichen Beihilfen, Einkommen aus Vermietung, Verpachtung, Wohngeld, Kindergeld und sonstige Einkuenfte hinzu und ziehen Sie dann Steuern und Sozialversicherungsbetraege ab. Falls jemand in Ihrem Haushalt in selbststaendiger Taetigkeit arbeitet, bitte beruecksichtigen Sie fuer diese Person die durchschnittlichen Nettobezuege abzueglich der Betriebsausgaben.")
+              "Wie hoch ist Ihr eigenes monatliches Nettoeinkommen? Ich meine dabei die Summe, die"
+                  + " sich aus Lohn, Gehalt, Einkommen aus selbststaendiger Taetigkeit, Rente oder"
+                  + " Pension ergibt. Rechnen Sie bitte auch die Einkuenfte aus oeffentlichen"
+                  + " Beihilfen, Einkommen aus Vermietung, Verpachtung, Wohngeld, Kindergeld und"
+                  + " sonstige Einkuenfte hinzu und ziehen Sie dann Steuern und"
+                  + " Sozialversicherungsbetraege ab. Falls jemand in Ihrem Haushalt in"
+                  + " selbststaendiger Taetigkeit arbeitet, bitte beruecksichtigen Sie fuer diese"
+                  + " Person die durchschnittlichen Nettobezuege abzueglich der Betriebsausgaben.")
           .descriptionEn(
-              "What is your own monthly net income? I am referring to the sum resulting from wages, salary, income from self-employment, pension or annuity. Please also include income from public benefits, income from renting, leasing, housing benefit, child benefit and other income and then deduct taxes and social security contributions. If someone in your household is self-employed, please take into account the average net income for this person minus operating expenses.")
+              "What is your own monthly net income? I am referring to the sum resulting from wages,"
+                  + " salary, income from self-employment, pension or annuity. Please also include"
+                  + " income from public benefits, income from renting, leasing, housing benefit,"
+                  + " child benefit and other income and then deduct taxes and social security"
+                  + " contributions. If someone in your household is self-employed, please take"
+                  + " into account the average net income for this person minus operating"
+                  + " expenses.")
           .number()
           .get();
 
@@ -1271,9 +1354,14 @@ public class SES3Test {
           .titleDe("Eigene Einkommensgruppe")
           .titleEn("Own income group")
           .descriptionDe(
-              "Bei dieser Frage geht es darum, Gruppen in der Bevoelkerung mit z. B. hohem, mittlerem oder niedrigerem Einkommen auswerten zu koennen. Es wuerde uns deshalb sehr helfen wenn Sie die Einkommensgruppe nennen wuerden zu der Sie gehoeren.")
+              "Bei dieser Frage geht es darum, Gruppen in der Bevoelkerung mit z. B. hohem,"
+                  + " mittlerem oder niedrigerem Einkommen auswerten zu koennen. Es wuerde uns"
+                  + " deshalb sehr helfen wenn Sie die Einkommensgruppe nennen wuerden zu der Sie"
+                  + " gehoeren.")
           .descriptionEn(
-              "This question is about being able to analyse groups in the population with e.g. high, medium or low income. It would therefore be very helpful if you could state the income group to which you belong.")
+              "This question is about being able to analyse groups in the population with e.g."
+                  + " high, medium or low income. It would therefore be very helpful if you could"
+                  + " state the income group to which you belong.")
           .string()
           .get();
   private static Phenotype einkommensgruppeEigenes_150 =
@@ -1470,9 +1558,11 @@ public class SES3Test {
           .titleDe("Haushaltsgroesse")
           .titleEn("Household size")
           .descriptionDe(
-              "Wie viele Personen leben staendig in Ihrem Haushalt, Sie selbst eingeschlossen? Denken Sie dabei bitte auch an alle im Haushalt lebenden Kinder.")
+              "Wie viele Personen leben staendig in Ihrem Haushalt, Sie selbst eingeschlossen?"
+                  + " Denken Sie dabei bitte auch an alle im Haushalt lebenden Kinder.")
           .descriptionEn(
-              "How many people permanently live in your household, including yourself? Please also think about any children living in the household.")
+              "How many people permanently live in your household, including yourself? Please also"
+                  + " think about any children living in the household.")
           .number()
           .get();
 
@@ -1482,9 +1572,11 @@ public class SES3Test {
           .titleDe("Einkommen")
           .titleEn("Income")
           .descriptionDe(
-              "Lebt genau eine Person im Haushalt, wird fuer die weiteren Berechnungen deren eigenes Einkommen herangezogen, andernfalls das Haushaltseinkommen.")
+              "Lebt genau eine Person im Haushalt, wird fuer die weiteren Berechnungen deren"
+                  + " eigenes Einkommen herangezogen, andernfalls das Haushaltseinkommen.")
           .descriptionEn(
-              "If exactly one person lives in the household, their own income is used for further calculations, otherwise the household income is used.")
+              "If exactly one person lives in the household, their own income is used for further"
+                  + " calculations, otherwise the household income is used.")
           .expression(
               If.of(
                   Eq.of(haushaltsgroesse, 1),
@@ -1947,8 +2039,12 @@ public class SES3Test {
         .insertPhe(haushaltsgroesse, 1)
         .insertPhe(juenger15, 0);
 
-    WRITER.printSbj();
-    WRITER.printPhe();
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    PrintStream stream = new PrintStream(baos);
+    WRITER.printSbj(stream);
+    WRITER.printPhe(stream);
+
+    LOGGER.trace(baos.toString());
   }
 
   @AfterAll
@@ -2637,7 +2733,7 @@ public class SES3Test {
             .pro(SES);
 
     ResultSet rs = q.execute();
-    System.out.println(rs);
+    LOGGER.trace(rs.toString());
 
     //    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     //    System.out.println(new CSV().toStringWideTable(rs, q.getEntities(), q.getQuery()));

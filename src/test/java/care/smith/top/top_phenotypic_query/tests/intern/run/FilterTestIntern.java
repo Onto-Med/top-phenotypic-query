@@ -22,9 +22,13 @@ import java.util.Set;
 import org.hl7.fhir.r4.model.Reference;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Disabled
 public class FilterTestIntern {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(FilterTestIntern.class);
 
   private static Client client = new Client();
 
@@ -111,13 +115,14 @@ public class FilterTestIntern {
             .execute();
     assertEquals(Set.of(pat2.getReference()), rs.getSubjectIds());
 
-    System.out.println(
+    LOGGER.trace(
         new Que("config/Default_FHIR_Adapter_Test.yml", dabi, eGFR, eGFRgt30, check1, check2)
             .pro(dabi)
             .pro(eGFR)
             .pro(eGFRgt30)
             .pro(check1)
             .pro(check2)
-            .execute());
+            .execute()
+            .toString());
   }
 }

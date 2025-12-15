@@ -12,9 +12,13 @@ import java.sql.SQLException;
 import java.util.Set;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Disabled
 public class BlazeTestIntern {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(BlazeTestIntern.class);
 
   private static final String CONFIG = "config/Blaze_Adapter_Test.yml";
 
@@ -28,7 +32,7 @@ public class BlazeTestIntern {
   public void test1() throws InstantiationException, SQLException {
     ResultSet rs = new Que(CONFIG, entities).inc(hemoglobinOver14_5).execute();
 
-    System.out.println(rs.getSubjectIds());
+    LOGGER.trace(rs.getSubjectIds().toString());
 
     assertEquals(
         Set.of(

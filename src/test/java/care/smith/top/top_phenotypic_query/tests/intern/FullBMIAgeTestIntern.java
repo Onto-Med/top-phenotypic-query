@@ -22,9 +22,13 @@ import java.util.List;
 import java.util.Set;
 import org.hl7.fhir.r4.model.Patient;
 import org.junit.jupiter.api.Disabled;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Disabled
 public class FullBMIAgeTestIntern extends AbstractTest {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(FullBMIAgeTestIntern.class);
 
   public static void main(String[] args) throws SQLException, NoCodesException {
     long start = new Date().getTime();
@@ -80,22 +84,22 @@ public class FullBMIAgeTestIntern extends AbstractTest {
           }
         });
 
-    System.out.println("ACTUAL:");
-    System.out.println(actualSbjIds);
+    LOGGER.trace("ACTUAL:");
+    LOGGER.trace(actualSbjIds.toString());
 
     List<String> expectedSbjIds = getExpectedSubjectIds();
-    System.out.println("EXPECTED:");
-    System.out.println(expectedSbjIds);
+    LOGGER.trace("EXPECTED:");
+    LOGGER.trace(expectedSbjIds.toString());
 
     List<String> onlyActualSbjIds = new ArrayList<>(actualSbjIds);
     onlyActualSbjIds.removeAll(expectedSbjIds);
-    System.out.println("ONLY ACTUAL:");
-    System.out.println(onlyActualSbjIds);
+    LOGGER.trace("ONLY ACTUAL:");
+    LOGGER.trace(onlyActualSbjIds.toString());
 
     List<String> onlyExpectedSbjIds = new ArrayList<>(expectedSbjIds);
     onlyExpectedSbjIds.removeAll(actualSbjIds);
-    System.out.println("ONLY EXPECTED:");
-    System.out.println(onlyExpectedSbjIds);
+    LOGGER.trace("ONLY EXPECTED:");
+    LOGGER.trace(onlyExpectedSbjIds.toString());
 
     //    assertEquals(expectedSbjIds, actualSbjIds);
   }
@@ -121,7 +125,16 @@ public class FullBMIAgeTestIntern extends AbstractTest {
     java.sql.ResultSet rs =
         getSQLAdapter()
             .executeQuery(
-                "SELECT s.subject_id, birth_date, sex, assessment_id, created_at, height, weight, DATE_PART('year', AGE(CURRENT_DATE, birth_date)) years, (weight/((height/100)^2)) bmi FROM subject s, (select distinct on (subject_id) subject_id, assessment_id, created_at, height, weight from assessment1 where height is not null and weight is not null and created_at >= '2000-01-01'::date and created_at < '2001-01-01'::date order by subject_id, created_at desc) a WHERE s.subject_id = a.subject_id AND sex = 'female' AND DATE_PART('year', AGE(CURRENT_DATE, birth_date)) > 18 AND (weight/((height/100)^2)) >= 27 AND (weight/((height/100)^2)) < 30 ORDER BY s.subject_id");
+                "SELECT s.subject_id, birth_date, sex, assessment_id, created_at, height, weight,"
+                    + " DATE_PART('year', AGE(CURRENT_DATE, birth_date)) years,"
+                    + " (weight/((height/100)^2)) bmi FROM subject s, (select distinct on"
+                    + " (subject_id) subject_id, assessment_id, created_at, height, weight from"
+                    + " assessment1 where height is not null and weight is not null and created_at"
+                    + " >= '2000-01-01'::date and created_at < '2001-01-01'::date order by"
+                    + " subject_id, created_at desc) a WHERE s.subject_id = a.subject_id AND sex ="
+                    + " 'female' AND DATE_PART('year', AGE(CURRENT_DATE, birth_date)) > 18 AND"
+                    + " (weight/((height/100)^2)) >= 27 AND (weight/((height/100)^2)) < 30 ORDER BY"
+                    + " s.subject_id");
     //    SQLAdapter.print(rs);
 
     List<String> ids = new ArrayList<>();

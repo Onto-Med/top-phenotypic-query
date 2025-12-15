@@ -52,7 +52,7 @@ public class SubjectPhenotypes extends LinkedHashMap<String, PhenotypeValues> {
       setValues(values);
     }
     values.addValue(dateRange, val);
-    log.debug(
+    log.trace(
         "value is added: {}::{}::{}::{}",
         subjectId,
         phenotypeName,
@@ -67,7 +67,7 @@ public class SubjectPhenotypes extends LinkedHashMap<String, PhenotypeValues> {
       setValues(values);
     }
     values.setValues(dateRange, vals);
-    log.debug(
+    log.trace(
         "values added to result set: {}::{}::{}::{}",
         subjectId,
         phenotypeName,
@@ -79,7 +79,7 @@ public class SubjectPhenotypes extends LinkedHashMap<String, PhenotypeValues> {
   //    PhenotypeValues vals = getValues(pheName);
   //    if (vals != null && vals.containsKey(dateRange)) {
   //      vals.remove(dateRange);
-  //      log.debug(
+  //      log.trace(
   //          "values removed from result set: {}::{}::{}",
   //          subjectId,
   //          pheName,
