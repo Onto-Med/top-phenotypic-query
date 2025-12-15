@@ -131,9 +131,9 @@ public class FullBMIAgeTest extends AbstractTest {
     String dataRequired =
         "Id;LightAndHigh;Weight;Weight(DATE);Weight::Light;Weight::Light(VALUES);Height[m];Height[m](DATE);Height::High;Height::High(VALUES)"
             + System.lineSeparator()
-            + "2;true;;;true;85;;;true;1.8000000000000000"
+            + "2;true;;;true;85;;;true;1.8"
             + System.lineSeparator()
-            + "4;true;;;true;85,90;;;true;1.8000000000000000"
+            + "4;true;;;true;85,90;;;true;1.8"
             + System.lineSeparator();
 
     assertEquals(dataRequired, dataActual);
@@ -156,9 +156,9 @@ public class FullBMIAgeTest extends AbstractTest {
     String dataRequired =
         "Id;Weight;Weight(DATE);Weight::Light;Weight::Light(VALUES);Height[m];Height[m](DATE);Height::High;Height::High(VALUES);LightAndHigh"
             + System.lineSeparator()
-            + "2;85;2000-12-01;true;85;1.8000000000000000;2000-12-01;true;1.8000000000000000;true"
+            + "2;85;2000-12-01;true;85;1.8;2000-12-01;true;1.8;true"
             + System.lineSeparator()
-            + "4;85,90;2000-12-01,2000-11-01;true;85,90;1.8000000000000000,1.6000000000000000;2000-12-01,2000-11-01;true;1.8000000000000000;true"
+            + "4;85,90;2000-12-01,2000-11-01;true;85,90;1.8,1.6;2000-12-01,2000-11-01;true;1.8;true"
             + System.lineSeparator();
 
     assertEquals(dataRequired, dataActual);
