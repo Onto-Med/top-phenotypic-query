@@ -12,6 +12,7 @@ public class Queries {
 
   public static QueryType getType(
       PhenotypeQuery query, Entities phenotypes, SubjectQueryMan sbjMan, SingleQueryMan sinMan) {
+    if (query == null) return null;
     boolean criExist = false;
     boolean sic = false;
     boolean cicWithoutNegation = false;
