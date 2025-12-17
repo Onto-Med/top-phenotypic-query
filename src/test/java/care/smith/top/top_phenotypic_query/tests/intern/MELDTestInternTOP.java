@@ -21,6 +21,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("unused")
 @Disabled
 public class MELDTestInternTOP {
 

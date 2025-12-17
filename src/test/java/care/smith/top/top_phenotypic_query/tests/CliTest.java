@@ -28,7 +28,7 @@ class CliTest extends AbstractTest {
   private final ObjectMapper MAPPER =
       new ObjectMapper()
           .registerModule(new JavaTimeModule())
-          .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+          .setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 
   @Test
   void query() throws IOException {
