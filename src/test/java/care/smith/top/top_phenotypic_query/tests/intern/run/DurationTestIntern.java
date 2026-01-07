@@ -20,9 +20,13 @@ import java.util.Set;
 import org.hl7.fhir.r4.model.Reference;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Disabled
 public class DurationTestIntern {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(DurationTestIntern.class);
 
   private static Client client = new Client();
 
@@ -110,7 +114,7 @@ public class DurationTestIntern {
             .inc(check)
             .execute();
 
-    System.out.println(rs);
+    LOGGER.trace(rs.toString());
 
     assertEquals(Set.of(pat3.getReference(), pat6.getReference()), rs.getSubjectIds());
   }

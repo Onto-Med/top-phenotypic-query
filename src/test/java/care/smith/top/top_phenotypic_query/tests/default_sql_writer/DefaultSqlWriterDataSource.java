@@ -2,6 +2,7 @@ package care.smith.top.top_phenotypic_query.tests.default_sql_writer;
 
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -95,7 +96,8 @@ public class DefaultSqlWriterDataSource {
 
   private void insertEnc(String dataSourceId, String subjectId, EncDao enc) {
     execute(
-        "INSERT INTO encounter (data_source_id, subject_id, encounter_id, type, start_date_time, end_date_time) VALUES ("
+        "INSERT INTO encounter (data_source_id, subject_id, encounter_id, type, start_date_time,"
+            + " end_date_time) VALUES ("
             + String.join(
                 ", ",
                 quote(dataSourceId),
@@ -113,7 +115,9 @@ public class DefaultSqlWriterDataSource {
       phe.date(DateUtil.format(LocalDateTime.now()));
 
     execute(
-        "INSERT INTO subject_resource (data_source_id, subject_id, encounter_id, subject_resource_id, code_system, code, date_time, start_date_time, end_date_time, unit, number_value, text_value, date_time_value, boolean_value) VALUES ("
+        "INSERT INTO subject_resource (data_source_id, subject_id, encounter_id,"
+            + " subject_resource_id, code_system, code, date_time, start_date_time, end_date_time,"
+            + " unit, number_value, text_value, date_time_value, boolean_value) VALUES ("
             + String.join(
                 ", ",
                 quote(dataSourceId),
@@ -144,7 +148,7 @@ public class DefaultSqlWriterDataSource {
   }
 
   private void execute(String sql) {
-    log.debug("execute sql statement:{}{}", System.lineSeparator(), sql);
+    log.trace("execute sql statement:{}{}", System.lineSeparator(), sql);
     try {
       Statement stmt = con.createStatement();
       stmt.execute(sql);
@@ -162,15 +166,15 @@ public class DefaultSqlWriterDataSource {
     }
   }
 
-  public void printSbj() {
-    tablePrinter.print("subject");
+  public void printSbj(PrintStream stream) {
+    tablePrinter.print("subject", stream);
   }
 
-  public void printEnc() {
-    tablePrinter.print("encounter");
+  public void printEnc(PrintStream stream) {
+    tablePrinter.print("encounter", stream);
   }
 
-  public void printPhe() {
-    tablePrinter.print("subject_resource");
+  public void printPhe(PrintStream stream) {
+    tablePrinter.print("subject_resource", stream);
   }
 }

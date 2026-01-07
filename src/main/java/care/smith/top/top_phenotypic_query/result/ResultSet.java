@@ -144,7 +144,7 @@ public class ResultSet extends LinkedHashMap<String, SubjectPhenotypes> {
   public void addSubject(String subjectId) {
     if (!getSubjectIds().contains(subjectId)) {
       put(subjectId, new SubjectPhenotypes(subjectId));
-      log.debug("subject is added: {}", subjectId);
+      log.trace("subject is added: {}", subjectId);
     }
   }
 
@@ -286,7 +286,7 @@ public class ResultSet extends LinkedHashMap<String, SubjectPhenotypes> {
 
   public void removeSubject(String id) {
     remove(id);
-    log.debug("subject removed from result set: {}", id);
+    log.trace("subject removed from result set: {}", id);
   }
 
   @Override

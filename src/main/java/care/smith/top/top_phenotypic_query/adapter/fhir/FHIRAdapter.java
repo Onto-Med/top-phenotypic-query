@@ -26,7 +26,7 @@ public class FHIRAdapter extends DataAdapter {
   @Override
   public ResultSet execute(SingleSearch search) {
     String query = getSettings().createSinglePreparedQuery(search);
-    log.debug("Execute FHIR query: {}", query);
+    log.trace("Execute FHIR query: {}", query);
     ResultSet rs = client.findPhenotypes(query, search);
     if (encParts != null) encParts.groupParts(rs);
     checkQuantifier(search, rs);
@@ -36,7 +36,7 @@ public class FHIRAdapter extends DataAdapter {
   @Override
   public ResultSet execute(SubjectSearch search) {
     String query = getSettings().createSubjectPreparedQuery(search);
-    log.debug("Execute FHIR query: {}", query);
+    log.trace("Execute FHIR query: {}", query);
     ResultSet rs = client.findPatients(query, search);
     if (encParts != null) encParts.groupParts(rs);
     EncounterPatientRef.check(rs, config);

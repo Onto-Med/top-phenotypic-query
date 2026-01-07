@@ -12,8 +12,12 @@ import care.smith.top.top_phenotypic_query.util.builder.Que;
 import java.math.BigDecimal;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultFullBMIAgeTest extends AbstractTest {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(DefaultFullBMIAgeTest.class);
 
   @Test
   public void test1() throws InstantiationException {
@@ -22,11 +26,11 @@ public class DefaultFullBMIAgeTest extends AbstractTest {
             .inc(overWeight, getDTR(2000), defAgrFunc.getId())
             .inc(female);
 
-    System.out.println(que.getConfig());
+    LOGGER.trace(que.getConfig().toString());
 
     ResultSet rs = que.execute();
 
-    System.out.println(rs);
+    LOGGER.trace(rs.toString());
 
     assertEquals(Set.of("1"), rs.getSubjectIds());
     assertEquals(13, rs.getPhenotypes("1").size());
@@ -68,7 +72,7 @@ public class DefaultFullBMIAgeTest extends AbstractTest {
             .exc(male)
             .execute();
 
-    System.out.println(rs);
+    LOGGER.trace(rs.toString());
 
     assertEquals(Set.of("1"), rs.getSubjectIds());
     assertEquals(13, rs.getPhenotypes("1").size());

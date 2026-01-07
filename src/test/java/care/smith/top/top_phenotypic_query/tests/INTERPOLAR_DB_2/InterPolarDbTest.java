@@ -10,8 +10,12 @@ import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class InterPolarDbTest {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(InterPolarDbTest.class);
 
   private static final String CONFIG = "config/Interpolar_Adapter_Test.yml";
 
@@ -39,7 +43,7 @@ public class InterPolarDbTest {
             .pro(sex)
             .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/test1.sql")
             .execute();
-    System.out.println(rs);
+    LOGGER.trace(rs.toString());
 
     assertEquals(Set.of("HOSP-0001-E-11", "HOSP-0001-E-33"), rs.getSubjectIds());
   }

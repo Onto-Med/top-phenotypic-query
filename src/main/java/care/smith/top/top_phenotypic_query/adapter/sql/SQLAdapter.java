@@ -79,7 +79,7 @@ public class SQLAdapter extends DataAdapter {
     String preparedQuery = SQLAdapterSettings.get().createSinglePreparedQuery(search);
     PreparedStatement ps =
         SQLAdapterSettings.get().getSinglePreparedStatement(preparedQuery, con, search);
-    log.debug("Execute SQL query: {}", ps);
+    log.trace("Execute SQL query: {}", ps);
     java.sql.ResultSet sqlRS = ps.executeQuery();
     Phenotype phe = search.getPhenotype();
     PhenotypeOutput out = search.getOutput();
@@ -127,7 +127,7 @@ public class SQLAdapter extends DataAdapter {
     String preparedQuery = SQLAdapterSettings.get().createSubjectPreparedQuery(search);
     PreparedStatement ps =
         SQLAdapterSettings.get().getSubjectPreparedStatement(preparedQuery, con, search);
-    log.debug("Execute SQL query: {}", ps);
+    log.trace("Execute SQL query: {}", ps);
     java.sql.ResultSet sqlRS = ps.executeQuery();
     SubjectOutput out = search.getOutput();
     String sbjCol = out.getId();

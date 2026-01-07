@@ -29,9 +29,13 @@ import java.util.List;
 import org.hl7.fhir.r4.model.Reference;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Disabled
 public class AKIPolarTestIntern {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(AKIPolarTestIntern.class);
 
   private static Client client = new Client();
 
@@ -301,7 +305,7 @@ public class AKIPolarTestIntern {
                   aki3)
               .pro(akiAll)
               .execute();
-      System.out.println(rs);
+      LOGGER.trace(rs.toString());
 
       assertEquals(
           List.of(Val.of(3), Val.of(0), Val.of(2), Val.of(3)),

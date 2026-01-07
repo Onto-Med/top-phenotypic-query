@@ -48,18 +48,20 @@ public class PhenotypeFinder {
   }
 
   private ResultSet executeCompositeSearches(ResultSet rs) {
-    if (query.getCriteria() != null)
-      for (QueryCriterion cri : query.getCriteria()) executeCompositeSearch(cri, rs);
+    if (query != null) {
+      if (query.getCriteria() != null)
+        for (QueryCriterion cri : query.getCriteria()) executeCompositeSearch(cri, rs);
 
-    if (query.getProjection() != null)
-      for (ProjectionEntry pro : query.getProjection())
-        if (!hasCriterion(pro)) executeCompositeSearch(pro, rs);
+      if (query.getProjection() != null)
+        for (ProjectionEntry pro : query.getProjection())
+          if (!hasCriterion(pro)) executeCompositeSearch(pro, rs);
+    }
 
     return rs;
   }
 
   private boolean hasCriterion(ProjectionEntry pro) {
-    if (query.getCriteria() == null) return false;
+    if (query == null || query.getCriteria() == null) return false;
     for (QueryCriterion cri : query.getCriteria()) {
       if (Objects.equals(cri.getSubjectId(), pro.getSubjectId())
           && Objects.equals(cri.getDateTimeRestriction(), pro.getDateTimeRestriction()))
@@ -77,7 +79,7 @@ public class PhenotypeFinder {
     SubjectQueryMan sbjMan = new SubjectQueryMan(adapter, query);
     SingleQueryMan man = new SingleQueryMan(sbjMan, query, phenotypes);
 
-    if (query.getCriteria() != null) {
+    if (query != null && query.getCriteria() != null) {
       for (QueryCriterion cri : query.getCriteria()) {
         Phenotype phe = phenotypes.getPhenotype(cri.getSubjectId());
         if (Phenotypes.isSingle(phe)) {
@@ -97,7 +99,7 @@ public class PhenotypeFinder {
       }
     }
 
-    if (query.getProjection() != null) {
+    if (query != null && query.getProjection() != null) {
       for (ProjectionEntry pro : query.getProjection())
         addVariable(pro.getSubjectId(), pro, sbjMan, man);
       for (ProjectionEntry pro : query.getProjection()) {

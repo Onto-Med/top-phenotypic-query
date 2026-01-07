@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
+import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -45,8 +45,8 @@ public class HTTP {
   }
 
   private static <T> T read(String url, String token, Class<T> cls)
-      throws IOException, InterruptedException {
-    URLConnection uc = new URL(url).openConnection();
+      throws IOException, InterruptedException, URISyntaxException {
+    URLConnection uc = new URI(url).toURL().openConnection();
     uc.setRequestProperty("Authorization", "Bearer " + token);
     String text = new String(uc.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
     ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
@@ -54,7 +54,7 @@ public class HTTP {
   }
 
   public static List<Entity> readEntities(String repoUrl, String token)
-      throws IOException, InterruptedException {
+      throws IOException, InterruptedException, URISyntaxException {
     EntityPage page1 = HTTP.read(repoUrl + "/entity", token, EntityPage.class);
     List<Entity> entities = page1.getContent();
     for (int i = 2; i <= page1.getTotalPages(); i++) {
@@ -65,7 +65,7 @@ public class HTTP {
   }
 
   public static Repository readRepository(String repoUrl, String token)
-      throws IOException, InterruptedException {
+      throws IOException, InterruptedException, URISyntaxException {
     return HTTP.read(repoUrl, token, Repository.class);
   }
 }

@@ -20,7 +20,7 @@ public class Aggregator {
   public static Expression aggregate(Expression arg, C2R c2r) {
     if (!hasMultipleValues(arg)) return arg;
     Expression ag = c2r.getDefaultAggregateFunction().calculate(Exp.toList(arg.getValues()), c2r);
-    log.debug(
+    log.trace(
         "aggregate: {} = {}",
         c2r.getDefaultAggregateFunction().toStringValues(arg.getValues()),
         Values.toStringWithoutDateTime(Expressions.getValue(ag)));

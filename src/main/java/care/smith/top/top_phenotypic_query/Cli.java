@@ -32,7 +32,7 @@ public class Cli implements Callable<Integer> {
   private final ObjectMapper MAPPER =
       new ObjectMapper()
           .registerModule(new JavaTimeModule())
-          .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+          .setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
 
   public static void main(String... args) {
     int exitCode = new CommandLine(new Cli()).execute(args);
@@ -74,15 +74,16 @@ public class Cli implements Callable<Integer> {
               names = {"-p", "--phenotype"},
               paramLabel = "<phenotype-id>",
               description =
-                  "A phenotype ID to be used as inclusion criterion to query the data source. "
-                      + "To provide multiple phenotype IDs, add this option multiple times. The IDs must be present in the provided model. "
-                      + "Alternatively, you can provide a query configuration file (see other positional parameter).")
+                  "A phenotype ID to be used as inclusion criterion to query the data source. To"
+                      + " provide multiple phenotype IDs, add this option multiple times. The IDs"
+                      + " must be present in the provided model. Alternatively, you can provide a"
+                      + " query configuration file (see other positional parameter).")
           List<String> phenotypeIds,
       @Option(
               names = {"-s", "--slim"},
               description =
-                  "The output will contnsist of a single CSV file. "
-                      + "Consequently, the outputfile specified with `--output` must have a .csv extension.")
+                  "The output will contnsist of a single CSV file. Consequently, the outputfile"
+                      + " specified with `--output` must have a .csv extension.")
           boolean slim,
       @Parameters(
               index = "0",
@@ -107,7 +108,8 @@ public class Cli implements Callable<Integer> {
       if (outputFile != null && !isValidOutputSpec(outputFile, slim)) {
         throw new ParameterException(
             new CommandLine(this),
-            "The output file must have one of the following extensions: .csv (for slim output) or .zip");
+            "The output file must have one of the following extensions: .csv (for slim output) or"
+                + " .zip");
       }
 
       PhenotypeQuery query;

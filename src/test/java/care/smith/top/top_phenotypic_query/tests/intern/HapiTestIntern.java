@@ -16,9 +16,13 @@ import care.smith.top.top_phenotypic_query.util.builder.Res;
 import java.util.Set;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Disabled
 public class HapiTestIntern {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(HapiTestIntern.class);
 
   private static final String CONFIG = "config/Hapi_Adapter_Test.yml";
 
@@ -129,7 +133,7 @@ public class HapiTestIntern {
             .inc(obesityClassI, Res.ge(DateUtil.parse("2010-01-01")))
             .execute();
 
-    System.out.println(rs.getSubjectIds());
+    LOGGER.trace(rs.getSubjectIds().toString());
 
     assertEquals(
         Set.of(
@@ -145,7 +149,7 @@ public class HapiTestIntern {
   public void test3() throws InstantiationException {
     ResultSet rs = new Que(CONFIG, entities).inc(female).inc(obesityClassI).execute();
 
-    System.out.println(rs.size());
+    LOGGER.trace(String.valueOf(rs.size()));
 
     assertEquals(
         Set.of(
@@ -165,7 +169,7 @@ public class HapiTestIntern {
 
     ResultSet rs = new Que(CONFIG, entities).inc(amb).execute();
 
-    System.out.println(rs.getSubjectIds());
-    System.out.println(rs.getSubjectIds().size());
+    LOGGER.trace(rs.getSubjectIds().toString());
+    LOGGER.trace(String.valueOf(rs.getSubjectIds().size()));
   }
 }

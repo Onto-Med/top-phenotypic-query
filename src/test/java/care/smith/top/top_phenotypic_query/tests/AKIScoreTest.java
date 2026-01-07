@@ -32,8 +32,12 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AKIScoreTest {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(AKIScoreTest.class);
 
   private static final String CONFIG = "config/AKI_SQL_Adapter.yml";
 
@@ -274,7 +278,7 @@ public class AKIScoreTest {
                 DROP_SBJ, DROP_ASM, CREATE_SBJ, CREATE_ASM, insertSubjects(), insertAssesments())
             .execute();
 
-    System.out.println(rs);
+    LOGGER.trace(rs.toString());
 
     assertEquals(Set.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"), rs.getSubjectIds());
 

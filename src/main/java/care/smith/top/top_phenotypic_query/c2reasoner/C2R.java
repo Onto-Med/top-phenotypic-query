@@ -264,7 +264,7 @@ public class C2R {
   }
 
   public Expression calculate(Phenotype phe) {
-    log.debug("start calculating variable: {} ...", phe.getId());
+    log.trace("start calculating variable: {} ...", phe.getId());
 
     List<Value> vals = values.getValues(phe.getId(), dateTimeRestriction);
     if (vals != null) return logVariable(phe.getId(), Exp.of(vals), false);
@@ -278,7 +278,7 @@ public class C2R {
   }
 
   private Expression logVariable(String pheId, Expression res, boolean addToRS) {
-    log.debug("end calculating variable: {} = {}", pheId, toString(res));
+    log.trace("end calculating variable: {} = {}", pheId, toString(res));
     if (addToRS && res != null) values.setValues(pheId, dateTimeRestriction, res.getValues());
     return res;
   }
@@ -296,20 +296,20 @@ public class C2R {
   }
 
   private Expression calculateConstant(String constantId) {
-    log.debug("start calculating constant: {} ...", constantId);
+    log.trace("start calculating constant: {} ...", constantId);
     Exceptions.checkConstantExists(constantId, constants);
     Expression result = getConstant(constantId).getValueExpression();
-    log.debug("end calculating constant: {} = {}", constantId, toString(result));
+    log.trace("end calculating constant: {} = {}", constantId, toString(result));
     return result;
   }
 
   public Expression calculateFunction(Expression exp) {
     String expStr = toString(exp);
-    log.debug("start calculating function '{}': {} ...", exp.getFunctionId(), expStr);
+    log.trace("start calculating function '{}': {} ...", exp.getFunctionId(), expStr);
     Exceptions.checkFunctionExists(exp, functions);
     FunctionEntity func = getFunction(exp.getFunctionId());
     Expression result = func.calculate(exp.getArguments(), this);
-    log.debug(
+    log.trace(
         "end calculating function '{}': {} = {}", exp.getFunctionId(), expStr, toString(result));
     return result;
   }

@@ -9,20 +9,24 @@ import care.smith.top.top_phenotypic_query.tests.AbstractTest;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Disabled;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Disabled
 public class POLARTestIntern extends AbstractTest {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(POLARTestIntern.class);
+
   public static void main(String[] args)
       throws SQLException,
-          MalformedURLException,
           IOException,
           InstantiationException,
           InterruptedException,
-          NoCodesException {
+          NoCodesException,
+          URISyntaxException {
     Entities entities =
         Entities.of(
             "http://top-prod.imise.uni-leipzig.de/api/polar/delir/entity",
@@ -41,11 +45,8 @@ public class POLARTestIntern extends AbstractTest {
 
     PhenotypeFinder pf = new PhenotypeFinder(query, entities, adapter);
     ResultSet rs = pf.execute();
-    System.out.println(rs.toString(entities));
-    System.out.println(rs.size());
+    LOGGER.trace(rs.toString(entities));
+    LOGGER.trace(String.valueOf(rs.size()));
     adapter.close();
-
-    //    System.out.println(phens.getIdsAndTitles());
-    //    System.out.println(phens.size());
   }
 }

@@ -19,9 +19,13 @@ import java.util.Set;
 import org.hl7.fhir.r4.model.Reference;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Disabled
 public class FHIRAnaphylaxisTestInternEnc {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(FHIRAnaphylaxisTestInternEnc.class);
 
   private static Client client = new Client();
 
@@ -122,7 +126,7 @@ public class FHIRAnaphylaxisTestInternEnc {
             .inc(imp, Res.geLe(DateUtil.parse("2020-01-01"), DateUtil.parse("2020-01-02")))
             .inc(male)
             .execute();
-    System.out.println(rs);
+    LOGGER.trace(rs.toString());
     assertEquals(Set.of(enc1.getReference()), rs.getSubjectIds());
 
     rs =
@@ -131,7 +135,7 @@ public class FHIRAnaphylaxisTestInternEnc {
             .inc(amb, Res.geLe(DateUtil.parse("2020-01-01"), DateUtil.parse("2020-01-02")))
             .inc(male)
             .execute();
-    System.out.println(rs);
+    LOGGER.trace(rs.toString());
     assertEquals(Set.of(enc2.getReference()), rs.getSubjectIds());
 
     rs =
@@ -148,7 +152,7 @@ public class FHIRAnaphylaxisTestInternEnc {
             .inc(algIMPAMB, Res.geLe(DateUtil.parse("2020-01-01"), DateUtil.parse("2020-01-02")))
             .inc(male)
             .execute();
-    System.out.println(rs);
+    LOGGER.trace(rs.toString());
     assertEquals(Set.of(enc1.getReference(), enc2.getReference()), rs.getSubjectIds());
 
     rs =

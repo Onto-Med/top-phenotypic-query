@@ -42,7 +42,7 @@ public class CompositeSearch extends PhenotypeSearch {
   }
 
   private void executeForSubject(Phenotype phe, String sbjId) {
-    log.debug("start composite search: {} :: {} ...", sbjId, phe.getId());
+    log.trace("start composite search: {} :: {} ...", sbjId, phe.getId());
 
     C2R c2r =
         new C2R()
@@ -53,7 +53,7 @@ public class CompositeSearch extends PhenotypeSearch {
 
     Expression resExp = c2r.calculate(phe);
 
-    log.debug("end composite search: {} :: {} :: {}", sbjId, phe.getId(), c2r.toString(resExp));
+    log.trace("end composite search: {} :: {} :: {}", sbjId, phe.getId(), c2r.toString(resExp));
 
     if (Queries.isCriterion(entry)) {
       boolean res = (resExp == null) ? false : Expressions.getBooleanValue(resExp);
