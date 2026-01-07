@@ -1,1 +1,1 @@
-tagSearchIndex = [];updateSearchResults();
+tagSearchIndex = [{"l":"Functions and Constants","h":"Overview","d":"Section","u":"index.html#functions-and-constants-heading"}];updateSearchResults();
