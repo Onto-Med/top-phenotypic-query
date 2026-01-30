@@ -1,10 +1,14 @@
 # This adapter can be used for querying INTERPOLAR databases that are the result of the ETL process defined and
 # implemented in https://github.com/medizininformatik-initiative/INTERPOLAR.
-# The ETL process stores the data in a postgres database "cds_hub_db" under the schema "db_log" (see
-# https://github.com/medizininformatik-initiative/INTERPOLAR/blob/main/Dataflow.md).
-# Access to the db_log schema is accomplished by the postgres user 'db_log_user' as this user has read and write
-# permissions to the schema, see
-# https://github.com/medizininformatik-initiative/INTERPOLAR/blob/main/Postgres-cds_hub/DB_description.md#rechtekonzept
+# The ETL process stores the data in a PostgreSQL database "cds_hub_db" under various schemas
+# (see https://github.com/medizininformatik-initiative/INTERPOLAR/blob/main/Dataflow.md).
+#
+# In the context of INTERPOLAR, the TOP Framework is considered as a so called "data processor".
+# Access to the database is restricted to the schemas "db2dataprocessor_out" (read) and "db2dataprocessor_in" (write).
+#
+# Per default, data processors should use the PostgreSQL user "db2dataprocessor_user"
+# (see https://github.com/medizininformatik-initiative/INTERPOLAR/blob/main/Postgres-cds_hub/DB_description.md#rechtekonzept).
+#
 # The adapter has been tested using the synthetic sample data set imported from
 # https://github.com/medizininformatik-initiative/kerndatensatz-testdaten.
 #
@@ -13,18 +17,17 @@
 #
 # UPDATE db_log.encounter
 # SET
-#	  enc_class_system='http://terminology.hl7.org/CodeSystem/v3-ActCode',
-#	  enc_class_display='inpatient encounter',
-#     enc_class_code='IMP'
-# WHERE enc_id < 'UKB-0009-E-1'
+#	  enc_class_system = 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
+#	  enc_class_display = 'inpatient encounter',
+#     enc_class_code = 'IMP'
+# WHERE enc_id < 'UKB-0009-E-1';
 #
 # UPDATE db_log.encounter
 # SET
-#     enc_class_system='http://terminology.hl7.org/CodeSystem/v3-ActCode',
-#     enc_class_display='ambulatory',
-#     enc_class_code='AMB'
-# WHERE enc_id >= 'UKB-0009-E-1'
-#
+#     enc_class_system = 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
+#     enc_class_display = 'ambulatory',
+#     enc_class_code = 'AMB'
+# WHERE enc_id >= 'UKB-0009-E-1';
 baseId: encounter
 subjectQuery:
   baseQuery: "SELECT enc_id, pat_birthdate, pat_gender FROM db_log.patient, db_log.encounter\nWHERE enc_patient_ref = 'Patient/' || pat_id"
