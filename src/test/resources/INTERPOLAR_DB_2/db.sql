@@ -1,6 +1,6 @@
-CREATE SCHEMA db_log;
+CREATE SCHEMA db2dataprocessor_out;
 
-CREATE TABLE db_log.patient
+CREATE TABLE db2dataprocessor_out.patient
 (
     pat_id        varchar NOT NULL,
     pat_birthdate date NULL,
@@ -8,7 +8,7 @@ CREATE TABLE db_log.patient
     PRIMARY KEY (pat_id)
 );
 
-CREATE TABLE db_log.encounter
+CREATE TABLE db2dataprocessor_out.encounter
 (
     enc_id                      varchar NOT NULL,
     enc_patient_ref             varchar NULL,
@@ -19,7 +19,7 @@ CREATE TABLE db_log.encounter
     PRIMARY KEY (enc_id, enc_diagnosis_condition_ref)
 );
 
-CREATE TABLE db_log.observation
+CREATE TABLE db2dataprocessor_out.observation
 (
     obs_id                  varchar NOT NULL,
     obs_encounter_ref       varchar NULL,
@@ -32,7 +32,7 @@ CREATE TABLE db_log.observation
     PRIMARY KEY (obs_id, obs_code_system, obs_code_code)
 );
 
-CREATE TABLE db_log."condition"
+CREATE TABLE db2dataprocessor_out."condition"
 (
     con_id               varchar NOT NULL,
     con_patient_ref      varchar NULL,
@@ -45,7 +45,7 @@ CREATE TABLE db_log."condition"
     PRIMARY KEY (con_id)
 );
 
-CREATE TABLE db_log."procedure"
+CREATE TABLE db2dataprocessor_out."procedure"
 (
     proc_id                varchar NOT NULL,
     proc_patient_ref       varchar NULL,
@@ -55,7 +55,7 @@ CREATE TABLE db_log."procedure"
     PRIMARY KEY (proc_id)
 );
 
-CREATE TABLE db_log.medication
+CREATE TABLE db2dataprocessor_out.medication
 (
     med_id          varchar NOT NULL,
     med_code_system varchar NULL,
@@ -63,7 +63,7 @@ CREATE TABLE db_log.medication
     PRIMARY KEY (med_id, med_code_system, med_code_code)
 );
 
-CREATE TABLE db_log.medicationadministration
+CREATE TABLE db2dataprocessor_out.medicationadministration
 (
     medadm_id                       varchar NOT NULL,
     medadm_encounter_ref            varchar NULL,
@@ -73,7 +73,7 @@ CREATE TABLE db_log.medicationadministration
     PRIMARY KEY (medadm_id)
 );
 
-CREATE TABLE db_log.medicationstatement
+CREATE TABLE db2dataprocessor_out.medicationstatement
 (
     medstat_id                      varchar NOT NULL,
     medstat_encounter_ref           varchar NULL,
@@ -83,7 +83,7 @@ CREATE TABLE db_log.medicationstatement
     PRIMARY KEY (medstat_id)
 );
 
-CREATE TABLE db_log.medicationrequest
+CREATE TABLE db2dataprocessor_out.medicationrequest
 (
     medreq_id                       varchar NOT NULL,
     medreq_encounter_ref            varchar NULL,

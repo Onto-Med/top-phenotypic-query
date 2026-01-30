@@ -15,14 +15,14 @@
 # As the test data is missing encounter class codes, it is recommended to execute the following SQL update statements
 # after the import:
 #
-# UPDATE db_log.encounter
+# UPDATE db2dataprocessor_out.encounter
 # SET
 #	  enc_class_system = 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
 #	  enc_class_display = 'inpatient encounter',
 #     enc_class_code = 'IMP'
 # WHERE enc_id < 'UKB-0009-E-1';
 #
-# UPDATE db_log.encounter
+# UPDATE db2dataprocessor_out.encounter
 # SET
 #     enc_class_system = 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
 #     enc_class_display = 'ambulatory',
@@ -30,7 +30,7 @@
 # WHERE enc_id >= 'UKB-0009-E-1';
 baseId: encounter
 subjectQuery:
-  baseQuery: "SELECT enc_id, pat_birthdate, pat_gender FROM db_log.patient, db_log.encounter\nWHERE enc_patient_ref = 'Patient/' || pat_id"
+  baseQuery: "SELECT enc_id, pat_birthdate, pat_gender FROM db2dataprocessor_out.patient, db2dataprocessor_out.encounter\nWHERE enc_patient_ref = 'Patient/' || pat_id"
   sexListPart: "\nAND pat_gender IN ({values})"
   birthdateIntervalPart: "\nAND pat_birthdate {operator} {value}"
   output:
@@ -39,7 +39,7 @@ subjectQuery:
     birthdate: pat_birthdate
 phenotypeQueries:
   encounter:
-    baseQuery: "SELECT enc_id, enc_period_start, enc_period_end, enc_class_code FROM db_log.encounter\nWHERE TRUE"
+    baseQuery: "SELECT enc_id, enc_period_start, enc_period_end, enc_class_code FROM db2dataprocessor_out.encounter\nWHERE TRUE"
     textValueListPart: "\nAND enc_class_code IN ({values})"
     startDateTimeIntervalPart: "\nAND enc_period_start {operator} {value}"
     endDateTimeIntervalPart: "\nAND (enc_period_end IS NULL OR enc_period_end {operator} {value})"
@@ -49,7 +49,7 @@ phenotypeQueries:
       startDateTime: enc_period_start
       endDateTime: enc_period_end
   observation:
-    baseQuery: "SELECT RIGHT(obs_encounter_ref, LENGTH(obs_encounter_ref) - 10) AS enc_id, obs_effectivedatetime, obs_valuequantity_value FROM db_log.observation\nWHERE obs_valuequantity_value IS NOT NULL AND obs_code_system || '|' || obs_code_code IN ({codes})"
+    baseQuery: "SELECT RIGHT(obs_encounter_ref, LENGTH(obs_encounter_ref) - 10) AS enc_id, obs_effectivedatetime, obs_valuequantity_value FROM db2dataprocessor_out.observation\nWHERE obs_valuequantity_value IS NOT NULL AND obs_code_system || '|' || obs_code_code IN ({codes})"
     numberValueIntervalPart: "\nAND obs_valuequantity_value {operator} {value}"
     numberValueListPart: "\nAND obs_valuequantity_value IN ({values})"
     dateTimeIntervalPart: "\nAND obs_effectivedatetime {operator} {value}"
@@ -58,13 +58,13 @@ phenotypeQueries:
       numberValue: obs_valuequantity_value
       dateTime: obs_effectivedatetime
   condition:
-    baseQuery: "SELECT enc_id, con_recordeddate FROM db_log.condition, db_log.encounter\nWHERE enc_diagnosis_condition_ref  = 'Condition/' || con_identifier_value AND con_code_system || '|' || con_code_code IN ({codes})"
+    baseQuery: "SELECT enc_id, con_recordeddate FROM db2dataprocessor_out.condition, db2dataprocessor_out.encounter\nWHERE enc_diagnosis_condition_ref  = 'Condition/' || con_identifier_value AND con_code_system || '|' || con_code_code IN ({codes})"
     dateTimeIntervalPart: "\nAND con_recordeddate {operator} {value}"
     output:
       subject: enc_id
       dateTime: con_recordeddate
   procedure:
-    baseQuery: "SELECT enc_id, proc_performeddatetime FROM db_log.\"procedure\", db_log.encounter\nWHERE enc_diagnosis_condition_ref  = 'Procedure/' || proc_id AND proc_code_system || '|' || proc_code_code IN ({codes})"
+    baseQuery: "SELECT enc_id, proc_performeddatetime FROM db2dataprocessor_out.\"procedure\", db2dataprocessor_out.encounter\nWHERE enc_diagnosis_condition_ref  = 'Procedure/' || proc_id AND proc_code_system || '|' || proc_code_code IN ({codes})"
     dateTimeIntervalPart: "\nAND proc_performeddatetime {operator} {value}"
     output:
       subject: enc_id
@@ -72,19 +72,19 @@ phenotypeQueries:
   medication:
     union: [ medication_administration, medication_statement, medication_request ]
   medication_administration:
-    baseQuery: "SELECT RIGHT(medadm_encounter_ref, LENGTH(medadm_encounter_ref) - 10) AS enc_id, medadm_effectivedatetime AS datetime FROM db_log.medicationadministration, db_log.medication\nWHERE medadm_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
+    baseQuery: "SELECT RIGHT(medadm_encounter_ref, LENGTH(medadm_encounter_ref) - 10) AS enc_id, medadm_effectivedatetime AS datetime FROM db2dataprocessor_out.medicationadministration, db2dataprocessor_out.medication\nWHERE medadm_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
     dateTimeIntervalPart: "\nAND medadm_effectivedatetime {operator} {value}"
     output:
       subject: enc_id
       dateTime: datetime
   medication_statement:
-    baseQuery: "SELECT RIGHT(medstat_encounter_ref, LENGTH(medstat_encounter_ref) - 10) AS enc_id, medstat_effectivedatetime AS datetime FROM db_log.medicationstatement, db_log.medication\nWHERE medstat_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
+    baseQuery: "SELECT RIGHT(medstat_encounter_ref, LENGTH(medstat_encounter_ref) - 10) AS enc_id, medstat_effectivedatetime AS datetime FROM db2dataprocessor_out.medicationstatement, db2dataprocessor_out.medication\nWHERE medstat_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
     dateTimeIntervalPart: "\nAND medstat_effectivedatetime {operator} {value}"
     output:
       subject: enc_id
       dateTime: datetime
   medication_request:
-    baseQuery: "SELECT RIGHT(medreq_encounter_ref, LENGTH(medreq_encounter_ref) - 10) AS enc_id, medreq_authoredon AS datetime FROM db_log.medicationrequest, db_log.medication\nWHERE medreq_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
+    baseQuery: "SELECT RIGHT(medreq_encounter_ref, LENGTH(medreq_encounter_ref) - 10) AS enc_id, medreq_authoredon AS datetime FROM db2dataprocessor_out.medicationrequest, db2dataprocessor_out.medication\nWHERE medreq_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
     dateTimeIntervalPart: "\nAND medreq_authoredon {operator} {value}"
     output:
       subject: enc_id
