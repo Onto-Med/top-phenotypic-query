@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.analysis;
 
+import java.util.stream.Collectors;
 import picocli.CommandLine.Command;
 
 @Command(
@@ -13,10 +14,10 @@ public class Example extends Analysis {
     System.out.println(
         String.format(
             "I have been called with the following parameters:\n"
-                + "input file: %s\n"
+                + "input files: %s\n"
                 + "output file: %s\n"
                 + "config file: %s",
-            inputFile.getAbsolutePath(),
+            inputFiles.stream().map(i -> i.getAbsolutePath()).collect(Collectors.joining(";")),
             outputFile != null ? outputFile.getAbsolutePath() : null,
             configFile != null ? configFile.getAbsolutePath() : null));
   }

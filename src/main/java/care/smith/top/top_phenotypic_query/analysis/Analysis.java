@@ -1,6 +1,8 @@
 package care.smith.top.top_phenotypic_query.analysis;
 
 import java.io.File;
+import java.util.List;
+
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
@@ -21,7 +23,8 @@ public abstract class Analysis implements Runnable {
 
   @Parameters(
       index = "0",
+      arity = "1..*",
       paramLabel = "<input ZIP>",
-      description = "TOP query result as ZIP file to be analysed.")
-  protected File inputFile;
+      description = "TOP query results as ZIP files to be analysed.")
+  protected List<File> inputFiles;
 }
