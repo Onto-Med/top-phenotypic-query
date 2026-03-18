@@ -1,6 +1,6 @@
 package care.smith.top.top_phenotypic_query.command;
 
-import care.smith.top.top_phenotypic_query.analysis.Example;
+import care.smith.top.top_phenotypic_query.analysis.CountPhenotypes;
 import java.util.concurrent.Callable;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -10,7 +10,7 @@ import picocli.CommandLine.ParameterException;
     name = "analysis",
     description = "Choose and execute analyses on TOP phenotypic query results.",
     mixinStandardHelpOptions = true,
-    subcommands = {Example.class})
+    subcommands = {CountPhenotypes.class})
 public class AnalysisCommand implements Callable<Integer> {
 
   @Override
