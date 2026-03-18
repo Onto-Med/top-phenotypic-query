@@ -3,6 +3,9 @@ package care.smith.top.top_phenotypic_query.analysis;
 import care.smith.top.model.DataType;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.Phenotype;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderHeaderAware;
 import com.opencsv.CSVReaderHeaderAwareBuilder;
@@ -16,17 +19,23 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 public abstract class Analysis implements Runnable {
+
+  private Logger log = LoggerFactory.getLogger(Analysis.class);
+
   @Option(
       names = {"-c", "--config"},
       paramLabel = "<config YAML>",
       description = "Specify analysis parameters via a YAML configuration file.")
-  protected File configFile;
+  protected Optional<File> configFile;
 
   @Option(
       names = {"-o", "--output"},
@@ -34,7 +43,7 @@ public abstract class Analysis implements Runnable {
       description =
           "Location where resulting out file will be stored. "
               + "The file must have a .zip extension.")
-  protected File outputFile;
+  protected Optional<File> outputFile;
 
   @Parameters(
       index = "0",
@@ -42,6 +51,22 @@ public abstract class Analysis implements Runnable {
       paramLabel = "<input ZIP>",
       description = "TOP query results as ZIP files to be analysed.")
   protected List<File> inputFiles;
+
+  protected Optional<Map<String, List<AnalysisSpec>>> loadConfiguration()
+      throws IOException {
+    if (configFile.isEmpty()) {
+      log.trace("No configuration was provided.");
+      return Optional.empty();
+    }
+
+    File file = configFile.get();
+    if (!file.canRead())
+      throw new IOException(String.format("Cannot access configuration at '%s'!", file));
+
+    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+    return Optional.of(
+        mapper.readValue(file, new TypeReference<Map<String, List<AnalysisSpec>>>() {}));
+  }
 
   protected List<Phenotype> loadMetadata() {
     return loadCsv("metadata.csv").stream()
