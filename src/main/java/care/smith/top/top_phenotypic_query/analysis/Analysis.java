@@ -53,13 +53,15 @@ public abstract class Analysis implements Runnable {
   protected List<File> inputFiles;
 
   /**
-   * Load analysis configuration from the provided YAML file ({@link #configFile}).
+   * Parse analysis configuration from the provided YAML file ({@link #configFile}) to the specified
+   * type.
    *
-   * @return Optional that may contain a map, where keys are algorithm IDs and values are lists of
-   *     {@link AnalysisSpec}.
+   * @param <T> Java class the YAML will be parsed to (e.g., {@link AnalysisSpec}).
+   * @return Optional that may contain a map, where keys are algorithm IDs and values are of type
+   *     {@code T}.
    * @throws IOException If the YAML file could not be read.
    */
-  protected Optional<Map<String, List<AnalysisSpec>>> loadConfiguration() throws IOException {
+  protected <T> Optional<Map<String, List<T>>> loadConfiguration() throws IOException {
     if (configFile.isEmpty()) {
       log.trace("No configuration was provided.");
       return Optional.empty();
@@ -70,8 +72,7 @@ public abstract class Analysis implements Runnable {
       throw new IOException(String.format("Cannot access configuration at '%s'!", file));
 
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-    return Optional.of(
-        mapper.readValue(file, new TypeReference<Map<String, List<AnalysisSpec>>>() {}));
+    return Optional.of(mapper.readValue(file, new TypeReference<Map<String, List<T>>>() {}));
   }
 
   /**
