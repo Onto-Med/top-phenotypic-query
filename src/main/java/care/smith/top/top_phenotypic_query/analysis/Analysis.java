@@ -1,5 +1,8 @@
 package care.smith.top.top_phenotypic_query.analysis;
 
+import care.smith.top.model.DataType;
+import care.smith.top.model.EntityType;
+import care.smith.top.model.Phenotype;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderHeaderAware;
 import com.opencsv.CSVReaderHeaderAwareBuilder;
@@ -40,8 +43,15 @@ public abstract class Analysis implements Runnable {
       description = "TOP query results as ZIP files to be analysed.")
   protected List<File> inputFiles;
 
-  protected List<Map<String, String>> loadMetadata() {
-    return loadCsv("metadata.csv");
+  protected List<Phenotype> loadMetadata() {
+    return loadCsv("metadata.csv").stream()
+        .map(
+            r ->
+                new Phenotype(EntityType.fromValue(r.get("type")))
+                    .id(r.get("phenotype"))
+                    .dataType(DataType.fromValue(r.get("datatype")))
+                    .unit(r.get("unit")))
+        .toList();
   }
 
   protected List<Map<String, String>> loadSubjectData() {
