@@ -52,8 +52,14 @@ public abstract class Analysis implements Runnable {
       description = "TOP query results as ZIP files to be analysed.")
   protected List<File> inputFiles;
 
-  protected Optional<Map<String, List<AnalysisSpec>>> loadConfiguration()
-      throws IOException {
+  /**
+   * Load analysis configuration from the provided YAML file ({@link #configFile}).
+   *
+   * @return Optional that may contain a map, where keys are algorithm IDs and values are lists of
+   *     {@link AnalysisSpec}.
+   * @throws IOException If the YAML file could not be read.
+   */
+  protected Optional<Map<String, List<AnalysisSpec>>> loadConfiguration() throws IOException {
     if (configFile.isEmpty()) {
       log.trace("No configuration was provided.");
       return Optional.empty();
@@ -68,6 +74,11 @@ public abstract class Analysis implements Runnable {
         mapper.readValue(file, new TypeReference<Map<String, List<AnalysisSpec>>>() {}));
   }
 
+  /**
+   * Load metadata from a {@code metadata.csv} file in all query result ZIP files.
+   *
+   * @return List of {@link Phenotype}.
+   */
   protected List<Phenotype> loadMetadata() {
     return loadCsv("metadata.csv").stream()
         .map(
