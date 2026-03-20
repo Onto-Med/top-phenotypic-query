@@ -2,6 +2,7 @@ package care.smith.top.top_phenotypic_query.analysis;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import picocli.CommandLine.Command;
 
 @Command(
@@ -11,8 +12,9 @@ import picocli.CommandLine.Command;
 public class CountPhenotypes extends Analysis {
 
   @Override
-  public void run() {
-    List<Map<String, String>> phenotypes = loadPhenotypeData();
+  public Optional<List<AnalysisReport>> analyse(int index) {
+    List<Map<String, String>> phenotypes = loadPhenotypeData(index);
     System.out.println(phenotypes.size());
+    return Optional.empty();
   }
 }
