@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.analysis;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import picocli.CommandLine.Command;
@@ -11,8 +12,8 @@ import picocli.CommandLine.Command;
 public class ListPhenotypeClasses extends Analysis {
 
   @Override
-  public Optional<List<AnalysisReport>> analyse(int index) {
-    System.out.println(loadMetadata(index));
+  public Optional<List<AnalysisReport>> analyse(File queryResultFile) {
+    System.out.println(loadMetadata(queryResultFile));
     return Optional.empty();
   }
 }

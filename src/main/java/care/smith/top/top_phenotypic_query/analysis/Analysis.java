@@ -25,9 +25,9 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.slf4j.Logger;
@@ -61,32 +61,33 @@ public abstract class Analysis implements Runnable {
   protected List<File> inputFiles;
 
   /**
-   * Iterates over all provided query results and calls {@link #analyse(List, List, List)} for each
-   * of them.
+   * Iterates over all provided query results and calls {@link #analyse(File)} for each of them.
    *
    * <p>The resulting reports are written to the provided {@link #outputFile}, if any. Otherwise,
    * they are written to STDOUT.
+   *
+   * <p>If {@link #analyse(File)} yielded no results ({@link Optional.empty}), nothing is written to
+   * {@link #outputFile} and STDOUT.
    */
   @Override
   public void run() {
-    ListIterator<File> iterator = inputFiles.listIterator();
 
-    while (iterator.hasNext()) {
-      int index = iterator.nextIndex();
-      File file = iterator.next();
-      Optional<List<AnalysisReport>> reports =
-          analyse(index).map(o -> o.stream().map(r -> r.model(file.getName())).toList());
+    Stream<Optional<List<AnalysisReport>>> results =
+        inputFiles.stream()
+            .map(f -> analyse(f).map(l -> l.stream().map(r -> r.model(f.getName())).toList()));
 
-      if (reports.isPresent()) {
-        if (outputFile.isPresent()) {
-          try {
-            writeReports(outputFile.get(), reports.get());
-          } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException | IOException e) {
-            e.printStackTrace();
-          }
-        } else {
-          System.out.println(reports);
+    if (results.anyMatch(Optional::isPresent)) {
+      List<AnalysisReport> reports =
+          results.flatMap(Optional::stream).flatMap(List::stream).toList();
+
+      if (outputFile.isPresent()) {
+        try {
+          writeReports(outputFile.get(), reports);
+        } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException | IOException e) {
+          e.printStackTrace();
         }
+      } else {
+        System.out.println(reports);
       }
     }
   }
@@ -94,10 +95,13 @@ public abstract class Analysis implements Runnable {
   /**
    * This method is executed for each query result. Override it with a specific analysis.
    *
-   * @param index The index of the query result ZIP file to be analysed.
+   * <p>Let your implementation return {@link Optional.empty} to prevent any output. This is
+   * helpful, if you want to handle the output in a special way.
+   *
+   * @param queryResultFile The query result ZIP file to be analysed.
    * @return An {@link Optional} that may contain analysis results.
    */
-  protected abstract Optional<List<AnalysisReport>> analyse(int index);
+  protected abstract Optional<List<AnalysisReport>> analyse(File queryResultFile);
 
   /**
    * Parse analysis configuration from the provided YAML file ({@link #configFile}) to the specified
@@ -123,14 +127,13 @@ public abstract class Analysis implements Runnable {
   }
 
   /**
-   * Load metadata from a {@code metadata.csv} file in a query result ZIP file, denoted by {@code
-   * index}.
+   * Load metadata from a {@code metadata.csv} file in a query result ZIP file.
    *
-   * @param index The index of the query result for which the metadata are requested.
+   * @param queryResultFile The query result file for which the metadata are requested.
    * @return List of {@link Phenotype}.
    */
-  protected List<Phenotype> loadMetadata(int index) {
-    return loadCsv(index, "metadata.csv").stream()
+  protected List<Phenotype> loadMetadata(File queryResultFile) {
+    return loadCsv(queryResultFile, "metadata.csv").stream()
         .map(
             r ->
                 new Phenotype(EntityType.fromValue(r.get("type")))
@@ -141,25 +144,23 @@ public abstract class Analysis implements Runnable {
   }
 
   /**
-   * Load subject data from a {@code data_subjects.csv} file in a query result ZIP file, denoted by
-   * {@code index}.
+   * Load subject data from a {@code data_subjects.csv} file in a query result ZIP file.
    *
-   * @param index The index of the query result for which the subject data are requested.
+   * @param queryResultFile The query result file for which the subject data are requested.
    * @return List of String maps.
    */
-  protected List<Map<String, String>> loadSubjectData(int index) {
-    return loadCsv(index, "data_subjects.csv");
+  protected List<Map<String, String>> loadSubjectData(File queryResultFile) {
+    return loadCsv(queryResultFile, "data_subjects.csv");
   }
 
   /**
-   * Load subject data from a {@code data_phenotypes.csv} file in a query result ZIP file, denoted
-   * by {@code index}.
+   * Load subject data from a {@code data_phenotypes.csv} file in a query result ZIP file.
    *
-   * @param index The index of the query result for which the phenotype data are requested.
+   * @param queryResultFile The query result file for which the phenotype data are requested.
    * @return List of String maps.
    */
-  protected List<Map<String, String>> loadPhenotypeData(int index) {
-    return loadCsv(index, "data_phenotypes.csv");
+  protected List<Map<String, String>> loadPhenotypeData(File queryResultFile) {
+    return loadCsv(queryResultFile, "data_phenotypes.csv");
   }
 
   protected void writeReports(@NotNull File csvFile, List<AnalysisReport> reports)
@@ -171,12 +172,11 @@ public abstract class Analysis implements Runnable {
     }
   }
 
-  private List<Map<String, String>> loadCsv(int index, @NotBlank String entryName)
+  private List<Map<String, String>> loadCsv(File queryResultFile, @NotBlank String entryName)
       throws ArrayIndexOutOfBoundsException {
     List<Map<String, String>> records = new ArrayList<>();
 
-    File f = inputFiles.get(index);
-    try (ZipFile zipFile = new ZipFile(f)) {
+    try (ZipFile zipFile = new ZipFile(queryResultFile)) {
       ZipEntry entry = zipFile.getEntry(entryName);
       InputStream stream = zipFile.getInputStream(entry);
       CSVReaderHeaderAwareBuilder builder =
