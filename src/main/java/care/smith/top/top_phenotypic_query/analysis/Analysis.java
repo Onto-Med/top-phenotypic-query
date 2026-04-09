@@ -3,7 +3,6 @@ package care.smith.top.top_phenotypic_query.analysis;
 import care.smith.top.model.DataType;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.Phenotype;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.opencsv.CSVParserBuilder;
@@ -108,11 +107,10 @@ public abstract class Analysis implements Runnable {
    * type.
    *
    * @param <T> Java class the YAML will be parsed to (e.g., {@link AnalysisSpec}).
-   * @return Optional that may contain a map, where keys are algorithm IDs and values are of type
-   *     {@code T}.
+   * @return Optional that may contain an object of type {@code T}.
    * @throws IOException If the YAML file could not be read.
    */
-  protected <T> Optional<Map<String, List<T>>> loadConfiguration() throws IOException {
+  protected <T> Optional<T> loadConfiguration(Class<T> cls) throws IOException {
     if (configFile.isEmpty()) {
       log.trace("No configuration was provided.");
       return Optional.empty();
@@ -123,7 +121,7 @@ public abstract class Analysis implements Runnable {
       throw new IOException(String.format("Cannot access configuration at '%s'!", file));
 
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-    return Optional.of(mapper.readValue(file, new TypeReference<Map<String, List<T>>>() {}));
+    return Optional.of(mapper.readValue(file, cls));
   }
 
   /**

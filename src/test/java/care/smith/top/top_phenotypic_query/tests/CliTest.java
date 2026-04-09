@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.zip.ZipFile;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,32 @@ class CliTest extends AbstractTest {
       new ObjectMapper()
           .registerModule(new JavaTimeModule())
           .setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL);
+
+  @Test
+  void timeAnalysisTest() throws IOException {
+    Path config = Files.createTempFile("time_analysis_config", ".yml");
+    String configText =
+        "timeIntervals: [ 12, 24, 36, 48, 72, 120 ]\r\n"
+            + "\r\n"
+            + "phenotypes:\r\n"
+            + "\r\n"
+            + "  alg1:\r\n"
+            + "    - [ p1, p2, p3 ]\r\n"
+            + "    - [ p4, p5 ]\r\n"
+            + "\r\n"
+            + "  alg2:\r\n"
+            + "    - [ p6, p7 ]\r\n"
+            + "    - [ p8, p9, p10 ]";
+    Files.writeString(config, configText, StandardOpenOption.CREATE);
+
+    Path data = Files.createTempFile("result_set", ".zip");
+
+    new CommandLine(new Cli())
+        .execute("analysis", "time-analysis", "-c", config.toString(), data.toString());
+
+    Files.deleteIfExists(config);
+    Files.deleteIfExists(data);
+  }
 
   @Test
   void query() throws IOException {
