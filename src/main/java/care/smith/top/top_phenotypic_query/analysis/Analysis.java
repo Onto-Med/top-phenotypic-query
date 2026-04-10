@@ -5,6 +5,8 @@ import care.smith.top.model.EntityType;
 import care.smith.top.model.Phenotype;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderHeaderAware;
 import com.opencsv.CSVReaderHeaderAwareBuilder;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -36,7 +40,7 @@ import picocli.CommandLine.Parameters;
 
 public abstract class Analysis implements Runnable {
 
-  private Logger log = LoggerFactory.getLogger(Analysis.class);
+  protected Logger log = LoggerFactory.getLogger(Analysis.class);
 
   @Option(
       names = {"-c", "--config"},
@@ -131,14 +135,29 @@ public abstract class Analysis implements Runnable {
    * @return List of {@link Phenotype}.
    */
   protected List<Phenotype> loadMetadata(File queryResultFile) {
+    return getMetadataStream(queryResultFile).toList();
+  }
+
+  /**
+   * Load metadata from a {@code metadata.csv} file in a query result ZIP file to a map with
+   * phenotype ids as keys.
+   *
+   * @param queryResultFile The query result file for which the metadata are requested.
+   * @return List of {@link Phenotype}.
+   */
+  protected Map<String, Phenotype> loadMetadataToMap(File queryResultFile) {
+    return getMetadataStream(queryResultFile)
+        .collect(Collectors.toMap(Phenotype::getId, Function.identity()));
+  }
+
+  private Stream<Phenotype> getMetadataStream(File queryResultFile) {
     return loadCsv(queryResultFile, "metadata.csv").stream()
         .map(
             r ->
                 new Phenotype(EntityType.fromValue(r.get("type")))
                     .id(r.get("phenotype"))
                     .dataType(DataType.fromValue(r.get("datatype")))
-                    .unit(r.get("unit")))
-        .toList();
+                    .unit(r.get("unit")));
   }
 
   /**
@@ -159,6 +178,19 @@ public abstract class Analysis implements Runnable {
    */
   protected List<Map<String, String>> loadPhenotypeData(File queryResultFile) {
     return loadCsv(queryResultFile, "data_phenotypes.csv");
+  }
+
+  /**
+   * Load subject data from a {@code data_phenotypes.csv} file in a query result ZIP file.
+   *
+   * @param queryResultFile The query result file for which the phenotype data are requested.
+   * @return Multimap with subject ids als keys and phenotype records as values.
+   */
+  protected Multimap<String, PhenotypeRecord> loadPhenotypeDataOfSubjects(File queryResultFile) {
+    Multimap<String, PhenotypeRecord> data = ArrayListMultimap.create();
+    loadPhenotypeData(queryResultFile)
+        .forEach(r -> data.put(r.get("subject"), new PhenotypeRecord(r)));
+    return data;
   }
 
   protected void writeReports(@NotNull File csvFile, List<AnalysisReport> reports)

@@ -73,7 +73,29 @@ public abstract class AbstractTest {
   protected static Phenotype finding = getPhenotype("Finding", getFindingExpression());
   protected static Phenotype overWeight = getRestriction("Overweight", finding, 1);
   protected static Phenotype lightAndHigh =
-      new Phe("LightAndHigh").titleEn("LightAndHigh").expression(And.of(light, high)).get();
+      new Phe("LightAndHigh").titleEn("LightAndHigh").expression(And.of(light, high)).bool().get();
+  protected static Phenotype dabi =
+      new Phe("Dabigatran", "http://fhir.de/CodeSystem/bfarm/atc", "B01AE07")
+          .titleDe("Dabi")
+          .itemType(ItemType.MEDICATION)
+          .bool()
+          .get();
+  protected static Phenotype infect =
+      new Phe("Infect", "http://fhir.de/CodeSystem/bfarm/icd-10-gm", "G00.0", "G00.1", "G00.2")
+          .itemType(ItemType.CONDITION)
+          .titleDe("Infektion")
+          .titleEn("Infection")
+          .bool()
+          .get();
+  protected static Phenotype op =
+      new Phe("Op", "http://fhir.de/CodeSystem/bfarm/ops", "5")
+          .itemType(ItemType.PROCEDURE)
+          .titleDe("Operation")
+          .titleEn("Operation")
+          .bool()
+          .get();
+  protected static Phenotype combi =
+      new Phe("Combi").expression(And.of(dabi, infect, op)).titleEn("Combi").bool().get();
 
   protected static Entity[] phenotypes = {
     age,
@@ -94,7 +116,11 @@ public abstract class AbstractTest {
     light,
     heavy,
     high,
-    lightAndHigh
+    lightAndHigh,
+    dabi,
+    infect,
+    op,
+    combi
   };
 
   protected static ExpressionFunction defAgrFunc = Last.get().getFunction();
@@ -134,30 +160,30 @@ public abstract class AbstractTest {
   static Phenotype getPhenotype(
       String name, String codeSystem, String code, DataType dataType, String unit) {
     Phenotype phenotype =
-        (Phenotype)
-            new Phenotype()
-                .dataType(dataType)
-                .itemType(ItemType.OBSERVATION)
-                .id(name)
-                .entityType(EntityType.SINGLE_PHENOTYPE)
-                .addTitlesItem(new LocalisableText().text(name));
+        new Phenotype()
+            .dataType(dataType)
+            .itemType(ItemType.OBSERVATION)
+            .id(name)
+            .entityType(EntityType.SINGLE_PHENOTYPE)
+            .addTitlesItem(new LocalisableText().text(name));
     if (unit != null) phenotype.setUnit(unit);
     addCode(phenotype, codeSystem, code);
     return phenotype;
   }
 
   static Phenotype getPhenotype(String name, Expression exp) {
-    return getPhenotype(name, exp, null, null);
+    return getPhenotype(name, exp, null, null, DEFAULT_DATA_TYPE);
   }
 
-  static Phenotype getPhenotype(String name, Expression exp, String codeSystem, String code) {
+  static Phenotype getPhenotype(
+      String name, Expression exp, String codeSystem, String code, DataType dataType) {
     Phenotype phenotype =
-        (Phenotype)
-            new Phenotype()
-                .expression(exp)
-                .id(name)
-                .entityType(EntityType.COMPOSITE_PHENOTYPE)
-                .addTitlesItem(new LocalisableText().text(name));
+        new Phenotype()
+            .dataType(dataType)
+            .expression(exp)
+            .id(name)
+            .entityType(EntityType.COMPOSITE_PHENOTYPE)
+            .addTitlesItem(new LocalisableText().text(name));
     addCode(phenotype, codeSystem, code);
     return phenotype;
   }
@@ -348,23 +374,22 @@ public abstract class AbstractTest {
   //  }
 
   private static Phenotype getRestriction(String name, Phenotype parent, Restriction restr) {
-    return (Phenotype)
-        new Phenotype()
-            .superPhenotype(parent)
-            .restriction(restr)
-            .dataType(DataType.BOOLEAN)
-            //            .expression(exp)
-            .entityType(getRestrictionType(parent))
-            .id(name)
-            .addTitlesItem(new LocalisableText().text(name));
+    return new Phenotype()
+        .superPhenotype(parent)
+        .restriction(restr)
+        .dataType(DataType.BOOLEAN)
+        //            .expression(exp)
+        .entityType(getRestrictionType(parent))
+        .id(name)
+        .addTitlesItem(new LocalisableText().text(name));
   }
 
   private static NumberRestriction getNumberRestriction() {
-    return (NumberRestriction) new NumberRestriction().type(DataType.NUMBER);
+    return new NumberRestriction().type(DataType.NUMBER);
   }
 
   private static StringRestriction getStringRestriction() {
-    return (StringRestriction) new StringRestriction().type(DataType.STRING);
+    return new StringRestriction().type(DataType.STRING);
   }
 
   static Expression getBMIExpression() {

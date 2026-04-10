@@ -11,16 +11,24 @@ import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.model.QueryType;
 import care.smith.top.top_phenotypic_query.Cli;
+import care.smith.top.top_phenotypic_query.converter.csv.CSV;
+import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.util.DateUtil;
+import care.smith.top.top_phenotypic_query.util.builder.Res;
+import care.smith.top.top_phenotypic_query.util.builder.Val;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Collections;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
@@ -33,6 +41,17 @@ class CliTest extends AbstractTest {
 
   @Test
   void timeAnalysisTest() throws IOException {
+    Path config = getConfig();
+    Path data = getData();
+
+    new CommandLine(new Cli())
+        .execute("analysis", "time-analysis", "-c", config.toString(), data.toString());
+
+    Files.deleteIfExists(config);
+    Files.deleteIfExists(data);
+  }
+
+  Path getConfig() throws IOException {
     Path config = Files.createTempFile("time_analysis_config", ".yml");
     String configText =
         "timeIntervals: [ 12, 24, 36, 48, 72, 120 ]\r\n"
@@ -47,14 +66,49 @@ class CliTest extends AbstractTest {
             + "    - [ p6, p7 ]\r\n"
             + "    - [ p8, p9, p10 ]";
     Files.writeString(config, configText, StandardOpenOption.CREATE);
+    return config;
+  }
 
+  Path getData() throws IOException {
     Path data = Files.createTempFile("result_set", ".zip");
+    ZipOutputStream zipStream = new ZipOutputStream(new FileOutputStream(data.toFile()));
+    CSV csvConverter = new CSV();
 
-    new CommandLine(new Cli())
-        .execute("analysis", "time-analysis", "-c", config.toString(), data.toString());
+    zipStream.putNextEntry(new ZipEntry("data_phenotypes.csv"));
+    csvConverter.writePhenotypes(getResultSet(), phenotypes, zipStream);
 
-    Files.deleteIfExists(config);
-    Files.deleteIfExists(data);
+    zipStream.putNextEntry(new ZipEntry("metadata.csv"));
+    csvConverter.writeMetadata(phenotypes, zipStream);
+
+    zipStream.close();
+    return data;
+  }
+
+  ResultSet getResultSet() {
+    ResultSet rs = new ResultSet();
+    rs.addValue(
+        "1",
+        weight,
+        Res.geLe(DateUtil.parse("2008-01-01"), DateUtil.parse("2008-12-31")),
+        Val.of(58, DateUtil.parse("2008-01-01")));
+    rs.addValue(
+        "1",
+        weight,
+        Res.geLe(DateUtil.parse("2009-01-01"), DateUtil.parse("2009-12-31")),
+        Val.of(59, DateUtil.parse("2009-01-01")));
+    rs.addValue(
+        "1",
+        weight,
+        Res.geLe(DateUtil.parse("2010-01-01"), DateUtil.parse("2010-12-31")),
+        Val.of(60, DateUtil.parse("2010-01-01")));
+    rs.addValue("1", height, null, Val.of(1.8));
+    rs.addValue("1", bmi, null, Val.of(18.52));
+    rs.addValue("1", dabi, null, Val.of(true, DateUtil.parse("2010-01-01")));
+    rs.addValue("1", infect, null, Val.of(true, DateUtil.parse("2010-01-02")));
+    rs.addValue("1", op, null, Val.of(true, DateUtil.parse("2010-01-03")));
+    rs.addValue("1", combi, null, Val.ofTrue());
+
+    return rs;
   }
 
   @Test
