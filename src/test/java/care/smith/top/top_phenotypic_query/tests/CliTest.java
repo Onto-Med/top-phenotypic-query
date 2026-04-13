@@ -14,7 +14,6 @@ import care.smith.top.top_phenotypic_query.Cli;
 import care.smith.top.top_phenotypic_query.converter.csv.CSV;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
-import care.smith.top.top_phenotypic_query.util.builder.Res;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,9 +57,8 @@ class CliTest extends AbstractTest {
             + "\r\n"
             + "phenotypes:\r\n"
             + "\r\n"
-            + "  alg1:\r\n"
-            + "    - [ p1, p2, p3 ]\r\n"
-            + "    - [ p4, p5 ]\r\n"
+            + "  BMI:\r\n"
+            + "    - [ Weight, Height ]\r\n"
             + "\r\n"
             + "  alg2:\r\n"
             + "    - [ p6, p7 ]\r\n"
@@ -86,22 +84,11 @@ class CliTest extends AbstractTest {
 
   ResultSet getResultSet() {
     ResultSet rs = new ResultSet();
-    rs.addValue(
-        "1",
-        weight,
-        Res.geLe(DateUtil.parse("2008-01-01"), DateUtil.parse("2008-12-31")),
-        Val.of(58, DateUtil.parse("2008-01-01")));
-    rs.addValue(
-        "1",
-        weight,
-        Res.geLe(DateUtil.parse("2009-01-01"), DateUtil.parse("2009-12-31")),
-        Val.of(59, DateUtil.parse("2009-01-01")));
-    rs.addValue(
-        "1",
-        weight,
-        Res.geLe(DateUtil.parse("2010-01-01"), DateUtil.parse("2010-12-31")),
-        Val.of(60, DateUtil.parse("2010-01-01")));
-    rs.addValue("1", height, null, Val.of(1.8));
+    rs.addValue("1", weight, null, Val.of(58, DateUtil.parse("2008-01-01")));
+    rs.addValue("1", weight, null, Val.of(59, DateUtil.parse("2009-01-01")));
+    rs.addValue("1", weight, null, Val.of(60, DateUtil.parse("2010-01-01")));
+    rs.addValue("1", height, null, Val.of(1.7, DateUtil.parse("2007-01-01")));
+    rs.addValue("1", height, null, Val.of(1.8, DateUtil.parse("2010-01-11")));
     rs.addValue("1", bmi, null, Val.of(18.52));
     rs.addValue("1", dabi, null, Val.of(true, DateUtil.parse("2010-01-01")));
     rs.addValue("1", infect, null, Val.of(true, DateUtil.parse("2010-01-02")));

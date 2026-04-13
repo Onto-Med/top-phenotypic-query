@@ -4,11 +4,15 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.analysis.Analysis;
 import care.smith.top.top_phenotypic_query.analysis.AnalysisReport;
 import care.smith.top.top_phenotypic_query.analysis.PhenotypeRecord;
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 import com.google.common.collect.Multimap;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import picocli.CommandLine.Command;
 
 @Command(
@@ -23,17 +27,92 @@ public class TimeAnalysis extends Analysis {
     try {
       config = loadConfiguration(TimeAnalysisSpec.class);
     } catch (Exception e) {
-      log.trace("No configuration was provided.");
       e.printStackTrace();
       System.exit(0);
     }
 
-    Map<String, Phenotype> metadata = loadMetadataToMap(queryResultFile);
-    System.out.println(metadata.keySet());
+    if (config.isEmpty()) {
+      log.trace("No configuration was provided or the configuration is empty.");
+      System.exit(0);
+    }
 
-    Multimap<String, PhenotypeRecord> data = loadPhenotypeDataOfSubjects(queryResultFile);
-    System.out.println(data);
+    TimeAnalysisSpec conf = config.get();
+
+    Map<String, Phenotype> metadata = loadMetadataToMap(queryResultFile);
+
+    Map<String, Multimap<String, PhenotypeRecord>> data =
+        loadPhenotypeDataBySubjectsAndPhenotypes(queryResultFile);
+
+    for (String algId : conf.getPhenotypes().keySet()) {
+      Phenotype algPhe = metadata.get(algId);
+      if (algPhe == null) continue;
+      System.out.println();
+      System.out.println("Algorithm: " + algId + " :: " + algPhe.getTitles().getFirst().getText());
+      List<List<String>> pheCombis = conf.getPhenotypes().get(algId);
+      for (List<String> pheCombi : pheCombis) {
+        System.out.println();
+        System.out.println("Parameters: " + String.join("|", pheCombi));
+        System.out.println("Parameters: " + getPhenotypeCombinationTitle(pheCombi, metadata));
+        checkPhenotypeCombination(pheCombi, data);
+      }
+    }
 
     return Optional.empty();
+  }
+
+  private void checkPhenotypeCombination(
+      List<String> pheCombi, Map<String, Multimap<String, PhenotypeRecord>> data) {
+    for (String sbj : data.keySet()) {
+      System.out.println();
+      System.out.println("Subject: " + sbj);
+      checkPhenotypeCombination(pheCombi, data.get(sbj));
+    }
+  }
+
+  private void checkPhenotypeCombination(
+      List<String> pheCombi, Multimap<String, PhenotypeRecord> data) {
+
+    List<List<PhenotypeRecord>> records = new ArrayList<>();
+    List<Integer> counts = new ArrayList<>();
+    for (String pheId : pheCombi) {
+      List<PhenotypeRecord> pheValues = (List<PhenotypeRecord>) data.get(pheId);
+      records.add(pheValues);
+      counts.add(pheValues.size() - 1);
+    }
+
+    List<int[]> combinations = new ArrayList<>();
+    getCombinations(records.size() - 1, counts.stream().mapToInt(i -> i).toArray(), combinations);
+
+    for (int[] c : combinations) {
+      System.out.println(Arrays.toString(c));
+      for (int i = 0; i < c.length; i++) {
+        System.out.println(DateUtil.format(records.get(i).get(c[i]).getDateTime()));
+      }
+      System.out.println();
+    }
+  }
+
+  private String getPhenotypeCombinationTitle(
+      List<String> pheCombi, Map<String, Phenotype> metadata) {
+    return pheCombi.stream()
+        .map(p -> metadata.get(p).getTitles().getFirst().getText())
+        .collect(Collectors.joining("|"));
+  }
+
+  private void getCombinations(int loop, int[] counts, List<int[]> res) {
+    if (loop == 0) {
+      for (int i = counts[0]; i >= 0; i--) {
+        int[] combi = Arrays.copyOf(counts, counts.length);
+        combi[0] = i;
+        res.add(combi);
+      }
+      return;
+    }
+
+    for (int i = counts[loop]; i >= 0; i--) {
+      int[] newCounts = Arrays.copyOf(counts, counts.length);
+      newCounts[loop] = i;
+      getCombinations(loop - 1, newCounts, res);
+    }
   }
 }

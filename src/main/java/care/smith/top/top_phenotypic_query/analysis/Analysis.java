@@ -2,6 +2,7 @@ package care.smith.top.top_phenotypic_query.analysis;
 
 import care.smith.top.model.DataType;
 import care.smith.top.model.EntityType;
+import care.smith.top.model.LocalisableText;
 import care.smith.top.model.Phenotype;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -25,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -139,11 +141,10 @@ public abstract class Analysis implements Runnable {
   }
 
   /**
-   * Load metadata from a {@code metadata.csv} file in a query result ZIP file to a map with
-   * phenotype ids as keys.
+   * Load metadata from a {@code metadata.csv} file in a query result ZIP file.
    *
    * @param queryResultFile The query result file for which the metadata are requested.
-   * @return List of {@link Phenotype}.
+   * @return Map with phenotype ids as keys and phenotypes {@link Phenotype} as values.
    */
   protected Map<String, Phenotype> loadMetadataToMap(File queryResultFile) {
     return getMetadataStream(queryResultFile)
@@ -157,7 +158,8 @@ public abstract class Analysis implements Runnable {
                 new Phenotype(EntityType.fromValue(r.get("type")))
                     .id(r.get("phenotype"))
                     .dataType(DataType.fromValue(r.get("datatype")))
-                    .unit(r.get("unit")));
+                    .unit(r.get("unit"))
+                    .addTitlesItem(new LocalisableText().text(r.get("titles"))));
   }
 
   /**
@@ -184,12 +186,36 @@ public abstract class Analysis implements Runnable {
    * Load subject data from a {@code data_phenotypes.csv} file in a query result ZIP file.
    *
    * @param queryResultFile The query result file for which the phenotype data are requested.
-   * @return Multimap with subject ids als keys and phenotype records as values.
+   * @return Multimap with subject ids as keys and phenotype records as values.
    */
-  protected Multimap<String, PhenotypeRecord> loadPhenotypeDataOfSubjects(File queryResultFile) {
+  protected Multimap<String, PhenotypeRecord> loadPhenotypeDataBySubjects(File queryResultFile) {
     Multimap<String, PhenotypeRecord> data = ArrayListMultimap.create();
     loadPhenotypeData(queryResultFile)
         .forEach(r -> data.put(r.get("subject"), new PhenotypeRecord(r)));
+    return data;
+  }
+
+  /**
+   * Load subject data from a {@code data_phenotypes.csv} file in a query result ZIP file.
+   *
+   * @param queryResultFile The query result file for which the phenotype data are requested.
+   * @return Map with subject ids as keys and Multimaps (phenotype id : phenotype record) as values.
+   */
+  protected Map<String, Multimap<String, PhenotypeRecord>> loadPhenotypeDataBySubjectsAndPhenotypes(
+      File queryResultFile) {
+    Map<String, Multimap<String, PhenotypeRecord>> data = new HashMap<>();
+
+    for (Map<String, String> r : loadPhenotypeData(queryResultFile)) {
+      String sbj = r.get("subject");
+      String phe = r.get("phenotype");
+      Multimap<String, PhenotypeRecord> sbjData = data.get(sbj);
+      if (sbjData == null) {
+        sbjData = ArrayListMultimap.create();
+        data.put(sbj, sbjData);
+      }
+      sbjData.put(phe, new PhenotypeRecord(r));
+    }
+
     return data;
   }
 
