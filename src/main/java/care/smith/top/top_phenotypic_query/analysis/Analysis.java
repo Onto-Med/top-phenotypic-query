@@ -4,6 +4,8 @@ import care.smith.top.model.DataType;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.LocalisableText;
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.util.builder.Val;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.collect.ArrayListMultimap;
@@ -186,36 +188,20 @@ public abstract class Analysis implements Runnable {
    * Load subject data from a {@code data_phenotypes.csv} file in a query result ZIP file.
    *
    * @param queryResultFile The query result file for which the phenotype data are requested.
-   * @return Multimap with subject ids as keys and phenotype records as values.
+   * @return Map with subject ids as keys and Multimaps (phenotype id : value) as values.
    */
-  protected Multimap<String, PhenotypeRecord> loadPhenotypeDataBySubjects(File queryResultFile) {
-    Multimap<String, PhenotypeRecord> data = ArrayListMultimap.create();
-    loadPhenotypeData(queryResultFile)
-        .forEach(r -> data.put(r.get("subject"), new PhenotypeRecord(r)));
-    return data;
-  }
-
-  /**
-   * Load subject data from a {@code data_phenotypes.csv} file in a query result ZIP file.
-   *
-   * @param queryResultFile The query result file for which the phenotype data are requested.
-   * @return Map with subject ids as keys and Multimaps (phenotype id : phenotype record) as values.
-   */
-  protected Map<String, Multimap<String, PhenotypeRecord>> loadPhenotypeDataBySubjectsAndPhenotypes(
-      File queryResultFile) {
-    Map<String, Multimap<String, PhenotypeRecord>> data = new HashMap<>();
-
+  protected Map<String, Multimap<String, Value>> loadPhenotypeDataToMap(File queryResultFile) {
+    Map<String, Multimap<String, Value>> data = new HashMap<>();
     for (Map<String, String> r : loadPhenotypeData(queryResultFile)) {
       String sbj = r.get("subject");
       String phe = r.get("phenotype");
-      Multimap<String, PhenotypeRecord> sbjData = data.get(sbj);
+      Multimap<String, Value> sbjData = data.get(sbj);
       if (sbjData == null) {
         sbjData = ArrayListMultimap.create();
         data.put(sbj, sbjData);
       }
-      sbjData.put(phe, new PhenotypeRecord(r));
+      sbjData.put(phe, Val.of(r));
     }
-
     return data;
   }
 

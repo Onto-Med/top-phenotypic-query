@@ -1,9 +1,9 @@
 package care.smith.top.top_phenotypic_query.analysis.time_analysis;
 
 import care.smith.top.model.Phenotype;
+import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.analysis.Analysis;
 import care.smith.top.top_phenotypic_query.analysis.AnalysisReport;
-import care.smith.top.top_phenotypic_query.analysis.PhenotypeRecord;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import com.google.common.collect.Multimap;
 import java.io.File;
@@ -40,8 +40,8 @@ public class TimeAnalysis extends Analysis {
 
     Map<String, Phenotype> metadata = loadMetadataToMap(queryResultFile);
 
-    Map<String, Multimap<String, PhenotypeRecord>> data =
-        loadPhenotypeDataBySubjectsAndPhenotypes(queryResultFile);
+    Map<String, Multimap<String, Value>> data =
+        loadPhenotypeDataToMap(queryResultFile);
 
     for (String algId : conf.getPhenotypes().keySet()) {
       Phenotype algPhe = metadata.get(algId);
@@ -61,7 +61,7 @@ public class TimeAnalysis extends Analysis {
   }
 
   private void checkPhenotypeCombination(
-      List<String> pheCombi, Map<String, Multimap<String, PhenotypeRecord>> data) {
+      List<String> pheCombi, Map<String, Multimap<String, Value>> data) {
     for (String sbj : data.keySet()) {
       System.out.println();
       System.out.println("Subject: " + sbj);
@@ -69,13 +69,12 @@ public class TimeAnalysis extends Analysis {
     }
   }
 
-  private void checkPhenotypeCombination(
-      List<String> pheCombi, Multimap<String, PhenotypeRecord> data) {
+  private void checkPhenotypeCombination(List<String> pheCombi, Multimap<String, Value> data) {
 
-    List<List<PhenotypeRecord>> records = new ArrayList<>();
+    List<List<Value>> records = new ArrayList<>();
     List<Integer> counts = new ArrayList<>();
     for (String pheId : pheCombi) {
-      List<PhenotypeRecord> pheValues = (List<PhenotypeRecord>) data.get(pheId);
+      List<Value> pheValues = (List<Value>) data.get(pheId);
       records.add(pheValues);
       counts.add(pheValues.size() - 1);
     }
