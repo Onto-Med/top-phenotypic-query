@@ -284,4 +284,13 @@ public class Values {
     if (fields == null) return null;
     return fields.get(fieldName);
   }
+
+  public static boolean hasNoDateTime(Value v) {
+    return v.getDateTime() == null && v.getStartDateTime() == null && v.getEndDateTime() == null;
+  }
+
+  public static BigDecimal getDistanceInHours(Value v1, Value v2) {
+    return DateUtil.getDistanceInHours(
+        v1.getStartDateTime(), v1.getEndDateTime(), v2.getStartDateTime(), v2.getEndDateTime());
+  }
 }

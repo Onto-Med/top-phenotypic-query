@@ -11,20 +11,20 @@ public class TimeAnalysisSpec {
   @JsonProperty private List<Integer> timeIntervals = new ArrayList<>();
   @JsonProperty private Map<String, List<List<String>>> phenotypes = new HashMap<>();
 
-  public List<Integer> getTimeIntervals() {
+  protected List<Integer> getTimeIntervals() {
     return timeIntervals;
   }
 
-  public TimeAnalysisSpec timeIntervals(List<Integer> timeIntervals) {
+  protected TimeAnalysisSpec timeIntervals(List<Integer> timeIntervals) {
     this.timeIntervals = timeIntervals;
     return this;
   }
 
-  public Map<String, List<List<String>>> getPhenotypes() {
+  protected Map<String, List<List<String>>> getPhenotypes() {
     return phenotypes;
   }
 
-  public TimeAnalysisSpec phenotypes(Map<String, List<List<String>>> phenotypes) {
+  protected TimeAnalysisSpec phenotypes(Map<String, List<List<String>>> phenotypes) {
     this.phenotypes = phenotypes;
     return this;
   }

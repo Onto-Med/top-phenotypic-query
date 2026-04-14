@@ -123,14 +123,20 @@ public class Val {
     LocalDateTime end = (Strings.isBlank(e)) ? null : DateUtil.parse(e);
     LocalDateTime date = (Strings.isBlank(d)) ? null : DateUtil.parse(d);
 
+    if (start != null && end == null) end = DateUtil.parse("3000-01-01");
+    if (start == null && end != null) start = DateUtil.parse("1900-01-01");
+    if (start == null && end == null && date != null) {
+      start = date;
+      end = date;
+    }
+
     String v = null;
     if (!Strings.isBlank(v = record.get("boolean_value")))
-      return of(Boolean.valueOf(v), date, start, end);
-    if (!Strings.isBlank(v = record.get("number_value")))
-      return of(new BigDecimal(v), date, start, end);
+      return of(Boolean.valueOf(v), start, end);
+    if (!Strings.isBlank(v = record.get("number_value"))) return of(new BigDecimal(v), start, end);
     if (!Strings.isBlank(v = record.get("date_time_value")))
-      return of(DateUtil.parse(v), date, start, end);
-    if (!Strings.isBlank(v = record.get("string_value"))) return of(v, date, start, end);
+      return of(DateUtil.parse(v), start, end);
+    if (!Strings.isBlank(v = record.get("string_value"))) return of(v, start, end);
 
     return null;
   }

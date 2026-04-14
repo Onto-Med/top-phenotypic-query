@@ -7,6 +7,7 @@ import care.smith.top.top_phenotypic_query.analysis.AnalysisReport;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import com.google.common.collect.Multimap;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,8 +41,7 @@ public class TimeAnalysis extends Analysis {
 
     Map<String, Phenotype> metadata = loadMetadataToMap(queryResultFile);
 
-    Map<String, Multimap<String, Value>> data =
-        loadPhenotypeDataToMap(queryResultFile);
+    Map<String, Multimap<String, Value>> data = loadPhenotypeDataToMap(queryResultFile);
 
     for (String algId : conf.getPhenotypes().keySet()) {
       Phenotype algPhe = metadata.get(algId);
@@ -82,13 +82,21 @@ public class TimeAnalysis extends Analysis {
     List<int[]> combinations = new ArrayList<>();
     getCombinations(records.size() - 1, counts.stream().mapToInt(i -> i).toArray(), combinations);
 
+    BigDecimal min = null;
     for (int[] c : combinations) {
       System.out.println(Arrays.toString(c));
+      PhenotypeCombination combi = new PhenotypeCombination();
       for (int i = 0; i < c.length; i++) {
-        System.out.println(DateUtil.format(records.get(i).get(c[i]).getDateTime()));
+        System.out.println(DateUtil.format(records.get(i).get(c[i]).getStartDateTime()));
+        combi.add(records.get(i).get(c[i]));
       }
+      BigDecimal time = combi.getTimeInterval();
+      if (min == null || time.compareTo(min) < 0) min = time;
+      System.out.println(time);
       System.out.println();
     }
+
+    System.out.println("Min: " + min);
   }
 
   private String getPhenotypeCombinationTitle(

@@ -87,8 +87,8 @@ class CliTest extends AbstractTest {
     rs.addValue("1", weight, null, Val.of(58, DateUtil.parse("2008-01-01")));
     rs.addValue("1", weight, null, Val.of(59, DateUtil.parse("2009-01-01")));
     rs.addValue("1", weight, null, Val.of(60, DateUtil.parse("2010-01-01")));
-    rs.addValue("1", height, null, Val.of(1.7, DateUtil.parse("2007-01-01")));
-    rs.addValue("1", height, null, Val.of(1.8, DateUtil.parse("2010-01-11")));
+    rs.addValue("1", height, null, Val.of(1.7, DateUtil.parse("2008-01-03")));
+    rs.addValue("1", height, null, Val.of(1.8, DateUtil.parse("2010-01-05")));
     rs.addValue("1", bmi, null, Val.of(18.52));
     rs.addValue("1", dabi, null, Val.of(true, DateUtil.parse("2010-01-01")));
     rs.addValue("1", infect, null, Val.of(true, DateUtil.parse("2010-01-02")));
