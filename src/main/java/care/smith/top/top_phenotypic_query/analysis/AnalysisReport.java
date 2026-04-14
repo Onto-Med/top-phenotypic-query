@@ -4,8 +4,7 @@ import com.opencsv.bean.CsvBindByName;
 
 public class AnalysisReport {
 
-  @CsvBindByName private String modelId;
-  @CsvBindByName private String modelTitle;
+  @CsvBindByName private String model;
   @CsvBindByName private String algorithmId;
   @CsvBindByName private String algorithmTitle;
   @CsvBindByName private String phenotypeId;
@@ -13,21 +12,12 @@ public class AnalysisReport {
   @CsvBindByName private String resultName;
   @CsvBindByName private Object resultValue;
 
-  public String getModelId() {
-    return modelId;
+  public String getModel() {
+    return model;
   }
 
-  public AnalysisReport modelId(String modelId) {
-    this.modelId = modelId;
-    return this;
-  }
-
-  public String getModelTitle() {
-    return modelTitle;
-  }
-
-  public AnalysisReport modelTitle(String modelTitle) {
-    this.modelTitle = modelTitle;
+  public AnalysisReport model(String model) {
+    this.model = model;
     return this;
   }
 
@@ -87,10 +77,8 @@ public class AnalysisReport {
 
   @Override
   public String toString() {
-    return "AnalysisReport [modelId="
-        + modelId
-        + ", modelTitle="
-        + modelTitle
+    return "AnalysisReport [model="
+        + model
         + ", algorithmId="
         + algorithmId
         + ", algorithmTitle="
