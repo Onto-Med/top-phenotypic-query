@@ -7,7 +7,6 @@ import care.smith.top.top_phenotypic_query.analysis.AnalysisReport;
 import com.google.common.collect.Multimap;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,8 +17,6 @@ import picocli.CommandLine.Command;
     description = "Calculate the time intervals between specified phenotypes.",
     mixinStandardHelpOptions = true)
 public class TimeAnalysis extends Analysis {
-
-  private Map<String, TimeAnalysisCalc> calculations = new HashMap<>();
 
   @Override
   protected Optional<List<AnalysisReport>> analyse(File queryResultFile) {
