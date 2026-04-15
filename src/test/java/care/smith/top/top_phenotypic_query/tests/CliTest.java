@@ -43,11 +43,21 @@ class CliTest extends AbstractTest {
     Path config = getConfig();
     Path data = getData();
 
+    Path report = Files.createTempFile("time_analysis_report", ".csv");
+
     new CommandLine(new Cli())
-        .execute("analysis", "time-analysis", "-c", config.toString(), data.toString());
+        .execute(
+            "analysis",
+            "time-analysis",
+            "-c",
+            config.toString(),
+            "-o",
+            report.toString(),
+            data.toString());
 
     Files.deleteIfExists(config);
     Files.deleteIfExists(data);
+    Files.deleteIfExists(report);
   }
 
   Path getConfig() throws IOException {
@@ -94,6 +104,26 @@ class CliTest extends AbstractTest {
     rs.addValue("1", infect, null, Val.of(true, DateUtil.parse("2010-01-02")));
     rs.addValue("1", op, null, Val.of(true, DateUtil.parse("2010-01-03")));
     rs.addValue("1", combi, null, Val.ofTrue());
+    rs.addValue("2", weight, null, Val.of(58, DateUtil.parse("2008-01-01")));
+    rs.addValue("2", weight, null, Val.of(59, DateUtil.parse("2009-01-01")));
+    rs.addValue("2", weight, null, Val.of(60, DateUtil.parse("2010-01-01")));
+    rs.addValue("2", height, null, Val.of(1.7, DateUtil.parse("2008-01-03")));
+    rs.addValue("2", height, null, Val.of(1.8, DateUtil.parse("2010-01-05")));
+    rs.addValue("2", bmi, null, Val.of(18.52));
+    rs.addValue("2", dabi, null, Val.of(true, DateUtil.parse("2010-01-01")));
+    rs.addValue("2", infect, null, Val.of(true, DateUtil.parse("2010-01-02")));
+    rs.addValue("2", op, null, Val.of(true, DateUtil.parse("2010-01-03")));
+    rs.addValue("2", combi, null, Val.ofTrue());
+    rs.addValue("3", weight, null, Val.of(58, DateUtil.parse("2008-01-01")));
+    rs.addValue("3", weight, null, Val.of(59, DateUtil.parse("2009-01-01")));
+    rs.addValue("3", weight, null, Val.of(60, DateUtil.parse("2010-01-01")));
+    rs.addValue("3", height, null, Val.of(1.7));
+    rs.addValue("3", height, null, Val.of(1.8));
+    rs.addValue("3", bmi, null, Val.of(18.52));
+    rs.addValue("3", dabi, null, Val.of(true, DateUtil.parse("2010-01-01")));
+    rs.addValue("3", infect, null, Val.of(true, DateUtil.parse("2010-01-02")));
+    rs.addValue("3", op, null, Val.of(true, DateUtil.parse("2010-01-03")));
+    rs.addValue("3", combi, null, Val.ofTrue());
 
     return rs;
   }

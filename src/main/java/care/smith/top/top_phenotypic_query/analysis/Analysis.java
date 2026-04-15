@@ -54,7 +54,7 @@ public abstract class Analysis implements Runnable {
 
   @Option(
       names = {"-o", "--output"},
-      paramLabel = "<output ZIP>",
+      paramLabel = "<output CSV>",
       description =
           "Location where resulting out file will be stored. "
               + "The file should have a .csv extension.")
@@ -78,25 +78,22 @@ public abstract class Analysis implements Runnable {
    */
   @Override
   public void run() {
-
-    Stream<Optional<List<AnalysisReport>>> results =
+    List<AnalysisReport> reports =
         inputFiles.stream()
-            .map(f -> analyse(f).map(l -> l.stream().map(r -> r.model(f.getName())).toList()));
+            .map(f -> analyse(f).map(l -> l.stream().map(r -> r.model(f.getName())).toList()))
+            .flatMap(Optional::stream)
+            .flatMap(List::stream)
+            .toList();
 
-    if (results.anyMatch(Optional::isPresent)) {
-      List<AnalysisReport> reports =
-          results.flatMap(Optional::stream).flatMap(List::stream).toList();
+    if (reports.isEmpty()) return;
 
-      if (outputFile.isPresent()) {
-        try {
-          writeReports(outputFile.get(), reports);
-        } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException | IOException e) {
-          e.printStackTrace();
-        }
-      } else {
-        System.out.println(reports);
+    if (outputFile.isPresent()) {
+      try {
+        writeReports(outputFile.get(), reports);
+      } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException | IOException e) {
+        e.printStackTrace();
       }
-    }
+    } else System.out.println(reports);
   }
 
   /**
