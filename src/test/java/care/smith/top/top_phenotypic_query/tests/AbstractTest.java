@@ -73,9 +73,13 @@ public abstract class AbstractTest {
   protected static Phenotype finding = getPhenotype("Finding", getFindingExpression());
   protected static Phenotype overWeight = getRestriction("Overweight", finding, 1);
   protected static Phenotype lightAndHigh =
-      new Phe("LightAndHigh").titleEn("LightAndHigh").expression(And.of(light, high)).bool().get();
+      new Phe("LightAndHigh")
+          .titleEn("LightAndHigh")
+          .expression(And.of(light, high))
+          .get()
+          .dataType(DataType.BOOLEAN);
   protected static Phenotype dabi =
-      new Phe("Dabigatran", "http://fhir.de/CodeSystem/bfarm/atc", "B01AE07")
+      new Phe("Dabi", "http://fhir.de/CodeSystem/bfarm/atc", "B01AE07")
           .titleDe("Dabi")
           .itemType(ItemType.MEDICATION)
           .bool()
@@ -98,6 +102,28 @@ public abstract class AbstractTest {
       new Phe("Combi").expression(And.of(dabi, infect, op)).titleEn("Combi").bool().get();
 
   protected static Entity[] phenotypes = {
+    age,
+    young,
+    old,
+    sex,
+    female,
+    male,
+    weight,
+    height,
+    bmi,
+    bmi19_25,
+    bmi19_27,
+    bmi25_30,
+    bmi27_30,
+    finding,
+    overWeight,
+    light,
+    heavy,
+    high,
+    lightAndHigh
+  };
+
+  protected static Entity[] phenotypes2 = {
     age,
     young,
     old,

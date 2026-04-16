@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import care.smith.top.model.Entity;
+import care.smith.top.model.Phenotype;
 import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.QueryCriterion;
@@ -24,6 +25,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -69,10 +71,11 @@ class CliTest extends AbstractTest {
             + "\r\n"
             + "  BMI:\r\n"
             + "    - [ Weight, Height ]\r\n"
+            + "    - [ Dabi, Infect, Op ]\r\n"
             + "\r\n"
-            + "  alg2:\r\n"
-            + "    - [ p6, p7 ]\r\n"
-            + "    - [ p8, p9, p10 ]";
+            + "  Combi:\r\n"
+            + "    - [ Weight, Height ]\r\n"
+            + "    - [ Dabi, Infect, Op ]\r\n";
     Files.writeString(config, configText, StandardOpenOption.CREATE);
     return config;
   }
@@ -86,46 +89,46 @@ class CliTest extends AbstractTest {
     csvConverter.writePhenotypes(getResultSet(), phenotypes, zipStream);
 
     zipStream.putNextEntry(new ZipEntry("metadata.csv"));
-    csvConverter.writeMetadata(phenotypes, zipStream);
+    csvConverter.writeMetadata(phenotypes2, zipStream);
 
     zipStream.close();
     return data;
   }
 
+  private ResultSet rs;
+
   ResultSet getResultSet() {
-    ResultSet rs = new ResultSet();
-    rs.addValue("1", weight, null, Val.of(58, DateUtil.parse("2008-01-01")));
-    rs.addValue("1", weight, null, Val.of(59, DateUtil.parse("2009-01-01")));
-    rs.addValue("1", weight, null, Val.of(60, DateUtil.parse("2010-01-01")));
-    rs.addValue("1", height, null, Val.of(1.7, DateUtil.parse("2008-01-03")));
-    rs.addValue("1", height, null, Val.of(1.8, DateUtil.parse("2010-01-05")));
-    rs.addValue("1", bmi, null, Val.of(18.52));
-    rs.addValue("1", dabi, null, Val.of(true, DateUtil.parse("2010-01-01")));
-    rs.addValue("1", infect, null, Val.of(true, DateUtil.parse("2010-01-02")));
-    rs.addValue("1", op, null, Val.of(true, DateUtil.parse("2010-01-03")));
-    rs.addValue("1", combi, null, Val.ofTrue());
-    rs.addValue("2", weight, null, Val.of(58, DateUtil.parse("2008-01-01")));
-    rs.addValue("2", weight, null, Val.of(59, DateUtil.parse("2009-01-01")));
-    rs.addValue("2", weight, null, Val.of(60, DateUtil.parse("2010-01-01")));
-    rs.addValue("2", height, null, Val.of(1.7, DateUtil.parse("2008-01-03")));
-    rs.addValue("2", height, null, Val.of(1.8, DateUtil.parse("2010-01-05")));
-    rs.addValue("2", bmi, null, Val.of(18.52));
-    rs.addValue("2", dabi, null, Val.of(true, DateUtil.parse("2010-01-01")));
-    rs.addValue("2", infect, null, Val.of(true, DateUtil.parse("2010-01-02")));
-    rs.addValue("2", op, null, Val.of(true, DateUtil.parse("2010-01-03")));
-    rs.addValue("2", combi, null, Val.ofTrue());
-    rs.addValue("3", weight, null, Val.of(58, DateUtil.parse("2008-01-01")));
-    rs.addValue("3", weight, null, Val.of(59, DateUtil.parse("2009-01-01")));
-    rs.addValue("3", weight, null, Val.of(60, DateUtil.parse("2010-01-01")));
-    rs.addValue("3", height, null, Val.of(1.7));
-    rs.addValue("3", height, null, Val.of(1.8));
-    rs.addValue("3", bmi, null, Val.of(18.52));
-    rs.addValue("3", dabi, null, Val.of(true, DateUtil.parse("2010-01-01")));
-    rs.addValue("3", infect, null, Val.of(true, DateUtil.parse("2010-01-02")));
-    rs.addValue("3", op, null, Val.of(true, DateUtil.parse("2010-01-03")));
-    rs.addValue("3", combi, null, Val.ofTrue());
+    rs = new ResultSet();
+
+    addNum("1", weight, "2008-01-01", null, null);
+    addNum("1", weight, "2009-01-01", null, null);
+    addNum("1", weight, "2010-01-01", null, null);
+    addNum("1", height, "2008-01-03", null, null);
+    addNum("1", height, "2010-01-05", null, null);
+    addBool("1", dabi, "2010-01-05", null, null);
+    addBool("1", dabi, "2010-01-06", null, null);
+    addBool("1", dabi, "2010-01-07", null, null);
+    addBool("1", infect, "2010-02-07", null, null);
+    addBool("1", infect, "2010-03-07", null, null);
+    addBool("1", op, "2010-03-08", null, null);
+    addBool("1", op, "2010-03-09", null, null);
+    addBool("1", op, "2010-03-10", null, null);
 
     return rs;
+  }
+
+  void addNum(String patId, Phenotype phe, String date, String start, String end) {
+    rs.addValue(
+        patId, phe, null, Val.of(1, getDateTime(date), getDateTime(start), getDateTime(end)));
+  }
+
+  void addBool(String patId, Phenotype phe, String date, String start, String end) {
+    rs.addValue(
+        patId, phe, null, Val.of(true, getDateTime(date), getDateTime(start), getDateTime(end)));
+  }
+
+  LocalDateTime getDateTime(String date) {
+    return (date == null) ? null : DateUtil.parse(date);
   }
 
   @Test

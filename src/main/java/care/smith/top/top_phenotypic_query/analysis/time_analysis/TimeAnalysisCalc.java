@@ -1,6 +1,5 @@
 package care.smith.top.top_phenotypic_query.analysis.time_analysis;
 
-import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.analysis.AnalysisReport;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
@@ -12,41 +11,38 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 public class TimeAnalysisCalc {
 
   private List<String> pheCombi;
-
-  private String algId;
-  private String algTitle;
   private String pheId;
   private String pheTitle;
-
+  private String algId;
+  private String algTitle;
   private Map<String, Multimap<String, Value>> data;
   private TreeMap<BigDecimal, Integer> timeIntervals = new TreeMap<>();
   private List<AnalysisReport> report;
 
-  private int countOver = 0;
-  private int countNull = 0;
+  private int countGreaterEqual = 0;
+  private int countNoValue = 0;
+  private int countNoTimestamp = 0;
 
   public TimeAnalysisCalc(
-      List<String> phenotypeCombi,
-      Phenotype algorithm,
-      Map<String, Phenotype> metadata,
+      List<String> pheCombi,
+      String pheCombiId,
+      String pheCombiTitle,
+      String algId,
+      String algTitle,
       Map<String, Multimap<String, Value>> data,
-      List<Integer> timeIntervals,
+      TreeMap<BigDecimal, Integer> timeIntervals,
       List<AnalysisReport> report) {
-    this.pheCombi = phenotypeCombi;
-    this.algId = algorithm.getId();
-    this.algTitle = algorithm.getTitles().getFirst().getText();
-    this.pheId = String.join("|", pheCombi);
-    this.pheTitle =
-        pheCombi.stream()
-            .map(p -> metadata.get(p).getTitles().getFirst().getText())
-            .collect(Collectors.joining("|"));
+    this.pheCombi = pheCombi;
+    this.pheId = pheCombiId;
+    this.pheTitle = pheCombiTitle;
+    this.algId = algId;
+    this.algTitle = algTitle;
     this.data = data;
-    for (Integer time : timeIntervals) this.timeIntervals.put(new BigDecimal(time), 0);
+    this.timeIntervals = timeIntervals;
     this.report = report;
   }
 
@@ -54,7 +50,7 @@ public class TimeAnalysisCalc {
     System.out.println();
     System.out.println("Algorithm: " + algId);
     System.out.println();
-    System.out.println("Parameters: " + pheId);
+    System.out.println("Phenotypes: " + pheId);
 
     for (String sbj : data.keySet()) {
       System.out.println();
@@ -69,6 +65,10 @@ public class TimeAnalysisCalc {
     List<Integer> counts = new ArrayList<>();
     for (String pheId : pheCombi) {
       List<Value> pheValues = (List<Value>) data.get(pheId);
+      if (pheValues == null || pheValues.isEmpty()) {
+        countNoValue++;
+        return;
+      }
       records.add(pheValues);
       counts.add(pheValues.size() - 1);
     }
@@ -87,7 +87,7 @@ public class TimeAnalysisCalc {
         combi.add(records.get(i).get(c[i]));
       }
       BigDecimal time = combi.getTimeInterval();
-      if (minTime == null || time.compareTo(minTime) < 0) minTime = time;
+      if (time != null && (minTime == null || time.compareTo(minTime) < 0)) minTime = time;
       System.out.println(time);
       System.out.println();
     }
@@ -116,7 +116,7 @@ public class TimeAnalysisCalc {
 
   private void checkTimeInterval(BigDecimal time) {
     if (time == null) {
-      countNull++;
+      countNoTimestamp++;
       return;
     }
 
@@ -127,14 +127,15 @@ public class TimeAnalysisCalc {
       }
     }
 
-    countOver++;
+    countGreaterEqual++;
   }
 
   private void report() {
     for (BigDecimal time : timeIntervals.keySet())
       getReport(time.toString(), timeIntervals.get(time));
-    getReport("greater equal", countOver);
-    getReport("no timestamp", countNull);
+    getReport("greater equal", countGreaterEqual);
+    getReport("no value", countNoValue);
+    getReport("no timestamp", countNoTimestamp);
   }
 
   private void getReport(String name, Object value) {
