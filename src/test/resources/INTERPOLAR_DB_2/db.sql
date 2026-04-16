@@ -10,11 +10,11 @@ CREATE TABLE db2dataprocessor_out.v_patient
 
 CREATE TABLE db2dataprocessor_out.v_encounter
 (
-    enc_id                      varchar NOT NULL,
-    enc_patient_ref             varchar NULL,
-    enc_class_code              varchar NULL,
-    enc_period_start            timestamp NULL,
-    enc_period_end              timestamp NULL,
+    enc_id           varchar NOT NULL,
+    enc_patient_ref  varchar NULL,
+    enc_class_code   varchar NULL,
+    enc_period_start timestamp NULL,
+    enc_period_end   timestamp NULL,
     PRIMARY KEY (enc_id)
 );
 
@@ -53,6 +53,8 @@ CREATE TABLE db2dataprocessor_out.v_procedure
     proc_code_system              varchar NULL,
     proc_code_code                varchar NULL,
     proc_performeddatetime        timestamp NULL,
+    proc_performedperiod_start    timestamp NULL,
+    proc_performedperiod_end      timestamp NULL,
     PRIMARY KEY (proc_id)
 );
 
@@ -70,6 +72,8 @@ CREATE TABLE db2dataprocessor_out.v_medicationadministration
     medadm_encounter_calculated_ref varchar NULL,
     medadm_patient_ref              varchar NULL,
     medadm_effectivedatetime        timestamp NULL,
+    medadm_effectiveperiod_start    timestamp NULL,
+    medadm_effectiveperiod_end      timestamp NULL,
     medadm_medicationreference_ref  varchar NULL,
     PRIMARY KEY (medadm_id)
 );
@@ -81,6 +85,8 @@ CREATE TABLE db2dataprocessor_out.v_medicationstatement
     medstat_patient_ref              varchar NULL,
     medstat_medicationreference_ref  varchar NULL,
     medstat_effectivedatetime        timestamp NULL,
+    medstat_effectiveperiod_start    timestamp NULL,
+    medstat_effectiveperiod_end      timestamp NULL,
     PRIMARY KEY (medstat_id)
 );
 
