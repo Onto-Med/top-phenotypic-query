@@ -44,7 +44,6 @@ class CliTest extends AbstractTest {
   void timeAnalysisTest() throws IOException {
     Path config = getConfig();
     Path data = getData();
-
     Path report = Files.createTempFile("time_analysis_report", ".csv");
 
     new CommandLine(new Cli())
@@ -56,6 +55,65 @@ class CliTest extends AbstractTest {
             "-o",
             report.toString(),
             data.toString());
+
+    String expectedReport =
+        "\"ALGORITHMID\",\"ALGORITHMTITLE\",\"MODEL\",\"PHENOTYPEID\",\"PHENOTYPETITLE\",\"RESULTNAME\",\"RESULTVALUE\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Weight-Height\",\"Weight-Height\",\"12\",\"2\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Weight-Height\",\"Weight-Height\",\"24\",\"1\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Weight-Height\",\"Weight-Height\",\"36\",\"0\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Weight-Height\",\"Weight-Height\",\"48\",\"0\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Weight-Height\",\"Weight-Height\",\"72\",\"0\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Weight-Height\",\"Weight-Height\",\"120\",\"0\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Weight-Height\",\"Weight-Height\",\"greater equal\",\"0\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Weight-Height\",\"Weight-Height\",\"no value\",\"1\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Weight-Height\",\"Weight-Height\",\"no timestamp\",\"0\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"12\",\"1\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"24\",\"0\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"36\",\"0\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"48\",\"0\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"72\",\"0\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"120\",\"1\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"greater equal\",\"1\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"no value\",\"0\"\n"
+            + "\"BMI\",\"BMI\",\""
+            + data.getFileName()
+            + "\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"no timestamp\",\"1\"\n";
+
+    assertEquals(expectedReport, Files.readString(report));
 
     Files.deleteIfExists(config);
     Files.deleteIfExists(data);
@@ -70,10 +128,6 @@ class CliTest extends AbstractTest {
             + "phenotypes:\r\n"
             + "\r\n"
             + "  BMI:\r\n"
-            + "    - [ Weight, Height ]\r\n"
-            + "    - [ Dabi, Infect, Op ]\r\n"
-            + "\r\n"
-            + "  Combi:\r\n"
             + "    - [ Weight, Height ]\r\n"
             + "    - [ Dabi, Infect, Op ]\r\n";
     Files.writeString(config, configText, StandardOpenOption.CREATE);
@@ -100,19 +154,59 @@ class CliTest extends AbstractTest {
   ResultSet getResultSet() {
     rs = new ResultSet();
 
-    addNum("1", weight, "2008-01-01", null, null);
-    addNum("1", weight, "2009-01-01", null, null);
-    addNum("1", weight, "2010-01-01", null, null);
-    addNum("1", height, "2008-01-03", null, null);
-    addNum("1", height, "2010-01-05", null, null);
+    addNum("1", weight, "2010-01-03", null, null);
+    addNum("1", weight, "2010-01-01T18:00", null, null);
+    addNum("1", weight, "2010-01-02", null, null);
+    addNum("1", height, "2010-01-04", null, null);
+    addNum("1", height, "2010-01-01T07:00", null, null);
     addBool("1", dabi, "2010-01-05", null, null);
     addBool("1", dabi, "2010-01-06", null, null);
     addBool("1", dabi, "2010-01-07", null, null);
-    addBool("1", infect, "2010-02-07", null, null);
-    addBool("1", infect, "2010-03-07", null, null);
-    addBool("1", op, "2010-03-08", null, null);
-    addBool("1", op, "2010-03-09", null, null);
-    addBool("1", op, "2010-03-10", null, null);
+    addBool("1", infect, "2010-01-05", null, null);
+    addBool("1", infect, "2010-01-06", null, null);
+    addBool("1", op, "2010-01-05", null, null);
+    addBool("1", op, "2010-01-06", null, null);
+    addBool("1", op, "2010-01-07", null, null);
+
+    addNum("2", weight, null, "2010-01-03", null);
+    addNum("2", weight, null, null, "2010-01-01T18:00");
+    addNum("2", weight, null, "2010-01-02", "2010-01-03");
+    addNum("2", height, "2010-01-01T21:00", null, null);
+    addNum("2", height, null, "2010-01-01T20:00", "2010-01-01T21:00");
+    addBool("2", dabi, null, null, "2010-01-07");
+    addBool("2", dabi, null, null, "2010-01-07");
+    addBool("2", dabi, null, null, "2010-01-07");
+    addBool("2", infect, null, "2010-01-08", "2010-01-09");
+    addBool("2", infect, null, "2010-01-08", "2010-01-09");
+    addBool("2", op, null, "2010-01-11", null);
+    addBool("2", op, null, "2010-01-11", null);
+    addBool("2", op, null, "2010-01-11", null);
+
+    addNum("3", weight, "2010-01-03", null, null);
+    addNum("3", weight, "2010-01-01T18:00", null, null);
+    addNum("3", weight, "2010-01-02", null, null);
+    addBool("3", dabi, "2010-01-05", null, null);
+    addBool("3", dabi, "2010-01-06", null, null);
+    addBool("3", dabi, "2010-01-07", null, null);
+    addBool("3", infect, "2010-02-05", null, null);
+    addBool("3", infect, "2010-02-06", null, null);
+    addBool("3", op, "2010-03-05", null, null);
+    addBool("3", op, "2010-03-06", null, null);
+    addBool("3", op, "2010-03-07", null, null);
+
+    addNum("4", weight, "2010-01-03", null, null);
+    addNum("4", weight, "2010-01-01T18:00", null, null);
+    addNum("4", weight, "2010-01-02", null, null);
+    addNum("4", height, "2010-01-04", null, null);
+    addNum("4", height, "2010-01-01T06:00", null, null);
+    addBool("4", dabi, "2010-01-05", null, null);
+    addBool("4", dabi, "2010-01-06", null, null);
+    addBool("4", dabi, "2010-01-07", null, null);
+    addBool("4", infect, null, null, null);
+    addBool("4", infect, null, null, null);
+    addBool("4", op, "2010-01-05", null, null);
+    addBool("4", op, "2010-01-06", null, null);
+    addBool("4", op, "2010-01-07", null, null);
 
     return rs;
   }

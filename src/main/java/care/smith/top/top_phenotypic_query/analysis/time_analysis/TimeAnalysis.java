@@ -14,6 +14,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
 
 @Command(
@@ -21,6 +23,8 @@ import picocli.CommandLine.Command;
     description = "Calculate the time intervals between specified phenotypes.",
     mixinStandardHelpOptions = true)
 public class TimeAnalysis extends Analysis {
+
+  private Logger log = LoggerFactory.getLogger(TimeAnalysis.class);
 
   @Override
   protected Optional<List<AnalysisReport>> analyse(File queryResultFile) {
@@ -33,7 +37,7 @@ public class TimeAnalysis extends Analysis {
     }
 
     if (config.isEmpty()) {
-      log.trace("No configuration was provided or the configuration is empty.");
+      log.warn("No configuration was provided or the configuration is empty.");
       System.exit(0);
     }
 
@@ -49,7 +53,7 @@ public class TimeAnalysis extends Analysis {
       for (List<String> pheCombi : conf.getPhenotypes().get(algId)) {
         String pheCombiId = String.join("-", pheCombi);
         if (pheCombi.stream().map(p -> metadata.get(p)).anyMatch(Objects::isNull))
-          log.trace(
+          log.warn(
               String.format(
                   "Algorithm %s does not contain phenotype combination %s", algId, pheCombiId));
         else
