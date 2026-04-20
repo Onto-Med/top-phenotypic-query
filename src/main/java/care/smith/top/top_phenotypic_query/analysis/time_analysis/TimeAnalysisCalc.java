@@ -62,6 +62,7 @@ public class TimeAnalysisCalc {
     List<List<Value>> sbjRecord = new ArrayList<>();
     List<Integer> counts = new ArrayList<>();
     for (String pheId : pheCombi) {
+      if (pheId == null) continue;
       List<Value> pheValues = (List<Value>) data.get(pheId);
       if (pheValues == null || pheValues.isEmpty()) {
         countNoValue++;

@@ -33,12 +33,12 @@ public class TimeAnalysis extends Analysis {
       config = loadConfiguration(TimeAnalysisSpec.class);
     } catch (Exception e) {
       e.printStackTrace();
-      System.exit(0);
+      return Optional.empty();
     }
 
     if (config.isEmpty()) {
       log.warn("No configuration was provided or the configuration is empty.");
-      System.exit(0);
+      return Optional.empty();
     }
 
     List<AnalysisReport> report = new ArrayList<>();

@@ -192,12 +192,16 @@ public abstract class Analysis implements Runnable {
     for (Map<String, String> r : loadPhenotypeData(queryResultFile)) {
       String sbj = r.get("subject");
       String phe = r.get("phenotype");
+      Value value = Val.of(r);
+      if (sbj == null || phe == null || value == null) {
+        continue;
+      }
       Multimap<String, Value> sbjData = data.get(sbj);
       if (sbjData == null) {
         sbjData = ArrayListMultimap.create();
         data.put(sbj, sbjData);
       }
-      sbjData.put(phe, Val.of(r));
+      sbjData.put(phe, value);
     }
     return data;
   }
