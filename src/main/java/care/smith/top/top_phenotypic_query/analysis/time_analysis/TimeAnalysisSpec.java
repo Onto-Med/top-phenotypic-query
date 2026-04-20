@@ -8,15 +8,15 @@ import java.util.Map;
 
 public class TimeAnalysisSpec {
 
-  @JsonProperty private List<Integer> timeIntervals = new ArrayList<>();
+  @JsonProperty private List<Integer> periods = new ArrayList<>();
   @JsonProperty private Map<String, List<List<String>>> phenotypes = new HashMap<>();
 
-  protected List<Integer> getTimeIntervals() {
-    return timeIntervals;
+  protected List<Integer> getPeriods() {
+    return periods;
   }
 
-  protected TimeAnalysisSpec timeIntervals(List<Integer> timeIntervals) {
-    this.timeIntervals = timeIntervals;
+  protected TimeAnalysisSpec periods(List<Integer> periods) {
+    this.periods = periods;
     return this;
   }
 
@@ -32,8 +32,8 @@ public class TimeAnalysisSpec {
   @Override
   public String toString() {
     StringBuffer config =
-        new StringBuffer("timeIntervals: ")
-            .append(timeIntervals)
+        new StringBuffer("periods: ")
+            .append(periods)
             .append(System.lineSeparator())
             .append(System.lineSeparator());
     for (Map.Entry<String, List<List<String>>> alg : phenotypes.entrySet()) {

@@ -6,9 +6,9 @@
 		</encoder>
 	</appender>
 
-	<logger name="com.networknt.schema" level="INFO" />
+	<logger name="care.smith.top.top_phenotypic_query.analysis.time_analysis.TimeAnalysisCalc" level="TRACE" />
 
-	<root level="DEBUG">
+	<root level="ERROR">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>

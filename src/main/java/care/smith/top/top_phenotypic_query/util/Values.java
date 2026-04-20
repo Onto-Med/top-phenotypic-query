@@ -11,6 +11,7 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -285,12 +286,28 @@ public class Values {
     return fields.get(fieldName);
   }
 
-  public static boolean hasNoDateTime(Value v) {
-    return v.getDateTime() == null && v.getStartDateTime() == null && v.getEndDateTime() == null;
+  public static boolean hasDateTime(Value v) {
+    return v.getDateTime() != null || v.getStartDateTime() != null || v.getEndDateTime() != null;
   }
 
-  public static BigDecimal getDistanceInHours(Value v1, Value v2) {
-    return DateUtil.getDistanceInHours(
+  public static boolean hasDateTimeAllValues(Collection<Value> vals) {
+    return !vals.stream().anyMatch(v -> !hasDateTime(v));
+  }
+
+  public static BigDecimal getPeriodInHours(Value v1, Value v2) {
+    return DateUtil.getPeriodInHours(
         v1.getStartDateTime(), v1.getEndDateTime(), v2.getStartDateTime(), v2.getEndDateTime());
+  }
+
+  public static String toStringPeriod(Value v) {
+    LocalDateTime start = getStartDateTime(v);
+    LocalDateTime end = getEndDateTime(v);
+    String startStr = (start == null) ? "null" : DateUtil.format(start);
+    String endStr = (end == null) ? "null" : DateUtil.format(end);
+    return startStr + "|" + endStr;
+  }
+
+  public static String toStringPeriod(List<Value> vals) {
+    return vals.stream().map(v -> toStringPeriod(v)).toList().toString();
   }
 }
