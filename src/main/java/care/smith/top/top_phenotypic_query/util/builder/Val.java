@@ -6,6 +6,7 @@ import care.smith.top.model.DateTimeValue;
 import care.smith.top.model.NumberValue;
 import care.smith.top.model.StringValue;
 import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Values;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,8 +15,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.logging.log4j.util.Strings;
 
 public class Val {
 
@@ -59,55 +62,83 @@ public class Val {
     return of(val).dateTime(dateTime);
   }
 
-  public static Value of(Boolean val, LocalDateTime starDateTime, LocalDateTime endDateTime) {
-    return of(val).startDateTime(starDateTime).endDateTime(endDateTime);
+  public static Value of(Boolean val, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    return of(val).startDateTime(startDateTime).endDateTime(endDateTime);
   }
 
-  public static Value of(Number val, LocalDateTime starDateTime, LocalDateTime endDateTime) {
-    return of(val).startDateTime(starDateTime).endDateTime(endDateTime);
+  public static Value of(Number val, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    return of(val).startDateTime(startDateTime).endDateTime(endDateTime);
   }
 
-  public static Value of(BigDecimal val, LocalDateTime starDateTime, LocalDateTime endDateTime) {
-    return of(val).startDateTime(starDateTime).endDateTime(endDateTime);
+  public static Value of(BigDecimal val, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    return of(val).startDateTime(startDateTime).endDateTime(endDateTime);
   }
 
-  public static Value of(String val, LocalDateTime starDateTime, LocalDateTime endDateTime) {
-    return of(val).startDateTime(starDateTime).endDateTime(endDateTime);
-  }
-
-  public static Value of(LocalDateTime val, LocalDateTime starDateTime, LocalDateTime endDateTime) {
-    return of(val).startDateTime(starDateTime).endDateTime(endDateTime);
+  public static Value of(String val, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    return of(val).startDateTime(startDateTime).endDateTime(endDateTime);
   }
 
   public static Value of(
-      Boolean val, LocalDateTime dateTime, LocalDateTime starDateTime, LocalDateTime endDateTime) {
-    return of(val).dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
+      LocalDateTime val, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    return of(val).startDateTime(startDateTime).endDateTime(endDateTime);
   }
 
   public static Value of(
-      Number val, LocalDateTime dateTime, LocalDateTime starDateTime, LocalDateTime endDateTime) {
-    return of(val).dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
+      Boolean val, LocalDateTime dateTime, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    return of(val).dateTime(dateTime).startDateTime(startDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value of(
+      Number val, LocalDateTime dateTime, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    return of(val).dateTime(dateTime).startDateTime(startDateTime).endDateTime(endDateTime);
   }
 
   public static Value of(
       BigDecimal val,
       LocalDateTime dateTime,
-      LocalDateTime starDateTime,
+      LocalDateTime startDateTime,
       LocalDateTime endDateTime) {
-    return of(val).dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
+    return of(val).dateTime(dateTime).startDateTime(startDateTime).endDateTime(endDateTime);
   }
 
   public static Value of(
-      String val, LocalDateTime dateTime, LocalDateTime starDateTime, LocalDateTime endDateTime) {
-    return of(val).dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
+      String val, LocalDateTime dateTime, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    return of(val).dateTime(dateTime).startDateTime(startDateTime).endDateTime(endDateTime);
   }
 
   public static Value of(
       LocalDateTime val,
       LocalDateTime dateTime,
-      LocalDateTime starDateTime,
+      LocalDateTime startDateTime,
       LocalDateTime endDateTime) {
-    return of(val).dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
+    return of(val).dateTime(dateTime).startDateTime(startDateTime).endDateTime(endDateTime);
+  }
+
+  public static Value of(Map<String, String> record) {
+    String s = record.get("start_date_time");
+    String e = record.get("end_date_time");
+    String d = record.get("date_time");
+
+    LocalDateTime start = (Strings.isBlank(s)) ? null : DateUtil.parse(s);
+    LocalDateTime end = (Strings.isBlank(e)) ? null : DateUtil.parse(e);
+    LocalDateTime date = (Strings.isBlank(d)) ? null : DateUtil.parse(d);
+
+    if (start != null && end == null) end = DateUtil.parse("3000-01-01");
+    if (start == null && end != null) start = DateUtil.parse("1900-01-01");
+    if (start == null && end == null && date != null) {
+      start = date;
+      end = date;
+    }
+
+    String v = null;
+    if (!Strings.isBlank(v = record.get("boolean_value")))
+      return of(Boolean.valueOf(v), start, end);
+    if (!Strings.isBlank(v = record.get("number_value"))) return of(new BigDecimal(v), start, end);
+    if (!Strings.isBlank(v = record.get("date_time_value")))
+      return of(DateUtil.parse(v), start, end);
+    if (!Strings.isBlank(v = record.get("string_value"))) return of(v, start, end);
+
+    return null;
   }
 
   public static Value ofTrue() {
@@ -126,22 +157,22 @@ public class Val {
     return ofFalse().dateTime(dateTime);
   }
 
-  public static Value ofTrue(LocalDateTime starDateTime, LocalDateTime endDateTime) {
-    return ofTrue().startDateTime(starDateTime).endDateTime(endDateTime);
+  public static Value ofTrue(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    return ofTrue().startDateTime(startDateTime).endDateTime(endDateTime);
   }
 
-  public static Value ofFalse(LocalDateTime starDateTime, LocalDateTime endDateTime) {
-    return ofFalse().startDateTime(starDateTime).endDateTime(endDateTime);
+  public static Value ofFalse(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    return ofFalse().startDateTime(startDateTime).endDateTime(endDateTime);
   }
 
   public static Value ofTrue(
-      LocalDateTime dateTime, LocalDateTime starDateTime, LocalDateTime endDateTime) {
-    return ofTrue().dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
+      LocalDateTime dateTime, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    return ofTrue().dateTime(dateTime).startDateTime(startDateTime).endDateTime(endDateTime);
   }
 
   public static Value ofFalse(
-      LocalDateTime dateTime, LocalDateTime starDateTime, LocalDateTime endDateTime) {
-    return ofFalse().dateTime(dateTime).startDateTime(starDateTime).endDateTime(endDateTime);
+      LocalDateTime dateTime, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    return ofFalse().dateTime(dateTime).startDateTime(startDateTime).endDateTime(endDateTime);
   }
 
   public static List<Value> ofBoolean(List<Boolean> vals) {
