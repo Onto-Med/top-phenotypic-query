@@ -1,9 +1,8 @@
 package care.smith.top.top_phenotypic_query;
 
-import java.util.concurrent.Callable;
-
 import care.smith.top.top_phenotypic_query.command.AnalysisCommand;
 import care.smith.top.top_phenotypic_query.command.QueryCommand;
+import java.util.concurrent.Callable;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ParameterException;
