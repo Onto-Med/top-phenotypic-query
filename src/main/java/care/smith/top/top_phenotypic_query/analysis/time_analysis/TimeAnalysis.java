@@ -33,7 +33,7 @@ import picocli.CommandLine.Command;
  *
  * <p>&nbsp;&nbsp;&nbsp;&nbsp;- [ P3, P4, P5 ]
  *
- * <p>&nbsp;&nbsp;A2
+ * <p>&nbsp;&nbsp;A2:
  *
  * <p>&nbsp;&nbsp;&nbsp;&nbsp;- [ P6, P7, P8 ]
  *
