@@ -5,6 +5,7 @@ import care.smith.top.model.EntityType;
 import care.smith.top.model.LocalisableText;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
+import care.smith.top.top_phenotypic_query.analysis.time_analysis.TimeAnalysisSpec;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -111,7 +112,7 @@ public abstract class Analysis implements Runnable {
    * Parse analysis configuration from the provided YAML file ({@link #configFile}) to the specified
    * type.
    *
-   * @param <T> Java class the YAML will be parsed to (e.g., {@link AnalysisSpec}).
+   * @param <T> Java class the YAML will be parsed to (e.g., {@link TimeAnalysisSpec}).
    * @return Optional that may contain an object of type {@code T}.
    * @throws IOException If the YAML file could not be read.
    */
