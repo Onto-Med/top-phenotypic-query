@@ -27,7 +27,7 @@ import picocli.CommandLine.Command;
  *
  * <p>phenotypes:
  *
- * <p>&nbsp;&nbsp;A1
+ * <p>&nbsp;&nbsp;A1:
  *
  * <p>&nbsp;&nbsp;&nbsp;&nbsp;- [ P1, P2 ]
  *
