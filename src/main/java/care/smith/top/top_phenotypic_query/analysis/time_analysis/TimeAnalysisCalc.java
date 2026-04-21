@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// Calculates periods of a phenotype combination
 public class TimeAnalysisCalc {
 
   private Logger log = LoggerFactory.getLogger(TimeAnalysisCalc.class);
@@ -30,7 +31,6 @@ public class TimeAnalysisCalc {
   private int countNoValue = 0;
   private int countNoTimestamp = 0;
 
-  // Calculates periods of a phenotype combination
   public TimeAnalysisCalc(
       List<String> pheCombi,
       String pheCombiId,
@@ -121,7 +121,7 @@ public class TimeAnalysisCalc {
   }
 
   private void report() {
-    for (BigDecimal time : periods.keySet()) report(time.toString(), periods.get(time));
+    for (BigDecimal p : periods.keySet()) report(p.toString(), periods.get(p));
     report("greater equal", countGreaterEqual);
     report("no value", countNoValue);
     report("no timestamp", countNoTimestamp);
