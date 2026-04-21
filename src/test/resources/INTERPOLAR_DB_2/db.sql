@@ -41,6 +41,9 @@ CREATE TABLE db2dataprocessor_out."v_condition"
     con_code_code                varchar NULL,
     con_code_display             varchar NULL,
     con_code_text                varchar NULL,
+    con_onsetperiod_start        timestamp NULL,
+    con_onsetperiod_end          timestamp NULL,
+    con_onsetdatetime            timestamp NULL,
     con_recordeddate             timestamp NULL,
     PRIMARY KEY (con_id)
 );
