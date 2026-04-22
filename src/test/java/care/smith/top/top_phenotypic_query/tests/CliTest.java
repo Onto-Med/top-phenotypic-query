@@ -58,25 +58,25 @@ class CliTest extends AbstractTest {
 
     String expectedReport =
         String.format(
-            "\"ALGORITHMID\",\"ALGORITHMTITLE\",\"MODEL\",\"PHENOTYPEID\",\"PHENOTYPETITLE\",\"RESULTNAME\",\"RESULTVALUE\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"12\",\"2\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"24\",\"1\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"36\",\"0\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"48\",\"0\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"72\",\"0\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"120\",\"0\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"greater equal\",\"0\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"no value\",\"1\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"no timestamp\",\"0\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"12\",\"1\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"24\",\"0\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"36\",\"0\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"48\",\"0\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"72\",\"0\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"120\",\"1\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"greater equal\",\"1\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"no value\",\"0\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"no timestamp\",\"1\"\n",
+            "\"ALGORITHMID\",\"ALGORITHMTITLE\",\"MODEL\",\"PHENOTYPEID\",\"PHENOTYPETITLE\",\"RESULTNAME\",\"RESULTVALUE\",\"SIZE\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"12\",\"2\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"24\",\"1\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"36\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"48\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"72\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"120\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"greater equal\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"no value\",\"1\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"no timestamp\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"12\",\"1\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"24\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"36\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"48\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"72\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"120\",\"1\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"greater equal\",\"1\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"no value\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"no timestamp\",\"1\",\"4\"\n",
             data.getFileName());
 
     assertEquals(expectedReport, Files.readString(report));

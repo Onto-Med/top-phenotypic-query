@@ -26,6 +26,7 @@ public class TimeAnalysisCalc {
   private Map<String, Multimap<String, Value>> data;
   private TreeMap<BigDecimal, Integer> periods = new TreeMap<>();
   private List<AnalysisReport> report;
+  private int size;
 
   private int countGreaterEqual = 0;
   private int countNoValue = 0;
@@ -39,7 +40,8 @@ public class TimeAnalysisCalc {
       String algTitle,
       Map<String, Multimap<String, Value>> data,
       TreeMap<BigDecimal, Integer> periods,
-      List<AnalysisReport> report) {
+      List<AnalysisReport> report,
+      int size) {
     this.pheCombi = pheCombi;
     this.pheId = pheCombiId;
     this.pheTitle = pheCombiTitle;
@@ -48,6 +50,7 @@ public class TimeAnalysisCalc {
     this.data = data;
     this.periods = periods;
     this.report = report;
+    this.size = size;
   }
 
   // Calculates periods of a phenotype combination
@@ -135,7 +138,8 @@ public class TimeAnalysisCalc {
             .phenotypeId(pheId)
             .phenotypeTitle(pheTitle)
             .resultName(name)
-            .resultValue(value);
+            .resultValue(value)
+            .size(size);
     report.add(r);
   }
 }

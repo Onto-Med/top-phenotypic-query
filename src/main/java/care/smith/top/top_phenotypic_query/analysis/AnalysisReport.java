@@ -5,6 +5,7 @@ import com.opencsv.bean.CsvBindByName;
 public class AnalysisReport {
 
   @CsvBindByName private String model;
+  @CsvBindByName private int size;
   @CsvBindByName private String algorithmId;
   @CsvBindByName private String algorithmTitle;
   @CsvBindByName private String phenotypeId;
@@ -18,6 +19,15 @@ public class AnalysisReport {
 
   public AnalysisReport model(String model) {
     this.model = model;
+    return this;
+  }
+
+  public int getSize() {
+    return size;
+  }
+
+  public AnalysisReport size(int size) {
+    this.size = size;
     return this;
   }
 
@@ -79,6 +89,8 @@ public class AnalysisReport {
   public String toString() {
     return "AnalysisReport [model="
         + model
+        + ", size="
+        + size
         + ", algorithmId="
         + algorithmId
         + ", algorithmTitle="
