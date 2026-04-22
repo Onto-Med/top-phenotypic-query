@@ -79,6 +79,7 @@ public class TimeAnalysis extends Analysis {
     TimeAnalysisSpec conf = config.get();
     Map<String, Phenotype> metadata = loadMetadataToMap(queryResultFile);
     Map<String, Multimap<String, Value>> data = loadPhenotypeDataToMap(queryResultFile);
+    int size = data.keySet().size();
 
     for (String algId : conf.getPhenotypes().keySet()) {
       Phenotype algPhe = metadata.get(algId);
@@ -95,7 +96,8 @@ public class TimeAnalysis extends Analysis {
                   algTitle,
                   data,
                   getPeriods(conf),
-                  report)
+                  report,
+                  size)
               .calculate();
       }
     }
