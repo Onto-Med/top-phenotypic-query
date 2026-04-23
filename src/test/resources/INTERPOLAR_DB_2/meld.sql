@@ -30,10 +30,10 @@ INSERT INTO db2dataprocessor_out.v_medicationadministration (medadm_id, medadm_e
 VALUES ('HOSP-0003-E-33-MA-1', 'Encounter/HOSP-0003-E-33', 'Patient/HOSP-0003', '2020-01-01',
         'Medication/Medication-1');
 
-INSERT INTO db2dataprocessor_out.v_procedure (proc_id, proc_encounter_calculated_ref, proc_patient_ref, proc_code_system, proc_code_code, proc_performeddatetime)
-VALUES ('HOSP-0004-E-44-P-441', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 8),
-       ('HOSP-0004-E-44-P-442', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 6),
-       ('HOSP-0008-E-88-P-881', 'Encounter/HOSP-0008-E-88', 'Patient/HOSP-0008', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 6);
+INSERT INTO db2dataprocessor_out.v_procedure (proc_id, proc_encounter_calculated_ref, proc_patient_ref, proc_code_system, proc_code_code, proc_performeddatetime, proc_performedperiod_start, proc_performedperiod_end)
+VALUES ('HOSP-0004-E-44-P-441', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 8, null, null),
+       ('HOSP-0004-E-44-P-442', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 6, null, null),
+       ('HOSP-0008-E-88-P-881', 'Encounter/HOSP-0008-E-88', 'Patient/HOSP-0008', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 6, null, null);
 
 INSERT INTO db2dataprocessor_out.v_observation (obs_id, obs_encounter_calculated_ref, obs_patient_ref, obs_code_system, obs_code_code,
                                 obs_effectivedatetime, obs_valuequantity_value)
