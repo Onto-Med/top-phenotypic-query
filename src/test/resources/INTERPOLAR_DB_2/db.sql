@@ -31,7 +31,7 @@ CREATE TABLE db2dataprocessor_out.v_observation
     PRIMARY KEY (obs_id, obs_code_system, obs_code_code)
 );
 
-CREATE TABLE db2dataprocessor_out."v_condition"
+CREATE TABLE db2dataprocessor_out.v_condition
 (
     con_id                       varchar NOT NULL,
     con_encounter_calculated_ref varchar NULL,
