@@ -59,21 +59,40 @@ phenotypeQueries:
       dateTime: obs_effectivedatetime
   condition:
     baseQuery: |
-      SELECT 
+      SELECT
         SUBSTRING(con.con_encounter_calculated_ref FROM 11) AS enc_id,
-        COALESCE(con.con_onsetperiod_start, con.con_onsetdatetime, con.con_recordeddate) AS startDateTime,
-        COALESCE(con.con_onsetperiod_end, con.con_onsetdatetime, con.con_recordeddate) AS endDateTime
+        con.con_onsetperiod_start AS startDateTime, con.con_onsetperiod_end AS endDateTime, con_onsetdatetime, con_recordeddate,
+        CASE
+          WHEN con.con_onsetperiod_start IS NULL AND con.con_onsetperiod_end IS NULL AND con.con_onsetdatetime IS NULL
+            THEN con.con_recordeddate
+          ELSE
+            con.con_onsetdatetime
+        END
+        AS dateTime
       FROM
         db2dataprocessor_out.v_condition con
       WHERE
         con_code_system || '|' || con_code_code IN ({codes})
     startDateTimeIntervalPart: |
-      AND COALESCE(con.con_onsetperiod_start, con.con_onsetdatetime, con.con_recordeddate) {operator} {value}
+      AND
+      CASE
+      WHEN con.con_onsetperiod_start IS NOT NULL
+        THEN con.con_onsetperiod_start {operator} {value}
+      WHEN con.con_onsetperiod_end IS NOT NULL
+        THEN true
+      ELSE
+        COALESCE(con.con_onsetdatetime, con.con_recordeddate) {operator} {value}
+      END
     endDateTimeIntervalPart: |
-      AND (
-        COALESCE(con.con_onsetperiod_end, con.con_onsetdatetime, con.con_recordeddate) IS NULL
-        OR COALESCE(con.con_onsetperiod_end, con.con_onsetdatetime, con.con_recordeddate) {operator} {value}
-      )
+      AND
+      CASE
+      WHEN con.con_onsetperiod_end IS NOT NULL
+        THEN con.con_onsetperiod_end {operator} {value}
+      WHEN con.con_onsetperiod_start IS NOT NULL
+        THEN true
+      ELSE
+        COALESCE(con.con_onsetdatetime, con.con_recordeddate) {operator} {value}
+      END
     output:
       subject: enc_id
       startDateTime: startDateTime
