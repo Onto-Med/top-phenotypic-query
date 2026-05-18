@@ -43,13 +43,14 @@ VALUES ('Medication-1', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
        ('Medication-2', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc2');
 
 INSERT INTO db2dataprocessor_out.v_medicationadministration (medadm_id, medadm_encounter_calculated_ref, medadm_patient_ref,
-                                             medadm_effectivedatetime, medadm_medicationreference_ref)
-VALUES ('HOSP-0011-E-1-MA-1', 'Encounter/HOSP-0011-E-1', 'Patient/HOSP-0011', '2020-01-01', 'Medication/Medication-1'),
-       ('HOSP-0012-E-1-MA-1', 'Encounter/HOSP-0012-E-1', 'Patient/HOSP-0012', '2020-01-01', 'Medication/Medication-1'),
-       ('HOSP-0013-E-1-MA-1', 'Encounter/HOSP-0013-E-1', 'Patient/HOSP-0013', '2020-01-01', 'Medication/Medication-1'),
-       ('HOSP-0014-E-1-MA-1', 'Encounter/HOSP-0014-E-1', 'Patient/HOSP-0014', '2020-01-01', 'Medication/Medication-1'),
-       ('HOSP-0015-E-1-MA-1', 'Encounter/HOSP-0015-E-1', 'Patient/HOSP-0015', '2019-01-01', 'Medication/Medication-1'),
-       ('HOSP-0004-E-1-MA-1', 'Encounter/HOSP-0004-E-1', 'Patient/HOSP-0004', '2021-01-01', 'Medication/Medication-2');
+                                             medadm_effectivedatetime, medadm_effectiveperiod_start, medadm_effectiveperiod_end,
+                                                             medadm_medicationreference_ref)
+VALUES ('HOSP-0011-E-1-MA-1', 'Encounter/HOSP-0011-E-1', 'Patient/HOSP-0011', '2020-01-01', null, null, 'Medication/Medication-1'),
+       ('HOSP-0012-E-1-MA-1', 'Encounter/HOSP-0012-E-1', 'Patient/HOSP-0012', '2020-01-01', null, null, 'Medication/Medication-1'),
+       ('HOSP-0013-E-1-MA-1', 'Encounter/HOSP-0013-E-1', 'Patient/HOSP-0013', '2020-01-01', null, null, 'Medication/Medication-1'),
+       ('HOSP-0014-E-1-MA-1', 'Encounter/HOSP-0014-E-1', 'Patient/HOSP-0014', '2020-01-01', null, null, 'Medication/Medication-1'),
+       ('HOSP-0015-E-1-MA-1', 'Encounter/HOSP-0015-E-1', 'Patient/HOSP-0015', '2019-01-01', null, null, 'Medication/Medication-1'),
+       ('HOSP-0004-E-1-MA-1', 'Encounter/HOSP-0004-E-1', 'Patient/HOSP-0004', '2021-01-01', null, null, 'Medication/Medication-2');
 
 INSERT INTO db2dataprocessor_out.v_medicationrequest (medreq_id, medreq_encounter_calculated_ref, medreq_patient_ref,
                                       medreq_authoredon, medreq_medicationreference_ref)
@@ -60,14 +61,9 @@ VALUES ('HOSP-0021-E-1-MR-1', 'Encounter/HOSP-0021-E-1', 'Patient/HOSP-0021', '2
        ('HOSP-0025-E-1-MR-1', 'Encounter/HOSP-0025-E-1', 'Patient/HOSP-0025', '2019-01-01', 'Medication/Medication-1');
 
 INSERT INTO db2dataprocessor_out.v_medicationstatement (medstat_id, medstat_encounter_calculated_ref, medstat_patient_ref,
-                                        medstat_effectivedatetime, medstat_medicationreference_ref)
-VALUES ('HOSP-0031-E-1-MS-1', 'Encounter/HOSP-0031-E-1', 'Patient/HOSP-0031', '2020-01-01',
-        'Medication/Medication-1'),
-       ('HOSP-0032-E-1-MS-1', 'Encounter/HOSP-0032-E-1', 'Patient/HOSP-0032', '2020-01-01',
-        'Medication/Medication-1'),
-       ('HOSP-0033-E-1-MS-1', 'Encounter/HOSP-0033-E-1', 'Patient/HOSP-0033', '2020-01-01',
-        'Medication/Medication-1'),
-       ('HOSP-0034-E-1-MS-1', 'Encounter/HOSP-0034-E-1', 'Patient/HOSP-0034', '2020-01-01',
-        'Medication/Medication-1'),
-       ('HOSP-0035-E-1-MS-1', 'Encounter/HOSP-0035-E-1', 'Patient/HOSP-0035', '2019-01-01',
-        'Medication/Medication-1');
+                                        medstat_effectivedatetime, medstat_effectiveperiod_start, medstat_effectiveperiod_end, medstat_medicationreference_ref)
+VALUES ('HOSP-0031-E-1-MS-1', 'Encounter/HOSP-0031-E-1', 'Patient/HOSP-0031', '2020-01-01', null, null, 'Medication/Medication-1'),
+       ('HOSP-0032-E-1-MS-1', 'Encounter/HOSP-0032-E-1', 'Patient/HOSP-0032', '2020-01-01', null, null, 'Medication/Medication-1'),
+       ('HOSP-0033-E-1-MS-1', 'Encounter/HOSP-0033-E-1', 'Patient/HOSP-0033', '2020-01-01', null, null, 'Medication/Medication-1'),
+       ('HOSP-0034-E-1-MS-1', 'Encounter/HOSP-0034-E-1', 'Patient/HOSP-0034', '2020-01-01', null, null, 'Medication/Medication-1'),
+       ('HOSP-0035-E-1-MS-1', 'Encounter/HOSP-0035-E-1', 'Patient/HOSP-0035', '2019-01-01', null, null, 'Medication/Medication-1');
