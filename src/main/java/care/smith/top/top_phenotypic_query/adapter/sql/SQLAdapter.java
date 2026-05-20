@@ -14,18 +14,25 @@ import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.mapper.MapMapper;
+import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.result.ResultIterable;
+import org.jdbi.v3.core.statement.StatementContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Date;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.Map;
 
 public class SQLAdapter extends DataAdapter {
@@ -47,11 +54,34 @@ public class SQLAdapter extends DataAdapter {
     this.handle = Jdbi.create(
             config.getConnectionAttribute("url"),
             config.getConnectionAttribute("user"),
-            config.getConnectionAttribute("password")).open();
+            config.getConnectionAttribute("password")).
+            open();
+  }
+  
+  private MapMapper mapper = new MapMapper() {
+    @Override
+    public RowMapper<Map<String, Object>> specialize(java.sql.ResultSet rs, StatementContext ctx) throws SQLException {
+      final RowMapper<Map<String, Object>> rootRowMapper = super.specialize(rs, ctx);
+      return (r, c) -> {
+        var result = new HashMap<String, Object>();
+        rootRowMapper.map(rs, c).entrySet().stream().forEach(entry -> result.put(entry.getKey(), toOffsetDateTime(entry.getValue())));
+        return result;
+      };
+    }
+  };
+  
+  private static Object toOffsetDateTime(Object o) {
+    if (o == null) return null;
+    return switch (o) {
+      case Date d -> OffsetDateTime.ofInstant(Instant.ofEpochMilli(d.getTime()), ZoneId.systemDefault());
+      case Timestamp ts -> OffsetDateTime.ofInstant(Instant.ofEpochMilli(ts.getTime()), ZoneId.systemDefault());
+      case Double d -> BigDecimal.valueOf(d);
+      default -> o;
+    };
   }
   
   public ResultIterable<Map<String, Object>> executeQuery(String query) {
-    return handle.createQuery(query).mapToMap();
+    return handle.createQuery(query).map(mapper);
   }
   
   public Handle getConnection() {
@@ -72,7 +102,7 @@ public class SQLAdapter extends DataAdapter {
     String preparedQuery = SQLAdapterSettings.get().createSinglePreparedQuery(search);
     var sqlQuery = SQLAdapterSettings.get().getSingleSqlQuery(preparedQuery, handle, search);
     log.info("Execute SQL query: {}", sqlQuery);
-    var sqlRS = sqlQuery.mapToMap();
+    var sqlRS = sqlQuery.map(mapper);
     Phenotype phe = search.getPhenotype();
     PhenotypeOutput out = search.getOutput();
     String sbjCol = out.getSubject();
@@ -120,7 +150,7 @@ public class SQLAdapter extends DataAdapter {
     
     var sqlQuery = SQLAdapterSettings.get().getSubjectSqlQuery(preparedQuery, handle, search);
     log.info("Execute SQL query: {}", sqlQuery);
-    var sqlRS = sqlQuery.mapToMap();
+    var sqlRS = sqlQuery.map(mapper);
     
     SubjectOutput out = search.getOutput();
     String sbjCol = out.getId();
