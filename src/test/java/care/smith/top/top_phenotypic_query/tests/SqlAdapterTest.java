@@ -109,10 +109,8 @@ public class SqlAdapterTest extends AbstractTest {
       PhenotypeFinder finder =
               new PhenotypeFinder(query, new Entity[]{stringPhenotype, corrupted}, adapter);
       finder.execute();
-    }
-    
-    try (var con = ((SQLAdapter) adapter).getConnection()) {
-      var result = con.select("SELECT count(*) FROM assessment1").mapTo(Integer.class);
+      
+      result = con.select("SELECT count(*) FROM assessment1").mapTo(Integer.class);
       assertTrue(result.stream().count() == 1);
       assertEquals(4, result.stream().findFirst().get());
     }

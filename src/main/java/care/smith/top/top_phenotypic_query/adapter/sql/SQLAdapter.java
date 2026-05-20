@@ -21,16 +21,17 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.Date;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Map;
 
 public class SQLAdapter extends DataAdapter {
   
   private Handle handle;
+  
   private static final Logger log = LoggerFactory.getLogger(SQLAdapter.class);
   
   public SQLAdapter(DataAdapterConfig config) throws SQLException {
@@ -59,18 +60,18 @@ public class SQLAdapter extends DataAdapter {
   
   private LocalDateTime getDate(String dateCol, Map<String, Object> row) {
     if (dateCol == null) return null;
-    Timestamp ts = (Timestamp) row.get(dateCol);
+    OffsetDateTime ts = (OffsetDateTime) row.get(dateCol);
     if (ts == null) return null;
     return ts.toLocalDateTime();
   }
   
   @Override
-  public ResultSet execute(SingleSearch search) throws SQLException {
+  public ResultSet execute(SingleSearch search) {
     ResultSet rs = new ResultSet();
     
     String preparedQuery = SQLAdapterSettings.get().createSinglePreparedQuery(search);
     var sqlQuery = SQLAdapterSettings.get().getSingleSqlQuery(preparedQuery, handle, search);
-    log.trace("Execute SQL query: {}", sqlQuery);
+    log.info("Execute SQL query: {}", sqlQuery);
     var sqlRS = sqlQuery.mapToMap();
     Phenotype phe = search.getPhenotype();
     PhenotypeOutput out = search.getOutput();
@@ -95,7 +96,7 @@ public class SQLAdapter extends DataAdapter {
       } else if (Phenotypes.hasDateTimeType(phe))
         val = Val.of(((Timestamp) row.get(pheCol)).toLocalDateTime(), date, startDate, endDate);
       else if (Phenotypes.hasNumberType(phe))
-        val = Val.of((Double) row.get(pheCol), date, startDate, endDate);
+        val = Val.of((BigDecimal) row.get(pheCol), date, startDate, endDate);
       else val = Val.of((String) row.get(pheCol), date, startDate, endDate);
       if (val != null)
         rs.addValueWithRestriction(
@@ -112,13 +113,13 @@ public class SQLAdapter extends DataAdapter {
   }
   
   @Override
-  public ResultSet execute(SubjectSearch search) throws SQLException {
+  public ResultSet execute(SubjectSearch search) {
     ResultSet rs = new ResultSet();
     
     String preparedQuery = SQLAdapterSettings.get().createSubjectPreparedQuery(search);
     
     var sqlQuery = SQLAdapterSettings.get().getSubjectSqlQuery(preparedQuery, handle, search);
-    log.trace("Execute SQL query: {}", sqlQuery);
+    log.info("Execute SQL query: {}", sqlQuery);
     var sqlRS = sqlQuery.mapToMap();
     
     SubjectOutput out = search.getOutput();
@@ -136,7 +137,7 @@ public class SQLAdapter extends DataAdapter {
         continue;
       }
       if (bd != null) {
-        Date bdSqlVal = (Date) row.get(bdCol);
+        OffsetDateTime bdSqlVal = (OffsetDateTime) row.get(bdCol);
         if (bdSqlVal != null) {
           Value val = Val.of(bdSqlVal.toLocalDate().atStartOfDay());
           if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, val);
