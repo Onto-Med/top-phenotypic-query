@@ -12,24 +12,21 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.tests.AbstractTest;
 import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 import org.hl7.fhir.r4.model.Patient;
+import org.jdbi.v3.core.result.ResultIterable;
 import org.junit.jupiter.api.Disabled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.*;
+
 @Disabled
 public class FullBMIAgeTestIntern extends AbstractTest {
-
+  
   private static final Logger LOGGER = LoggerFactory.getLogger(FullBMIAgeTestIntern.class);
-
+  
   public static void main(String[] args) throws SQLException, NoCodesException {
     long start = new Date().getTime();
     test(getFHIRAdapter());
@@ -38,111 +35,110 @@ public class FullBMIAgeTestIntern extends AbstractTest {
     System.out.println("time: " + (end - start));
     System.out.println("==========================");
   }
-
+  
   private static FHIRAdapter getFHIRAdapter() {
     URL configFile =
-        Thread.currentThread().getContextClassLoader().getResource("config/FHIR_Adapter_Test.yml");
+            Thread.currentThread().getContextClassLoader().getResource("config/FHIR_Adapter_Test.yml");
     return new FHIRAdapter(DataAdapterConfig.getInstance(configFile.getPath()));
   }
-
+  
   private static SQLAdapter getSQLAdapter() throws SQLException {
     return new SQLAdapter(DataAdapterConfig.getInstance("test_files/SQL_Adapter_Test_intern.yml"));
   }
-
+  
   private static void test(DataAdapter adapter) throws SQLException, NoCodesException {
     QueryCriterion cri1 =
-        new QueryCriterion()
-            .inclusion(true)
-            .defaultAggregationFunctionId(defAgrFunc.getId())
-            .subjectId(overWeight.getId())
-            .dateTimeRestriction(getDTR(2000))
-            .type(TypeEnum.QUERY_CRITERION);
+            new QueryCriterion()
+                    .inclusion(true)
+                    .defaultAggregationFunctionId(defAgrFunc.getId())
+                    .subjectId(overWeight.getId())
+                    .dateTimeRestriction(getDTR(2000))
+                    .type(TypeEnum.QUERY_CRITERION);
     QueryCriterion cri2 =
-        new QueryCriterion()
-            .inclusion(true)
-            .subjectId(female.getId())
-            .type(TypeEnum.QUERY_CRITERION);
+            new QueryCriterion()
+                    .inclusion(true)
+                    .subjectId(female.getId())
+                    .type(TypeEnum.QUERY_CRITERION);
     QueryCriterion cri3 =
-        new QueryCriterion().inclusion(true).subjectId(old.getId()).type(TypeEnum.QUERY_CRITERION);
+            new QueryCriterion().inclusion(true).subjectId(old.getId()).type(TypeEnum.QUERY_CRITERION);
     PhenotypeQuery query =
-        new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2).addCriteriaItem(cri3);
-
+            new PhenotypeQuery().addCriteriaItem(cri1).addCriteriaItem(cri2).addCriteriaItem(cri3);
+    
     PhenotypeFinder pf = new PhenotypeFinder(query, phenotypes, adapter);
     ResultSet rs = pf.execute();
     adapter.close();
-
+    
     List<String> actualSbjIds = null;
     if (adapter instanceof FHIRAdapter) actualSbjIds = getDBIds(rs.getSubjectIds());
     else actualSbjIds = new ArrayList<String>(rs.getSubjectIds());
-
+    
     Collections.sort(
-        actualSbjIds,
-        new Comparator<String>() {
-          @Override
-          public int compare(String o1, String o2) {
-            return Integer.valueOf(o1).compareTo(Integer.valueOf(o2));
-          }
-        });
-
+            actualSbjIds,
+            new Comparator<String>() {
+              @Override
+              public int compare(String o1, String o2) {
+                return Integer.valueOf(o1).compareTo(Integer.valueOf(o2));
+              }
+            });
+    
     LOGGER.trace("ACTUAL:");
     LOGGER.trace(actualSbjIds.toString());
-
+    
     List<String> expectedSbjIds = getExpectedSubjectIds();
     LOGGER.trace("EXPECTED:");
     LOGGER.trace(expectedSbjIds.toString());
-
+    
     List<String> onlyActualSbjIds = new ArrayList<>(actualSbjIds);
     onlyActualSbjIds.removeAll(expectedSbjIds);
     LOGGER.trace("ONLY ACTUAL:");
     LOGGER.trace(onlyActualSbjIds.toString());
-
+    
     List<String> onlyExpectedSbjIds = new ArrayList<>(expectedSbjIds);
     onlyExpectedSbjIds.removeAll(actualSbjIds);
     LOGGER.trace("ONLY EXPECTED:");
     LOGGER.trace(onlyExpectedSbjIds.toString());
-
+    
     //    assertEquals(expectedSbjIds, actualSbjIds);
   }
-
+  
   private static List<String> getDBIds(Set<String> ids) {
     URL configFile =
-        Thread.currentThread().getContextClassLoader().getResource("config/FHIR_Adapter_Test.yml");
+            Thread.currentThread().getContextClassLoader().getResource("config/FHIR_Adapter_Test.yml");
     DataAdapterConfig conf = DataAdapterConfig.getInstance(configFile.getPath());
     FHIRClient client = new FHIRClient(conf);
-
+    
     List<String> dbIds = new ArrayList<>();
-
+    
     for (String id : ids)
       dbIds.add(
-          ((Patient) client.findResources("http://localhost:8080/baseR4/Patient?_id=" + id).get(0))
-              .getIdentifierFirstRep()
-              .getValue());
-
+              ((Patient) client.findResources("http://localhost:8080/baseR4/Patient?_id=" + id).get(0))
+                      .getIdentifierFirstRep()
+                      .getValue());
+    
     return dbIds;
   }
-
+  
   private static List<String> getExpectedSubjectIds() throws SQLException {
-    java.sql.ResultSet rs =
-        getSQLAdapter()
-            .executeQuery(
-                "SELECT s.subject_id, birth_date, sex, assessment_id, created_at, height, weight,"
-                    + " DATE_PART('year', AGE(CURRENT_DATE, birth_date)) years,"
-                    + " (weight/((height/100)^2)) bmi FROM subject s, (select distinct on"
-                    + " (subject_id) subject_id, assessment_id, created_at, height, weight from"
-                    + " assessment1 where height is not null and weight is not null and created_at"
-                    + " >= '2000-01-01'::date and created_at < '2001-01-01'::date order by"
-                    + " subject_id, created_at desc) a WHERE s.subject_id = a.subject_id AND sex ="
-                    + " 'female' AND DATE_PART('year', AGE(CURRENT_DATE, birth_date)) > 18 AND"
-                    + " (weight/((height/100)^2)) >= 27 AND (weight/((height/100)^2)) < 30 ORDER BY"
-                    + " s.subject_id");
+    ResultIterable<Map<String, Object>> rs =
+            getSQLAdapter()
+                    .executeQuery(
+                            "SELECT s.subject_id, birth_date, sex, assessment_id, created_at, height, weight,"
+                                    + " DATE_PART('year', AGE(CURRENT_DATE, birth_date)) years,"
+                                    + " (weight/((height/100)^2)) bmi FROM subject s, (select distinct on"
+                                    + " (subject_id) subject_id, assessment_id, created_at, height, weight from"
+                                    + " assessment1 where height is not null and weight is not null and created_at"
+                                    + " >= '2000-01-01'::date and created_at < '2001-01-01'::date order by"
+                                    + " subject_id, created_at desc) a WHERE s.subject_id = a.subject_id AND sex ="
+                                    + " 'female' AND DATE_PART('year', AGE(CURRENT_DATE, birth_date)) > 18 AND"
+                                    + " (weight/((height/100)^2)) >= 27 AND (weight/((height/100)^2)) < 30 ORDER BY"
+                                    + " s.subject_id");
     //    SQLAdapter.print(rs);
-
+    
     List<String> ids = new ArrayList<>();
-    while (rs.next()) ids.add(rs.getString("subject_id"));
-
+    for (Map<String, Object> row : rs) ids.add((String) row.get("subject_id"));
     return ids;
   }
-
+  
   //  private static void print() throws SQLException {
   //    DataAdapterConfig sqlConfig =
   //        DataAdapterConfig.getInstance("test_files/SQL_Adapter_Test_intern.yml");

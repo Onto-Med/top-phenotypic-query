@@ -3,27 +3,17 @@ package care.smith.top.top_phenotypic_query.tests.intern;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRClient;
 import care.smith.top.top_phenotypic_query.adapter.sql.SQLAdapter;
+import org.hl7.fhir.r4.model.*;
+import org.junit.jupiter.api.Disabled;
+
 import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.Condition;
-import org.hl7.fhir.r4.model.DateTimeType;
-import org.hl7.fhir.r4.model.Enumerations;
-import org.hl7.fhir.r4.model.MedicationAdministration;
-import org.hl7.fhir.r4.model.Observation;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Procedure;
-import org.hl7.fhir.r4.model.Quantity;
-import org.hl7.fhir.r4.model.Reference;
-import org.junit.jupiter.api.Disabled;
 
 @Disabled
 public class DB2FHIRTestIntern {
@@ -49,14 +39,14 @@ public class DB2FHIRTestIntern {
     DataAdapterConfig sqlConfig = DataAdapterConfig.getInstance(configFile.getPath());
     SQLAdapter sqlAdapter = new SQLAdapter(sqlConfig);
 
-    ResultSet subjects = sqlAdapter.executeQuery("SELECT subject_id, birth_date, sex FROM subject");
+    var subjects = sqlAdapter.executeQuery("SELECT subject_id, birth_date, sex FROM subject");
 
     Map<String, String> patIds = new HashMap<>();
 
-    while (subjects.next()) {
-      String patId = subjects.getString("subject_id");
-      LocalDateTime bd = subjects.getTimestamp("birth_date").toLocalDateTime();
-      String sex = subjects.getString("sex");
+   for (Map<String, Object> subject : subjects) {
+      String patId = (String) subject.get("subject_id");
+      LocalDateTime bd = ((Timestamp)subject.get("birth_date")).toLocalDateTime();
+      String sex = (String) subject.get("sex");
 
       String fhirPatId = patIds.get(patId);
       if (fhirPatId == null) {
@@ -65,28 +55,28 @@ public class DB2FHIRTestIntern {
       }
     }
 
-    ResultSet observations =
+    var observations =
         sqlAdapter.executeQuery(
             "SELECT phenotype_id, subject_id, created_at, code_system, code, unit, number_value FROM observation");
-    while (observations.next()) {
-      Phenotype p = new Phenotype(observations, patIds, true);
+    for (Map<String, Object> observation : observations) {
+      Phenotype p = new Phenotype(observation, patIds, true);
       if (p.getValue() != null) createObservation(p);
     }
 
-    ResultSet conditions =
+    var conditions =
         sqlAdapter.executeQuery(
             "SELECT phenotype_id, subject_id, created_at, code_system, code FROM condition");
-    while (conditions.next()) createCondition(new Phenotype(conditions, patIds, false));
+    for (Map<String, Object> condition: conditions) createCondition(new Phenotype(condition, patIds, false));
 
-    ResultSet medications =
+    var medications =
         sqlAdapter.executeQuery(
             "SELECT phenotype_id, subject_id, created_at, code_system, code FROM medication");
-    while (medications.next()) createMedication(new Phenotype(medications, patIds, false));
-
-    ResultSet procedures =
+    for (Map<String, Object> medication: medications) createMedication(new Phenotype(medication, patIds, false));
+    
+    var procedures =
         sqlAdapter.executeQuery(
             "SELECT phenotype_id, subject_id, created_at, code_system, code FROM procedure");
-    while (procedures.next()) createProcedure(new Phenotype(procedures, patIds, false));
+    for (Map<String, Object> procedure: procedures) createProcedure(new Phenotype(procedure, patIds, false));
   }
 
   private static String createPatient(String id, LocalDateTime bd, String sex) {
@@ -150,15 +140,15 @@ public class DB2FHIRTestIntern {
     String unit;
     BigDecimal value;
 
-    Phenotype(ResultSet rs, Map<String, String> patIds, boolean withValue) throws SQLException {
-      id = rs.getString("phenotype_id");
-      patientId = patIds.get(rs.getString("subject_id"));
-      date = rs.getTimestamp("created_at");
-      system = rs.getString("code_system");
-      code = rs.getString("code");
+    Phenotype(Map<String, Object> row, Map<String, String> patIds, boolean withValue) {
+      id = (String) row.get("phenotype_id");
+      patientId = patIds.get(row.get("subject_id"));
+      date = (Date) row.get("created_at");
+      system = (String) row.get("code_system");
+      code = (String) row.get("code");
       if (withValue) {
-        unit = rs.getString("unit");
-        value = rs.getBigDecimal("number_value");
+        unit = (String) row.get("unit");
+        value = (BigDecimal) row.get("number_value");
       }
     }
 

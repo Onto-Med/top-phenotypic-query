@@ -1,11 +1,6 @@
 package care.smith.top.top_phenotypic_query.adapter.sql;
 
-import care.smith.top.model.Code;
-import care.smith.top.model.DateTimeRestriction;
-import care.smith.top.model.Phenotype;
-import care.smith.top.model.Quantifier;
-import care.smith.top.model.Restriction;
-import care.smith.top.model.RestrictionOperator;
+import care.smith.top.model.*;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapterSettings;
 import care.smith.top.top_phenotypic_query.adapter.config.PhenotypeQueryBuilder;
 import care.smith.top.top_phenotypic_query.adapter.config.Props;
@@ -14,190 +9,194 @@ import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.statement.Query;
+
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class SQLAdapterSettings extends DataAdapterSettings {
-
+  
+  private enum ParameterType {
+    code,
+    sex,
+    birthdate,
+    date,
+    restriction
+  }
+  
   private static SQLAdapterSettings instance = null;
-
-  private SQLAdapterSettings() {}
-
+  
+  private SQLAdapterSettings() {
+  }
+  
   public static SQLAdapterSettings get() {
     if (instance == null) instance = new SQLAdapterSettings();
     return instance;
   }
-
+  
   @Override
   public String formatNumber(BigDecimal num) {
     return num.toPlainString();
   }
-
+  
   @Override
   public String formatDateTime(LocalDateTime date) {
     return "'" + DateUtil.format(date) + "'";
   }
-
+  
   @Override
   public String formatBoolean(Boolean bool) {
     return bool.toString();
   }
-
+  
   @Override
   public String formatString(String str) {
     return "'" + str + "'";
   }
-
+  
   @Override
   public String formatList(Stream<String> values) {
     return values.collect(Collectors.joining(", "));
   }
-
+  
   @Override
   public String formatOperator(RestrictionOperator oper) {
     return oper.getValue();
   }
-
+  
   @Override
   protected String getSexList(Restriction r, SubjectSearch search) {
-    return generateQuestionMarks(Restrictions.getValuesCount(r));
+    return generateNamedPlaceholders(ParameterType.sex, Restrictions.getValuesCount(r));
   }
-
+  
   @Override
   protected Map<String, String> getBirthdateInterval(Restriction r, SubjectSearch search) {
-    return generateQuestionMarks(Restrictions.getIntervalAsStringMap(r));
+    return generateNamedPlaceholders(ParameterType.birthdate, Restrictions.getIntervalAsStringMap(r));
   }
-
+  
   @Override
   protected void addCodeList(Phenotype p, PhenotypeQueryBuilder builder, SingleSearch search) {
     String valuesAsString =
-        generateQuestionMarks(Phenotypes.getUnrestrictedPhenotypeCodes(p).size());
+            generateNamedPlaceholders(ParameterType.code, Phenotypes.getUnrestrictedPhenotypeCodes(p).size());
     builder.baseQuery(valuesAsString, search.getQuery().getDataSource());
   }
-
+  
   @Override
   protected void addValueInterval(
-      Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
-    Map<String, String> interval = generateQuestionMarks(Restrictions.getIntervalAsStringMap(r));
+          Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
+    Map<String, String> interval = generateNamedPlaceholders(ParameterType.restriction, Restrictions.getIntervalAsStringMap(r));
     for (String key : interval.keySet())
       builder.valueIntervalLimit(r.getType(), key, interval.get(key));
   }
-
+  
   @Override
   protected void addValueList(Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
-    String valuesAsString = generateQuestionMarks(Restrictions.getValuesCount(r));
+    String valuesAsString = generateNamedPlaceholders(ParameterType.restriction, Restrictions.getValuesCount(r));
     builder.valueList(r.getType(), valuesAsString);
   }
-
+  
   @Override
   protected void addDateInterval(
-      Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
-    Map<String, String> interval = generateQuestionMarks(Restrictions.getIntervalAsStringMap(r));
+          Restriction r, PhenotypeQueryBuilder builder, SingleSearch search) {
+    Map<String, String> interval = generateNamedPlaceholders(ParameterType.date, Restrictions.getIntervalAsStringMap(r));
     for (String key : interval.keySet()) builder.dateTimeIntervalLimit(key, interval.get(key));
   }
-
-  public PreparedStatement getSubjectPreparedStatement(
-      String query, Connection con, SubjectSearch search) throws SQLException {
-    PreparedStatement ps = con.prepareStatement(query);
-
-    int paramNum = 1;
-
+  
+  public Query getSubjectSqlQuery(
+          String queryString, Handle handle, SubjectSearch search) {
+    
+    Query query = handle.createQuery(queryString);
+    
     if (search.hasSexRestriction()) {
       Restriction sexR = search.getSexRestriction();
       if (Restrictions.hasValues(sexR))
-        paramNum = setValues(ps, search.getSexMapping().getConvertedRestriction(sexR), paramNum);
+        setValues(ParameterType.sex, query, search.getSexMapping().getConvertedRestriction(sexR));
     }
-
+    
     if (search.hasBirthdateRestriction()) {
       Restriction birthdateR = search.getBirthdateRestriction();
       if (Restrictions.hasInterval(birthdateR))
         setDateTimeValues(
-            ps, search.getBirthdateMapping().getConvertedRestriction(birthdateR), paramNum);
+                ParameterType.birthdate, query, search.getBirthdateMapping().getConvertedRestriction(birthdateR));
     }
-
-    return ps;
+    
+    return query;
   }
-
-  public PreparedStatement getSinglePreparedStatement(
-      String query, Connection con, SingleSearch search) throws SQLException {
-    PreparedStatement ps = con.prepareStatement(query);
-
-    int paramNum = 1;
-
+  
+  public Query getSingleSqlQuery(
+          String queryString, Handle handle, SingleSearch search) {
+    
+    Query query = handle.createQuery(queryString);
+    
     if (search.getPhenotypeQuery().getBaseQuery().contains(Props.VAR_CODES)) {
+      int paramNum = 0;
       for (Code code : Phenotypes.getUnrestrictedPhenotypeCodes(search.getPhenotype()))
-        ps.setString(paramNum++, Phenotypes.getCodeUri(code));
+        query.bind(ParameterType.code.toString() + paramNum++, Phenotypes.getCodeUri(code));
     }
-
+    
     if (search.hasRestriction()) {
       Restriction r = search.getRestriction();
       if (r.getQuantifier() != Quantifier.ALL
-          && (Restrictions.hasInterval(r) || Restrictions.hasValues(r)))
-        paramNum = setValues(ps, search.getConvertedRestriction(), paramNum);
+              && (Restrictions.hasInterval(r) || Restrictions.hasValues(r)))
+        setValues(ParameterType.restriction, query, search.getConvertedRestriction());
     }
-
+    
     if (search.hasDateTimeRestriction()) {
       DateTimeRestriction dtr = search.getDateTimeRestriction();
-      if (Restrictions.hasInterval(dtr)) setDateTimeValues(ps, dtr, paramNum);
+      if (Restrictions.hasInterval(dtr)) setDateTimeValues(ParameterType.date, query, dtr);
     }
-
-    return ps;
+    
+    return query;
   }
-
-  private String generateQuestionMarks(int num) {
-    StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < num; i++) builder.append("?,");
-    return builder.deleteCharAt(builder.length() - 1).toString();
+  
+  private String generateNamedPlaceholders(ParameterType type, int num) {
+    return String.join(",", IntStream.range(0, num).mapToObj(i -> String.format(":%s%d", type, i)).toList());
   }
-
-  private Map<String, String> generateQuestionMarks(Map<String, String> interval) {
-    for (String oper : interval.keySet()) interval.put(oper, "?");
+  
+  private Map<String, String> generateNamedPlaceholders(ParameterType type, Map<String, String> interval) {
+    int i = 0;
+    for (String oper : interval.keySet()) interval.put(oper, String.format(":%s%d", type, i++));
     return interval;
   }
-
-  private int setValues(PreparedStatement ps, Restriction r, int paramNum) throws SQLException {
-    if (Restrictions.hasNumberType(r)) return setNumberValues(ps, r, paramNum);
-    if (Restrictions.hasDateTimeType(r)) return setDateTimeValues(ps, r, paramNum);
-    if (Restrictions.hasBooleanType(r)) return setBooleanValues(ps, r, paramNum);
-    return setStringValues(ps, r, paramNum);
+  
+  private void setValues(ParameterType type, Query query, Restriction r) {
+    if (Restrictions.hasNumberType(r)) setNumberValues(type, query, r);
+    else if (Restrictions.hasDateTimeType(r)) setDateTimeValues(type, query, r);
+    else if (Restrictions.hasBooleanType(r)) setBooleanValues(type, query, r);
+    else setStringValues(type, query, r);
   }
-
-  private int setStringValues(PreparedStatement ps, Restriction r, int paramNum)
-      throws SQLException {
+  
+  private void setStringValues(ParameterType type, Query query, Restriction r) {
+    int paramNum = 0;
     for (String v : Restrictions.getStringValues(r)) {
-      if (v != null) ps.setString(paramNum++, v);
+      if (v != null) query.bind(type.toString() + paramNum++, v);
     }
-    return paramNum;
   }
-
-  private int setNumberValues(PreparedStatement ps, Restriction r, int paramNum)
-      throws SQLException {
+  
+  private void setNumberValues(ParameterType type, Query query, Restriction r) {
+    int paramNum = 0;
     for (BigDecimal v : Restrictions.getNumberValues(r)) {
-      if (v != null) ps.setBigDecimal(paramNum++, v);
+      if (v != null) query.bind(type.toString() + paramNum++, v);
     }
-    return paramNum;
   }
-
-  private int setBooleanValues(PreparedStatement ps, Restriction r, int paramNum)
-      throws SQLException {
+  
+  private void setBooleanValues(ParameterType type, Query query, Restriction r) {
+    int paramNum = 0;
     for (Boolean v : Restrictions.getBooleanValues(r)) {
-      if (v != null) ps.setBoolean(paramNum++, v);
+      if (v != null) query.bind(type.toString() + paramNum++, v);
     }
-    return paramNum;
   }
-
-  private int setDateTimeValues(PreparedStatement ps, Restriction r, int paramNum)
-      throws SQLException {
+  
+  private void setDateTimeValues(ParameterType type, Query query, Restriction r) {
+    int paramNum = 0;
     for (LocalDateTime v : Restrictions.getDateTimeValues(r)) {
-      if (v != null) ps.setTimestamp(paramNum++, Timestamp.valueOf(v));
+      if (v != null) query.bind(type.toString() + paramNum++, Timestamp.valueOf(v));
     }
-    return paramNum;
   }
 }
