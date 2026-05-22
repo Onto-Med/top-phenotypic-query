@@ -51,11 +51,12 @@ public class SQLAdapter extends DataAdapter {
   }
   
   private void initConnection() {
-    this.handle = Jdbi.create(
-            config.getConnectionAttribute("url"),
-            config.getConnectionAttribute("user"),
-            config.getConnectionAttribute("password")).
-            open();
+    this.handle =
+            Jdbi.create(
+                            config.getConnectionAttribute("url"),
+                            config.getConnectionAttribute("user"),
+                            config.getConnectionAttribute("password")).
+                    open();
   }
   
   private MapMapper mapper = new MapMapper() {
@@ -96,103 +97,111 @@ public class SQLAdapter extends DataAdapter {
   }
   
   @Override
-  public ResultSet execute(SingleSearch search) {
-    ResultSet rs = new ResultSet();
-    
-    String preparedQuery = SQLAdapterSettings.get().createSinglePreparedQuery(search);
-    var sqlQuery = SQLAdapterSettings.get().getSingleSqlQuery(preparedQuery, handle, search);
-    log.info("Execute SQL query: {}", sqlQuery);
-    var sqlRS = sqlQuery.map(mapper);
-    Phenotype phe = search.getPhenotype();
-    PhenotypeOutput out = search.getOutput();
-    String sbjCol = out.getSubject();
-    String pheCol = out.getValue(Phenotypes.getDataType(phe));
-    String dateCol = out.getDateTime();
-    String startDateCol = out.getStartDateTime();
-    String endDateCol = out.getEndDateTime();
-    
-    for (Map<String, Object> row : sqlRS) {
-      String sbj = row.get(sbjCol).toString();
-      LocalDateTime date = getDate(dateCol, row);
-      LocalDateTime startDate = getDate(startDateCol, row);
-      LocalDateTime endDate = getDate(endDateCol, row);
-      Value val;
-      if (Phenotypes.hasBooleanType(phe)) {
-        if (pheCol == null) {
-          rs.addValue(
-                  sbj, phe, search.getDateTimeRestriction(), Val.ofTrue(date, startDate, endDate));
-          continue;
-        } else val = Val.of((Boolean) row.get(pheCol), date, startDate, endDate);
-      } else if (Phenotypes.hasDateTimeType(phe))
-        val = Val.of(((Timestamp) row.get(pheCol)).toLocalDateTime(), date, startDate, endDate);
-      else if (Phenotypes.hasNumberType(phe))
-        val = Val.of((BigDecimal) row.get(pheCol), date, startDate, endDate);
-      else val = Val.of((String) row.get(pheCol), date, startDate, endDate);
-      if (val != null)
-        rs.addValueWithRestriction(
-                sbj,
-                phe,
-                search.getDateTimeRestriction(),
-                val,
-                search.getSourceUnit(),
-                search.getModelUnit());
+  public ResultSet execute(SingleSearch search) throws SQLException {
+    try {
+      ResultSet rs = new ResultSet();
+      
+      String preparedQuery = SQLAdapterSettings.get().createSinglePreparedQuery(search);
+      var sqlQuery = SQLAdapterSettings.get().getSingleSqlQuery(preparedQuery, handle, search);
+      log.info("Execute SQL query: {}", sqlQuery);
+      var sqlRS = sqlQuery.map(mapper);
+      Phenotype phe = search.getPhenotype();
+      PhenotypeOutput out = search.getOutput();
+      String sbjCol = out.getSubject();
+      String pheCol = out.getValue(Phenotypes.getDataType(phe));
+      String dateCol = out.getDateTime();
+      String startDateCol = out.getStartDateTime();
+      String endDateCol = out.getEndDateTime();
+      
+      for (Map<String, Object> row : sqlRS) {
+        String sbj = row.get(sbjCol).toString();
+        LocalDateTime date = getDate(dateCol, row);
+        LocalDateTime startDate = getDate(startDateCol, row);
+        LocalDateTime endDate = getDate(endDateCol, row);
+        Value val;
+        if (Phenotypes.hasBooleanType(phe)) {
+          if (pheCol == null) {
+            rs.addValue(
+                    sbj, phe, search.getDateTimeRestriction(), Val.ofTrue(date, startDate, endDate));
+            continue;
+          } else val = Val.of((Boolean) row.get(pheCol), date, startDate, endDate);
+        } else if (Phenotypes.hasDateTimeType(phe))
+          val = Val.of(((Timestamp) row.get(pheCol)).toLocalDateTime(), date, startDate, endDate);
+        else if (Phenotypes.hasNumberType(phe))
+          val = Val.of((BigDecimal) row.get(pheCol), date, startDate, endDate);
+        else val = Val.of((String) row.get(pheCol), date, startDate, endDate);
+        if (val != null)
+          rs.addValueWithRestriction(
+                  sbj,
+                  phe,
+                  search.getDateTimeRestriction(),
+                  val,
+                  search.getSourceUnit(),
+                  search.getModelUnit());
+      }
+      checkQuantifier(search, rs);
+      
+      return rs;
+    } catch (Exception e) {
+      throw new SQLException(e);
     }
-    checkQuantifier(search, rs);
-    
-    return rs;
   }
   
   @Override
-  public ResultSet execute(SubjectSearch search) {
-    ResultSet rs = new ResultSet();
-    
-    String preparedQuery = SQLAdapterSettings.get().createSubjectPreparedQuery(search);
-    
-    var sqlQuery = SQLAdapterSettings.get().getSubjectSqlQuery(preparedQuery, handle, search);
-    log.info("Execute SQL query: {}", sqlQuery);
-    var sqlRS = sqlQuery.map(mapper);
-    
-    SubjectOutput out = search.getOutput();
-    String sbjCol = out.getId();
-    String bdCol = out.getBirthdate();
-    String sexCol = out.getSex();
-    Phenotype sex = search.getSex();
-    Phenotype bd = search.getBirthdateDerived();
-    Phenotype age = search.getAge();
-    
-    for (Map<String, Object> row : sqlRS) {
-      String sbj = row.get(sbjCol).toString();
-      if (bd == null && sex == null) {
-        rs.addSubject(row.get(sbjCol).toString());
-        continue;
-      }
-      if (bd != null) {
-        OffsetDateTime bdSqlVal = (OffsetDateTime) row.get(bdCol);
-        if (bdSqlVal != null) {
-          Value val = Val.of(bdSqlVal.toLocalDate().atStartOfDay());
-          if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, val);
-          else rs.addValue(sbj, bd, null, val);
-          if (age != null) {
-            Value ageVal = Val.of(DateUtil.birthdateToAge(bdSqlVal.toLocalDate().atStartOfDay()));
-            rs.addValueWithRestriction(sbj, age, ageVal);
+  public ResultSet execute(SubjectSearch search) throws SQLException {
+    try {
+      ResultSet rs = new ResultSet();
+      
+      String preparedQuery = SQLAdapterSettings.get().createSubjectPreparedQuery(search);
+      
+      var sqlQuery = SQLAdapterSettings.get().getSubjectSqlQuery(preparedQuery, handle, search);
+      log.info("Execute SQL query: {}", sqlQuery);
+      var sqlRS = sqlQuery.map(mapper);
+      
+      SubjectOutput out = search.getOutput();
+      String sbjCol = out.getId();
+      String bdCol = out.getBirthdate();
+      String sexCol = out.getSex();
+      Phenotype sex = search.getSex();
+      Phenotype bd = search.getBirthdateDerived();
+      Phenotype age = search.getAge();
+      
+      for (Map<String, Object> row : sqlRS) {
+        String sbj = row.get(sbjCol).toString();
+        if (bd == null && sex == null) {
+          rs.addSubject(row.get(sbjCol).toString());
+          continue;
+        }
+        if (bd != null) {
+          OffsetDateTime bdSqlVal = (OffsetDateTime) row.get(bdCol);
+          if (bdSqlVal != null) {
+            Value val = Val.of(bdSqlVal.toLocalDate().atStartOfDay());
+            if (search.getBirthdate() != null) rs.addValueWithRestriction(sbj, bd, val);
+            else rs.addValue(sbj, bd, null, val);
+            if (age != null) {
+              Value ageVal = Val.of(DateUtil.birthdateToAge(bdSqlVal.toLocalDate().atStartOfDay()));
+              rs.addValueWithRestriction(sbj, age, ageVal);
+            }
+          }
+        }
+        if (sex != null) {
+          if (Phenotypes.hasBooleanType(sex)) {
+            Boolean sexSqlVal = (Boolean) row.get(sexCol);
+            if (sexSqlVal != null) rs.addValueWithRestriction(sbj, sex, Val.of(sexSqlVal));
+          } else if (Phenotypes.hasNumberType(sex)) {
+            BigDecimal sexSqlVal = (BigDecimal) row.get(sexCol);
+            if (sexSqlVal != null) rs.addValueWithRestriction(sbj, sex, Val.of(sexSqlVal));
+          } else {
+            String sexSqlVal = (String) row.get(sexCol);
+            if (sexSqlVal != null) rs.addValueWithRestriction(sbj, sex, Val.of(sexSqlVal));
           }
         }
       }
-      if (sex != null) {
-        if (Phenotypes.hasBooleanType(sex)) {
-          Boolean sexSqlVal = (Boolean) row.get(sexCol);
-          if (sexSqlVal != null) rs.addValueWithRestriction(sbj, sex, Val.of(sexSqlVal));
-        } else if (Phenotypes.hasNumberType(sex)) {
-          BigDecimal sexSqlVal = (BigDecimal) row.get(sexCol);
-          if (sexSqlVal != null) rs.addValueWithRestriction(sbj, sex, Val.of(sexSqlVal));
-        } else {
-          String sexSqlVal = (String) row.get(sexCol);
-          if (sexSqlVal != null) rs.addValueWithRestriction(sbj, sex, Val.of(sexSqlVal));
-        }
-      }
+      
+      return rs;
+    } catch (Exception e) {
+      throw new SQLException(e);
     }
-    
-    return rs;
   }
   
   @Override

@@ -34,18 +34,18 @@ public class PreparedStatementTest extends AbstractTest {
     SQLAdapterSettings settings = SQLAdapterSettings.get();
     
     String pqExpected =
-            "SELECT subject_id, birth_date, sex FROM subject\n"
-                    + "WHERE TRUE\n"
-                    + "AND sex IN (?,?)\n"
-                    + "AND birth_date >= ?";
+            "SELECT subject_id, birth_date, sex FROM subject\n" +
+                    "WHERE TRUE\n" +
+                    "AND sex IN (:sex0,:sex1)\n" +
+                    "AND birth_date >= :birthdate0";
     String pqActual = settings.createSubjectPreparedQuery(search);
     assertEquals(pqExpected, pqActual);
     
     String psExpected =
-            "SELECT subject_id, birth_date, sex FROM subject\n"
-                    + "WHERE TRUE\n"
-                    + "AND sex IN (?,?)\n"
-                    + "AND birth_date >= ? {1: 'female', 2: 'male', 3: TIMESTAMP '2000-01-01 00:00:00'}";
+            "SELECT subject_id, birth_date, sex FROM subject\n" +
+                    "WHERE TRUE\n" +
+                    "AND sex IN (:sex0,:sex1)\n" +
+                    "AND birth_date >= :birthdate0, bindings={named:{sex0:female,sex1:male,birthdate0:2000-01-01 00:00:00.0}}]";
     String psActual =
             settings
                     .getSubjectSqlQuery(pqActual, ((SQLAdapter) adapter).getConnection(), search)
@@ -60,22 +60,22 @@ public class PreparedStatementTest extends AbstractTest {
     SQLAdapterSettings settings = SQLAdapterSettings.get();
     
     String pqExpected =
-            "SELECT subject_id, created_at, weight FROM assessment1\n"
-                    + "WHERE weight IS NOT NULL\n"
-                    + "AND weight >= ?\n"
-                    + "AND weight < ?\n"
-                    + "AND created_at >= ?\n"
-                    + "AND created_at < ?";
+            "SELECT subject_id, created_at, weight FROM assessment1\n" +
+                    "WHERE weight IS NOT NULL\n" +
+                    "AND weight >= :restriction0\n" +
+                    "AND weight < :restriction1\n" +
+                    "AND created_at >= :date0\n" +
+                    "AND created_at < :date1";
     String pqActual = settings.createSinglePreparedQuery(search);
     assertEquals(pqExpected, pqActual);
     
     String psExpected =
-            "SELECT subject_id, created_at, weight FROM assessment1\n"
-                    + "WHERE weight IS NOT NULL\n"
-                    + "AND weight >= ?\n"
-                    + "AND weight < ?\n"
-                    + "AND created_at >= ?\n"
-                    + "AND created_at < ? {1: CAST(100 AS NUMERIC(3)), 2: CAST(500 AS NUMERIC(3)), 3: TIMESTAMP '2000-01-01 00:00:00', 4: TIMESTAMP '2001-01-01 00:00:00'}";
+            "SELECT subject_id, created_at, weight FROM assessment1\n" +
+                    "WHERE weight IS NOT NULL\n" +
+                    "AND weight >= :restriction0\n" +
+                    "AND weight < :restriction1\n" +
+                    "AND created_at >= :date0\n" +
+                    "AND created_at < :date1, bindings={named:{restriction0:100,restriction1:500,date0:2000-01-01 00:00:00.0,date1:2001-01-01 00:00:00.0}}]";
     String psActual =
             settings
                     .getSingleSqlQuery(pqActual, ((SQLAdapter) adapter).getConnection(), search)

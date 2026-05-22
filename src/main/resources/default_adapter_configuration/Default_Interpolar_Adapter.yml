@@ -61,14 +61,14 @@ phenotypeQueries:
     baseQuery: |
       SELECT
         SUBSTRING(con.con_encounter_calculated_ref FROM 11) AS enc_id,
-        con.con_onsetperiod_start AS startDateTime, con.con_onsetperiod_end AS endDateTime, con_onsetdatetime, con_recordeddate,
+        con.con_onsetperiod_start AS start_date_time, con.con_onsetperiod_end AS end_date_time, con_onsetdatetime, con_recordeddate,
         CASE
           WHEN con.con_onsetperiod_start IS NULL AND con.con_onsetperiod_end IS NULL AND con.con_onsetdatetime IS NULL
             THEN con.con_recordeddate
           ELSE
             con.con_onsetdatetime
         END
-        AS dateTime
+        AS datetime
       FROM
         db2dataprocessor_out.v_condition con
       WHERE
@@ -95,14 +95,14 @@ phenotypeQueries:
       END
     output:
       subject: enc_id
-      startDateTime: startDateTime
-      endDateTime: endDateTime
+      startDateTime: start_date_time
+      endDateTime: end_date_time
   procedure:
     baseQuery: |
       SELECT 
           SUBSTRING(proc.proc_encounter_calculated_ref FROM 11) AS enc_id,
-          COALESCE(proc.proc_performedperiod_start, proc.proc_performeddatetime) AS startDateTime,
-          COALESCE(proc.proc_performedperiod_end, proc.proc_performeddatetime) AS endDateTime
+          COALESCE(proc.proc_performedperiod_start, proc.proc_performeddatetime) AS start_date_time,
+          COALESCE(proc.proc_performedperiod_end, proc.proc_performeddatetime) AS end_date_time
       FROM 
           db2dataprocessor_out.v_procedure proc
       WHERE 
@@ -116,16 +116,16 @@ phenotypeQueries:
         )
     output:
       subject: enc_id
-      startDateTime: startDateTime
-      endDateTime: endDateTime
+      startDateTime: start_date_time
+      endDateTime: end_date_time
   medication:
     union: [ medication_administration, medication_statement, medication_request ]
   medication_administration:
     baseQuery: |
       SELECT 
           SUBSTRING(medadm.medadm_encounter_calculated_ref FROM 11) AS enc_id,
-          COALESCE(medadm.medadm_effectiveperiod_start, medadm.medadm_effectivedatetime) AS startDateTime,
-          COALESCE(medadm.medadm_effectiveperiod_end, medadm.medadm_effectivedatetime) AS endDateTime
+          COALESCE(medadm.medadm_effectiveperiod_start, medadm.medadm_effectivedatetime) AS start_date_time,
+          COALESCE(medadm.medadm_effectiveperiod_end, medadm.medadm_effectivedatetime) AS end_date_time
       FROM 
           db2dataprocessor_out.v_medicationadministration medadm
       INNER JOIN 
@@ -142,14 +142,14 @@ phenotypeQueries:
         )
     output:
       subject: enc_id
-      startDateTime: startDateTime
-      endDateTime: endDateTime
+      startDateTime: start_date_time
+      endDateTime: end_date_time
   medication_statement:
     baseQuery: |
       SELECT 
           SUBSTRING(medstat.medstat_encounter_calculated_ref FROM 11) AS enc_id,
-          COALESCE(medstat.medstat_effectiveperiod_start, medstat.medstat_effectivedatetime) AS startDateTime,
-          COALESCE(medstat.medstat_effectiveperiod_end, medstat.medstat_effectivedatetime) AS endDateTime
+          COALESCE(medstat.medstat_effectiveperiod_start, medstat.medstat_effectivedatetime) AS start_date_time,
+          COALESCE(medstat.medstat_effectiveperiod_end, medstat.medstat_effectivedatetime) AS end_date_time
       FROM 
           db2dataprocessor_out.v_medicationstatement medstat
       INNER JOIN 
@@ -166,8 +166,8 @@ phenotypeQueries:
         )
     output:
       subject: enc_id
-      startDateTime: startDateTime
-      endDateTime: endDateTime
+      startDateTime: start_date_time
+      endDateTime: end_date_time
   medication_request:
     baseQuery: "SELECT SUBSTRING(medreq_encounter_calculated_ref FROM 11) AS enc_id, medreq_authoredon AS datetime FROM db2dataprocessor_out.v_medicationrequest, db2dataprocessor_out.v_medication\nWHERE medreq_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
     dateTimeIntervalPart: "\nAND medreq_authoredon {operator} {value}"
