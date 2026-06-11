@@ -1,0 +1,57 @@
+INSERT INTO db2dataprocessor_out.v_patient (pat_id, pat_birthdate, pat_gender)
+VALUES ('HOSP-0011', '2001-01-01', 'male'  ),
+       ('HOSP-0012', '2001-01-01', 'female'),
+       ('HOSP-0013', '1951-01-01', 'male'  ),
+       ('HOSP-0014', '1951-01-01', 'female'),
+       ('HOSP-0015', '1951-01-01', 'male'  ),
+
+       ('HOSP-0021', '2002-01-01', 'male'  ),
+       ('HOSP-0022', '2002-01-01', 'female'),
+       ('HOSP-0023', '1952-01-01', 'male'  ),
+       ('HOSP-0024', '1952-01-01', 'female'),
+       ('HOSP-0025', '1952-01-01', 'male'  ),
+
+       ('HOSP-0031', '2003-01-01', 'male'  ),
+       ('HOSP-0032', '2003-01-01', 'female'),
+       ('HOSP-0033', '1953-01-01', 'male'  ),
+       ('HOSP-0034', '1953-01-01', 'female'),
+       ('HOSP-0035', '1953-01-01', 'male'  ),
+
+       ('HOSP-0004', '1940-01-03', 'male'  );
+
+INSERT INTO db2dataprocessor_out.v_encounter (enc_id, enc_patient_ref, enc_class_code, enc_period_start, enc_period_end)
+VALUES ('HOSP-0011-E-1', 'Patient/HOSP-0011', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0012-E-1', 'Patient/HOSP-0012', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0013-E-1', 'Patient/HOSP-0013', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0014-E-1', 'Patient/HOSP-0014', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0015-E-1', 'Patient/HOSP-0015', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0021-E-1', 'Patient/HOSP-0021', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0022-E-1', 'Patient/HOSP-0022', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0023-E-1', 'Patient/HOSP-0023', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0024-E-1', 'Patient/HOSP-0024', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0025-E-1', 'Patient/HOSP-0025', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0031-E-1', 'Patient/HOSP-0031', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0032-E-1', 'Patient/HOSP-0032', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0033-E-1', 'Patient/HOSP-0033', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0034-E-1', 'Patient/HOSP-0034', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0035-E-1', 'Patient/HOSP-0035', 'IMP', '2017-01-01', '2017-02-01'),
+       ('HOSP-0004-E-1', 'Patient/HOSP-0004', 'IMP', '2017-01-01', '2017-02-01');
+
+INSERT INTO db2dataprocessor_out.v_medication (med_id, med_code_system, med_code_code)
+VALUES ('Medication-1', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('Medication-2', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc2');
+
+INSERT INTO db2dataprocessor_out.v_medicationadministration (medadm_id, medadm_encounter_calculated_ref, medadm_patient_ref, medadm_effectivedatetime, medadm_effectiveperiod_start, medadm_effectiveperiod_end, medadm_medicationreference_ref)
+VALUES ('HOSP-0011-E-1-MA-1', 'Encounter/HOSP-0011-E-1', 'Patient/HOSP-0011', '2020-01-01', null,         null,         'Medication/Medication-1'),
+       ('HOSP-0012-E-1-MA-1', 'Encounter/HOSP-0012-E-1', 'Patient/HOSP-0012', null,         '2020-01-01', '2020-01-02', 'Medication/Medication-2'),
+       ('HOSP-0013-E-1-MA-1', 'Encounter/HOSP-0013-E-1', 'Patient/HOSP-0013', null,         '2020-01-03', '2020-01-04', 'Medication/Medication-1'),
+       ('HOSP-0014-E-1-MA-1', 'Encounter/HOSP-0014-E-1', 'Patient/HOSP-0014', '2020-01-01', '2020-01-02', '2020-01-03', 'Medication/Medication-2'),
+       ('HOSP-0015-E-1-MA-1', 'Encounter/HOSP-0015-E-1', 'Patient/HOSP-0015', null,         null,         null,         'Medication/Medication-1'),
+       ('HOSP-0004-E-1-MA-1', 'Encounter/HOSP-0004-E-1', 'Patient/HOSP-0004', null,         '2020-01-01', null,         'Medication/Medication-2');
+
+INSERT INTO db2dataprocessor_out.v_medicationstatement (medstat_id, medstat_encounter_calculated_ref, medstat_patient_ref, medstat_effectivedatetime, medstat_effectiveperiod_start, medstat_effectiveperiod_end, medstat_medicationreference_ref)
+VALUES ('HOSP-0031-E-1-MS-1', 'Encounter/HOSP-0031-E-1', 'Patient/HOSP-0031', '2020-01-01', null,         null,          'Medication/Medication-1'),
+       ('HOSP-0032-E-1-MS-1', 'Encounter/HOSP-0032-E-1', 'Patient/HOSP-0032', null,         '2020-01-01', '2020-01-02',  'Medication/Medication-2'),
+       ('HOSP-0033-E-1-MS-1', 'Encounter/HOSP-0033-E-1', 'Patient/HOSP-0033', null,         '2020-01-03', '2020-01-04',  'Medication/Medication-1'),
+       ('HOSP-0034-E-1-MS-1', 'Encounter/HOSP-0034-E-1', 'Patient/HOSP-0034', '2020-01-01', '2020-01-02', '2020-01-03',  'Medication/Medication-2'),
+       ('HOSP-0035-E-1-MS-1', 'Encounter/HOSP-0035-E-1', 'Patient/HOSP-0035', null,         null,         null,          'Medication/Medication-1');
