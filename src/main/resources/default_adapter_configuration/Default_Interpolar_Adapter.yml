@@ -63,10 +63,12 @@ phenotypeQueries:
         SUBSTRING(con.con_encounter_calculated_ref FROM 11) AS enc_id,
         con.con_onsetperiod_start AS startDateTime, con.con_onsetperiod_end AS endDateTime, con_onsetdatetime, con_recordeddate,
         CASE
-          WHEN con.con_onsetperiod_start IS NULL AND con.con_onsetperiod_end IS NULL AND con.con_onsetdatetime IS NULL
-            THEN con.con_recordeddate
-          ELSE
-            con.con_onsetdatetime
+          WHEN con.con_onsetperiod_start IS NULL AND con.con_onsetperiod_end IS NULL
+            THEN
+              CASE WHEN con.con_onsetdatetime IS NULL
+                THEN con.con_recordeddate
+                ELSE con.con_onsetdatetime
+           END
         END
         AS dateTime
       FROM
