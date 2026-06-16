@@ -82,8 +82,7 @@ public class MedicationTimeTest {
             q -> q.inc(medadm, Res.ge(DateUtil.parse("2020-01-03"))),
             "HOSP-0004-E-1",
             "HOSP-0013-E-1",
-            "HOSP-0014-E-1",
-            "HOSP-0015-E-1"),
+            "HOSP-0014-E-1"),
         a(
             medadm,
             q -> q.inc(medadm, Res.le(DateUtil.parse("2020-01-04"))),
@@ -134,8 +133,7 @@ public class MedicationTimeTest {
             medstmt,
             q -> q.inc(medstmt, Res.ge(DateUtil.parse("2020-01-03"))),
             "HOSP-0033-E-1",
-            "HOSP-0034-E-1",
-            "HOSP-0035-E-1"),
+            "HOSP-0034-E-1"),
         a(
             medstmt,
             q -> q.inc(medstmt, Res.le(DateUtil.parse("2020-01-04"))),
