@@ -61,7 +61,8 @@ public class ProcedureTest {
             "HOSP-0002-E2",
             "HOSP-0003-E3",
             "HOSP-0004-E4"),
-        a(q -> q.inc(proc, Res.ge(DateUtil.parse("2026-04-07"))),
+        a(
+            q -> q.inc(proc, Res.ge(DateUtil.parse("2026-04-07"))),
             "HOSP-0003-E3",
             "HOSP-0005-E5",
             "HOSP-0007-E7"),
