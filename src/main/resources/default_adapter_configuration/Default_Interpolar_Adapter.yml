@@ -49,7 +49,7 @@ phenotypeQueries:
       startDateTime: enc_period_start
       endDateTime: enc_period_end
   observation:
-    baseQuery: "SELECT RIGHT(obs_encounter_calculated_ref, LENGTH(obs_encounter_calculated_ref) - 10) AS enc_id, obs_effectivedatetime, obs_valuequantity_value FROM db2dataprocessor_out.v_observation\nWHERE obs_valuequantity_value IS NOT NULL AND obs_code_system || '|' || obs_code_code IN ({codes})"
+    baseQuery: "SELECT SUBSTRING(obs_encounter_calculated_ref FROM 11) AS enc_id, obs_effectivedatetime, obs_valuequantity_value FROM db2dataprocessor_out.v_observation\nWHERE obs_valuequantity_value IS NOT NULL AND obs_code_system || '|' || obs_code_code IN ({codes})"
     numberValueIntervalPart: "\nAND obs_valuequantity_value {operator} {value}"
     numberValueListPart: "\nAND obs_valuequantity_value IN ({values})"
     dateTimeIntervalPart: "\nAND obs_effectivedatetime {operator} {value}"
@@ -58,33 +58,138 @@ phenotypeQueries:
       numberValue: obs_valuequantity_value
       dateTime: obs_effectivedatetime
   condition:
-    baseQuery: "SELECT RIGHT(con_encounter_calculated_ref, LENGTH(con_encounter_calculated_ref) - 10) AS enc_id,  con_recordeddate FROM db2dataprocessor_out.v_condition\nWHERE con_code_system || '|' || con_code_code IN ({codes})"
-    dateTimeIntervalPart: "\nAND con_recordeddate {operator} {value}"
+    baseQuery: |
+      SELECT
+        SUBSTRING(con.con_encounter_calculated_ref FROM 11) AS enc_id,
+        con.con_onsetperiod_start AS start_date_time,
+        con.con_onsetperiod_end AS end_date_time,
+        CASE
+          WHEN con.con_onsetperiod_start IS NULL AND con.con_onsetperiod_end IS NULL AND con.con_onsetdatetime IS NULL
+          THEN con.con_recordeddate
+          ELSE con.con_onsetdatetime
+        END
+        AS date_time 
+      FROM
+        db2dataprocessor_out.v_condition con
+      WHERE
+        con_code_system || '|' || con_code_code IN ({codes})
+    startDateTimeIntervalPart: |
+      AND
+      CASE
+        WHEN con.con_onsetperiod_start IS NOT NULL OR (con.con_onsetperiod_start IS NULL AND con.con_onsetperiod_end IS NULL)
+          THEN COALESCE(con.con_onsetperiod_start, con.con_onsetdatetime, con.con_recordeddate) {operator} {value}
+        ELSE true
+      END
+    endDateTimeIntervalPart: |
+      AND
+      CASE
+        WHEN con.con_onsetperiod_end IS NOT NULL OR (con.con_onsetperiod_start IS NULL AND con.con_onsetperiod_end IS NULL)
+          THEN COALESCE(con.con_onsetperiod_end, con.con_onsetdatetime, con.con_recordeddate) {operator} {value}
+        ELSE true
+      END
     output:
       subject: enc_id
-      dateTime: con_recordeddate
+      startDateTime: start_date_time
+      endDateTime: end_date_time
+      dateTime: date_time
   procedure:
-    baseQuery: "SELECT RIGHT(proc_encounter_calculated_ref, LENGTH(proc_encounter_calculated_ref) - 10) AS enc_id, proc_performeddatetime FROM db2dataprocessor_out.v_procedure\nWHERE proc_code_system || '|' || proc_code_code IN ({codes})"
-    dateTimeIntervalPart: "\nAND proc_performeddatetime {operator} {value}"
+    baseQuery: |
+      SELECT 
+          SUBSTRING(proc.proc_encounter_calculated_ref FROM 11) AS enc_id,
+          proc.proc_performedperiod_start AS start_date_time,
+          proc.proc_performedperiod_end AS end_date_time,
+          proc.proc_performeddatetime AS date_time
+      FROM 
+          db2dataprocessor_out.v_procedure proc
+      WHERE 
+      	proc_code_system || '|' || proc_code_code IN ({codes})
+    startDateTimeIntervalPart: |
+        AND 
+          CASE
+            WHEN proc.proc_performedperiod_start IS NOT NULL OR (proc.proc_performedperiod_start IS NULL AND proc.proc_performedperiod_end IS NULL)
+              THEN COALESCE(proc.proc_performedperiod_start, proc.proc_performeddatetime) {operator} {value}
+            ELSE true
+          END
+    endDateTimeIntervalPart: |
+        AND
+          CASE
+            WHEN proc.proc_performedperiod_end IS NOT NULL OR (proc.proc_performedperiod_start IS NULL AND proc.proc_performedperiod_end IS NULL)
+              THEN COALESCE(proc.proc_performedperiod_end, proc.proc_performeddatetime) {operator} {value}
+            ELSE true
+          END
     output:
       subject: enc_id
-      dateTime: proc_performeddatetime
+      startDateTime: start_date_time
+      endDateTime: end_date_time
+      dateTime: date_time
   medication:
     union: [ medication_administration, medication_statement, medication_request ]
   medication_administration:
-    baseQuery: "SELECT RIGHT(medadm_encounter_calculated_ref, LENGTH(medadm_encounter_calculated_ref) - 10) AS enc_id, medadm_effectivedatetime AS datetime FROM db2dataprocessor_out.v_medicationadministration, db2dataprocessor_out.v_medication\nWHERE medadm_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
-    dateTimeIntervalPart: "\nAND medadm_effectivedatetime {operator} {value}"
+    baseQuery: |
+      SELECT
+          SUBSTRING(medadm.medadm_encounter_calculated_ref FROM 11) AS enc_id,
+          medadm.medadm_effectiveperiod_start AS start_date_time,
+          medadm.medadm_effectiveperiod_end AS end_date_time,
+          medadm.medadm_effectivedatetime AS date_time
+      FROM
+          db2dataprocessor_out.v_medicationadministration medadm,
+          db2dataprocessor_out.v_medication med
+      WHERE
+          medadm.medadm_medicationreference_ref = 'Medication/' || med.med_id
+          AND med.med_code_system || '|' || med.med_code_code IN ({codes})
+    startDateTimeIntervalPart: |
+          AND
+            CASE
+              WHEN medadm.medadm_effectiveperiod_start IS NOT NULL OR (medadm.medadm_effectiveperiod_start IS NULL AND medadm.medadm_effectiveperiod_end IS NULL)
+                THEN COALESCE(medadm.medadm_effectiveperiod_start, medadm.medadm_effectivedatetime) {operator} {value}
+              ELSE true
+            END
+    endDateTimeIntervalPart: |
+          AND
+            CASE
+              WHEN medadm.medadm_effectiveperiod_end IS NOT NULL OR (medadm.medadm_effectiveperiod_start IS NULL AND medadm.medadm_effectiveperiod_end IS NULL)
+                THEN COALESCE(medadm.medadm_effectiveperiod_end, medadm.medadm_effectivedatetime) {operator} {value}
+              ELSE true
+            END
     output:
       subject: enc_id
-      dateTime: datetime
+      startDateTime: start_date_time
+      endDateTime: end_date_time
+      dateTime: date_time
   medication_statement:
-    baseQuery: "SELECT RIGHT(medstat_encounter_calculated_ref, LENGTH(medstat_encounter_calculated_ref) - 10) AS enc_id, medstat_effectivedatetime AS datetime FROM db2dataprocessor_out.v_medicationstatement, db2dataprocessor_out.v_medication\nWHERE medstat_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
-    dateTimeIntervalPart: "\nAND medstat_effectivedatetime {operator} {value}"
+    baseQuery: |
+      SELECT
+          SUBSTRING(medstat.medstat_encounter_calculated_ref FROM 11) AS enc_id,
+          medstat.medstat_effectiveperiod_start AS start_date_time,
+          medstat.medstat_effectiveperiod_end AS end_date_time,
+          medstat.medstat_effectivedatetime AS date_time
+      FROM
+          db2dataprocessor_out.v_medicationstatement medstat,
+          db2dataprocessor_out.v_medication med
+      WHERE
+          medstat.medstat_medicationreference_ref = 'Medication/' || med.med_id
+          AND med.med_code_system || '|' || med.med_code_code IN ({codes})
+    startDateTimeIntervalPart: |
+      AND
+        CASE
+          WHEN medstat.medstat_effectiveperiod_start IS NOT NULL OR (medstat.medstat_effectiveperiod_start IS NULL AND medstat.medstat_effectiveperiod_end IS NULL)
+            THEN COALESCE(medstat.medstat_effectiveperiod_start, medstat.medstat_effectivedatetime) {operator} {value}
+          ELSE true
+        END
+    endDateTimeIntervalPart: |
+      AND
+        CASE
+          WHEN medstat.medstat_effectiveperiod_end IS NOT NULL OR (medstat.medstat_effectiveperiod_start IS NULL AND medstat.medstat_effectiveperiod_end IS NULL)
+            THEN COALESCE(medstat.medstat_effectiveperiod_end, medstat.medstat_effectivedatetime) {operator} {value}
+          ELSE true
+        END
     output:
       subject: enc_id
-      dateTime: datetime
+      startDateTime: start_date_time
+      endDateTime: end_date_time
+      dateTime: date_time
   medication_request:
-    baseQuery: "SELECT RIGHT(medreq_encounter_calculated_ref, LENGTH(medreq_encounter_calculated_ref) - 10) AS enc_id, medreq_authoredon AS datetime FROM db2dataprocessor_out.v_medicationrequest, db2dataprocessor_out.v_medication\nWHERE medreq_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
+    baseQuery: "SELECT SUBSTRING(medreq_encounter_calculated_ref FROM 11) AS enc_id, medreq_authoredon AS datetime FROM db2dataprocessor_out.v_medicationrequest, db2dataprocessor_out.v_medication\nWHERE medreq_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
     dateTimeIntervalPart: "\nAND medreq_authoredon {operator} {value}"
     output:
       subject: enc_id
