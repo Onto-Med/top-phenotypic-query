@@ -61,16 +61,9 @@ phenotypeQueries:
     baseQuery: |
       SELECT
         SUBSTRING(con.con_encounter_calculated_ref FROM 11) AS enc_id,
-        con.con_onsetperiod_start AS start_date_time, con.con_onsetperiod_end AS end_date_time, con_onsetdatetime, con_recordeddate,
-        CASE
-          WHEN con.con_onsetperiod_start IS NULL AND con.con_onsetperiod_end IS NULL
-            THEN
-              CASE WHEN con.con_onsetdatetime IS NULL
-                THEN con.con_recordeddate
-                ELSE con.con_onsetdatetime
-           END
-        END
-        AS date_time
+        con.con_onsetperiod_start AS start_date_time,
+        con.con_onsetperiod_end AS end_date_time,
+        COALESCE(con.con_onsetdatetime, con.con_recordeddate) AS date_time 
       FROM
         db2dataprocessor_out.v_condition con
       WHERE
@@ -100,11 +93,7 @@ phenotypeQueries:
           SUBSTRING(proc.proc_encounter_calculated_ref FROM 11) AS enc_id,
           proc.proc_performedperiod_start AS start_date_time,
           proc.proc_performedperiod_end AS end_date_time,
-          CASE
-          	WHEN proc.proc_performedperiod_start IS NULL AND proc.proc_performedperiod_end IS NULL
-          	THEN proc.proc_performeddatetime
-          END
-          AS date_time
+          proc.proc_performeddatetime AS date_time
       FROM 
           db2dataprocessor_out.v_procedure proc
       WHERE 
@@ -136,14 +125,7 @@ phenotypeQueries:
           SUBSTRING(medadm.medadm_encounter_calculated_ref FROM 11) AS enc_id,
           medadm.medadm_effectiveperiod_start AS start_date_time,
           medadm.medadm_effectiveperiod_end AS end_date_time,
-          medadm.medadm_medicationreference_ref,
-          med.med_code_system,
-          med.med_code_code,
-          CASE
-          	WHEN medadm.medadm_effectiveperiod_start IS NULL AND medadm.medadm_effectiveperiod_end IS NULL
-          	THEN medadm.medadm_effectivedatetime
-          END
-          AS date_time
+          medadm.medadm_effectivedatetime AS date_time
       FROM
           db2dataprocessor_out.v_medicationadministration medadm,
           db2dataprocessor_out.v_medication med
@@ -175,14 +157,7 @@ phenotypeQueries:
           SUBSTRING(medstat.medstat_encounter_calculated_ref FROM 11) AS enc_id,
           medstat.medstat_effectiveperiod_start AS start_date_time,
           medstat.medstat_effectiveperiod_end AS end_date_time,
-          medstat.medstat_medicationreference_ref,
-          med.med_code_system,
-          med.med_code_code,
-          CASE
-          	WHEN medstat.medstat_effectiveperiod_start IS NULL AND medstat.medstat_effectiveperiod_end IS NULL
-          	THEN medstat.medstat_effectivedatetime
-          END
-          AS date_time
+          medstat.medstat_effectivedatetime AS date_time
       FROM
           db2dataprocessor_out.v_medicationstatement medstat,
           db2dataprocessor_out.v_medication med
