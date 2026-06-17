@@ -11,6 +11,7 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +24,20 @@ public class Values {
       new Comparator<Expression>() {
         @Override
         public int compare(Expression e1, Expression e2) {
-          if (!Expressions.hasValues(e1) || !Expressions.hasValues(e2)) return 0;
-          LocalDateTime d1 = getDateTime(Expressions.getValue(e1));
-          LocalDateTime d2 = getDateTime(Expressions.getValue(e2));
-          if (d1 == null || d2 == null) return 0;
+          boolean hasValuesE1 = Expressions.hasValues(e1);
+          boolean hasValuesE2 = Expressions.hasValues(e2);
+          if (!hasValuesE1 && !hasValuesE2) return 0;
+          if (!hasValuesE1) return -1;
+          if (!hasValuesE2) return 1;
+
+          LocalDateTime d1 = null;
+          LocalDateTime d2 = null;
+          if (hasValuesE1) d1 = getDateTime(Expressions.getValue(e1));
+          if (hasValuesE2) d2 = getDateTime(Expressions.getValue(e2));
+          if (d1 == null && d2 == null) return 0;
+          if (d1 == null) return -1;
+          if (d2 == null) return 1;
+
           return d1.compareTo(d2);
         }
       };
@@ -37,7 +48,10 @@ public class Values {
         public int compare(Value v1, Value v2) {
           LocalDateTime d1 = getDateTime(v1);
           LocalDateTime d2 = getDateTime(v2);
-          if (d1 == null || d2 == null) return 0;
+          if (d1 == null && d2 == null) return 0;
+          if (d1 == null) return -1;
+          if (d2 == null) return 1;
+
           return d1.compareTo(d2);
         }
       };
@@ -46,10 +60,18 @@ public class Values {
       new Comparator<Expression>() {
         @Override
         public int compare(Expression e1, Expression e2) {
-          if (!Expressions.hasValues(e1) || !Expressions.hasValues(e2)) return 0;
+          boolean hasValuesE1 = Expressions.hasValues(e1);
+          boolean hasValuesE2 = Expressions.hasValues(e2);
+          if (!hasValuesE1 && !hasValuesE2) return 0;
+          if (!hasValuesE1) return -1;
+          if (!hasValuesE2) return 1;
+
           BigDecimal v1 = Expressions.getNumberValue(e1);
           BigDecimal v2 = Expressions.getNumberValue(e2);
-          if (v1 == null || v2 == null) return 0;
+          if (v1 == null && v2 == null) return 0;
+          if (v1 == null) return -1;
+          if (v2 == null) return 1;
+
           return v1.compareTo(v2);
         }
       };
@@ -262,5 +284,30 @@ public class Values {
     Map<String, Value> fields = v.getFields();
     if (fields == null) return null;
     return fields.get(fieldName);
+  }
+
+  public static boolean hasDateTime(Value v) {
+    return v.getDateTime() != null || v.getStartDateTime() != null || v.getEndDateTime() != null;
+  }
+
+  public static boolean hasDateTimeAllValues(Collection<Value> vals) {
+    return !vals.stream().anyMatch(v -> !hasDateTime(v));
+  }
+
+  public static BigDecimal getPeriodInHours(Value v1, Value v2) {
+    return DateUtil.getPeriodInHours(
+        v1.getStartDateTime(), v1.getEndDateTime(), v2.getStartDateTime(), v2.getEndDateTime());
+  }
+
+  public static String toStringPeriod(Value v) {
+    LocalDateTime start = getStartDateTime(v);
+    LocalDateTime end = getEndDateTime(v);
+    String startStr = (start == null) ? "null" : DateUtil.format(start);
+    String endStr = (end == null) ? "null" : DateUtil.format(end);
+    return startStr + "|" + endStr;
+  }
+
+  public static String toStringPeriod(List<Value> vals) {
+    return vals.stream().map(v -> toStringPeriod(v)).toList().toString();
   }
 }

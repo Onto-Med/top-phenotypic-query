@@ -23,8 +23,14 @@ follows:
 
 ```sh
 # show help message
-java -jar top-phenotypic-query-x.x.x.jar query --help
+java -jar top-phenotypic-query-x.x.x.jar --help
+```
 
+### Query Execution
+
+The subcommand `query` provides execution of phenotypic queries.
+
+```sh
 # execute phenotypic queries based on a phenotype model, results are written to ZIP
 java -jar top-phenotypic-query-x.x.x.jar query <phenotype model> \
   <adapter config> <query config> -o <ZIP output path>
@@ -38,10 +44,23 @@ Input parameters:
   Alternatively, the `--phenotype` option can be used to build a query from the provided phenotype ID.
 * optional: output destination of the ZIP file that contains the result set (if not provided, output is written to STDOUT)
 
-The next sections provide information on how to add `top-phenotypic-query` as Maven dependency to your Java project and
-how to call it programmatically.
+### Result Set Analysis
+
+The subcommand `analysis` enables execution of analyses based on previously generated query results (e.g., with `query` subcommand).
+
+```sh
+# list all available analyses
+java -jar top-phenotypic-query-x.x.x.jar analysis --help
+
+# print the number of phenotype classes contained all provided query result archives
+java -jar top-phenotypic-query-x.x.x.jar analysis count-phenotypes query_result_1.zip query_result_2.zip
+```
+
+Some analyses require additional configuration, which can be provided as YAML file using the `--config` option.
 
 ## Installation
+
+This sections provides information on how to add `top-phenotypic-query` as Maven dependency to your Java project and how to call it programmatically.
 
 Add the following Maven dependency to your project's `pom.xml` file and see section [Authentication to GitHub Packages](#authentication-to-github-packages)
 for authentication with [GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry).

@@ -320,6 +320,57 @@ public class C2RTest {
   }
 
   @Test
+  public void testLastWithoutTimestamp() {
+    Value v1 = Val.of(3, DateUtil.parse("2002-01-01"));
+    Value v2 = Val.of(5, DateUtil.parse("2001-01-01"));
+    Value v3 = Val.of(9);
+    Value v4 = Val.of(7, DateUtil.parse("2000-01-01"));
+    Value v5 = Val.of(1);
+
+    Phenotype a = new Phe("a").get();
+    SubjectPhenotypes vals = new SubjectPhenotypes("1");
+    vals.addValue("a", null, v1);
+    vals.addValue("a", null, v2);
+    vals.addValue("a", null, v3);
+    vals.addValue("a", null, v4);
+    vals.addValue("a", null, v5);
+
+    Phenotype x = new Phe("x").expression(Last.of(a)).get();
+    Phenotype y = new Phe("y").expression(CutLast.of(a)).get();
+
+    Entities phens = Entities.of(a, x, y);
+
+    C2R c = new C2R().phenotypes(phens).values(vals);
+
+    assertEquals(List.of(BigDecimal.valueOf(3)), Expressions.getNumberValues(c.calculate(x)));
+    assertEquals(
+        List.of(
+            BigDecimal.valueOf(9),
+            BigDecimal.valueOf(1),
+            BigDecimal.valueOf(7),
+            BigDecimal.valueOf(5)),
+        Expressions.getNumberValues(c.calculate(y)));
+
+    Expression e1 = Exp.of(v1);
+    Expression e2 = Exp.of(v2);
+    Expression e3 = Exp.of(v3);
+    Expression e4 = Exp.of(v4);
+    Expression e5 = Exp.of(v5);
+    Expression ea = Last.of(e1, e2, e3, e4, e5);
+    Expression eb = CutLast.of(e1, e2, e3, e4, e5);
+
+    assertEquals(
+        List.of(BigDecimal.valueOf(3)), Expressions.getNumberValues(new C2R().calculate(ea)));
+    assertEquals(
+        List.of(
+            BigDecimal.valueOf(9),
+            BigDecimal.valueOf(1),
+            BigDecimal.valueOf(7),
+            BigDecimal.valueOf(5)),
+        Expressions.getNumberValues(new C2R().calculate(eb)));
+  }
+
+  @Test
   public void testFilter1() {
     Value v1 = Val.of(5, DateUtil.parse("2000-01-01"));
     Value v2 = Val.of(10, DateUtil.parse("2001-01-01"));

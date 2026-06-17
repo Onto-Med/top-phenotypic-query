@@ -189,6 +189,13 @@ public class DateUtil {
         .setScale(3, RoundingMode.HALF_UP);
   }
 
+  public static BigDecimal getPeriodInHours(
+      LocalDateTime start1, LocalDateTime end1, LocalDateTime start2, LocalDateTime end2) {
+    if (end1.isBefore(start2)) return getPeriodInHours(end1, start2);
+    if (end2.isBefore(start1)) return getPeriodInHours(end2, start1);
+    return BigDecimal.ZERO;
+  }
+
   public static long birthdateToAge(LocalDateTime birthdate) {
     return ChronoUnit.YEARS.between(birthdate.toLocalDate(), LocalDate.now());
   }
