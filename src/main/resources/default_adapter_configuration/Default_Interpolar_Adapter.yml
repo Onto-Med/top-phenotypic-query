@@ -63,7 +63,12 @@ phenotypeQueries:
         SUBSTRING(con.con_encounter_calculated_ref FROM 11) AS enc_id,
         con.con_onsetperiod_start AS start_date_time,
         con.con_onsetperiod_end AS end_date_time,
-        COALESCE(con.con_onsetdatetime, con.con_recordeddate) AS date_time 
+        CASE
+          WHEN con.con_onsetperiod_start IS NULL AND con.con_onsetperiod_end IS NULL AND con.con_onsetdatetime IS NULL
+          THEN con.con_recordeddate
+          ELSE con.con_onsetdatetime
+        END
+        AS date_time 
       FROM
         db2dataprocessor_out.v_condition con
       WHERE
