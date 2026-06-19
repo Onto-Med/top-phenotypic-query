@@ -68,8 +68,8 @@ public class TimeAnalysisCalc {
     List<List<Value>> sbjRecord = new ArrayList<>();
     for (String pheId : pheCombi) {
       if (pheId == null) continue;
-      List<Value> pheValues = (List<Value>) data.get(pheId);
-      if (pheValues == null || pheValues.isEmpty()) {
+      List<Value> pheValues = getPhenotypeValues(pheId, data);
+      if (pheValues.isEmpty()) {
         log.debug(String.format("No values of phenotype %s", pheId));
         countNoValue++;
         return;
@@ -90,6 +90,12 @@ public class TimeAnalysisCalc {
     log.debug(String.format("Phenotype combi period (min): %s", pheCombiPeriod));
 
     checkPeriod(pheCombiPeriod);
+  }
+
+  private List<Value> getPhenotypeValues(String pheId, Multimap<String, Value> data) {
+    List<Value> vals = new ArrayList<>();
+    for (String pId : data.keySet()) if (pId.startsWith(pheId)) vals.addAll(data.get(pId));
+    return vals;
   }
 
   // Calculates the maximum period between values of a value combination

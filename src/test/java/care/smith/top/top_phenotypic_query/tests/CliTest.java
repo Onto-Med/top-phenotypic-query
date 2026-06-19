@@ -59,24 +59,24 @@ class CliTest extends AbstractTest {
     String expectedReport =
         String.format(
             "\"ALGORITHMID\",\"ALGORITHMTITLE\",\"MODEL\",\"PHENOTYPEID\",\"PHENOTYPETITLE\",\"RESULTNAME\",\"RESULTVALUE\",\"SIZE\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"12\",\"2\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"24\",\"1\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"36\",\"0\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"48\",\"0\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"72\",\"0\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"120\",\"0\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"greater equal\",\"0\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"no value\",\"1\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight-Height\",\"Weight-Height\",\"no timestamp\",\"0\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"12\",\"1\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"24\",\"0\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"36\",\"0\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"48\",\"0\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"72\",\"0\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"120\",\"1\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"greater equal\",\"1\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"no value\",\"0\",\"4\"\n"
-                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi-Infect-Op\",\"Dabi|en,Dabi|de-Infection|en,Infektion|de-Operation|en,Operation|de\",\"no timestamp\",\"1\",\"4\"\n",
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight::Height\",\"Weight::Height\",\"12\",\"2\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight::Height\",\"Weight::Height\",\"24\",\"1\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight::Height\",\"Weight::Height\",\"36\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight::Height\",\"Weight::Height\",\"48\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight::Height\",\"Weight::Height\",\"72\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight::Height\",\"Weight::Height\",\"120\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight::Height\",\"Weight::Height\",\"greater equal\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight::Height\",\"Weight::Height\",\"no value\",\"1\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Weight::Height\",\"Weight::Height\",\"no timestamp\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi::Infect::Op\",\"Dabi|en,Dabi|de::Infection|en,Infektion|de::Operation|en,Operation|de\",\"12\",\"1\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi::Infect::Op\",\"Dabi|en,Dabi|de::Infection|en,Infektion|de::Operation|en,Operation|de\",\"24\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi::Infect::Op\",\"Dabi|en,Dabi|de::Infection|en,Infektion|de::Operation|en,Operation|de\",\"36\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi::Infect::Op\",\"Dabi|en,Dabi|de::Infection|en,Infektion|de::Operation|en,Operation|de\",\"48\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi::Infect::Op\",\"Dabi|en,Dabi|de::Infection|en,Infektion|de::Operation|en,Operation|de\",\"72\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi::Infect::Op\",\"Dabi|en,Dabi|de::Infection|en,Infektion|de::Operation|en,Operation|de\",\"120\",\"1\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi::Infect::Op\",\"Dabi|en,Dabi|de::Infection|en,Infektion|de::Operation|en,Operation|de\",\"greater equal\",\"1\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi::Infect::Op\",\"Dabi|en,Dabi|de::Infection|en,Infektion|de::Operation|en,Operation|de\",\"no value\",\"0\",\"4\"\n"
+                + "\"BMI\",\"BMI\",\"%1$s\",\"Dabi::Infect::Op\",\"Dabi|en,Dabi|de::Infection|en,Infektion|de::Operation|en,Operation|de\",\"no timestamp\",\"1\",\"4\"\n",
             data.getFileName());
 
     assertEquals(expectedReport, Files.readString(report));
@@ -120,9 +120,9 @@ class CliTest extends AbstractTest {
   ResultSet getResultSet() {
     rs = new ResultSet();
 
-    addNum("1", weight, "2010-01-03", null, null);
-    addNum("1", weight, "2010-01-01T18:00", null, null);
-    addNum("1", weight, "2010-01-02", null, null);
+    addNum("1", weight.getId() + "_values_a", "2010-01-03", null, null);
+    addNum("1", weight.getId() + "_values_b", "2010-01-01T18:00", null, null);
+    addNum("1", weight.getId() + "_values_a", "2010-01-02", null, null);
     addNum("1", height, "2010-01-04", null, null);
     addNum("1", height, "2010-01-01T07:00", null, null);
     addBool("1", dabi, "2010-01-05", null, null);
@@ -134,9 +134,9 @@ class CliTest extends AbstractTest {
     addBool("1", op, "2010-01-06", null, null);
     addBool("1", op, "2010-01-07", null, null);
 
-    addNum("2", weight, null, "2010-01-03", null);
-    addNum("2", weight, null, null, "2010-01-01T18:00");
-    addNum("2", weight, null, "2010-01-02", "2010-01-03");
+    addNum("2", weight.getId() + "_values_a", null, "2010-01-03", null);
+    addNum("2", weight.getId() + "_values_b", null, null, "2010-01-01T18:00");
+    addNum("2", weight.getId() + "_values_a", null, "2010-01-02", "2010-01-03");
     addNum("2", height, "2010-01-01T21:00", null, null);
     addNum("2", height, null, "2010-01-01T20:00", "2010-01-01T21:00");
     addBool("2", dabi, null, null, "2010-01-07");
@@ -148,9 +148,9 @@ class CliTest extends AbstractTest {
     addBool("2", op, null, "2010-01-11", null);
     addBool("2", op, null, "2010-01-11", null);
 
-    addNum("3", weight, "2010-01-03", null, null);
-    addNum("3", weight, "2010-01-01T18:00", null, null);
-    addNum("3", weight, "2010-01-02", null, null);
+    addNum("3", weight.getId() + "_values_a", "2010-01-03", null, null);
+    addNum("3", weight.getId() + "_values_b", "2010-01-01T18:00", null, null);
+    addNum("3", weight.getId() + "_values_a", "2010-01-02", null, null);
     addBool("3", dabi, "2010-01-05", null, null);
     addBool("3", dabi, "2010-01-06", null, null);
     addBool("3", dabi, "2010-01-07", null, null);
@@ -160,9 +160,9 @@ class CliTest extends AbstractTest {
     addBool("3", op, "2010-03-06", null, null);
     addBool("3", op, "2010-03-07", null, null);
 
-    addNum("4", weight, "2010-01-03", null, null);
-    addNum("4", weight, "2010-01-01T18:00", null, null);
-    addNum("4", weight, "2010-01-02", null, null);
+    addNum("4", weight.getId() + "_values_a", "2010-01-03", null, null);
+    addNum("4", weight.getId() + "_values_b", "2010-01-01T18:00", null, null);
+    addNum("4", weight.getId() + "_values_a", "2010-01-02", null, null);
     addNum("4", height, "2010-01-04", null, null);
     addNum("4", height, "2010-01-01T06:00", null, null);
     addBool("4", dabi, "2010-01-05", null, null);
@@ -180,6 +180,11 @@ class CliTest extends AbstractTest {
   void addNum(String patId, Phenotype phe, String date, String start, String end) {
     rs.addValue(
         patId, phe, null, Val.of(1, getDateTime(date), getDateTime(start), getDateTime(end)));
+  }
+
+  void addNum(String patId, String pheName, String date, String start, String end) {
+    rs.addValue(
+        patId, pheName, null, Val.of(1, getDateTime(date), getDateTime(start), getDateTime(end)));
   }
 
   void addBool(String patId, Phenotype phe, String date, String start, String end) {

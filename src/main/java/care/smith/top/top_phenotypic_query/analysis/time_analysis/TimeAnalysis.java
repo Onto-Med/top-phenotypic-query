@@ -86,7 +86,7 @@ public class TimeAnalysis extends Analysis {
       if (algPhe == null) continue;
       String algTitle = algPhe.getTitles().getFirst().getText();
       for (List<String> pheCombi : conf.getPhenotypes().get(algId)) {
-        String pheCombiId = String.join("-", pheCombi);
+        String pheCombiId = String.join("::", pheCombi);
         if (containsCombi(pheCombi, algId, metadata))
           new TimeAnalysisCalc(
                   pheCombi,
@@ -120,7 +120,7 @@ public class TimeAnalysis extends Analysis {
   private String getPheCombiTitle(List<String> pheCombi, Map<String, Phenotype> metadata) {
     return pheCombi.stream()
         .map(p -> metadata.get(p).getTitles().getFirst().getText())
-        .collect(Collectors.joining("-"));
+        .collect(Collectors.joining("::"));
   }
 
   private TreeMap<BigDecimal, Integer> getPeriods(TimeAnalysisSpec conf) {
