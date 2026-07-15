@@ -1,6 +1,6 @@
 CREATE SCHEMA db2dataprocessor_out;
 
-CREATE TABLE db2dataprocessor_out.v_patient
+CREATE TABLE db2dataprocessor_out.v_patient_last_version
 (
     pat_id        varchar NOT NULL,
     pat_birthdate date NULL,
@@ -8,7 +8,7 @@ CREATE TABLE db2dataprocessor_out.v_patient
     PRIMARY KEY (pat_id)
 );
 
-CREATE TABLE db2dataprocessor_out.v_encounter
+CREATE TABLE db2dataprocessor_out.v_encounter_last_version
 (
     enc_id                      varchar NOT NULL,
     enc_patient_ref             varchar NULL,
@@ -18,7 +18,7 @@ CREATE TABLE db2dataprocessor_out.v_encounter
     PRIMARY KEY (enc_id)
 );
 
-CREATE TABLE db2dataprocessor_out.v_observation
+CREATE TABLE db2dataprocessor_out.v_observation_last_version
 (
     obs_id                       varchar NOT NULL,
     obs_encounter_calculated_ref varchar NULL,
@@ -45,7 +45,7 @@ CREATE TABLE db2dataprocessor_out."v_condition"
     PRIMARY KEY (con_id)
 );
 
-CREATE TABLE db2dataprocessor_out.v_procedure
+CREATE TABLE db2dataprocessor_out.v_procedure_last_version
 (
     proc_id                       varchar NOT NULL,
     proc_encounter_calculated_ref varchar NULL,
@@ -56,7 +56,7 @@ CREATE TABLE db2dataprocessor_out.v_procedure
     PRIMARY KEY (proc_id)
 );
 
-CREATE TABLE db2dataprocessor_out.v_medication
+CREATE TABLE db2dataprocessor_out.v_medication_last_version
 (
     med_id          varchar NOT NULL,
     med_code_system varchar NULL,
@@ -64,7 +64,7 @@ CREATE TABLE db2dataprocessor_out.v_medication
     PRIMARY KEY (med_id, med_code_system, med_code_code)
 );
 
-CREATE TABLE db2dataprocessor_out.v_medicationadministration
+CREATE TABLE db2dataprocessor_out.v_medicationadministration_last_version
 (
     medadm_id                       varchar NOT NULL,
     medadm_encounter_calculated_ref varchar NULL,
@@ -74,7 +74,7 @@ CREATE TABLE db2dataprocessor_out.v_medicationadministration
     PRIMARY KEY (medadm_id)
 );
 
-CREATE TABLE db2dataprocessor_out.v_medicationstatement
+CREATE TABLE db2dataprocessor_out.v_medicationstatement_last_version
 (
     medstat_id                       varchar NOT NULL,
     medstat_encounter_calculated_ref varchar NULL,
@@ -84,7 +84,7 @@ CREATE TABLE db2dataprocessor_out.v_medicationstatement
     PRIMARY KEY (medstat_id)
 );
 
-CREATE TABLE db2dataprocessor_out.v_medicationrequest
+CREATE TABLE db2dataprocessor_out.v_medicationrequest_last_version
 (
     medreq_id                       varchar NOT NULL,
     medreq_encounter_calculated_ref varchar NULL,
@@ -94,21 +94,21 @@ CREATE TABLE db2dataprocessor_out.v_medicationrequest
     PRIMARY KEY (medreq_id)
 );
 
-INSERT INTO db2dataprocessor_out.v_patient
+INSERT INTO db2dataprocessor_out.v_patient_last_version
 VALUES ('HOSP-0001', current_date - '85' year, 'female'),
        ('HOSP-0002', current_date - '65' year, 'female'),
        ('HOSP-0003', current_date - '45' year, 'male'),
        ('HOSP-0004', current_date - '25' year, 'male'),
        ('HOSP-0005', current_date - '5' year, 'female');
 
-INSERT INTO db2dataprocessor_out.v_encounter
+INSERT INTO db2dataprocessor_out.v_encounter_last_version
 VALUES ('HOSP-0001-E-1', 'Patient/HOSP-0001', NULL, 'IMP', '2016-01-01', '2016-02-01'),
        ('HOSP-0002-E-1', 'Patient/HOSP-0002', NULL, 'IMP', '2017-01-01', '2017-02-01'),
        ('HOSP-0003-E-1', 'Patient/HOSP-0003', NULL, 'IMP', '2018-01-01', '2018-02-01'),
        ('HOSP-0004-E-1', 'Patient/HOSP-0004', NULL, 'IMP', '2019-01-01', '2019-02-01'),
        ('HOSP-0005-E-1', 'Patient/HOSP-0005', NULL, 'AMB', '2020-01-01', '2020-02-01');
 
-INSERT INTO db2dataprocessor_out.v_observation
+INSERT INTO db2dataprocessor_out.v_observation_last_version
 VALUES ('HOSP-0001-E-1-OL-1', 'Encounter/HOSP-0001-E-1', 'Patient/HOSP-0001', 'http://loinc.org', '1234-5',
         '2016-01-16T12:43:00', 160, 'mg/dL'),
        ('HOSP-0001-E-1-OL-1', 'Encounter/HOSP-0001-E-1', 'Patient/HOSP-0001', 'http://loinc.org', '2160-0',

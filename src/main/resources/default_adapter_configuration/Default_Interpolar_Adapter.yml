@@ -15,14 +15,14 @@
 # As the test data is missing encounter class codes, it is recommended to execute the following SQL update statements
 # after the import:
 #
-# UPDATE db2dataprocessor_out.v_encounter
+# UPDATE db2dataprocessor_out.v_encounter_last_version
 # SET
 #	  enc_class_system = 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
 #	  enc_class_display = 'inpatient encounter',
 #     enc_class_code = 'IMP'
 # WHERE enc_id < 'UKB-0009-E-1';
 #
-# UPDATE db2dataprocessor_out.v_encounter
+# UPDATE db2dataprocessor_out.v_encounter_last_version
 # SET
 #     enc_class_system = 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
 #     enc_class_display = 'ambulatory',
@@ -30,7 +30,7 @@
 # WHERE enc_id >= 'UKB-0009-E-1';
 baseId: encounter
 subjectQuery:
-  baseQuery: "SELECT enc_id, pat_birthdate, pat_gender FROM db2dataprocessor_out.v_patient, db2dataprocessor_out.v_encounter\nWHERE enc_patient_ref = 'Patient/' || pat_id"
+  baseQuery: "SELECT enc_id, pat_birthdate, pat_gender FROM db2dataprocessor_out.v_patient_last_version, db2dataprocessor_out.v_encounter_last_version\nWHERE enc_patient_ref = 'Patient/' || pat_id"
   sexListPart: "\nAND pat_gender IN ({values})"
   birthdateIntervalPart: "\nAND pat_birthdate {operator} {value}"
   output:
@@ -39,7 +39,7 @@ subjectQuery:
     birthdate: pat_birthdate
 phenotypeQueries:
   encounter:
-    baseQuery: "SELECT enc_id, enc_period_start, enc_period_end, enc_class_code FROM db2dataprocessor_out.v_encounter\nWHERE TRUE"
+    baseQuery: "SELECT enc_id, enc_period_start, enc_period_end, enc_class_code FROM db2dataprocessor_out.v_encounter_last_version\nWHERE TRUE"
     textValueListPart: "\nAND enc_class_code IN ({values})"
     startDateTimeIntervalPart: "\nAND enc_period_start {operator} {value}"
     endDateTimeIntervalPart: "\nAND (enc_period_end IS NULL OR enc_period_end {operator} {value})"
@@ -49,7 +49,7 @@ phenotypeQueries:
       startDateTime: enc_period_start
       endDateTime: enc_period_end
   observation:
-    baseQuery: "SELECT SUBSTRING(obs_encounter_calculated_ref FROM 11) AS enc_id, obs_effectivedatetime, obs_valuequantity_value FROM db2dataprocessor_out.v_observation\nWHERE obs_valuequantity_value IS NOT NULL AND obs_code_system || '|' || obs_code_code IN ({codes})"
+    baseQuery: "SELECT SUBSTRING(obs_encounter_calculated_ref FROM 11) AS enc_id, obs_effectivedatetime, obs_valuequantity_value FROM db2dataprocessor_out.v_observation_last_version\nWHERE obs_valuequantity_value IS NOT NULL AND obs_code_system || '|' || obs_code_code IN ({codes})"
     numberValueIntervalPart: "\nAND obs_valuequantity_value {operator} {value}"
     numberValueListPart: "\nAND obs_valuequantity_value IN ({values})"
     dateTimeIntervalPart: "\nAND obs_effectivedatetime {operator} {value}"
@@ -70,7 +70,7 @@ phenotypeQueries:
         END
         AS date_time 
       FROM
-        db2dataprocessor_out.v_condition con
+        db2dataprocessor_out.v_condition_last_version con
       WHERE
         con_code_system || '|' || con_code_code IN ({codes})
     startDateTimeIntervalPart: |
@@ -100,7 +100,7 @@ phenotypeQueries:
           proc.proc_performedperiod_end AS end_date_time,
           proc.proc_performeddatetime AS date_time
       FROM 
-          db2dataprocessor_out.v_procedure proc
+          db2dataprocessor_out.v_procedure_last_version proc
       WHERE 
       	proc_code_system || '|' || proc_code_code IN ({codes})
     startDateTimeIntervalPart: |
@@ -132,8 +132,8 @@ phenotypeQueries:
           medadm.medadm_effectiveperiod_end AS end_date_time,
           medadm.medadm_effectivedatetime AS date_time
       FROM
-          db2dataprocessor_out.v_medicationadministration medadm,
-          db2dataprocessor_out.v_medication med
+          db2dataprocessor_out.v_medicationadministration_last_version medadm,
+          db2dataprocessor_out.v_medication_last_version med
       WHERE
           medadm.medadm_medicationreference_ref = 'Medication/' || med.med_id
           AND med.med_code_system || '|' || med.med_code_code IN ({codes})
@@ -164,8 +164,8 @@ phenotypeQueries:
           medstat.medstat_effectiveperiod_end AS end_date_time,
           medstat.medstat_effectivedatetime AS date_time
       FROM
-          db2dataprocessor_out.v_medicationstatement medstat,
-          db2dataprocessor_out.v_medication med
+          db2dataprocessor_out.v_medicationstatement_last_version medstat,
+          db2dataprocessor_out.v_medication_last_version med
       WHERE
           medstat.medstat_medicationreference_ref = 'Medication/' || med.med_id
           AND med.med_code_system || '|' || med.med_code_code IN ({codes})
@@ -189,7 +189,7 @@ phenotypeQueries:
       endDateTime: end_date_time
       dateTime: date_time
   medication_request:
-    baseQuery: "SELECT SUBSTRING(medreq_encounter_calculated_ref FROM 11) AS enc_id, medreq_authoredon AS datetime FROM db2dataprocessor_out.v_medicationrequest, db2dataprocessor_out.v_medication\nWHERE medreq_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
+    baseQuery: "SELECT SUBSTRING(medreq_encounter_calculated_ref FROM 11) AS enc_id, medreq_authoredon AS datetime FROM db2dataprocessor_out.v_medicationrequest_last_version, db2dataprocessor_out.v_medication_last_version\nWHERE medreq_medicationreference_ref = 'Medication/' || med_id AND med_code_system || '|' || med_code_code IN ({codes})"
     dateTimeIntervalPart: "\nAND medreq_authoredon {operator} {value}"
     output:
       subject: enc_id

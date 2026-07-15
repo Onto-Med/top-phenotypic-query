@@ -1,4 +1,4 @@
-INSERT INTO db2dataprocessor_out.v_patient (pat_id, pat_birthdate, pat_gender)
+INSERT INTO db2dataprocessor_out.v_patient_last_version (pat_id, pat_birthdate, pat_gender)
 VALUES ('HOSP-0001', '1960-01-01', 'female'),
        ('HOSP-0002', '1960-01-01', 'female'),
        ('HOSP-0003', '1980-01-01', 'male'  ),
@@ -8,7 +8,7 @@ VALUES ('HOSP-0001', '1960-01-01', 'female'),
        ('HOSP-0007', '2003-01-01', 'male'  ),
        ('HOSP-0008', '2004-01-01', 'male'  );
 
-INSERT INTO db2dataprocessor_out.v_encounter (enc_id, enc_patient_ref, enc_class_code, enc_period_start, enc_period_end)
+INSERT INTO db2dataprocessor_out.v_encounter_last_version (enc_id, enc_patient_ref, enc_class_code, enc_period_start, enc_period_end)
 VALUES ('HOSP-0001-E1', 'Patient/HOSP-0001', 'IMP', '2026-04-01', '2026-04-11'),
        ('HOSP-0002-E2', 'Patient/HOSP-0002', 'AMB', '2026-04-02', '2026-04-12'),
        ('HOSP-0003-E3', 'Patient/HOSP-0003', 'IMP', '2026-04-03', '2026-04-13'),
@@ -19,7 +19,7 @@ VALUES ('HOSP-0001-E1', 'Patient/HOSP-0001', 'IMP', '2026-04-01', '2026-04-11'),
        ('HOSP-0008-E8', 'Patient/HOSP-0008', 'AMB', '2026-04-08', '2026-04-18');
 
 
-INSERT INTO db2dataprocessor_out.v_condition (con_id, con_encounter_calculated_ref, con_patient_ref, con_code_system, con_code_code, con_onsetperiod_start, con_onsetperiod_end, con_onsetdatetime, con_recordeddate)
+INSERT INTO db2dataprocessor_out.v_condition_last_version (con_id, con_encounter_calculated_ref, con_patient_ref, con_code_system, con_code_code, con_onsetperiod_start, con_onsetperiod_end, con_onsetdatetime, con_recordeddate)
 VALUES ('HOSP-0001-E1-C1', 'Encounter/HOSP-0001-E1', 'Patient/HOSP-0001', 'http://snomed.info/sct', '135816001', null,         null,         null,         null        ),
        ('HOSP-0002-E2-C2', 'Encounter/HOSP-0002-E2', 'Patient/HOSP-0002', 'http://snomed.info/sct', '135816001', null,         null,         null,         '2026-04-01'),
        ('HOSP-0003-E3-C3', 'Encounter/HOSP-0003-E3', 'Patient/HOSP-0003', 'http://snomed.info/sct', '258157001', null,         null,         '2026-04-02', null        ),

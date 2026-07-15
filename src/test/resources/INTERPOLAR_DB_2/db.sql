@@ -1,6 +1,6 @@
 CREATE SCHEMA db2dataprocessor_out;
 
-CREATE TABLE db2dataprocessor_out.v_patient
+CREATE TABLE db2dataprocessor_out.v_patient_last_version
 (
     pat_id        varchar NOT NULL,
     pat_birthdate date NULL,
@@ -8,7 +8,7 @@ CREATE TABLE db2dataprocessor_out.v_patient
     PRIMARY KEY (pat_id)
 );
 
-CREATE TABLE db2dataprocessor_out.v_encounter
+CREATE TABLE db2dataprocessor_out.v_encounter_last_version
 (
     enc_id           varchar NOT NULL,
     enc_patient_ref  varchar NULL,
@@ -18,7 +18,7 @@ CREATE TABLE db2dataprocessor_out.v_encounter
     PRIMARY KEY (enc_id)
 );
 
-CREATE TABLE db2dataprocessor_out.v_observation
+CREATE TABLE db2dataprocessor_out.v_observation_last_version
 (
     obs_id                       varchar NOT NULL,
     obs_encounter_calculated_ref varchar NULL,
@@ -31,7 +31,7 @@ CREATE TABLE db2dataprocessor_out.v_observation
     PRIMARY KEY (obs_id, obs_code_system, obs_code_code)
 );
 
-CREATE TABLE db2dataprocessor_out.v_condition
+CREATE TABLE db2dataprocessor_out.v_condition_last_version
 (
     con_id                       varchar NOT NULL,
     con_encounter_calculated_ref varchar NULL,
@@ -48,7 +48,7 @@ CREATE TABLE db2dataprocessor_out.v_condition
     PRIMARY KEY (con_id)
 );
 
-CREATE TABLE db2dataprocessor_out.v_procedure
+CREATE TABLE db2dataprocessor_out.v_procedure_last_version
 (
     proc_id                       varchar NOT NULL,
     proc_encounter_calculated_ref varchar NULL,
@@ -61,7 +61,7 @@ CREATE TABLE db2dataprocessor_out.v_procedure
     PRIMARY KEY (proc_id)
 );
 
-CREATE TABLE db2dataprocessor_out.v_medication
+CREATE TABLE db2dataprocessor_out.v_medication_last_version
 (
     med_id          varchar NOT NULL,
     med_code_system varchar NULL,
@@ -69,7 +69,7 @@ CREATE TABLE db2dataprocessor_out.v_medication
     PRIMARY KEY (med_id, med_code_system, med_code_code)
 );
 
-CREATE TABLE db2dataprocessor_out.v_medicationadministration
+CREATE TABLE db2dataprocessor_out.v_medicationadministration_last_version
 (
     medadm_id                       varchar NOT NULL,
     medadm_encounter_calculated_ref varchar NULL,
@@ -81,7 +81,7 @@ CREATE TABLE db2dataprocessor_out.v_medicationadministration
     PRIMARY KEY (medadm_id)
 );
 
-CREATE TABLE db2dataprocessor_out.v_medicationstatement
+CREATE TABLE db2dataprocessor_out.v_medicationstatement_last_version
 (
     medstat_id                       varchar NOT NULL,
     medstat_encounter_calculated_ref varchar NULL,
@@ -93,7 +93,7 @@ CREATE TABLE db2dataprocessor_out.v_medicationstatement
     PRIMARY KEY (medstat_id)
 );
 
-CREATE TABLE db2dataprocessor_out.v_medicationrequest
+CREATE TABLE db2dataprocessor_out.v_medicationrequest_last_version
 (
     medreq_id                       varchar NOT NULL,
     medreq_encounter_calculated_ref varchar NULL,
