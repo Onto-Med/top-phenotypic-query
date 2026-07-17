@@ -1,4 +1,4 @@
-INSERT INTO db2dataprocessor_out.v_patient (pat_id, pat_birthdate, pat_gender)
+INSERT INTO db2dataprocessor_out.v_patient_last_version (pat_id, pat_birthdate, pat_gender)
 VALUES ('HOSP-0001', '1960-01-01', 'female'),
        ('HOSP-0002', '1960-01-01', 'female'),
        ('HOSP-0003', '1980-01-01', 'male'),
@@ -9,7 +9,7 @@ VALUES ('HOSP-0001', '1960-01-01', 'female'),
        ('HOSP-0008', '2000-01-01', 'male'),
        ('HOSP-0009', '2020-01-01', 'female');
 
-INSERT INTO db2dataprocessor_out.v_encounter (enc_id, enc_patient_ref, enc_class_code, enc_period_start,
+INSERT INTO db2dataprocessor_out.v_encounter_last_version (enc_id, enc_patient_ref, enc_class_code, enc_period_start,
                               enc_period_end)
 VALUES ('HOSP-0001-E-11', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01'),
        ('HOSP-0002-E-22', 'Patient/HOSP-0002', 'IMP', '2017-01-01', '2017-02-01'),
@@ -21,21 +21,21 @@ VALUES ('HOSP-0001-E-11', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01'
        ('HOSP-0008-E-88', 'Patient/HOSP-0008', 'IMP', '2019-01-01', '2019-02-01'),
        ('HOSP-0009-E-99', 'Patient/HOSP-0009', 'AMB', '2020-01-01', '2020-02-01');
 
-INSERT INTO db2dataprocessor_out.v_medication (med_id, med_code_system, med_code_code)
+INSERT INTO db2dataprocessor_out.v_medication_last_version (med_id, med_code_system, med_code_code)
 VALUES ('Medication-1', 'http://fhir.de/CodeSystem/bfarm/atc', 'B01AA'),
        ('Medication-1', 'http://fhir.de/CodeSystem/bfarm/atc', 'B01AF');
 
-INSERT INTO db2dataprocessor_out.v_medicationadministration (medadm_id, medadm_encounter_calculated_ref, medadm_patient_ref,
+INSERT INTO db2dataprocessor_out.v_medicationadministration_last_version (medadm_id, medadm_encounter_calculated_ref, medadm_patient_ref,
                                              medadm_effectivedatetime, medadm_medicationreference_ref)
 VALUES ('HOSP-0003-E-33-MA-1', 'Encounter/HOSP-0003-E-33', 'Patient/HOSP-0003', '2020-01-01',
         'Medication/Medication-1');
 
-INSERT INTO db2dataprocessor_out.v_procedure (proc_id, proc_encounter_calculated_ref, proc_patient_ref, proc_code_system, proc_code_code, proc_performeddatetime, proc_performedperiod_start, proc_performedperiod_end)
+INSERT INTO db2dataprocessor_out.v_procedure_last_version (proc_id, proc_encounter_calculated_ref, proc_patient_ref, proc_code_system, proc_code_code, proc_performeddatetime, proc_performedperiod_start, proc_performedperiod_end)
 VALUES ('HOSP-0004-E-44-P-441', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 8, null, null),
        ('HOSP-0004-E-44-P-442', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 6, null, null),
        ('HOSP-0008-E-88-P-881', 'Encounter/HOSP-0008-E-88', 'Patient/HOSP-0008', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 6, null, null);
 
-INSERT INTO db2dataprocessor_out.v_observation (obs_id, obs_encounter_calculated_ref, obs_patient_ref, obs_code_system, obs_code_code,
+INSERT INTO db2dataprocessor_out.v_observation_last_version (obs_id, obs_encounter_calculated_ref, obs_patient_ref, obs_code_system, obs_code_code,
                                 obs_effectivedatetime, obs_valuequantity_value)
 VALUES ('HOSP-0001-E-11-OL-1', 'Encounter/HOSP-0001-E-11', 'Patient/HOSP-0001', 'http://loinc.org', '2160-0',
         '2020-01-01', 1.1),
