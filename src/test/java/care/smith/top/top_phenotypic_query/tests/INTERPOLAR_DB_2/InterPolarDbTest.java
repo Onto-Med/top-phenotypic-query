@@ -48,6 +48,32 @@ public class InterPolarDbTest {
     assertEquals(Set.of("HOSP-0001-E-11", "HOSP-0001-E-33"), rs.getSubjectIds());
   }
 
+  @Test
+  void testEncAge() throws InstantiationException {
+    Phenotype age =
+        new Phe("age", "http://loinc.org", "29553-5").itemType(ItemType.OBSERVATION).number().get();
+    Phenotype ageLe30 = new Phe("ageLe30").restriction(age, Res.le(30)).get();
+    Phenotype ageGt30 = new Phe("ageGt30").restriction(age, Res.gt(30)).get();
+
+    ResultSet rs =
+        new Que(CONFIG, age, ageLe30, ageGt30)
+            .inc(ageLe30)
+            .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/test1.sql")
+            .execute();
+    LOGGER.trace(rs.toString());
+
+    assertEquals(Set.of("HOSP-0001-E-11", "HOSP-0001-E-22"), rs.getSubjectIds());
+
+    rs =
+        new Que(CONFIG, age, ageLe30, ageGt30)
+            .inc(ageGt30)
+            .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/test1.sql")
+            .execute();
+    LOGGER.trace(rs.toString());
+
+    assertEquals(Set.of("HOSP-0001-E-33", "HOSP-0001-E-44"), rs.getSubjectIds());
+  }
+
   //  @Test
   //  void test() {
   //    client.clean();

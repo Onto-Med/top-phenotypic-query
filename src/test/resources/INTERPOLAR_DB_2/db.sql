@@ -10,11 +10,12 @@ CREATE TABLE db2dataprocessor_out.v_patient_last_version
 
 CREATE TABLE db2dataprocessor_out.v_encounter_last_version
 (
-    enc_id           varchar NOT NULL,
-    enc_patient_ref  varchar NULL,
-    enc_class_code   varchar NULL,
-    enc_period_start timestamp NULL,
-    enc_period_end   timestamp NULL,
+    enc_id           	   varchar NOT NULL,
+    enc_patient_ref  	   varchar NULL,
+    enc_class_code   	   varchar NULL,
+    enc_period_start 	   timestamp NULL,
+    enc_period_end   	   timestamp NULL,
+    enc_age_at_admission   numeric NULL,
     PRIMARY KEY (enc_id)
 );
 

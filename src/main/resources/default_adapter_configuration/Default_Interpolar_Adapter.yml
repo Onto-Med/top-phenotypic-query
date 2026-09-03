@@ -49,14 +49,25 @@ phenotypeQueries:
       startDateTime: enc_period_start
       endDateTime: enc_period_end
   observation:
-    baseQuery: "SELECT SUBSTRING(obs_encounter_calculated_ref FROM 11) AS enc_id, obs_effectivedatetime, analysis_value FROM db2dataprocessor_out.v_observation_last_version\nWHERE analysis_value IS NOT NULL AND 'http://loinc.org|' || analysis_loinc_code IN ({codes})"
-    numberValueIntervalPart: "\nAND analysis_value {operator} {value}"
-    numberValueListPart: "\nAND analysis_value IN ({values})"
-    dateTimeIntervalPart: "\nAND obs_effectivedatetime {operator} {value}"
+    baseQuery: |
+      SELECT un.enc_id, un.da, un.va, un.co
+      FROM (
+        SELECT SUBSTRING(obs_encounter_calculated_ref FROM 11) AS enc_id, obs_effectivedatetime AS da, analysis_value AS va, analysis_loinc_code as co
+        FROM db2dataprocessor_out.v_observation_last_version
+        WHERE analysis_value IS NOT NULL
+        UNION ALL
+        SELECT enc_id, enc_period_start AS da, CAST(enc_age_at_admission AS float8) AS va, '29553-5' AS co
+        FROM db2dataprocessor_out.v_encounter_last_version
+        WHERE enc_age_at_admission IS NOT NULL
+      ) AS un
+      WHERE 'http://loinc.org|' || un.co IN ({codes})
+    numberValueIntervalPart: "\nAND va {operator} {value}"
+    numberValueListPart: "\nAND va IN ({values})"
+    dateTimeIntervalPart: "\nAND da {operator} {value}"
     output:
       subject: enc_id
-      numberValue: analysis_value
-      dateTime: obs_effectivedatetime
+      numberValue: va
+      dateTime: da
   condition:
     baseQuery: |
       SELECT
