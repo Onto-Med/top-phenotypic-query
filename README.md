@@ -170,5 +170,9 @@ The code in this repository and the package `care.smith.top:top-phenotypic-query
 > Beger C, Matthies F, Schäfermeier R, Kirsten T, Herre H, Uciteli A. Towards an Ontology-Based Phenotypic Query Model.
 > Applied Sciences. 2022 May 21;12(10):5214. https://doi.org/10.3390/app12105214.
 
+> Uciteli A, Beger C, Wagner J, Kirsten T, Meineke FA, Stäubert S, Löbe M, Herre H. Ontological modelling and FHIR Search
+> based representation of basic eligibility criteria. GMS Med Inform Biom Epidemiol. 2021 Apr 26;17(2):Doc05.
+> https://doi.org/10.3205/mibe000219
+
 > Uciteli A, Beger C, Kirsten T, Meineke FA, Herre H. Ontological representation, classification and data-driven
 > computing of phenotypes. J Biomed Semant. 2020 Dec;11(1):15. https://doi.org/10.1186/s13326-020-00230-0.
