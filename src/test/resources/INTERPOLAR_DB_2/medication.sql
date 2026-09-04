@@ -38,32 +38,28 @@ VALUES ('HOSP-0011-E-1', 'Patient/HOSP-0011', 'IMP', '2017-01-01', '2017-02-01')
        ('HOSP-0035-E-1', 'Patient/HOSP-0035', 'IMP', '2017-01-01', '2017-02-01'),
        ('HOSP-0004-E-1', 'Patient/HOSP-0004', 'IMP', '2017-01-01', '2017-02-01');
 
-INSERT INTO db2dataprocessor_out.v_medication_last_version (med_id, med_code_system, med_code_code)
-VALUES ('Medication-1', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
-       ('Medication-2', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc2');
-
 INSERT INTO db2dataprocessor_out.v_medicationadministration_last_version (medadm_id, medadm_encounter_calculated_ref, medadm_patient_ref,
                                              medadm_effectivedatetime, medadm_effectiveperiod_start, medadm_effectiveperiod_end,
-                                                             medadm_medicationreference_ref)
-VALUES ('HOSP-0011-E-1-MA-1', 'Encounter/HOSP-0011-E-1', 'Patient/HOSP-0011', '2020-01-01', null, null, 'Medication/Medication-1'),
-       ('HOSP-0012-E-1-MA-1', 'Encounter/HOSP-0012-E-1', 'Patient/HOSP-0012', '2020-01-01', null, null, 'Medication/Medication-1'),
-       ('HOSP-0013-E-1-MA-1', 'Encounter/HOSP-0013-E-1', 'Patient/HOSP-0013', '2020-01-01', null, null, 'Medication/Medication-1'),
-       ('HOSP-0014-E-1-MA-1', 'Encounter/HOSP-0014-E-1', 'Patient/HOSP-0014', '2020-01-01', null, null, 'Medication/Medication-1'),
-       ('HOSP-0015-E-1-MA-1', 'Encounter/HOSP-0015-E-1', 'Patient/HOSP-0015', '2019-01-01', null, null, 'Medication/Medication-1'),
-       ('HOSP-0004-E-1-MA-1', 'Encounter/HOSP-0004-E-1', 'Patient/HOSP-0004', '2021-01-01', null, null, 'Medication/Medication-2');
+                                                             medadm_medication_system, medadm_medication_code)
+VALUES ('HOSP-0011-E-1-MA-1', 'Encounter/HOSP-0011-E-1', 'Patient/HOSP-0011', '2020-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0012-E-1-MA-1', 'Encounter/HOSP-0012-E-1', 'Patient/HOSP-0012', '2020-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0013-E-1-MA-1', 'Encounter/HOSP-0013-E-1', 'Patient/HOSP-0013', '2020-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0014-E-1-MA-1', 'Encounter/HOSP-0014-E-1', 'Patient/HOSP-0014', '2020-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0015-E-1-MA-1', 'Encounter/HOSP-0015-E-1', 'Patient/HOSP-0015', '2019-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0004-E-1-MA-1', 'Encounter/HOSP-0004-E-1', 'Patient/HOSP-0004', '2021-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc2');
 
 INSERT INTO db2dataprocessor_out.v_medicationrequest_last_version (medreq_id, medreq_encounter_calculated_ref, medreq_patient_ref,
-                                      medreq_authoredon, medreq_medicationreference_ref)
-VALUES ('HOSP-0021-E-1-MR-1', 'Encounter/HOSP-0021-E-1', 'Patient/HOSP-0021', '2020-01-01', 'Medication/Medication-1'),
-       ('HOSP-0022-E-1-MR-1', 'Encounter/HOSP-0022-E-1', 'Patient/HOSP-0022', '2020-01-01', 'Medication/Medication-1'),
-       ('HOSP-0023-E-1-MR-1', 'Encounter/HOSP-0023-E-1', 'Patient/HOSP-0023', '2020-01-01', 'Medication/Medication-1'),
-       ('HOSP-0024-E-1-MR-1', 'Encounter/HOSP-0024-E-1', 'Patient/HOSP-0024', '2020-01-01', 'Medication/Medication-1'),
-       ('HOSP-0025-E-1-MR-1', 'Encounter/HOSP-0025-E-1', 'Patient/HOSP-0025', '2019-01-01', 'Medication/Medication-1');
+                                      medreq_authoredon, medreq_medication_system, medreq_medication_code)
+VALUES ('HOSP-0021-E-1-MR-1', 'Encounter/HOSP-0021-E-1', 'Patient/HOSP-0021', '2020-01-01', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0022-E-1-MR-1', 'Encounter/HOSP-0022-E-1', 'Patient/HOSP-0022', '2020-01-01', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0023-E-1-MR-1', 'Encounter/HOSP-0023-E-1', 'Patient/HOSP-0023', '2020-01-01', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0024-E-1-MR-1', 'Encounter/HOSP-0024-E-1', 'Patient/HOSP-0024', '2020-01-01', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0025-E-1-MR-1', 'Encounter/HOSP-0025-E-1', 'Patient/HOSP-0025', '2019-01-01', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1');
 
 INSERT INTO db2dataprocessor_out.v_medicationstatement_last_version (medstat_id, medstat_encounter_calculated_ref, medstat_patient_ref,
-                                        medstat_effectivedatetime, medstat_effectiveperiod_start, medstat_effectiveperiod_end, medstat_medicationreference_ref)
-VALUES ('HOSP-0031-E-1-MS-1', 'Encounter/HOSP-0031-E-1', 'Patient/HOSP-0031', '2020-01-01', null, null, 'Medication/Medication-1'),
-       ('HOSP-0032-E-1-MS-1', 'Encounter/HOSP-0032-E-1', 'Patient/HOSP-0032', '2020-01-01', null, null, 'Medication/Medication-1'),
-       ('HOSP-0033-E-1-MS-1', 'Encounter/HOSP-0033-E-1', 'Patient/HOSP-0033', '2020-01-01', null, null, 'Medication/Medication-1'),
-       ('HOSP-0034-E-1-MS-1', 'Encounter/HOSP-0034-E-1', 'Patient/HOSP-0034', '2020-01-01', null, null, 'Medication/Medication-1'),
-       ('HOSP-0035-E-1-MS-1', 'Encounter/HOSP-0035-E-1', 'Patient/HOSP-0035', '2019-01-01', null, null, 'Medication/Medication-1');
+            medstat_effectivedatetime, medstat_effectiveperiod_start, medstat_effectiveperiod_end, medstat_medication_system, medstat_medication_code)
+VALUES ('HOSP-0031-E-1-MS-1', 'Encounter/HOSP-0031-E-1', 'Patient/HOSP-0031', '2020-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0032-E-1-MS-1', 'Encounter/HOSP-0032-E-1', 'Patient/HOSP-0032', '2020-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0033-E-1-MS-1', 'Encounter/HOSP-0033-E-1', 'Patient/HOSP-0033', '2020-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0034-E-1-MS-1', 'Encounter/HOSP-0034-E-1', 'Patient/HOSP-0034', '2020-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0035-E-1-MS-1', 'Encounter/HOSP-0035-E-1', 'Patient/HOSP-0035', '2019-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1');

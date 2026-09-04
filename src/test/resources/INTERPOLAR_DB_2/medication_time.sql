@@ -37,21 +37,17 @@ VALUES ('HOSP-0011-E-1', 'Patient/HOSP-0011', 'IMP', '2017-01-01', '2017-02-01')
        ('HOSP-0035-E-1', 'Patient/HOSP-0035', 'IMP', '2017-01-01', '2017-02-01'),
        ('HOSP-0004-E-1', 'Patient/HOSP-0004', 'IMP', '2017-01-01', '2017-02-01');
 
-INSERT INTO db2dataprocessor_out.v_medication_last_version (med_id, med_code_system, med_code_code)
-VALUES ('Medication-1', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
-       ('Medication-2', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc2');
+INSERT INTO db2dataprocessor_out.v_medicationadministration_last_version (medadm_id, medadm_encounter_calculated_ref, medadm_patient_ref, medadm_effectivedatetime, medadm_effectiveperiod_start, medadm_effectiveperiod_end, medadm_medication_system, medadm_medication_code)
+VALUES ('HOSP-0011-E-1-MA-1', 'Encounter/HOSP-0011-E-1', 'Patient/HOSP-0011', '2020-01-01', null,         null,         'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0012-E-1-MA-1', 'Encounter/HOSP-0012-E-1', 'Patient/HOSP-0012', null,         '2020-01-01', '2020-01-02', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc2'),
+       ('HOSP-0013-E-1-MA-1', 'Encounter/HOSP-0013-E-1', 'Patient/HOSP-0013', null,         '2020-01-03', '2020-01-04', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0014-E-1-MA-1', 'Encounter/HOSP-0014-E-1', 'Patient/HOSP-0014', '2020-01-01', '2020-01-02', '2020-01-03', 'http://fhir.de/CodeSystem/bfarm/atc', 'atc2'),
+       ('HOSP-0015-E-1-MA-1', 'Encounter/HOSP-0015-E-1', 'Patient/HOSP-0015', null,         null,         null,         'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0004-E-1-MA-1', 'Encounter/HOSP-0004-E-1', 'Patient/HOSP-0004', null,         '2020-01-01', null,         'http://fhir.de/CodeSystem/bfarm/atc', 'atc2');
 
-INSERT INTO db2dataprocessor_out.v_medicationadministration_last_version (medadm_id, medadm_encounter_calculated_ref, medadm_patient_ref, medadm_effectivedatetime, medadm_effectiveperiod_start, medadm_effectiveperiod_end, medadm_medicationreference_ref)
-VALUES ('HOSP-0011-E-1-MA-1', 'Encounter/HOSP-0011-E-1', 'Patient/HOSP-0011', '2020-01-01', null,         null,         'Medication/Medication-1'),
-       ('HOSP-0012-E-1-MA-1', 'Encounter/HOSP-0012-E-1', 'Patient/HOSP-0012', null,         '2020-01-01', '2020-01-02', 'Medication/Medication-2'),
-       ('HOSP-0013-E-1-MA-1', 'Encounter/HOSP-0013-E-1', 'Patient/HOSP-0013', null,         '2020-01-03', '2020-01-04', 'Medication/Medication-1'),
-       ('HOSP-0014-E-1-MA-1', 'Encounter/HOSP-0014-E-1', 'Patient/HOSP-0014', '2020-01-01', '2020-01-02', '2020-01-03', 'Medication/Medication-2'),
-       ('HOSP-0015-E-1-MA-1', 'Encounter/HOSP-0015-E-1', 'Patient/HOSP-0015', null,         null,         null,         'Medication/Medication-1'),
-       ('HOSP-0004-E-1-MA-1', 'Encounter/HOSP-0004-E-1', 'Patient/HOSP-0004', null,         '2020-01-01', null,         'Medication/Medication-2');
-
-INSERT INTO db2dataprocessor_out.v_medicationstatement_last_version (medstat_id, medstat_encounter_calculated_ref, medstat_patient_ref, medstat_effectivedatetime, medstat_effectiveperiod_start, medstat_effectiveperiod_end, medstat_medicationreference_ref)
-VALUES ('HOSP-0031-E-1-MS-1', 'Encounter/HOSP-0031-E-1', 'Patient/HOSP-0031', '2020-01-01', null,         null,          'Medication/Medication-1'),
-       ('HOSP-0032-E-1-MS-1', 'Encounter/HOSP-0032-E-1', 'Patient/HOSP-0032', null,         '2020-01-01', '2020-01-02',  'Medication/Medication-2'),
-       ('HOSP-0033-E-1-MS-1', 'Encounter/HOSP-0033-E-1', 'Patient/HOSP-0033', null,         '2020-01-03', '2020-01-04',  'Medication/Medication-1'),
-       ('HOSP-0034-E-1-MS-1', 'Encounter/HOSP-0034-E-1', 'Patient/HOSP-0034', '2020-01-01', '2020-01-02', '2020-01-03',  'Medication/Medication-2'),
-       ('HOSP-0035-E-1-MS-1', 'Encounter/HOSP-0035-E-1', 'Patient/HOSP-0035', null,         null,         null,          'Medication/Medication-1');
+INSERT INTO db2dataprocessor_out.v_medicationstatement_last_version (medstat_id, medstat_encounter_calculated_ref, medstat_patient_ref, medstat_effectivedatetime, medstat_effectiveperiod_start, medstat_effectiveperiod_end, medstat_medication_system, medstat_medication_code)
+VALUES ('HOSP-0031-E-1-MS-1', 'Encounter/HOSP-0031-E-1', 'Patient/HOSP-0031', '2020-01-01', null,         null,          'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0032-E-1-MS-1', 'Encounter/HOSP-0032-E-1', 'Patient/HOSP-0032', null,         '2020-01-01', '2020-01-02',  'http://fhir.de/CodeSystem/bfarm/atc', 'atc2'),
+       ('HOSP-0033-E-1-MS-1', 'Encounter/HOSP-0033-E-1', 'Patient/HOSP-0033', null,         '2020-01-03', '2020-01-04',  'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
+       ('HOSP-0034-E-1-MS-1', 'Encounter/HOSP-0034-E-1', 'Patient/HOSP-0034', '2020-01-01', '2020-01-02', '2020-01-03',  'http://fhir.de/CodeSystem/bfarm/atc', 'atc2'),
+       ('HOSP-0035-E-1-MS-1', 'Encounter/HOSP-0035-E-1', 'Patient/HOSP-0035', null,         null,         null,          'http://fhir.de/CodeSystem/bfarm/atc', 'atc1');

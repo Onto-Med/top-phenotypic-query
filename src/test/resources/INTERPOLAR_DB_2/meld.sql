@@ -21,75 +21,71 @@ VALUES ('HOSP-0001-E-11', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01'
        ('HOSP-0008-E-88', 'Patient/HOSP-0008', 'IMP', '2019-01-01', '2019-02-01'),
        ('HOSP-0009-E-99', 'Patient/HOSP-0009', 'AMB', '2020-01-01', '2020-02-01');
 
-INSERT INTO db2dataprocessor_out.v_medication_last_version (med_id, med_code_system, med_code_code)
-VALUES ('Medication-1', 'http://fhir.de/CodeSystem/bfarm/atc', 'B01AA'),
-       ('Medication-1', 'http://fhir.de/CodeSystem/bfarm/atc', 'B01AF');
-
 INSERT INTO db2dataprocessor_out.v_medicationadministration_last_version (medadm_id, medadm_encounter_calculated_ref, medadm_patient_ref,
-                                             medadm_effectivedatetime, medadm_medicationreference_ref)
+                                             medadm_effectivedatetime, medadm_medication_system, medadm_medication_code)
 VALUES ('HOSP-0003-E-33-MA-1', 'Encounter/HOSP-0003-E-33', 'Patient/HOSP-0003', '2020-01-01',
-        'Medication/Medication-1');
+        'http://fhir.de/CodeSystem/bfarm/atc', 'B01AA');
 
 INSERT INTO db2dataprocessor_out.v_procedure_last_version (proc_id, proc_encounter_calculated_ref, proc_patient_ref, proc_code_system, proc_code_code, proc_performeddatetime, proc_performedperiod_start, proc_performedperiod_end)
 VALUES ('HOSP-0004-E-44-P-441', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 8, null, null),
        ('HOSP-0004-E-44-P-442', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 6, null, null),
        ('HOSP-0008-E-88-P-881', 'Encounter/HOSP-0008-E-88', 'Patient/HOSP-0008', 'http://fhir.de/CodeSystem/bfarm/ops', '8-853', current_date - 6, null, null);
 
-INSERT INTO db2dataprocessor_out.v_observation_last_version (obs_id, obs_encounter_calculated_ref, obs_patient_ref, obs_code_system, obs_code_code,
-                                obs_effectivedatetime, obs_valuequantity_value)
-VALUES ('HOSP-0001-E-11-OL-1', 'Encounter/HOSP-0001-E-11', 'Patient/HOSP-0001', 'http://loinc.org', '2160-0',
+INSERT INTO db2dataprocessor_out.v_observation_last_version (obs_id, obs_encounter_calculated_ref, obs_patient_ref, analysis_loinc_code,
+                                obs_effectivedatetime, analysis_value)
+VALUES ('HOSP-0001-E-11-OL-1', 'Encounter/HOSP-0001-E-11', 'Patient/HOSP-0001', '2160-0',
         '2020-01-01', 1.1),
-       ('HOSP-0001-E-11-OL-2', 'Encounter/HOSP-0001-E-11', 'Patient/HOSP-0001', 'http://loinc.org', '42719-5',
+       ('HOSP-0001-E-11-OL-2', 'Encounter/HOSP-0001-E-11', 'Patient/HOSP-0001', '42719-5',
         '2020-01-01', 1.2),
-       ('HOSP-0001-E-11-OL-3', 'Encounter/HOSP-0001-E-11', 'Patient/HOSP-0001', 'http://loinc.org', '6301-6',
+       ('HOSP-0001-E-11-OL-3', 'Encounter/HOSP-0001-E-11', 'Patient/HOSP-0001', '6301-6',
         '2020-01-01', 1.3),
 
-       ('HOSP-0002-E-22-OL-1', 'Encounter/HOSP-0002-E-22', 'Patient/HOSP-0002', 'http://loinc.org', '2160-0',
+       ('HOSP-0002-E-22-OL-1', 'Encounter/HOSP-0002-E-22', 'Patient/HOSP-0002', '2160-0',
         '2020-01-01', 2.1),
-       ('HOSP-0002-E-22-OL-2', 'Encounter/HOSP-0002-E-22', 'Patient/HOSP-0002', 'http://loinc.org', '42719-5',
+       ('HOSP-0002-E-22-OL-2', 'Encounter/HOSP-0002-E-22', 'Patient/HOSP-0002', '42719-5',
         '2020-01-01', 2.2),
-       ('HOSP-0002-E-22-OL-3', 'Encounter/HOSP-0002-E-22', 'Patient/HOSP-0002', 'http://loinc.org', '6301-6',
+       ('HOSP-0002-E-22-OL-3', 'Encounter/HOSP-0002-E-22', 'Patient/HOSP-0002', '6301-6',
         '2020-01-01', 2.3),
 
-       ('HOSP-0003-E-33-OL-1', 'Encounter/HOSP-0003-E-33', 'Patient/HOSP-0003', 'http://loinc.org', '2160-0',
+       ('HOSP-0003-E-33-OL-1', 'Encounter/HOSP-0003-E-33', 'Patient/HOSP-0003', '2160-0',
         '2020-01-01', 3.1),
-       ('HOSP-0003-E-33-OL-2', 'Encounter/HOSP-0003-E-33', 'Patient/HOSP-0003', 'http://loinc.org', '42719-5',
+       ('HOSP-0003-E-33-OL-2', 'Encounter/HOSP-0003-E-33', 'Patient/HOSP-0003', '42719-5',
         '2020-01-01', 3.2),
-       ('HOSP-0003-E-33-OL-3', 'Encounter/HOSP-0003-E-33', 'Patient/HOSP-0003', 'http://loinc.org', '6301-6',
+       ('HOSP-0003-E-33-OL-3', 'Encounter/HOSP-0003-E-33', 'Patient/HOSP-0003', '6301-6',
         '2020-01-01', 3.3),
 
-       ('HOSP-0004-E-44-OL-1', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', 'http://loinc.org', '2160-0',
+       ('HOSP-0004-E-44-OL-1', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', '2160-0',
         '2020-01-01', 0.1),
-       ('HOSP-0004-E-44-OL-2', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', 'http://loinc.org', '42719-5',
+       ('HOSP-0004-E-44-OL-2', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', '42719-5',
         '2020-01-01', 0.2),
-       ('HOSP-0004-E-44-OL-3', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', 'http://loinc.org', '6301-6',
+       ('HOSP-0004-E-44-OL-3', 'Encounter/HOSP-0004-E-44', 'Patient/HOSP-0004', '6301-6',
         '2020-01-01', 0.3),
 
-       ('HOSP-0005-E-55-OL-1', 'Encounter/HOSP-0005-E-55', 'Patient/HOSP-0005', 'http://loinc.org', '2160-0',
+       ('HOSP-0005-E-55-OL-1', 'Encounter/HOSP-0005-E-55', 'Patient/HOSP-0005', '2160-0',
         '2020-01-01', 2.1),
-       ('HOSP-0005-E-55-OL-2', 'Encounter/HOSP-0005-E-55', 'Patient/HOSP-0005', 'http://loinc.org', '42719-5',
+       ('HOSP-0005-E-55-OL-2', 'Encounter/HOSP-0005-E-55', 'Patient/HOSP-0005', '42719-5',
         '2020-01-01', 2.2),
 
-       ('HOSP-0006-E-66-OL-1', 'Encounter/HOSP-0006-E-66', 'Patient/HOSP-0006', 'http://loinc.org', '2160-0',
+       ('HOSP-0006-E-66-OL-1', 'Encounter/HOSP-0006-E-66', 'Patient/HOSP-0006', '2160-0',
         '2020-01-01', 2.1),
-       ('HOSP-0006-E-66-OL-2', 'Encounter/HOSP-0006-E-66', 'Patient/HOSP-0006', 'http://loinc.org', '6301-6',
+       ('HOSP-0006-E-66-OL-2', 'Encounter/HOSP-0006-E-66', 'Patient/HOSP-0006', '6301-6',
         '2020-01-01', 2.3),
 
-       ('HOSP-0007-E-77-OL-1', 'Encounter/HOSP-0007-E-77', 'Patient/HOSP-0007', 'http://loinc.org', '42719-5',
+       ('HOSP-0007-E-77-OL-1', 'Encounter/HOSP-0007-E-77', 'Patient/HOSP-0007', '42719-5',
         '2020-01-01', 2.2),
-       ('HOSP-0007-E-77-OL-2', 'Encounter/HOSP-0007-E-77', 'Patient/HOSP-0007', 'http://loinc.org', '6301-6',
+       ('HOSP-0007-E-77-OL-2', 'Encounter/HOSP-0007-E-77', 'Patient/HOSP-0007', '6301-6',
         '2020-01-01', 2.3),
 
-       ('HOSP-0008-E-88-OL-1', 'Encounter/HOSP-0008-E-88', 'Patient/HOSP-0008', 'http://loinc.org', '42719-5',
+       ('HOSP-0008-E-88-OL-1', 'Encounter/HOSP-0008-E-88', 'Patient/HOSP-0008', '42719-5',
         '2020-01-01', 3.2),
-       ('HOSP-0008-E-88-OL-2', 'Encounter/HOSP-0008-E-88', 'Patient/HOSP-0008', 'http://loinc.org', '6301-6',
+       ('HOSP-0008-E-88-OL-2', 'Encounter/HOSP-0008-E-88', 'Patient/HOSP-0008', '6301-6',
         '2020-01-01', 3.3),
 
-       ('HOSP-0009-E-99-OL-1', 'Encounter/HOSP-0009-E-99', 'Patient/HOSP-0009', 'http://loinc.org', '2160-0',
+       ('HOSP-0009-E-99-OL-1', 'Encounter/HOSP-0009-E-99', 'Patient/HOSP-0009', '2160-0',
         '2020-01-01', 0.1),
-       ('HOSP-0009-E-99-OL-2', 'Encounter/HOSP-0009-E-99', 'Patient/HOSP-0009', 'http://loinc.org', '2160-0',
+       ('HOSP-0009-E-99-OL-2', 'Encounter/HOSP-0009-E-99', 'Patient/HOSP-0009', '2160-0',
         '2019-01-02', 2.1),
-       ('HOSP-0009-E-99-OL-3', 'Encounter/HOSP-0009-E-99', 'Patient/HOSP-0009', 'http://loinc.org', '42719-5',
+       ('HOSP-0009-E-99-OL-3', 'Encounter/HOSP-0009-E-99', 'Patient/HOSP-0009', '42719-5',
         '2020-01-01', 0.2),
-       ('HOSP-0009-E-99-OL-4', 'Encounter/HOSP-0009-E-99', 'Patient/HOSP-0009', 'http://loinc.org', '6301-6',
+       ('HOSP-0009-E-99-OL-4', 'Encounter/HOSP-0009-E-99', 'Patient/HOSP-0009', '6301-6',
         '2020-01-01', 0.3);
