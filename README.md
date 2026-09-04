@@ -165,7 +165,7 @@ The code in this repository and the package `care.smith.top:top-phenotypic-query
 
 > Beger C, Strobach D, Schäfermeier R, Matthies F, Höffner K, Uciteli A. Introducing the TOP framework: a novel
 > phenotyping solution for collaborative phenotype algorithm development and application. J Biomed Semant.
-> 2026 Jul 27;17(1):14. doi:10.1186/s13326-026-00364-7
+> 2026 Jul 27;17(1):14. https://doi.org/10.1186/s13326-026-00364-7
 
 > Beger C, Matthies F, Schäfermeier R, Kirsten T, Herre H, Uciteli A. Towards an Ontology-Based Phenotypic Query Model.
 > Applied Sciences. 2022 May 21;12(10):5214. https://doi.org/10.3390/app12105214.
