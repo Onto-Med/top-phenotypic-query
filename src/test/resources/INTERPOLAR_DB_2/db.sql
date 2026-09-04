@@ -3,7 +3,7 @@ CREATE SCHEMA db2dataprocessor_out;
 CREATE TABLE db2dataprocessor_out.v_patient_last_version
 (
     pat_id        varchar NOT NULL,
-    pat_birthdate date NULL,
+    pat_birthdate varchar NULL,
     pat_gender    varchar NULL,
     PRIMARY KEY (pat_id)
 );

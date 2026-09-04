@@ -1,5 +1,5 @@
 INSERT INTO db2dataprocessor_out.v_patient_last_version (pat_id, pat_birthdate, pat_gender)
-VALUES ('HOSP-0001', '1940-01-01', 'female');
+VALUES ('HOSP-0001', 'abc', 'female');
 
 INSERT INTO db2dataprocessor_out.v_encounter_last_version (enc_id, enc_patient_ref, enc_class_code, enc_period_start,
                               enc_period_end, enc_age_at_admission)

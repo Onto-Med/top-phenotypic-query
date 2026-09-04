@@ -23,8 +23,9 @@ public class InterPolarDbTest {
   void test1() throws InstantiationException {
     Phenotype enc = new Phe("enc").itemType(ItemType.ENCOUNTER).string().get();
     Phenotype imp = new Phe("imp").restriction(enc, Res.of("IMP")).get();
-    Phenotype age = new Phe("age").itemType(ItemType.SUBJECT_AGE).string().get();
     Phenotype sex = new Phe("sex").itemType(ItemType.SUBJECT_SEX).string().get();
+    Phenotype female = new Phe("female").restriction(sex, Res.of("female")).get();
+    Phenotype male = new Phe("male").restriction(sex, Res.of("male")).get();
 
     Phenotype crea =
         new Phe("crea", "http://loinc.org", "2160-0", "38483-4")
@@ -34,18 +35,28 @@ public class InterPolarDbTest {
             .get();
 
     ResultSet rs =
-        new Que(CONFIG, age, sex, enc, imp, crea)
+        new Que(CONFIG, sex, male, female, enc, imp, crea)
             .inc(crea)
             .inc(imp)
+            .inc(female)
             .pro(enc)
             .pro(crea)
-            .pro(age)
-            .pro(sex)
             .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/test1.sql")
             .execute();
+
     LOGGER.trace(rs.toString());
 
     assertEquals(Set.of("HOSP-0001-E-11", "HOSP-0001-E-33"), rs.getSubjectIds());
+
+    rs =
+        new Que(CONFIG, sex, male, female, enc, imp, crea)
+            .inc(male)
+            .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/test1.sql")
+            .execute();
+
+    LOGGER.trace(rs.toString());
+
+    assertEquals(0, rs.getSubjectIds().size());
   }
 
   @Test
