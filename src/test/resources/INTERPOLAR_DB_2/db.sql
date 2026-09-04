@@ -1,4 +1,4 @@
-CREATE SCHEMA db2dataprocessor_out;
+CREATE SCHEMA IF NOT EXISTS db2dataprocessor_out;
 
 CREATE TABLE db2dataprocessor_out.v_patient_last_version
 (
