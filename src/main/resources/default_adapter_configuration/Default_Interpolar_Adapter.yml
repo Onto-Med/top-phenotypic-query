@@ -39,7 +39,7 @@ subjectQuery:
     birthdate: pat_birthdate
 phenotypeQueries:
   encounter:
-    baseQuery: "SELECT enc_id, enc_period_start, enc_period_end, enc_class_code FROM db2dataprocessor_out.v_encounter_last_version\nWHERE TRUE"
+    baseQuery: "SELECT enc_id, enc_period_start, enc_period_end, enc_class_code FROM db2dataprocessor_out.v_encounter_last_version\nWHERE enc_type_code = 'einrichtungskontakt'"
     textValueListPart: "\nAND enc_class_code IN ({values})"
     startDateTimeIntervalPart: "\nAND enc_period_start {operator} {value}"
     endDateTimeIntervalPart: "\nAND (enc_period_end IS NULL OR enc_period_end {operator} {value})"

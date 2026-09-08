@@ -2,8 +2,8 @@ INSERT INTO db2dataprocessor_out.v_patient_last_version (pat_id, pat_birthdate, 
 VALUES ('HOSP-0001', '2001-01-01', 'male');
 
 INSERT INTO db2dataprocessor_out.v_encounter_last_version (enc_id, enc_patient_ref, enc_class_code, enc_period_start,
-                              enc_period_end)
-VALUES ('HOSP-0001-E-11', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-01-04'),
-       ('HOSP-0001-E-12', 'Patient/HOSP-0001', 'AMB', '2018-01-01', '2018-01-04'),
-       ('HOSP-0001-E-13', 'Patient/HOSP-0001', 'IMP', '2019-01-01', '2019-01-04'),
-       ('HOSP-0001-E-14', 'Patient/HOSP-0001', 'IMP', '2020-01-01', '2020-01-03');
+                              enc_period_end, enc_type_code)
+VALUES ('HOSP-0001-E-11', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-01-04', 'einrichtungskontakt'),
+       ('HOSP-0001-E-12', 'Patient/HOSP-0001', 'AMB', '2018-01-01', '2018-01-04', 'einrichtungskontakt'),
+       ('HOSP-0001-E-13', 'Patient/HOSP-0001', 'IMP', '2019-01-01', '2019-01-04', 'einrichtungskontakt'),
+       ('HOSP-0001-E-14', 'Patient/HOSP-0001', 'IMP', '2020-01-01', '2020-01-03', 'einrichtungskontakt');

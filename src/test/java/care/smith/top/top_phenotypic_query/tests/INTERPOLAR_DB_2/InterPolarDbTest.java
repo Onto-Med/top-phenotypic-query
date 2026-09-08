@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
+import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
@@ -83,6 +84,22 @@ public class InterPolarDbTest {
     LOGGER.trace(rs.toString());
 
     assertEquals(Set.of("HOSP-0001-E-33", "HOSP-0001-E-44"), rs.getSubjectIds());
+  }
+
+  @Test
+  void testEncCount() throws InstantiationException {
+    Phenotype enc = new Phe("enc").itemType(ItemType.ENCOUNTER).bool().get();
+    Phenotype encCount = new Phe("encCount").expression(Exp.of(enc)).get();
+
+    ResultSet rs =
+        new Que(CONFIG, enc, encCount)
+            .inc(encCount)
+            .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/test1.sql")
+            .execute();
+
+    LOGGER.trace(rs.toString());
+
+    assertEquals(Set.of("HOSP-0001-E-11", "HOSP-0001-E-33", "HOSP-0001-E-55"), rs.getSubjectIds());
   }
 
   //  @Test

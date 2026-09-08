@@ -2,12 +2,12 @@ INSERT INTO db2dataprocessor_out.v_patient_last_version (pat_id, pat_birthdate, 
 VALUES ('HOSP-0001', 'abc', 'female');
 
 INSERT INTO db2dataprocessor_out.v_encounter_last_version (enc_id, enc_patient_ref, enc_class_code, enc_period_start,
-                              enc_period_end, enc_age_at_admission)
-VALUES ('HOSP-0001-E-11', 'Patient/HOSP-0001', 'IMP', '2016-01-01', '2016-02-01', 20),
-       ('HOSP-0001-E-22', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01', 30),
-       ('HOSP-0001-E-33', 'Patient/HOSP-0001', 'IMP', '2018-01-01', '2018-02-01', 40),
-       ('HOSP-0001-E-44', 'Patient/HOSP-0001', 'IMP', '2019-01-01', '2019-02-01', 50),
-       ('HOSP-0001-E-55', 'Patient/HOSP-0001', 'AMB', '2020-01-01', '2020-02-01', NULL);
+                              enc_period_end, enc_age_at_admission, enc_type_code)
+VALUES ('HOSP-0001-E-11', 'Patient/HOSP-0001', 'IMP', '2016-01-01', '2016-02-01', 20, 'einrichtungskontakt'),
+       ('HOSP-0001-E-22', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01', 30, 'abc'),
+       ('HOSP-0001-E-33', 'Patient/HOSP-0001', 'IMP', '2018-01-01', '2018-02-01', 40, 'einrichtungskontakt'),
+       ('HOSP-0001-E-44', 'Patient/HOSP-0001', 'IMP', '2019-01-01', '2019-02-01', 50, 'abc'),
+       ('HOSP-0001-E-55', 'Patient/HOSP-0001', 'AMB', '2020-01-01', '2020-02-01', NULL, 'einrichtungskontakt');
 
 INSERT INTO db2dataprocessor_out.v_observation_last_version (obs_id, obs_encounter_calculated_ref, obs_patient_ref, analysis_loinc_code,
                                 obs_effectivedatetime, analysis_value)
