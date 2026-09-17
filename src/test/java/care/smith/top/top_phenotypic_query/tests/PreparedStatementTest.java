@@ -74,7 +74,8 @@ public class PreparedStatementTest extends AbstractTest {
             + "AND weight >= ?\n"
             + "AND weight < ?\n"
             + "AND created_at >= ?\n"
-            + "AND created_at < ? {1: CAST(100 AS NUMERIC(3)), 2: CAST(500 AS NUMERIC(3)), 3: TIMESTAMP '2000-01-01 00:00:00', 4: TIMESTAMP '2001-01-01 00:00:00'}";
+            + "AND created_at < ? {1: CAST(100 AS NUMERIC(3)), 2: CAST(500 AS NUMERIC(3)), 3:"
+            + " TIMESTAMP '2000-01-01 00:00:00', 4: TIMESTAMP '2001-01-01 00:00:00'}";
     String psActual =
         settings
             .getSinglePreparedStatement(pqActual, ((SQLAdapter) adapter).getConnection(), search)

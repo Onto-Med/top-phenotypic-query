@@ -808,6 +808,7 @@ public class SES3Test {
           .descriptionEn("What is your marital status?")
           .number()
           .get();
+
   private static Phenotype verheiratet =
       new Phe("verheiratet")
           .titleDe("Verheiratet")
@@ -1778,6 +1779,7 @@ public class SES3Test {
                       Avg.of(Exp.of(bildungSES), Exp.of(berufSES), Exp.of(2)))),
               DataType.NUMBER)
           .get();
+
   private static Phenotype SES_Q1 =
       new Phe("SES_Q1")
           .titleDe("1. Quintil")

@@ -35,7 +35,8 @@ public class CompositeSearch extends PhenotypeSearch {
     if (phe.getExpression() == null)
       throw new IllegalArgumentException(
           String.format(
-              "A query criterion phenotype must have an expression! The phenotype '%s' has no expression.",
+              "A query criterion phenotype must have an expression! The phenotype '%s' has no"
+                  + " expression.",
               phe.getId()));
     for (String sbjId : new HashSet<>(rs.getSubjectIds())) executeForSubject(phe, sbjId);
     return rs;

@@ -72,7 +72,8 @@ public class FHIRClientTestIntern {
     SQLAdapter sqlAdapter = new SQLAdapter(sqlConfig);
     ResultSet rs =
         sqlAdapter.executeQuery(
-            "SELECT s.subject_id, birth_date, sex, assessment_id, created_at, height, weight FROM subject s, assessment1 a WHERE s.subject_id = a.subject_id");
+            "SELECT s.subject_id, birth_date, sex, assessment_id, created_at, height, weight FROM"
+                + " subject s, assessment1 a WHERE s.subject_id = a.subject_id");
 
     Map<String, String> patIds = new HashMap<>();
 

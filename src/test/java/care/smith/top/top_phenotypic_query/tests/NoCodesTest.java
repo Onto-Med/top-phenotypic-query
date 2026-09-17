@@ -67,7 +67,8 @@ public class NoCodesTest {
     String msg = exception.getMessage();
 
     assertEquals(
-        "The following single phenotypes have no codes: crea (Creatinine [Mass/volume] in Serum or Plasma), bili (Bilirubin.total [Mass/volume] in Blood)!",
+        "The following single phenotypes have no codes: crea (Creatinine [Mass/volume] in Serum or"
+            + " Plasma), bili (Bilirubin.total [Mass/volume] in Blood)!",
         msg);
   }
 }
