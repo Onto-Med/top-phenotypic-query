@@ -146,10 +146,19 @@ public class QueryCommand implements Callable<Integer> {
       if (list) System.out.println(rs.getSubjectIds());
       if (count) System.out.println(rs.getSubjectIds().size());
       if (!list && !count) System.out.println(rs.toString());
-    } catch (Exception e) {
-      e.printStackTrace();
-      return 1;
     }
+    catch (ParameterException e) {
+        System.err.println("Invalid configuration: " + e.getMessage());
+        return 2;
+    }
+		catch (FileNotFoundException | FileAlreadyExistsException e) {
+    		System.err.println("File error: " + e.getMessage());
+    		return 1;
+		}
+		catch (Exception e) {
+    		System.err.println("Execution failed: " + e.getMessage());
+    		return 1;
+		}
     return 0;
   }
 
