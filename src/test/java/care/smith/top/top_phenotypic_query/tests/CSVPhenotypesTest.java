@@ -85,13 +85,18 @@ public class CSVPhenotypesTest {
             + System.lineSeparator()
             + "male;sex;single_restriction;observation;boolean;;male|en;;;;|MIN|1|[male]|;"
             + System.lineSeparator()
-            + "weight;;single_phenotype;observation;number;kg;weight|en,Gewicht|de;Gewicht Synonym 1|de,Gewicht Synonym 2|de,Weight Synonym 1|en,Weight Synonym 2|en;Gewicht Description 1|de,Gewicht Description 2|de,Weight Description 1|en,Weight Description 2|en;http://loinc.org|3141-9,http://snomed.info/sct|27113001;;"
+            + "weight;;single_phenotype;observation;number;kg;weight|en,Gewicht|de;Gewicht Synonym"
+            + " 1|de,Gewicht Synonym 2|de,Weight Synonym 1|en,Weight Synonym 2|en;Gewicht"
+            + " Description 1|de,Gewicht Description 2|de,Weight Description 1|en,Weight"
+            + " Description 2|en;http://loinc.org|3141-9,http://snomed.info/sct|27113001;;"
             + System.lineSeparator()
             + "height;;single_phenotype;observation;number;m;height|en;;;http://loinc.org|3137-7,http://snomed.info/sct|1153637007;;"
             + System.lineSeparator()
-            + "bmi;;composite_phenotype;observation;number;kg/m2;bmi|en;;;http://loinc.org|39156-5;;(weight / (height ^ [2]))"
+            + "bmi;;composite_phenotype;observation;number;kg/m2;bmi|en;;;http://loinc.org|39156-5;;(weight"
+            + " / (height ^ [2]))"
             + System.lineSeparator()
-            + "overweight;bmi;composite_restriction;observation;boolean;;overweight|en;;;;|MIN|1|> 25|;"
+            + "overweight;bmi;composite_restriction;observation;boolean;;overweight|en;;;;|MIN|1|>"
+            + " 25|;"
             + System.lineSeparator()
             + "Dabigatran;;single_phenotype;medication;boolean;;Dabigatran|en,Dabi|de;;;http://fhir.de/CodeSystem/bfarm/atc|B01AE07;;"
             + System.lineSeparator();
@@ -126,13 +131,18 @@ public class CSVPhenotypesTest {
             + System.lineSeparator()
             + "male,sex,single_restriction,observation,boolean,,male|en,,,,|MIN|1|[male]|,"
             + System.lineSeparator()
-            + "weight,,single_phenotype,observation,number,kg,weight|en::Gewicht|de,Gewicht Synonym 1|de::Gewicht Synonym 2|de::Weight Synonym 1|en::Weight Synonym 2|en,Gewicht Description 1|de::Gewicht Description 2|de::Weight Description 1|en::Weight Description 2|en,http://loinc.org|3141-9::http://snomed.info/sct|27113001,,"
+            + "weight,,single_phenotype,observation,number,kg,weight|en::Gewicht|de,Gewicht Synonym"
+            + " 1|de::Gewicht Synonym 2|de::Weight Synonym 1|en::Weight Synonym 2|en,Gewicht"
+            + " Description 1|de::Gewicht Description 2|de::Weight Description 1|en::Weight"
+            + " Description 2|en,http://loinc.org|3141-9::http://snomed.info/sct|27113001,,"
             + System.lineSeparator()
             + "height,,single_phenotype,observation,number,m,height|en,,,http://loinc.org|3137-7::http://snomed.info/sct|1153637007,,"
             + System.lineSeparator()
-            + "bmi,,composite_phenotype,observation,number,kg/m2,bmi|en,,,http://loinc.org|39156-5,,(weight / (height ^ [2]))"
+            + "bmi,,composite_phenotype,observation,number,kg/m2,bmi|en,,,http://loinc.org|39156-5,,(weight"
+            + " / (height ^ [2]))"
             + System.lineSeparator()
-            + "overweight,bmi,composite_restriction,observation,boolean,,overweight|en,,,,|MIN|1|> 25|,"
+            + "overweight,bmi,composite_restriction,observation,boolean,,overweight|en,,,,|MIN|1|>"
+            + " 25|,"
             + System.lineSeparator()
             + "Dabigatran,,single_phenotype,medication,boolean,,Dabigatran|en::Dabi|de,,,http://fhir.de/CodeSystem/bfarm/atc|B01AE07,,"
             + System.lineSeparator();
@@ -164,13 +174,18 @@ public class CSVPhenotypesTest {
             + System.lineSeparator()
             + "male,sex,single_restriction,observation,boolean,,male|en,,,,|MIN|1|[male]|,"
             + System.lineSeparator()
-            + "weight,,single_phenotype,observation,number,kg,weight|en::Gewicht|de,Gewicht Synonym 1|de::Gewicht Synonym 2|de::Weight Synonym 1|en::Weight Synonym 2|en,Gewicht Description 1|de::Gewicht Description 2|de::Weight Description 1|en::Weight Description 2|en,http://loinc.org|3141-9::http://snomed.info/sct|27113001,,"
+            + "weight,,single_phenotype,observation,number,kg,weight|en::Gewicht|de,Gewicht Synonym"
+            + " 1|de::Gewicht Synonym 2|de::Weight Synonym 1|en::Weight Synonym 2|en,Gewicht"
+            + " Description 1|de::Gewicht Description 2|de::Weight Description 1|en::Weight"
+            + " Description 2|en,http://loinc.org|3141-9::http://snomed.info/sct|27113001,,"
             + System.lineSeparator()
             + "height,,single_phenotype,observation,number,m,height|en,,,http://loinc.org|3137-7::http://snomed.info/sct|1153637007,,"
             + System.lineSeparator()
-            + "bmi,,composite_phenotype,observation,number,kg/m2,bmi|en,,,http://loinc.org|39156-5,,(weight / (height ^ [2]))"
+            + "bmi,,composite_phenotype,observation,number,kg/m2,bmi|en,,,http://loinc.org|39156-5,,(weight"
+            + " / (height ^ [2]))"
             + System.lineSeparator()
-            + "overweight,bmi,composite_restriction,observation,boolean,,overweight|en,,,,|MIN|1|> 25|,"
+            + "overweight,bmi,composite_restriction,observation,boolean,,overweight|en,,,,|MIN|1|>"
+            + " 25|,"
             + System.lineSeparator()
             + "Dabigatran,,single_phenotype,medication,boolean,,Dabigatran|en::Dabi|de,,,http://fhir.de/CodeSystem/bfarm/atc|B01AE07,,"
             + System.lineSeparator();

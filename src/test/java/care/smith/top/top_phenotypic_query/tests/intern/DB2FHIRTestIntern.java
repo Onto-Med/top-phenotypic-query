@@ -67,7 +67,8 @@ public class DB2FHIRTestIntern {
 
     ResultSet observations =
         sqlAdapter.executeQuery(
-            "SELECT phenotype_id, subject_id, created_at, code_system, code, unit, number_value FROM observation");
+            "SELECT phenotype_id, subject_id, created_at, code_system, code, unit, number_value"
+                + " FROM observation");
     while (observations.next()) {
       Phenotype p = new Phenotype(observations, patIds, true);
       if (p.getValue() != null) createObservation(p);

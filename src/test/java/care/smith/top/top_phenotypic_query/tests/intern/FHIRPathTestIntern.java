@@ -133,13 +133,15 @@ public class FHIRPathTestIntern {
         BigDecimal.valueOf(111),
         path.getNumber(
             obs,
-            "component.where(code.coding.system.value + '|' + code.coding.code = 'http://system.com|xxx').value.value"));
+            "component.where(code.coding.system.value + '|' + code.coding.code ="
+                + " 'http://system.com|xxx').value.value"));
 
     assertEquals(
         "http://value.system.com|ccc",
         path.getString(
             obs,
-            "component.where(code.coding.system.value + '|' + code.coding.code = 'http://system2.com|bbb').value.coding.select(system.value + '|' + code)"));
+            "component.where(code.coding.system.value + '|' + code.coding.code ="
+                + " 'http://system2.com|bbb').value.coding.select(system.value + '|' + code)"));
   }
 
   @Test
