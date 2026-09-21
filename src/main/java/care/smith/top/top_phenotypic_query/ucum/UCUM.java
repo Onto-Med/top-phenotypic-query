@@ -16,8 +16,7 @@ public class UCUM {
 
   private static UcumService getService() {
     try {
-      return new UcumEssenceService(
-          UCUM.class.getClassLoader().getResourceAsStream("ucum-essence.xml"));
+      return new UcumEssenceService(UCUM.class.getResourceAsStream("/ucum-essence.xml"));
     } catch (UcumException e) {
       log.error("'ucum-essence.xml' not found!");
       throw new IllegalArgumentException(e);

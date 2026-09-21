@@ -6,6 +6,12 @@ module care.smith.top.top_phenotypic_query {
 
   opens care.smith.top.top_phenotypic_query to
       info.picocli;
+  opens care.smith.top.top_phenotypic_query.command to
+      info.picocli;
+  opens care.smith.top.top_phenotypic_query.adapter.config to
+      com.fasterxml.jackson.databind;
+  opens care.smith.top.top_phenotypic_query.analysis to
+      info.picocli;
 
   requires org.slf4j;
   requires org.apache.logging.log4j;
@@ -25,7 +31,13 @@ module care.smith.top.top_phenotypic_query {
   requires ucum;
   requires com.opencsv;
   requires jakarta.validation;
+  requires org.postgresql.jdbc;
+  requires com.h2database;
   requires top.api;
 
   exports care.smith.top.top_phenotypic_query;
+  exports care.smith.top.top_phenotypic_query.adapter;
+  exports care.smith.top.top_phenotypic_query.adapter.config;
+  exports care.smith.top.top_phenotypic_query.search;
+  exports care.smith.top.top_phenotypic_query.result;
 }
