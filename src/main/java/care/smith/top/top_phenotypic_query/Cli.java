@@ -15,13 +15,13 @@ import picocli.CommandLine.ParameterException;
     subcommands = {QueryCommand.class, AnalysisCommand.class})
 public class Cli implements Callable<Integer> {
 
-  public static void main(String... args) {
+  void main(String... args) {
     int exitCode = new CommandLine(new Cli()).execute(args);
     System.exit(exitCode);
   }
 
   @Override
-  public Integer call() throws Exception {
+  public Integer call() {
     throw new ParameterException(new CommandLine(this), "Missing required subcommand.");
   }
 }
