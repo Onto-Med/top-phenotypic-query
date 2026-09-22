@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
+import module java.base;
+
 import care.smith.top.model.Category;
 import care.smith.top.model.Code;
 import care.smith.top.model.CodeSystem;
@@ -12,10 +14,6 @@ import care.smith.top.model.Phenotype;
 import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 public class Phe {
 

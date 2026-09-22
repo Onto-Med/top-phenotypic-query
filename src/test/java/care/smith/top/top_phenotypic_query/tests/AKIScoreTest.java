@@ -2,6 +2,8 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import module java.base;
+
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Entity;
 import care.smith.top.model.ItemType;
@@ -28,9 +30,6 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

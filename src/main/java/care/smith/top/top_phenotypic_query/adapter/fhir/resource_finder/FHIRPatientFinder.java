@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder;
 
+import module java.base;
+
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
@@ -10,7 +12,6 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
-import java.time.LocalDateTime;
 import org.hl7.fhir.r4.model.Resource;
 
 public class FHIRPatientFinder extends FHIRPathResourceFinder {

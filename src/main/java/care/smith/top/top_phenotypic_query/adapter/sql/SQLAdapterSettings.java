@@ -1,5 +1,8 @@
 package care.smith.top.top_phenotypic_query.adapter.sql;
 
+import module java.base;
+import module java.sql;
+
 import care.smith.top.model.Code;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
@@ -14,15 +17,7 @@ import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class SQLAdapterSettings extends DataAdapterSettings {
 

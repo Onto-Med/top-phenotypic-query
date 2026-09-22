@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.util;
 
+import module java.base;
+
 import care.smith.top.model.Category;
 import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
@@ -13,17 +15,6 @@ import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class Entities {
 

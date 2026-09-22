@@ -1,18 +1,12 @@
 package care.smith.top.top_phenotypic_query.analysis.time_analysis;
 
+import module java.base;
+
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.analysis.Analysis;
 import care.smith.top.top_phenotypic_query.analysis.AnalysisReport;
 import com.google.common.collect.Multimap;
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;

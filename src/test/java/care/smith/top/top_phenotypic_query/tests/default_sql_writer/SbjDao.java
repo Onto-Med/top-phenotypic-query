@@ -1,9 +1,8 @@
 package care.smith.top.top_phenotypic_query.tests.default_sql_writer;
 
+import module java.base;
+
 import care.smith.top.top_phenotypic_query.util.DateUtil;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SbjDao {
   private String subjectId;

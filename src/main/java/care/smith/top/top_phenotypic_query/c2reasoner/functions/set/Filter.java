@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.set;
 
+import module java.base;
+
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
@@ -16,10 +18,6 @@ import care.smith.top.top_phenotypic_query.util.builder.DateTimeRange;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.NumberRange;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * The function <b>Filter</b> reduces the number of elements in a list (1st argument) based on a

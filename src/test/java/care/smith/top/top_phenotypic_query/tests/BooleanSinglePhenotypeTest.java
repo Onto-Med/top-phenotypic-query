@@ -3,6 +3,9 @@ package care.smith.top.top_phenotypic_query.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import module java.base;
+import module java.sql;
+
 import care.smith.top.model.DataType;
 import care.smith.top.model.Entity;
 import care.smith.top.model.EntityType;
@@ -21,8 +24,6 @@ import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import com.google.common.collect.ObjectArrays;
 import jakarta.annotation.Nonnull;
 import java.net.URL;
-import java.sql.SQLException;
-import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

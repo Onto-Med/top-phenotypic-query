@@ -2,13 +2,14 @@ package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import module java.base;
+
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

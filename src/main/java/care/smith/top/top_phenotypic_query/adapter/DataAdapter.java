@@ -1,5 +1,8 @@
 package care.smith.top.top_phenotypic_query.adapter;
 
+import module java.base;
+import module java.sql;
+
 import care.smith.top.model.Expression;
 import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
@@ -12,9 +15,6 @@ import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
-import java.util.HashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

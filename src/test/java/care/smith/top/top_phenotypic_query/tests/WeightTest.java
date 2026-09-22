@@ -2,6 +2,8 @@ package care.smith.top.top_phenotypic_query.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import module java.base;
+
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
@@ -11,9 +13,6 @@ import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 public class WeightTest {

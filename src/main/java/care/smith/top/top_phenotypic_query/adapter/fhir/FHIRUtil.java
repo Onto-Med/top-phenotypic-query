@@ -1,11 +1,9 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir;
 
+import module java.base;
+
 import ca.uhn.fhir.context.FhirContext;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Base;
 import org.hl7.fhir.r4.model.BaseDateTimeType;

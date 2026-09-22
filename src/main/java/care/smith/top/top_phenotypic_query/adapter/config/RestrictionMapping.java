@@ -1,9 +1,9 @@
 package care.smith.top.top_phenotypic_query.adapter.config;
 
+import module java.base;
+
 import care.smith.top.model.Restriction;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RestrictionMapping {
 

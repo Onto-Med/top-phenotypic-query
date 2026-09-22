@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter;
 
+import module java.base;
+
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
@@ -13,9 +15,6 @@ import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * The function <b>EncAge</b> returns the age of the patient at the start of the last encounter.

@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.bool;
 
+import module java.base;
+
 import care.smith.top.model.DataType;
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
@@ -10,7 +12,6 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggregator;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
-import java.util.List;
 
 /**
  * The function <b>And</b> is a Boolean operation on any number of Boolean expressions (arguments).

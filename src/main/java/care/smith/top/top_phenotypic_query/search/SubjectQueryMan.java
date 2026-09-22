@@ -1,5 +1,8 @@
 package care.smith.top.top_phenotypic_query.search;
 
+import module java.base;
+import module java.sql;
+
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.ProjectionEntry;
@@ -12,10 +15,6 @@ import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class SubjectQueryMan {
 

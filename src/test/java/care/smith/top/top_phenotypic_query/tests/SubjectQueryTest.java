@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import module java.base;
+import module java.sql;
+
 import care.smith.top.model.DataType;
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
@@ -15,11 +18,7 @@ import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import care.smith.top.top_phenotypic_query.util.Values;
-import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 public class SubjectQueryTest extends AbstractTest {

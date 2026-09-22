@@ -1,9 +1,7 @@
 package care.smith.top.top_phenotypic_query.analysis;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import module java.base;
+
 import picocli.CommandLine.Command;
 
 @Command(

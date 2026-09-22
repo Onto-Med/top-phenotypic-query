@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
+import module java.base;
+
 import care.smith.top.model.BooleanValue;
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeValue;
@@ -12,12 +14,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.logging.log4j.util.Strings;
 
 public class Val {

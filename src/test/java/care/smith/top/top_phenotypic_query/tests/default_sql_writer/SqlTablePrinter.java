@@ -1,12 +1,7 @@
 package care.smith.top.top_phenotypic_query.tests.default_sql_writer;
 
-import java.io.PrintStream;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
+import module java.base;
+import module java.sql;
 
 public class SqlTablePrinter {
 

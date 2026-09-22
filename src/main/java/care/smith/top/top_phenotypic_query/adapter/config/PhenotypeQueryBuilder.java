@@ -1,7 +1,8 @@
 package care.smith.top.top_phenotypic_query.adapter.config;
 
+import module java.base;
+
 import care.smith.top.model.DataType;
-import java.util.Map;
 
 public class PhenotypeQueryBuilder extends QueryBuilder {
 

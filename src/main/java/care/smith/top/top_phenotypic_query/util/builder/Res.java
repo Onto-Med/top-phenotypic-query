@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
+import module java.base;
+
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.NumberRestriction;
@@ -9,8 +11,6 @@ import care.smith.top.model.RestrictionOperator;
 import care.smith.top.model.StringRestriction;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
-import java.time.LocalDateTime;
-import java.util.List;
 
 public class Res {
 

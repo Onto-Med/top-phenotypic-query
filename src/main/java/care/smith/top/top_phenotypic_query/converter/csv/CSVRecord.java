@@ -1,6 +1,6 @@
 package care.smith.top.top_phenotypic_query.converter.csv;
 
-import java.util.ArrayList;
+import module java.base;
 
 public class CSVRecord extends ArrayList<String> {
 

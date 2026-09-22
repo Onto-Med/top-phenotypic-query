@@ -1,5 +1,8 @@
 package care.smith.top.top_phenotypic_query.util.builder;
 
+import module java.base;
+import module java.sql;
+
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
@@ -12,14 +15,6 @@ import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

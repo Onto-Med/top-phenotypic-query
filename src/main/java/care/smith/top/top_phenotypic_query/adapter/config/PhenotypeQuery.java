@@ -1,8 +1,6 @@
 package care.smith.top.top_phenotypic_query.adapter.config;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import module java.base;
 
 public class PhenotypeQuery {
 

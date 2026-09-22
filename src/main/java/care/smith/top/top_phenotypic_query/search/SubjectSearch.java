@@ -1,5 +1,8 @@
 package care.smith.top.top_phenotypic_query.search;
 
+import module java.base;
+import module java.sql;
+
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.EntityType;
@@ -17,9 +20,6 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.Objects;
 
 public class SubjectSearch extends PhenotypeSearch {
 

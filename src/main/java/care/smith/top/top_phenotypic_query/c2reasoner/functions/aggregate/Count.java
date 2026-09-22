@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate;
 
+import module java.base;
+
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
@@ -7,7 +9,6 @@ import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
-import java.util.List;
 
 /**
  * The function <b>Count</b> returns the number of values of the argument expression.
