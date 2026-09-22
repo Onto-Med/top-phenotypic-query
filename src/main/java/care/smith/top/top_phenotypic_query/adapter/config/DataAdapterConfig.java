@@ -39,8 +39,7 @@ public class DataAdapterConfig {
   }
 
   public static DataAdapterConfig getInstanceFromResource(String resourceName) {
-    return getInstanceFromStream(
-        DataAdapterConfig.class.getClassLoader().getResourceAsStream(resourceName));
+    return getInstanceFromStream(DataAdapterConfig.class.getResourceAsStream("/" + resourceName));
   }
 
   public static DataAdapterConfig getInstanceFromStream(InputStream inputStream) {
