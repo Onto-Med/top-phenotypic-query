@@ -1,9 +1,10 @@
 package care.smith.top.top_phenotypic_query.converter.csv;
 
+import module java.base;
+
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Values;
-import java.util.List;
 
 public class CSVPhenotypesDataRecord extends CSVRecord {
 

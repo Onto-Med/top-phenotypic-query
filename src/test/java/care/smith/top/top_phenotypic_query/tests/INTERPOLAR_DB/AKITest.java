@@ -2,6 +2,8 @@ package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import module java.base;
+
 import care.smith.top.model.ItemType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.advanced.ForEach;
@@ -22,7 +24,6 @@ import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public class AKITest {

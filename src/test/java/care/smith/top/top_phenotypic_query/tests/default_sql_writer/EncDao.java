@@ -1,7 +1,6 @@
 package care.smith.top.top_phenotypic_query.tests.default_sql_writer;
 
-import java.util.ArrayList;
-import java.util.List;
+import module java.base;
 
 public class EncDao {
   private String encounterId;

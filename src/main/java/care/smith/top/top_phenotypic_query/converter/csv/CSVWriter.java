@@ -1,12 +1,8 @@
 package care.smith.top.top_phenotypic_query.converter.csv;
 
+import module java.base;
+
 import com.google.common.base.Strings;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class CSVWriter {
 

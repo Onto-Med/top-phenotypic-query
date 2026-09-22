@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.encounter;
 
+import module java.base;
+
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.ItemType;
@@ -11,7 +13,6 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
-import java.util.List;
 
 /**
  * The function <b>EncType</b> returns 'true' if the encounter type (e.g., inpatient or ambulatory)

@@ -2,14 +2,15 @@ package care.smith.top.top_phenotypic_query.tests.intern.run;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import module java.base;
+import module java.sql;
+
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
-import java.sql.SQLException;
-import java.util.Set;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;

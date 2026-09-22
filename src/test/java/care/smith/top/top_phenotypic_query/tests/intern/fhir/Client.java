@@ -1,8 +1,9 @@
 package care.smith.top.top_phenotypic_query.tests.intern.fhir;
 
+import module java.base;
+
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRClient;
-import java.util.List;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Resource;
 

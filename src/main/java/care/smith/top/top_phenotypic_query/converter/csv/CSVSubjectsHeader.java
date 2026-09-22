@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.converter.csv;
 
+import module java.base;
+
 import care.smith.top.model.DataType;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.PhenotypeQuery;
@@ -8,10 +10,6 @@ import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.TreeSet;
 
 public class CSVSubjectsHeader extends LinkedHashMap<CSVSubjectsHead, TreeSet<CSVSubjectsHead>> {
 

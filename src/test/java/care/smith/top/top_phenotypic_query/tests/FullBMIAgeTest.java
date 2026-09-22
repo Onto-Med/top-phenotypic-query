@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import module java.base;
+import module java.sql;
+
 import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.ProjectionEntry;
 import care.smith.top.model.ProjectionEntry.TypeEnum;
@@ -18,11 +21,7 @@ import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Que;
-import java.math.BigDecimal;
 import java.net.URL;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

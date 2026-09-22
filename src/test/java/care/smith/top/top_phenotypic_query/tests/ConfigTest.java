@@ -3,10 +3,11 @@ package care.smith.top.top_phenotypic_query.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import module java.base;
+
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import com.google.common.collect.ImmutableMap;
 import java.net.URL;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

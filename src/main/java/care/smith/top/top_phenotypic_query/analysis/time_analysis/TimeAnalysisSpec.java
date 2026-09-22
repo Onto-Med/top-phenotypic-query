@@ -1,10 +1,8 @@
 package care.smith.top.top_phenotypic_query.analysis.time_analysis;
 
+import module java.base;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class TimeAnalysisSpec {
 

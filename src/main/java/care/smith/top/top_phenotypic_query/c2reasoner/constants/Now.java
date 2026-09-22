@@ -1,11 +1,12 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.constants;
 
+import module java.base;
+
 import care.smith.top.model.Constant;
 import care.smith.top.model.DataType;
 import care.smith.top.model.DateTimeConstant;
 import care.smith.top.model.DateTimeValue;
 import care.smith.top.model.Value;
-import java.time.LocalDateTime;
 
 /**
  * The constant <b>Now</b> represents the current time.<br>

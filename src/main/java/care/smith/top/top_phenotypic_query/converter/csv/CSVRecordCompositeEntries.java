@@ -1,6 +1,6 @@
 package care.smith.top.top_phenotypic_query.converter.csv;
 
-import java.util.List;
+import module java.base;
 
 public class CSVRecordCompositeEntries extends CSVRecord {
 

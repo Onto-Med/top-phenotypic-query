@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.adapter.fhir.resource_finder;
 
+import module java.base;
+
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.adapter.config.SubjectOutput;
 import care.smith.top.top_phenotypic_query.adapter.fhir.FHIRPath;
@@ -8,8 +10,6 @@ import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
-import java.util.HashSet;
-import java.util.Set;
 import org.hl7.fhir.r4.model.Resource;
 
 public class EncounterPatientRef {

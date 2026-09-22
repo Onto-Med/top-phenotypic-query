@@ -1,16 +1,12 @@
 package care.smith.top.top_phenotypic_query.tests.default_sql_writer;
 
+import module java.base;
+import module java.sql;
+
 import care.smith.top.model.Code;
 import care.smith.top.model.Phenotype;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
-import java.io.PrintStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

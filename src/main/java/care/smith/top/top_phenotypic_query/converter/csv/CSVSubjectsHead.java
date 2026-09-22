@@ -1,9 +1,10 @@
 package care.smith.top.top_phenotypic_query.converter.csv;
 
+import module java.base;
+
 import care.smith.top.model.DataType;
 import care.smith.top.model.EntityType;
 import care.smith.top.model.ItemType;
-import java.util.Objects;
 
 public class CSVSubjectsHead implements Comparable<CSVSubjectsHead> {
 

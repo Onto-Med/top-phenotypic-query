@@ -1,13 +1,12 @@
 package care.smith.top.top_phenotypic_query.converter.csv;
 
+import module java.base;
+
 import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Values;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CSVSubjectsDataRecord extends CSVRecordCompositeEntries {
 

@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.tests;
 
+import module java.base;
+
 import care.smith.top.model.Code;
 import care.smith.top.model.CodeSystem;
 import care.smith.top.model.DataType;
@@ -27,10 +29,7 @@ import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
 import care.smith.top.top_phenotypic_query.util.builder.Phe;
-import java.math.BigDecimal;
 import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.List;
 
 public abstract class AbstractTest {
 

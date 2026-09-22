@@ -1,11 +1,12 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.constants;
 
+import module java.base;
+
 import care.smith.top.model.Constant;
 import care.smith.top.model.DataType;
 import care.smith.top.model.NumberConstant;
 import care.smith.top.model.NumberValue;
 import care.smith.top.model.Value;
-import java.math.BigDecimal;
 
 /**
  * The constant <b>E (e)</b> is the Euler's number, approximately equal to 2.71828.<br>

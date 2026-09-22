@@ -1,12 +1,8 @@
 package care.smith.top.top_phenotypic_query.analysis;
 
+import module java.base;
+
 import com.opencsv.CSVWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import picocli.CommandLine.Command;
 
 @Command(

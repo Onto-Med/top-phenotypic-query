@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.c2reasoner.functions.set;
 
+import module java.base;
+
 import care.smith.top.model.Expression;
 import care.smith.top.model.ExpressionFunction.NotationEnum;
 import care.smith.top.model.Phenotype;
@@ -10,8 +12,6 @@ import care.smith.top.top_phenotypic_query.c2reasoner.functions.aggregate.Aggreg
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The function <b>CutFirst</b> cuts the temporally first element of the given arguments list and

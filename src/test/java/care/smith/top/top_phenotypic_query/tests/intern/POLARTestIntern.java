@@ -1,5 +1,8 @@
 package care.smith.top.top_phenotypic_query.tests.intern;
 
+import module java.base;
+import module java.sql;
+
 import care.smith.top.model.PhenotypeQuery;
 import care.smith.top.model.QueryCriterion;
 import care.smith.top.top_phenotypic_query.adapter.DataAdapter;
@@ -8,9 +11,7 @@ import care.smith.top.top_phenotypic_query.search.PhenotypeFinder;
 import care.smith.top.top_phenotypic_query.tests.AbstractTest;
 import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Entities.NoCodesException;
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.sql.SQLException;
 import org.junit.jupiter.api.Disabled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

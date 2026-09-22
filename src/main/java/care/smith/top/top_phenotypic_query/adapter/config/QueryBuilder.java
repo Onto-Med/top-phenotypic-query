@@ -1,6 +1,6 @@
 package care.smith.top.top_phenotypic_query.adapter.config;
 
-import java.util.Map;
+import module java.base;
 
 public class QueryBuilder {
 

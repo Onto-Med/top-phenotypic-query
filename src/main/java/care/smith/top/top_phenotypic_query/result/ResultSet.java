@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.result;
 
+import module java.base;
+
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.ProjectionEntry;
@@ -9,12 +11,6 @@ import care.smith.top.top_phenotypic_query.util.Entities;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,5 +1,8 @@
 package care.smith.top.top_phenotypic_query.adapter.sql;
 
+import module java.base;
+import module java.sql;
+
 import care.smith.top.model.Code;
 import care.smith.top.model.CodeSystem;
 import care.smith.top.model.DataType;
@@ -22,16 +25,9 @@ import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

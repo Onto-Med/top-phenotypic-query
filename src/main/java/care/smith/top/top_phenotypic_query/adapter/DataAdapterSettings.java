@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.adapter;
 
+import module java.base;
+
 import care.smith.top.model.DateTimeRestriction;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.Quantifier;
@@ -12,10 +14,6 @@ import care.smith.top.top_phenotypic_query.search.SingleSearch;
 import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.stream.Stream;
 
 public abstract class DataAdapterSettings {
 

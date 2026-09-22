@@ -3,6 +3,8 @@ package care.smith.top.top_phenotypic_query.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import module java.base;
+
 import care.smith.top.model.DataType;
 import care.smith.top.model.NumberRestriction;
 import care.smith.top.model.Quantifier;
@@ -13,9 +15,7 @@ import care.smith.top.top_phenotypic_query.adapter.config.CodeMapping;
 import care.smith.top.top_phenotypic_query.adapter.config.DataAdapterConfig;
 import care.smith.top.top_phenotypic_query.util.Restrictions;
 import care.smith.top.top_phenotypic_query.util.builder.Res;
-import java.math.BigDecimal;
 import java.net.URL;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
