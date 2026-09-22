@@ -99,17 +99,10 @@ public class DateUtil {
   public static LocalDateTime getBirthdateForAge(int age, String ucumUnit) throws UcumException {
     LocalDate birthdate = LocalDate.now();
     switch (ucumUnit) {
-      case "a":
-        birthdate = birthdate.minusYears(age);
-        break;
-      case "d":
-        birthdate = birthdate.minusDays(age);
-        break;
-      case "mo":
-        birthdate = birthdate.minusMonths(age);
-        break;
-      default:
-        throw new UcumException("Invalid date unit!");
+      case "a" -> birthdate = birthdate.minusYears(age);
+      case "d" -> birthdate = birthdate.minusDays(age);
+      case "mo" -> birthdate = birthdate.minusMonths(age);
+      default -> throw new UcumException("Invalid date unit!");
     }
     return birthdate.atStartOfDay();
   }
@@ -120,16 +113,12 @@ public class DateUtil {
 
   public static BigDecimal getPeriod(LocalDateTime start, LocalDateTime end, String ucumUnit)
       throws UcumException {
-    switch (ucumUnit) {
-      case "a":
-        return getPeriodInYears(start, end);
-      case "d":
-        return getPeriodInDays(start, end);
-      case "mo":
-        return getPeriodInMonths(start, end);
-      default:
-        throw new UcumException("Invalid date unit!");
-    }
+    return switch (ucumUnit) {
+      case "a" -> getPeriodInYears(start, end);
+      case "d" -> getPeriodInDays(start, end);
+      case "mo" -> getPeriodInMonths(start, end);
+      default -> throw new UcumException("Invalid date unit!");
+    };
   }
 
   public static BigDecimal getPeriod(LocalDateTime start, String ucumUnit) throws UcumException {
