@@ -147,13 +147,26 @@ public class Phenotypes {
 
   private static List<Code> getCodesWithSubtreeFlattened(Phenotype p) {
     ArrayList<Code> codes = new ArrayList<>();
-    if (p.getCodes() != null) p.getCodes().forEach(code -> collectCodeChildren(code, codes));
+    Map<CodeKey, List<Code>> buckets = new HashMap<>();
+    if (p.getCodes() != null)
+      p.getCodes().forEach(code -> collectCodeChildren(code, codes, buckets));
     return codes;
   }
 
-  private static void collectCodeChildren(Code code, List<Code> codes) {
-    if (!codes.contains(code)) codes.add(code);
+  private static void collectCodeChildren(
+      Code code, List<Code> codes, Map<CodeKey, List<Code>> buckets) {
+    // URI and code equality are necessary, but not sufficient, for Code.equals.
+    // Keep full equality within each bucket to preserve metadata and subtree semantics.
+    CodeKey key = new CodeKey(code.getUri(), code.getCode());
+    List<Code> bucket = buckets.computeIfAbsent(key, ignored -> new ArrayList<>());
+    if (!bucket.contains(code)) {
+      bucket.add(code);
+      codes.add(code);
+    }
+    // Even duplicate parents may contain child objects that must still be visited.
     if (code.getChildren() != null)
-      code.getChildren().forEach(childCode -> collectCodeChildren(childCode, codes));
+      code.getChildren().forEach(childCode -> collectCodeChildren(childCode, codes, buckets));
   }
+
+  private record CodeKey(URI uri, String code) {}
 }
