@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>care.smith.top</groupId>
 	<artifactId>top-phenotypic-query</artifactId>
-	<version>1.0.3</version>
+	<version>2.0.0</version>
 	<name>TOP Phenotypic Query</name>
 
     <properties>

@@ -100,8 +100,9 @@ public class ForEach extends FunctionEntity {
   private Expression replace(Value i, String pheId, Expression exp, C2R c2r) {
     if (exp == null) return null;
     if (Objects.equals(pheId, exp.getEntityId())) return Exp.of(i);
-    if (exp.getConstantId() != null || exp.getRestriction() != null || exp.getValues() != null)
-      return exp;
+    if (exp.getConstantId() != null
+        || exp.getRestriction() != null
+        || (exp.getValues() != null && !exp.getValues().isEmpty())) return exp;
     if (exp.getEntityId() != null)
       return replace(i, pheId, c2r.getPhenotype(exp.getEntityId()).getExpression(), c2r);
     if (exp.getFunctionId() != null) {
