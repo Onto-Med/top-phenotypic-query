@@ -147,7 +147,7 @@ public class Phenotypes {
     return key.startsWith(singlePhenotypeId + "_values_");
   }
 
-  private static List<Code> getCodesWithSubtreeFlattened(Phenotype p) {
+  public static List<Code> getCodesWithSubtreeFlattened(Phenotype p) {
     ArrayList<Code> codes = new ArrayList<>();
     if (p.getCodes() != null) p.getCodes().forEach(code -> collectCodeChildren(code, codes));
     return codes;

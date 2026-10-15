@@ -66,7 +66,7 @@ public class CSVCodesTest {
 
   //  @Test
   //  public void test() throws IOException, InterruptedException, URISyntaxException {
-  //    String uri = "http://top.imise.uni-leipzig.de/api/polar/";
+  //    String uri = "https://top.imise.uni-leipzig.de/api/polar/";
   //    String[] aes = {
   //      "acute_kidney_injury",
   //      "anaemie",

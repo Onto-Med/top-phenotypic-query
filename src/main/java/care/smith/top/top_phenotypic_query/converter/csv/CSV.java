@@ -1,5 +1,6 @@
 package care.smith.top.top_phenotypic_query.converter.csv;
 
+import care.smith.top.model.Code;
 import care.smith.top.model.Entity;
 import care.smith.top.model.Phenotype;
 import care.smith.top.model.PhenotypeQuery;
@@ -9,11 +10,13 @@ import care.smith.top.top_phenotypic_query.result.PhenotypeValues;
 import care.smith.top.top_phenotypic_query.result.ResultSet;
 import care.smith.top.top_phenotypic_query.result.SubjectPhenotypes;
 import care.smith.top.top_phenotypic_query.util.Entities;
+import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import javax.validation.Valid;
 
 public class CSV {
 
@@ -63,8 +66,16 @@ public class CSV {
     Entities entities = Entities.of(phenotypes).deriveAdditionalProperties();
     for (Phenotype alg : entities.getCompositePhenotypes()) {
       for (Phenotype par : entities.getBasicVariables(alg)) {
-        writer.write(new CSVCodesRecord(alg, par, entryPartsDelimiter));
-        writer.flush();
+        for (@Valid Code code : Phenotypes.getCodesWithSubtreeFlattened(par)) {
+          writer.write(
+              new CSVCodesRecord(
+                  alg,
+                  par,
+                  code.getCodeSystem().getUri().toString(),
+                  code.getCode(),
+                  entryPartsDelimiter));
+          writer.flush();
+        }
       }
     }
   }
