@@ -48,13 +48,28 @@ phenotypeQueries:
       textValue: enc_class_code
       startDateTime: enc_period_start
       endDateTime: enc_period_end
+  # Numeric observations use the ETL's primary LOINC code and reference-unit value.
+  # Only successful unit conversions or values already in that unit are eligible.
+  # Repeated rows of an identified resource are collapsed on the relevant measurement fields.
+  # Rows without a resource ID are retained individually to avoid merging unrelated measurements.
   observation:
     baseQuery: |
       SELECT un.enc_id, un.da, un.va, un.co
       FROM (
         SELECT SUBSTRING(obs_encounter_calculated_ref FROM 11) AS enc_id, obs_effectivedatetime AS da, analysis_value AS va, analysis_loinc_code as co
-        FROM db2dataprocessor_out.v_observation_last_version
-        WHERE analysis_value IS NOT NULL
+        FROM (
+          SELECT DISTINCT obs_id, obs_encounter_calculated_ref, obs_effectivedatetime,
+                          analysis_value, analysis_loinc_code, analysis_unit
+          FROM db2dataprocessor_out.v_observation_last_version
+          WHERE analysis_value_status IN ('converted', 'already_reference_unit')
+            AND analysis_value IS NOT NULL AND NULLIF(obs_id, '') IS NOT NULL
+          UNION ALL
+          SELECT obs_id, obs_encounter_calculated_ref, obs_effectivedatetime,
+                 analysis_value, analysis_loinc_code, analysis_unit
+          FROM db2dataprocessor_out.v_observation_last_version
+          WHERE analysis_value_status IN ('converted', 'already_reference_unit')
+            AND analysis_value IS NOT NULL AND NULLIF(obs_id, '') IS NULL
+        ) AS observation_rows
         UNION ALL
         SELECT enc_id, enc_period_start AS da, CAST(enc_age_at_admission AS float8) AS va, '29553-5' AS co
         FROM db2dataprocessor_out.v_encounter_last_version

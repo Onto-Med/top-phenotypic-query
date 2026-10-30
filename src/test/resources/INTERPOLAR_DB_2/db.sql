@@ -27,6 +27,9 @@ CREATE TABLE db2dataprocessor_out.v_observation_last_version
     obs_patient_ref              varchar NULL,
     analysis_loinc_code          varchar NOT NULL,
     obs_effectivedatetime        timestamp NULL,
+    -- Existing synthetic measurements are supplied in their model's reference unit.
+    analysis_value_status       varchar DEFAULT 'already_reference_unit',
+    analysis_unit               varchar NULL,
     analysis_value      		 float8 NULL,
     PRIMARY KEY (obs_id, analysis_loinc_code)
 );
