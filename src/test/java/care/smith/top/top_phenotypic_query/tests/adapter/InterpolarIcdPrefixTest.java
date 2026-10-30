@@ -80,10 +80,10 @@ class InterpolarIcdPrefixTest {
     try (PreparedStatement insert =
         connection.prepareStatement(
             """
-        INSERT INTO db2dataprocessor_out.v_condition_last_version
-          (con_encounter_calculated_ref, con_code_system, con_code_code)
-        VALUES ('Encounter/test', ?, ?)
-        """)) {
+            INSERT INTO db2dataprocessor_out.v_condition_last_version
+              (con_encounter_calculated_ref, con_code_system, con_code_code)
+            VALUES ('Encounter/test', ?, ?)
+            """)) {
       insert.setString(1, system);
       insert.setString(2, code);
       insert.executeUpdate();
