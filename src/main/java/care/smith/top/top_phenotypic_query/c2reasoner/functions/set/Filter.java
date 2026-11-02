@@ -164,10 +164,8 @@ public class Filter extends FunctionEntity {
 
   public static List<Value> filterDate(List<Value> vals, Map<RestrictionOperator, Value> inter) {
     return vals.stream()
-        .filter(
-            v ->
-                Values.getDateTime(v) != null
-                    && Values.contains(inter, Val.of(Values.getDateTime(v))))
+        .filter(v ->
+            Values.getDateTime(v) != null && Values.contains(inter, Val.of(Values.getDateTime(v))))
         .collect(Collectors.toList());
   }
 }

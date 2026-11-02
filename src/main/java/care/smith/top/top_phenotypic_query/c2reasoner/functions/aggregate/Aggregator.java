@@ -36,11 +36,10 @@ public class Aggregator {
   public static List<Expression> aggregateIfNumber(List<Expression> args, C2R c2r) {
     if (containsMultipleValues(args))
       return args.stream()
-          .map(
-              a -> {
-                if (Expressions.hasNumberType(a)) return aggregate(a, c2r);
-                else return a;
-              })
+          .map(a -> {
+            if (Expressions.hasNumberType(a)) return aggregate(a, c2r);
+            else return a;
+          })
           .collect(Collectors.toList());
     return args;
   }

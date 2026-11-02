@@ -16,14 +16,13 @@ public class ListPhenotypeClasses extends Analysis {
     if (outputFile.isPresent()) {
       try (CSVWriter writer = new CSVWriter(new FileWriter(outputFile.get()))) {
         loadMetadata(queryResultFile).stream()
-            .map(
-                phe ->
-                    new String[] {
-                      phe.getId(),
-                      Objects.requireNonNullElse(phe.getEntityType(), "").toString(),
-                      Objects.requireNonNullElse(phe.getDataType(), "").toString(),
-                      phe.getUnit()
-                    })
+            .map(phe ->
+                new String[] {
+                  phe.getId(),
+                  Objects.requireNonNullElse(phe.getEntityType(), "").toString(),
+                  Objects.requireNonNullElse(phe.getDataType(), "").toString(),
+                  phe.getUnit()
+                })
             .forEach(line -> writer.writeNext(line));
       } catch (IOException e) {
         e.printStackTrace();

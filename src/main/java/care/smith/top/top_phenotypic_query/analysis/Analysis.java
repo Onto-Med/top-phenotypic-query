@@ -138,13 +138,12 @@ public abstract class Analysis implements Runnable {
 
   private Stream<Phenotype> getMetadataStream(File queryResultFile) {
     return loadCsv(queryResultFile, "metadata.csv").stream()
-        .map(
-            r ->
-                new Phenotype(EntityType.fromValue(r.get("type")))
-                    .id(r.get("phenotype"))
-                    .dataType(DataType.fromValue(r.get("datatype")))
-                    .unit(r.get("unit"))
-                    .addTitlesItem(new LocalisableText().text(r.get("titles"))));
+        .map(r ->
+            new Phenotype(EntityType.fromValue(r.get("type")))
+                .id(r.get("phenotype"))
+                .dataType(DataType.fromValue(r.get("datatype")))
+                .unit(r.get("unit"))
+                .addTitlesItem(new LocalisableText().text(r.get("titles"))));
   }
 
   /**
