@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.ucum;
+package care.smith.top.top_phenotypic_query.lab_units;
 
 import java.io.InputStream;
 import java.math.BigDecimal;

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import care.smith.top.top_phenotypic_query.ucum.LabUnitConverter;
+import care.smith.top.top_phenotypic_query.lab_units.LabUnitConverter;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
