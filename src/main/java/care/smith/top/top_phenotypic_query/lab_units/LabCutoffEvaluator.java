@@ -1,14 +1,7 @@
 package care.smith.top.top_phenotypic_query.lab_units;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import module java.base;
+import module java.logging;
 
 /**
  * Filters laboratory observations, harmonizes their units to match reference ranges, and evaluates
@@ -27,10 +20,13 @@ public class LabCutoffEvaluator {
   /** Evaluates a list of observation rows against a relative cutoff rule (ULN or LLN). */
   public CutoffEvaluationResult evaluateCutoff(
       List<LabObservation> observations, CutoffRule cutoff) {
+
     if (observations == null
         || observations.isEmpty()
         || cutoff == null
-        || cutoff.reference() == null) {
+        || cutoff.reference() == null
+        || cutoff.multiplier() == null
+        || cutoff.operator() == null) {
       return new CutoffEvaluationResult(List.of(), observations != null ? observations : List.of());
     }
 
@@ -39,6 +35,9 @@ public class LabCutoffEvaluator {
 
     // --- 1. Validate numeric value, unit validity, and presence of reference limit ---
     for (LabObservation obs : observations) {
+      if (obs == null) {
+        continue;
+      }
       BigDecimal numericValue = parseNumericValue(obs.rawValue());
       BigDecimal referenceLimit = getReferenceValue(obs, cutoff.reference());
 
@@ -129,19 +128,21 @@ public class LabCutoffEvaluator {
       String unitFrom = groupRows.get(0).unit();
       Optional<LabObservation> firstConvertible =
           preferred.stream()
-              .filter(
-                  candidate ->
-                      isConvertibleUnit(unitFrom, getReferenceUnit(candidate, referenceType)))
+              .filter(candidate ->
+                  isConvertibleUnit(unitFrom, getReferenceUnit(candidate, referenceType)))
               .findFirst();
 
       if (firstConvertible.isPresent()) {
         LabObservation chosen = firstConvertible.get();
         selectedCandidates.add(chosen);
         // Add unselected duplicate candidates to invalidObs (matching R behavior)
+        boolean skippedChosen = false;
         for (LabObservation row : groupRows) {
-          if (row != chosen) {
-            invalidObs.add(row);
+          if (!skippedChosen && row == chosen) {
+            skippedChosen = true;
+            continue;
           }
+          invalidObs.add(row);
         }
       } else {
         invalidObs.addAll(groupRows);

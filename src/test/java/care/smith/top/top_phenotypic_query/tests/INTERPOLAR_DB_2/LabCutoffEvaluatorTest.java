@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB_2;
 
+import module java.base;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,9 +12,6 @@ import care.smith.top.top_phenotypic_query.lab_units.LabCutoffEvaluator;
 import care.smith.top.top_phenotypic_query.lab_units.LabObservation;
 import care.smith.top.top_phenotypic_query.lab_units.LabUnitConverter;
 import care.smith.top.top_phenotypic_query.lab_units.MatchedObservation;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -243,6 +242,63 @@ class LabCutoffEvaluatorTest {
 
     assertTrue(result.evaluatedObservations().isEmpty());
     assertEquals(4, result.invalidObservations().size());
+  }
+
+  @Test
+  @DisplayName("Handle identical duplicate observation instances and unsupported range types")
+  void testDuplicateInstancesAndUnsupportedRangeTypes() {
+    LabObservation obs =
+        new LabObservation(
+            "obs-dup", "1742-6", "50", "mg/L", "normal", null, null, new BigDecimal("20"), "mg/L");
+    LabObservation onlyTherapeutic =
+        new LabObservation(
+            "obs-ther",
+            "1742-6",
+            "50",
+            "mg/L",
+            "therapeutic",
+            null,
+            null,
+            new BigDecimal("20"),
+            "mg/L");
+
+    CutoffRule rule =
+        new CutoffRule(
+            CutoffRule.ReferenceType.ULN, BigDecimal.ONE, CutoffRule.Operator.GREATER_THAN);
+
+    CutoffEvaluationResult result =
+        evaluator.evaluateCutoff(List.of(obs, obs, onlyTherapeutic), rule);
+
+    // One duplicate is evaluated, the second duplicate + 'therapeutic' go to invalidObservations
+    assertEquals(1, result.evaluatedObservations().size());
+    assertEquals(2, result.invalidObservations().size());
+  }
+
+  @Test
+  @DisplayName("Safely handle null or incomplete inputs and operator symbol parsing")
+  void testNullInputsAndOperatorParsing() {
+    LabObservation validObs =
+        new LabObservation(
+            "obs-null-check",
+            "1742-6",
+            "50",
+            "mg/L",
+            "normal",
+            null,
+            null,
+            new BigDecimal("20"),
+            "mg/L");
+    CutoffRule incompleteRule =
+        new CutoffRule(CutoffRule.ReferenceType.ULN, null, CutoffRule.Operator.GREATER_THAN);
+
+    assertTrue(evaluator.evaluateCutoff(null, incompleteRule).evaluatedObservations().isEmpty());
+    assertEquals(1, evaluator.evaluateCutoff(List.of(validObs), null).invalidObservations().size());
+    assertEquals(
+        1,
+        evaluator.evaluateCutoff(List.of(validObs), incompleteRule).invalidObservations().size());
+
+    assertEquals(CutoffRule.Operator.GREATER_THAN_OR_EQUAL, CutoffRule.Operator.fromSymbol(" >= "));
+    assertEquals(null, CutoffRule.Operator.fromSymbol("!="));
   }
 
   // --- Helper for scale-independent BigDecimal assertions ---

@@ -26,8 +26,11 @@ public record CutoffRule(
     }
 
     public static Operator fromSymbol(String symbol) {
+      if (symbol == null) {
+        return null;
+      }
       for (Operator op : values()) {
-        if (op.symbol.equals(symbol)) {
+        if (op.symbol.equals(symbol.trim())) {
           return op;
         }
       }
