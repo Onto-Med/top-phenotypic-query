@@ -1,5 +1,7 @@
 package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB_2;
 
+import module java.base;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -7,9 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import care.smith.top.top_phenotypic_query.lab_units.LabUnitConverter;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -227,6 +226,28 @@ class LabUnitConverterTest {
     // 285 mosm/kg = 0.285 mol/kg
     BigDecimal perKgResult = converter.convertLabUnits(new BigDecimal("285"), "mosm/kg", "mol/kg");
     assertBigDecimalEquals(new BigDecimal("0.285"), perKgResult);
+  }
+
+  @Test
+  @DisplayName("Normalize general exponents, multiplication asterisks, and Greek mu")
+  void testExtendedCleanUnitNormalization() {
+    // General exponents: m^2 and m*2 -> m2, mm^3 -> mm3 (from R example: ukat/mm^3 -> ukat/L)
+    assertBigDecimalEquals(
+        new BigDecimal("1000000"),
+        converter.convertLabUnits(new BigDecimal("1"), "ukat/mm^3", "ukat/L"));
+
+    assertBigDecimalEquals(
+        new BigDecimal("10"), converter.convertLabUnits(new BigDecimal("10"), "kg/m*2", "kg/m^2"));
+
+    // Multiplication asterisk between units ('*' -> '.') and negative exponent with lowercase 'l'
+    assertBigDecimalEquals(
+        new BigDecimal("1000"),
+        converter.convertLabUnits(new BigDecimal("1"), "L * min^-1", "ml.min-1"));
+
+    // Greek Small Letter Mu (\u03bc) vs. Micro Sign (\u00b5)
+    assertBigDecimalEquals(
+        new BigDecimal("0.15"),
+        converter.convertLabUnits(new BigDecimal("150"), "\u03bcmol/L", "\u00b5mol/mL"));
   }
 
   private void assertBigDecimalEquals(BigDecimal expected, BigDecimal actual) {
