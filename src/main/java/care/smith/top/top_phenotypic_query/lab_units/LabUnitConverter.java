@@ -1,13 +1,8 @@
 package care.smith.top.top_phenotypic_query.lab_units;
 
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import module java.base;
+import module java.logging;
+
 import org.fhir.ucum.Decimal;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
@@ -21,7 +16,7 @@ public class LabUnitConverter {
 
   private static final Logger LOGGER = Logger.getLogger(LabUnitConverter.class.getName());
   private final UcumService ucumService;
-  private final Map<String, ParsedUnit> unitCache = new ConcurrentHashMap<>();
+  private final Map<String, Optional<ParsedUnit>> unitCache = new ConcurrentHashMap<>();
 
   // Metric prefixes matching LAB_UNIT_PREFIX_FACTORS in R
   private static final Map<String, BigDecimal> PREFIX_FACTORS =
@@ -54,7 +49,12 @@ public class LabUnitConverter {
       Pattern.compile("^" + PREFIX_REGEX + "(U|IU|\\[IU\\]|\\[iU\\])/" + PREFIX_REGEX + "[Ll]$");
 
   private static final Pattern LOWERCASE_LITER_PATTERN =
-      Pattern.compile("(^|/|\\.|\\()" + PREFIX_REGEX + "(l)(?=$|/|\\.|\\)|\\d|\\^|\\*)");
+      Pattern.compile("(^|/|\\.|\\()" + PREFIX_REGEX + "(l)(?=$|/|\\.|\\)|\\d|\\^|\\*|-)");
+
+  private static final Pattern UNIT_EXPONENT_PATTERN =
+      Pattern.compile("([a-zA-Z\\]])[\\^\\*]([+-]?\\d+)");
+  private static final Pattern MULTIPLICATION_ASTERISK_PATTERN =
+      Pattern.compile("(?<!(?:^|[/\\.\\(])10)\\*");
 
   private enum UnitType {
     UCUM,
@@ -216,8 +216,9 @@ public class LabUnitConverter {
    */
   private String cleanUnit(String unit) {
     String cleaned = unit.replaceAll("/\\{[^/]+\\}$", "");
-    cleaned = cleaned.replace("*", "^");
     cleaned = cleaned.replaceAll("\\s+", "");
+    cleaned = UNIT_EXPONENT_PATTERN.matcher(cleaned).replaceAll("$1$2");
+    cleaned = MULTIPLICATION_ASTERISK_PATTERN.matcher(cleaned).replaceAll(".");
     return cleaned;
   }
 
@@ -225,11 +226,16 @@ public class LabUnitConverter {
     if (isMissingUnit(rawUnit)) {
       return null;
     }
-    return unitCache.computeIfAbsent(rawUnit, this::parseConvertibleUnitUncached);
+    return unitCache
+        .computeIfAbsent(rawUnit, unit -> Optional.ofNullable(parseConvertibleUnitUncached(unit)))
+        .orElse(null);
   }
 
   private ParsedUnit parseConvertibleUnitUncached(String rawUnit) {
-    String cleaned = cleanUnit(rawUnit).replace("\u00b5", "u"); // 'µ' -> 'u'
+    String cleaned =
+        cleanUnit(rawUnit)
+            .replace("\u00b5", "u") // Micro Sign µ
+            .replace("\u03bc", "u"); // Greek Small Letter Mu μ
 
     // Check simple IU quotients first so U/L, IU/L, [IU]/L, and [iU]/L share the exact same
     // equivalence logic as parseSimpleInternationalUnitQuotient() in R.
