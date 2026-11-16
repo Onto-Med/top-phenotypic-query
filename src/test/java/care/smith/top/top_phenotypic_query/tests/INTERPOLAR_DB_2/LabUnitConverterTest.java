@@ -250,6 +250,36 @@ class LabUnitConverterTest {
         converter.convertLabUnits(new BigDecimal("150"), "\u03bcmol/L", "\u00b5mol/mL"));
   }
 
+  @Test
+  void testFactor1() {
+    BigDecimal measuredValue = new BigDecimal("100");
+    String measuredUnit = "umol/L";
+    String targetUnit = "mg/dL";
+    String conversionUnit = "mmol/L";
+    BigDecimal conversionFactor = new BigDecimal("11.312");
+    BigDecimal result =
+        converter.convertLabUnits(
+            measuredValue, measuredUnit, targetUnit, conversionFactor, conversionUnit, false, null);
+
+    assertBigDecimalEquals(new BigDecimal("1.1312"), result);
+  }
+
+  @Test
+  void testFactor2() {
+    BigDecimal measuredValue = new BigDecimal("0.011312");
+    String measuredUnit = "g/L";
+    String targetUnit = "mmol/L";
+    String conversionUnit = "mg/dL";
+    BigDecimal conversionFactor =
+        BigDecimal.ONE.divide(new BigDecimal("11.312"), MathContext.DECIMAL128);
+
+    BigDecimal result =
+        converter.convertLabUnits(
+            measuredValue, measuredUnit, targetUnit, conversionFactor, conversionUnit, false, null);
+
+    assertBigDecimalEquals(new BigDecimal("0.1"), result);
+  }
+
   private void assertBigDecimalEquals(BigDecimal expected, BigDecimal actual) {
     assertNotNull(actual, "Expected non-null BigDecimal result");
     assertEquals(
