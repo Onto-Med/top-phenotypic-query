@@ -2,13 +2,13 @@ INSERT INTO db2dataprocessor_out.v_patient_last_version (pat_id, pat_birthdate, 
 VALUES ('HOSP-0001', '2001-01-01', 'male');
 
 INSERT INTO db2dataprocessor_out.v_encounter_last_version (enc_id, enc_patient_ref, enc_class_code, enc_period_start,
-                              enc_period_end)
-VALUES ('HOSP-0001-E-0', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01'),
-       ('HOSP-0001-E-1', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01'),
-       ('HOSP-0001-E-2', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01'),
-       ('HOSP-0001-E-3', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01'),
-       ('HOSP-0001-E-4', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01'),
-       ('HOSP-0001-E-5', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01');
+                              enc_period_end, enc_age_at_admission)
+VALUES ('HOSP-0001-E-0', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01', 18),
+       ('HOSP-0001-E-1', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01', 18),
+       ('HOSP-0001-E-2', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01', 18),
+       ('HOSP-0001-E-3', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01', 18),
+       ('HOSP-0001-E-4', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01', 18),
+       ('HOSP-0001-E-5', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01', 18);
 
 INSERT INTO db2dataprocessor_out.v_medicationadministration_last_version (medadm_id, medadm_encounter_calculated_ref, medadm_patient_ref,
                                              medadm_effectivedatetime, medadm_medication_system, medadm_medication_code)

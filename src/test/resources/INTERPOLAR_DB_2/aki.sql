@@ -10,16 +10,16 @@ VALUES ('HOSP-0001', '1960-01-01', 'female'),
        ('HOSP-0009', '2020-01-01', 'female');
 
 INSERT INTO db2dataprocessor_out.v_encounter_last_version (enc_id, enc_patient_ref, enc_class_code, enc_period_start,
-                              enc_period_end)
-VALUES ('HOSP-0001-E-11', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01'),
-       ('HOSP-0002-E-22', 'Patient/HOSP-0002', 'IMP', '2017-01-01', '2017-02-01'),
-       ('HOSP-0003-E-33', 'Patient/HOSP-0003', 'IMP', '2018-01-01', '2018-02-01'),
-       ('HOSP-0004-E-44', 'Patient/HOSP-0004', 'IMP', '2019-01-01', '2019-02-01'),
-       ('HOSP-0005-E-55', 'Patient/HOSP-0005', 'AMB', '2020-01-01', '2020-02-01'),
-       ('HOSP-0006-E-66', 'Patient/HOSP-0006', 'IMP', '2017-01-01', '2017-02-01'),
-       ('HOSP-0007-E-77', 'Patient/HOSP-0007', 'IMP', '2018-01-01', '2018-02-01'),
-       ('HOSP-0008-E-88', 'Patient/HOSP-0008', 'IMP', '2019-01-01', '2019-02-01'),
-       ('HOSP-0009-E-99', 'Patient/HOSP-0009', 'AMB', '2020-01-01', '2020-02-01');
+                              enc_period_end, enc_age_at_admission)
+VALUES ('HOSP-0001-E-11', 'Patient/HOSP-0001', 'IMP', '2017-01-01', '2017-02-01', 18),
+       ('HOSP-0002-E-22', 'Patient/HOSP-0002', 'IMP', '2017-01-01', '2017-02-01', 18),
+       ('HOSP-0003-E-33', 'Patient/HOSP-0003', 'IMP', '2018-01-01', '2018-02-01', 18),
+       ('HOSP-0004-E-44', 'Patient/HOSP-0004', 'IMP', '2019-01-01', '2019-02-01', 18),
+       ('HOSP-0005-E-55', 'Patient/HOSP-0005', 'AMB', '2020-01-01', '2020-02-01', 18),
+       ('HOSP-0006-E-66', 'Patient/HOSP-0006', 'IMP', '2017-01-01', '2017-02-01', 18),
+       ('HOSP-0007-E-77', 'Patient/HOSP-0007', 'IMP', '2018-01-01', '2018-02-01', 18),
+       ('HOSP-0008-E-88', 'Patient/HOSP-0008', 'IMP', '2019-01-01', '2019-02-01', 18),
+       ('HOSP-0009-E-99', 'Patient/HOSP-0009', 'AMB', '2020-01-01', '2020-02-01', 18);
 
 INSERT INTO db2dataprocessor_out.v_observation_last_version (obs_id, obs_encounter_calculated_ref, obs_patient_ref, analysis_loinc_code,
                                 obs_effectivedatetime, analysis_value)

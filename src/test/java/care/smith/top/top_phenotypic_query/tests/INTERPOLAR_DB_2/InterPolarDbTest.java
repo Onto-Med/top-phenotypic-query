@@ -100,7 +100,7 @@ public class InterPolarDbTest {
 
     LOGGER.trace(rs.toString());
 
-    assertEquals(Set.of("HOSP-0001-E-11", "HOSP-0001-E-33", "HOSP-0001-E-55"), rs.getSubjectIds());
+    assertEquals(Set.of("HOSP-0001-E-11", "HOSP-0001-E-33"), rs.getSubjectIds());
   }
 
   //  @Test

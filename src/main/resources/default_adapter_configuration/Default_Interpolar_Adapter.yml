@@ -30,7 +30,7 @@
 # WHERE enc_id >= 'UKB-0009-E-1';
 baseId: encounter
 subjectQuery:
-  baseQuery: "SELECT enc_id, pat_birthdate, pat_gender FROM db2dataprocessor_out.v_patient_last_version, db2dataprocessor_out.v_encounter_last_version\nWHERE enc_patient_ref = 'Patient/' || pat_id"
+  baseQuery: "SELECT enc_id, pat_birthdate, pat_gender FROM db2dataprocessor_out.v_patient_last_version, db2dataprocessor_out.v_encounter_last_version\nWHERE enc_patient_ref = 'Patient/' || pat_id AND enc_age_at_admission >= 18"
   sexListPart: "\nAND pat_gender IN ({values})"
   birthdateIntervalPart: "\nAND pat_birthdate {operator} {value}"
   output:
@@ -39,7 +39,7 @@ subjectQuery:
     birthdate: pat_birthdate
 phenotypeQueries:
   encounter:
-    baseQuery: "SELECT enc_id, enc_period_start, enc_period_end, enc_class_code FROM db2dataprocessor_out.v_encounter_last_version\nWHERE enc_type_code = 'einrichtungskontakt'"
+    baseQuery: "SELECT enc_id, enc_period_start, enc_period_end, enc_class_code FROM db2dataprocessor_out.v_encounter_last_version\nWHERE enc_type_code = 'einrichtungskontakt' AND enc_age_at_admission >= 18"
     textValueListPart: "\nAND enc_class_code IN ({values})"
     startDateTimeIntervalPart: "\nAND enc_period_start {operator} {value}"
     endDateTimeIntervalPart: "\nAND (enc_period_end IS NULL OR enc_period_end {operator} {value})"
@@ -70,10 +70,13 @@ phenotypeQueries:
           WHERE analysis_value_status IN ('converted', 'already_reference_unit')
             AND analysis_value IS NOT NULL AND NULLIF(obs_id, '') IS NULL
         ) AS observation_rows
+        JOIN db2dataprocessor_out.v_encounter_last_version enc
+          ON SUBSTRING(obs_encounter_calculated_ref FROM 11) = enc.enc_id
+        WHERE enc.enc_age_at_admission >= 18
         UNION ALL
         SELECT enc_id, enc_period_start AS da, CAST(enc_age_at_admission AS float8) AS va, '29553-5' AS co
         FROM db2dataprocessor_out.v_encounter_last_version
-        WHERE enc_age_at_admission IS NOT NULL
+        WHERE enc_age_at_admission IS NOT NULL AND enc_age_at_admission >= 18
       ) AS un
       WHERE 'http://loinc.org|' || un.co IN ({codes})
     numberValueIntervalPart: "\nAND va {operator} {value}"
@@ -113,17 +116,21 @@ phenotypeQueries:
         AS date_time 
       FROM
         db2dataprocessor_out.v_condition_last_version con
+      JOIN
+        db2dataprocessor_out.v_encounter_last_version enc
+        ON SUBSTRING(con.con_encounter_calculated_ref FROM 11) = enc.enc_id
       WHERE
+        enc.enc_age_at_admission >= 18 AND
         -- ICD prefixes have length 3, 5 or 6. Uncorrelated IN subqueries allow
         -- hashed lookups instead of testing every model prefix for every row.
         -- Normalize only model codes; suffixes on data codes are ignored.
-        CASE WHEN con_code_system = 'http://fhir.de/CodeSystem/bfarm/icd-10-gm' THEN
+        (CASE WHEN con_code_system = 'http://fhir.de/CodeSystem/bfarm/icd-10-gm' THEN
           LEFT(con_code_code, 3) IN (SELECT code FROM model_codes)
           OR LEFT(con_code_code, 5) IN (SELECT code FROM model_codes)
           OR LEFT(con_code_code, 6) IN (SELECT code FROM model_codes)
         ELSE
           con_code_system || '|' || con_code_code IN (SELECT code FROM model_codes)
-        END
+        END)
     startDateTimeIntervalPart: |
       AND
       CASE
@@ -152,8 +159,12 @@ phenotypeQueries:
           proc.proc_performeddatetime AS date_time
       FROM 
           db2dataprocessor_out.v_procedure_last_version proc
-      WHERE 
-      	proc_code_system || '|' || proc_code_code IN ({codes})
+      JOIN
+          db2dataprocessor_out.v_encounter_last_version enc
+          ON SUBSTRING(proc.proc_encounter_calculated_ref FROM 11) = enc.enc_id
+      WHERE
+          enc.enc_age_at_admission >= 18 AND 
+      	  proc_code_system || '|' || proc_code_code IN ({codes})
     startDateTimeIntervalPart: |
         AND 
           CASE
@@ -184,7 +195,11 @@ phenotypeQueries:
           medadm.medadm_effectivedatetime AS date_time
       FROM
           db2dataprocessor_out.v_medicationadministration_last_version medadm
+      JOIN
+          db2dataprocessor_out.v_encounter_last_version enc
+          ON SUBSTRING(medadm.medadm_encounter_calculated_ref FROM 11) = enc.enc_id
       WHERE
+          enc.enc_age_at_admission >= 18 AND
           medadm_medication_system || '|' || medadm_medication_code IN ({codes})
     startDateTimeIntervalPart: |
           AND
@@ -214,7 +229,11 @@ phenotypeQueries:
           medstat.medstat_effectivedatetime AS date_time
       FROM
           db2dataprocessor_out.v_medicationstatement_last_version medstat
+      JOIN
+          db2dataprocessor_out.v_encounter_last_version enc
+          ON SUBSTRING(medstat.medstat_encounter_calculated_ref FROM 11) = enc.enc_id
       WHERE
+          enc.enc_age_at_admission >= 18 AND
           medstat_medication_system || '|' || medstat_medication_code IN ({codes})
     startDateTimeIntervalPart: |
       AND
@@ -236,7 +255,15 @@ phenotypeQueries:
       endDateTime: end_date_time
       dateTime: date_time
   medication_request:
-    baseQuery: "SELECT SUBSTRING(medreq_encounter_calculated_ref FROM 11) AS enc_id, medreq_authoredon AS datetime FROM db2dataprocessor_out.v_medicationrequest_last_version\nWHERE medreq_medication_system || '|' || medreq_medication_code IN ({codes})"
+    baseQuery: |
+      SELECT SUBSTRING(medreq_encounter_calculated_ref FROM 11) AS enc_id, medreq_authoredon AS datetime
+      FROM db2dataprocessor_out.v_medicationrequest_last_version
+      JOIN
+          db2dataprocessor_out.v_encounter_last_version enc
+          ON SUBSTRING(medreq_encounter_calculated_ref FROM 11) = enc.enc_id
+      WHERE
+          enc.enc_age_at_admission >= 18 AND 
+          medreq_medication_system || '|' || medreq_medication_code IN ({codes})
     dateTimeIntervalPart: "\nAND medreq_authoredon {operator} {value}"
     output:
       subject: enc_id

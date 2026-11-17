@@ -76,6 +76,17 @@ class InterpolarIcdPrefixTest {
             con_onsetperiod_end TIMESTAMP, con_onsetdatetime TIMESTAMP,
             con_recordeddate TIMESTAMP)
           """);
+      statement.execute("DROP TABLE IF EXISTS db2dataprocessor_out.v_encounter_last_version");
+      statement.execute(
+          """
+          CREATE TABLE db2dataprocessor_out.v_encounter_last_version (
+            enc_id VARCHAR(100), enc_age_at_admission INTEGER)
+          """);
+      statement.execute(
+          """
+          INSERT INTO db2dataprocessor_out.v_encounter_last_version (enc_id, enc_age_at_admission)
+          VALUES ('test', 30)
+          """);
     }
     try (PreparedStatement insert =
         connection.prepareStatement(

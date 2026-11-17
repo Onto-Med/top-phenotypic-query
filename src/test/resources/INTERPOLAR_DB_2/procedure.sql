@@ -8,15 +8,15 @@ VALUES ('HOSP-0001', '1960-01-01', 'female'),
        ('HOSP-0007', '2003-01-01', 'male'  ),
        ('HOSP-0008', '2004-01-01', 'male'  );
 
-INSERT INTO db2dataprocessor_out.v_encounter_last_version (enc_id, enc_patient_ref, enc_class_code, enc_period_start, enc_period_end)
-VALUES ('HOSP-0001-E1', 'Patient/HOSP-0001', 'IMP', '2026-04-01', '2026-04-11'),
-       ('HOSP-0002-E2', 'Patient/HOSP-0002', 'AMB', '2026-04-02', '2026-04-12'),
-       ('HOSP-0003-E3', 'Patient/HOSP-0003', 'IMP', '2026-04-03', '2026-04-13'),
-       ('HOSP-0004-E4', 'Patient/HOSP-0004', 'AMB', '2026-04-04', '2026-04-14'),
-       ('HOSP-0005-E5', 'Patient/HOSP-0005', 'IMP', '2026-04-05', '2026-04-15'),
-       ('HOSP-0006-E6', 'Patient/HOSP-0006', 'AMB', '2026-04-06', '2026-04-16'),
-       ('HOSP-0007-E7', 'Patient/HOSP-0007', 'IMP', '2026-04-07', '2026-04-17'),
-       ('HOSP-0008-E8', 'Patient/HOSP-0008', 'AMB', '2026-04-08', '2026-04-18');
+INSERT INTO db2dataprocessor_out.v_encounter_last_version (enc_id, enc_patient_ref, enc_class_code, enc_period_start, enc_period_end, enc_age_at_admission)
+VALUES ('HOSP-0001-E1', 'Patient/HOSP-0001', 'IMP', '2026-04-01', '2026-04-11', 18),
+       ('HOSP-0002-E2', 'Patient/HOSP-0002', 'AMB', '2026-04-02', '2026-04-12', 18),
+       ('HOSP-0003-E3', 'Patient/HOSP-0003', 'IMP', '2026-04-03', '2026-04-13', 18),
+       ('HOSP-0004-E4', 'Patient/HOSP-0004', 'AMB', '2026-04-04', '2026-04-14', 18),
+       ('HOSP-0005-E5', 'Patient/HOSP-0005', 'IMP', '2026-04-05', '2026-04-15', 18),
+       ('HOSP-0006-E6', 'Patient/HOSP-0006', 'AMB', '2026-04-06', '2026-04-16', 18),
+       ('HOSP-0007-E7', 'Patient/HOSP-0007', 'IMP', '2026-04-07', '2026-04-17', 18),
+       ('HOSP-0008-E8', 'Patient/HOSP-0008', 'AMB', '2026-04-08', '2026-04-18', 18);
 
 
 INSERT INTO db2dataprocessor_out.v_procedure_last_version (proc_id, proc_encounter_calculated_ref, proc_patient_ref, proc_code_system, proc_code_code, proc_performedperiod_start, proc_performedperiod_end, proc_performeddatetime)
