@@ -54,27 +54,112 @@ phenotypeQueries:
   # Rows without a resource ID are retained individually to avoid merging unrelated measurements.
   observation:
     baseQuery: |
-      SELECT un.enc_id, un.da, un.va, un.co
+      WITH valid_obs AS (
+        SELECT
+          obs_id,
+          obs_encounter_calculated_ref,
+          obs_effectivedatetime,
+          analysis_value,
+          analysis_loinc_code,
+          analysis_unit,
+          obs_referencerange_low_value,
+          obs_referencerange_low_code,
+          obs_referencerange_high_value,
+          obs_referencerange_high_code,
+          NULLIF(obs_referencerange_type_code, '') AS clean_ref_type_code
+        FROM db2dataprocessor_out.v_observation_last_version
+        WHERE analysis_value_status IN ('converted', 'already_reference_unit')
+          AND analysis_value IS NOT NULL
+      ),
+      distinct_obs AS (
+        SELECT DISTINCT
+          obs_id, obs_encounter_calculated_ref, obs_effectivedatetime,
+          analysis_value, analysis_loinc_code, analysis_unit
+        FROM valid_obs
+        WHERE NULLIF(obs_id, '') IS NOT NULL
+      ),
+      ranked_ref AS (
+        SELECT
+          obs_id,
+          analysis_loinc_code,
+          obs_referencerange_low_value AS ref_low_val,
+          obs_referencerange_low_code AS ref_low_code,
+          obs_referencerange_high_value AS ref_high_val,
+          obs_referencerange_high_code AS ref_high_code,
+          clean_ref_type_code AS ref_type_code,
+          ROW_NUMBER() OVER (
+            PARTITION BY obs_id, analysis_loinc_code
+            ORDER BY
+              CASE WHEN clean_ref_type_code = 'normal' THEN 1 ELSE 2 END ASC,
+              obs_referencerange_low_value ASC
+          ) AS rn
+        FROM valid_obs
+        WHERE NULLIF(obs_id, '') IS NOT NULL
+          AND (clean_ref_type_code = 'normal' OR clean_ref_type_code IS NULL)
+      ),
+      best_ref AS (
+        SELECT
+          obs_id, analysis_loinc_code,
+          ref_low_val, ref_low_code, ref_high_val, ref_high_code, ref_type_code
+        FROM ranked_ref
+        WHERE rn = 1
+      )
+      SELECT un.enc_id, un.da, un.va, un.co, un.analysis_unit,
+             un.ref_low_val, un.ref_low_code,
+             un.ref_high_val, un.ref_high_code,
+             un.ref_type_code
       FROM (
-        SELECT SUBSTRING(obs_encounter_calculated_ref FROM 11) AS enc_id, obs_effectivedatetime AS da, analysis_value AS va, analysis_loinc_code as co
-        FROM (
-          SELECT DISTINCT obs_id, obs_encounter_calculated_ref, obs_effectivedatetime,
-                          analysis_value, analysis_loinc_code, analysis_unit
-          FROM db2dataprocessor_out.v_observation_last_version
-          WHERE analysis_value_status IN ('converted', 'already_reference_unit')
-            AND analysis_value IS NOT NULL AND NULLIF(obs_id, '') IS NOT NULL
-          UNION ALL
-          SELECT obs_id, obs_encounter_calculated_ref, obs_effectivedatetime,
-                 analysis_value, analysis_loinc_code, analysis_unit
-          FROM db2dataprocessor_out.v_observation_last_version
-          WHERE analysis_value_status IN ('converted', 'already_reference_unit')
-            AND analysis_value IS NOT NULL AND NULLIF(obs_id, '') IS NULL
-        ) AS observation_rows
+        -- 1. Observations MIT obs_id
+        SELECT
+          SUBSTRING(o.obs_encounter_calculated_ref FROM 11) AS enc_id,
+          o.obs_effectivedatetime AS da,
+          o.analysis_value AS va,
+          o.analysis_loinc_code AS co,
+          o.analysis_unit,
+          r.ref_low_val, r.ref_low_code,
+          r.ref_high_val, r.ref_high_code,
+          r.ref_type_code
+        FROM distinct_obs o
+        LEFT JOIN best_ref r
+          ON o.obs_id = r.obs_id AND o.analysis_loinc_code = r.analysis_loinc_code
         JOIN db2dataprocessor_out.v_encounter_last_version enc
-          ON SUBSTRING(obs_encounter_calculated_ref FROM 11) = enc.enc_id
+          ON SUBSTRING(o.obs_encounter_calculated_ref FROM 11) = enc.enc_id
         WHERE enc.enc_age_at_admission >= 18
+
         UNION ALL
-        SELECT enc_id, enc_period_start AS da, CAST(enc_age_at_admission AS float8) AS va, '29553-5' AS co
+
+        -- 2. Observations OHNE obs_id
+        SELECT
+          SUBSTRING(v.obs_encounter_calculated_ref FROM 11) AS enc_id,
+          v.obs_effectivedatetime AS da,
+          v.analysis_value AS va,
+          v.analysis_loinc_code AS co,
+          v.analysis_unit,
+          CASE WHEN v.clean_ref_type_code = 'normal' OR v.clean_ref_type_code IS NULL THEN v.obs_referencerange_low_value END AS ref_low_val,
+          CASE WHEN v.clean_ref_type_code = 'normal' OR v.clean_ref_type_code IS NULL THEN v.obs_referencerange_low_code END AS ref_low_code,
+          CASE WHEN v.clean_ref_type_code = 'normal' OR v.clean_ref_type_code IS NULL THEN v.obs_referencerange_high_value END AS ref_high_val,
+          CASE WHEN v.clean_ref_type_code = 'normal' OR v.clean_ref_type_code IS NULL THEN v.obs_referencerange_high_code END AS ref_high_code,
+          CASE WHEN v.clean_ref_type_code = 'normal' OR v.clean_ref_type_code IS NULL THEN v.clean_ref_type_code END AS ref_type_code
+        FROM valid_obs v
+        JOIN db2dataprocessor_out.v_encounter_last_version enc
+          ON SUBSTRING(v.obs_encounter_calculated_ref FROM 11) = enc.enc_id
+        WHERE NULLIF(v.obs_id, '') IS NULL
+          AND enc.enc_age_at_admission >= 18
+
+        UNION ALL
+
+        -- 3. Aufnahmealter
+        SELECT
+          enc_id,
+          enc_period_start AS da,
+          CAST(enc_age_at_admission AS float8) AS va,
+          '29553-5' AS co,
+          CAST('a' AS varchar) AS analysis_unit,
+          CAST(NULL AS float8) AS ref_low_val,
+          CAST(NULL AS varchar) AS ref_low_code,
+          CAST(NULL AS float8) AS ref_high_val,
+          CAST(NULL AS varchar) AS ref_high_code,
+          CAST(NULL AS varchar) AS ref_type_code
         FROM db2dataprocessor_out.v_encounter_last_version
         WHERE enc_age_at_admission IS NOT NULL AND enc_age_at_admission >= 18
       ) AS un
@@ -86,6 +171,12 @@ phenotypeQueries:
       subject: enc_id
       numberValue: va
       dateTime: da
+      fields:
+        unit: analysis_unit
+        refLowVal: ref_low_val
+        refLowUnit: ref_low_code
+        refHighVal: ref_high_val
+        refHighUnit: ref_high_code
   # ICD-10-GM model codes match themselves and their descendants, ignoring suffixes.
   # A model containing only child codes does not implicitly match their parent.
   # Other code systems retain exact system-and-code matching.

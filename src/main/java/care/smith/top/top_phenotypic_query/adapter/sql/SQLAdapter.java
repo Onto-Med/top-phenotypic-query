@@ -2,6 +2,7 @@ package care.smith.top.top_phenotypic_query.adapter.sql;
 
 import module java.base;
 import module java.sql;
+import java.sql.Timestamp;
 
 import care.smith.top.model.Code;
 import care.smith.top.model.CodeSystem;
@@ -25,9 +26,6 @@ import care.smith.top.top_phenotypic_query.search.SubjectSearch;
 import care.smith.top.top_phenotypic_query.util.DateUtil;
 import care.smith.top.top_phenotypic_query.util.Phenotypes;
 import care.smith.top.top_phenotypic_query.util.builder.Val;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.Timestamp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +75,7 @@ public class SQLAdapter extends DataAdapter {
         SQLAdapterSettings.get().getSinglePreparedStatement(preparedQuery, con, search);
     log.trace("Execute SQL query: {}", ps);
     java.sql.ResultSet sqlRS = ps.executeQuery();
+    ResultSetMetaData sqlMetaData = sqlRS.getMetaData();
     Phenotype phe = search.getPhenotype();
     PhenotypeOutput out = search.getOutput();
     String sbjCol = out.getSubject();
@@ -102,7 +101,8 @@ public class SQLAdapter extends DataAdapter {
       else if (Phenotypes.hasNumberType(phe))
         val = Val.of(sqlRS.getBigDecimal(pheCol), date, startDate, endDate);
       else val = Val.of(sqlRS.getString(pheCol), date, startDate, endDate);
-      if (val != null)
+      if (val != null) {
+        addFields(val, sqlRS, sqlMetaData, out.getFields());
         rs.addValueWithRestriction(
             sbj,
             phe,
@@ -110,10 +110,33 @@ public class SQLAdapter extends DataAdapter {
             val,
             search.getSourceUnit(),
             search.getModelUnit());
+      }
     }
     checkQuantifier(search, rs);
 
     return rs;
+  }
+
+  private void addFields(
+      Value val,
+      java.sql.ResultSet sqlRS,
+      ResultSetMetaData sqlMetaData,
+      Map<String, String> fields) {
+    if (fields == null) return;
+    for (String fieldName : fields.keySet()) {
+      try {
+        String colName = fields.get(fieldName);
+        if (isColumnNumeric(sqlRS, sqlMetaData, colName)) {
+          BigDecimal v = sqlRS.getBigDecimal(colName);
+          if (v != null) val.putFieldsItem(fieldName, Val.of(v));
+        } else {
+          String v = sqlRS.getString(colName);
+          if (v != null) val.putFieldsItem(fieldName, Val.of(v));
+        }
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   @Override
@@ -213,6 +236,25 @@ public class SQLAdapter extends DataAdapter {
     } catch (SQLException e) {
       e.printStackTrace();
     }
+  }
+
+  private static final Set<Integer> NUMERIC_TYPES =
+      Set.of(
+          Types.TINYINT,
+          Types.SMALLINT,
+          Types.INTEGER,
+          Types.BIGINT,
+          Types.FLOAT,
+          Types.REAL,
+          Types.DOUBLE,
+          Types.NUMERIC,
+          Types.DECIMAL);
+
+  private static boolean isColumnNumeric(
+      java.sql.ResultSet rs, ResultSetMetaData md, String columnName) throws SQLException {
+    int columnIndex = rs.findColumn(columnName);
+    int columnType = md.getColumnType(columnIndex);
+    return NUMERIC_TYPES.contains(columnType);
   }
 
   public static void main(String[] args) throws URISyntaxException, SQLException {

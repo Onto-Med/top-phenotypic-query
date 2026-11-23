@@ -21,12 +21,17 @@ class InterpolarObservationTest {
     try (Statement statement = connection.createStatement()) {
       statement.execute("CREATE SCHEMA db2dataprocessor_out");
       statement.execute(
-          """
+"""
           CREATE TABLE db2dataprocessor_out.v_observation_last_version (
             obs_id VARCHAR, obs_encounter_calculated_ref VARCHAR,
             obs_effectivedatetime TIMESTAMP, analysis_value DOUBLE PRECISION,
-            analysis_loinc_code VARCHAR, analysis_unit VARCHAR, analysis_value_status VARCHAR)
-          """);
+            analysis_loinc_code VARCHAR, analysis_unit VARCHAR, analysis_value_status VARCHAR,
+            obs_referencerange_low_value DOUBLE PRECISION,
+            obs_referencerange_low_code VARCHAR,
+            obs_referencerange_high_value DOUBLE PRECISION,
+            obs_referencerange_high_code VARCHAR,
+            obs_referencerange_type_code VARCHAR)
+""");
       statement.execute(
           """
           CREATE TABLE db2dataprocessor_out.v_encounter_last_version (
@@ -34,11 +39,11 @@ class InterpolarObservationTest {
           """);
       statement.execute(
           """
-              INSERT INTO db2dataprocessor_out.v_encounter_last_version VALUES
-              ('case', '2026-01-01 00:00:00', 30),
-              ('old-case', '2001-01-01 00:00:00', 42),
-              ('new-case', '2026-01-01 00:00:00', 61)
-              """);
+          INSERT INTO db2dataprocessor_out.v_encounter_last_version VALUES
+          ('case', '2026-01-01 00:00:00', 30),
+          ('old-case', '2001-01-01 00:00:00', 42),
+          ('new-case', '2026-01-01 00:00:00', 61)
+          """);
     }
   }
 
@@ -56,9 +61,34 @@ class InterpolarObservationTest {
       String unit,
       String status)
       throws Exception {
+    insert(id, encounter, date, value, code, unit, status, null, null, null, null, null);
+  }
+
+  private void insert(
+      String id,
+      String encounter,
+      String date,
+      Double value,
+      String code,
+      String unit,
+      String status,
+      Double refLowVal,
+      String refLowCode,
+      Double refHighVal,
+      String refHighCode,
+      String refTypeCode)
+      throws Exception {
     try (PreparedStatement statement =
         connection.prepareStatement(
-            "INSERT INTO db2dataprocessor_out.v_observation_last_version VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+            """
+            INSERT INTO db2dataprocessor_out.v_observation_last_version (
+              obs_id, obs_encounter_calculated_ref, obs_effectivedatetime,
+              analysis_value, analysis_loinc_code, analysis_unit, analysis_value_status,
+              obs_referencerange_low_value, obs_referencerange_low_code,
+              obs_referencerange_high_value, obs_referencerange_high_code,
+              obs_referencerange_type_code
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """)) {
       statement.setString(1, id);
       statement.setString(2, "Encounter/" + encounter);
       statement.setTimestamp(3, java.sql.Timestamp.valueOf(date));
@@ -66,6 +96,11 @@ class InterpolarObservationTest {
       statement.setString(5, code);
       statement.setString(6, unit);
       statement.setString(7, status);
+      statement.setObject(8, refLowVal);
+      statement.setString(9, refLowCode);
+      statement.setObject(10, refHighVal);
+      statement.setString(11, refHighCode);
+      statement.setString(12, refTypeCode);
       statement.executeUpdate();
     }
   }
@@ -158,5 +193,75 @@ class InterpolarObservationTest {
           """);
     }
     assertEquals(List.of("new-case:61.0", "old-case:42.0"), query("29553-5"));
+  }
+
+  @Test
+  void selectsSingleNormalOrNullReferenceRangeAndKeepsObservationWithoutMatch() throws Exception {
+    // 1. Observation ‘a’ has ‘treatment’ and ‘normal’ -> return only once with 'normal'
+    insert(
+        "a",
+        "case",
+        "2026-01-01 00:00:00",
+        90.0,
+        "8480-6",
+        "mm[Hg]",
+        "converted",
+        10.0,
+        "mm[Hg]",
+        20.0,
+        "mm[Hg]",
+        "treatment");
+    insert(
+        "a",
+        "case",
+        "2026-01-01 00:00:00",
+        90.0,
+        "8480-6",
+        "mm[Hg]",
+        "converted",
+        60.0,
+        "mm[Hg]",
+        80.0,
+        "mm[Hg]",
+        "normal");
+
+    // 2. Observation ‘b’ has only ‘treatment’ -> Observation is retained, reference range is NULL
+    insert(
+        "b",
+        "old-case",
+        "2001-01-01 00:00:00",
+        110.0,
+        "8480-6",
+        "mm[Hg]",
+        "converted",
+        10.0,
+        "mm[Hg]",
+        20.0,
+        "mm[Hg]",
+        "treatment");
+
+    String sql =
+        DataAdapterConfig.getInstanceFromResource(
+                "default_adapter_configuration/Default_Interpolar_Adapter.yml")
+            .getPhenotypeQuery("observation")
+            .getBaseQuery()
+            .replace("{codes}", "?");
+
+    Map<String, List<Double>> results = new HashMap<>();
+    try (PreparedStatement statement = connection.prepareStatement(sql)) {
+      statement.setString(1, "http://loinc.org|8480-6");
+      try (ResultSet rs = statement.executeQuery()) {
+        while (rs.next()) {
+          String enc = rs.getString("enc_id");
+          Double low = (Double) rs.getObject("ref_low_val");
+          Double high = (Double) rs.getObject("ref_high_val");
+          results.put(enc, Arrays.asList(rs.getDouble("va"), low, high));
+        }
+      }
+    }
+
+    assertEquals(2, results.size());
+    assertEquals(Arrays.asList(90.0, 60.0, 80.0), results.get("case"));
+    assertEquals(Arrays.asList(110.0, null, null), results.get("old-case"));
   }
 }

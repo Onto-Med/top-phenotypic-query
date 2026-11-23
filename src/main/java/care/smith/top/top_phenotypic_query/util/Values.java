@@ -95,7 +95,8 @@ public class Values {
 
   private static String fieldsToString(Map<String, Value> fields) {
     String str = "";
-    for (String name : fields.keySet()) str += "|" + name + "=" + getStringValue(fields.get(name));
+    for (String name : fields.keySet())
+      str += "|" + name + "=" + toStringWithoutFields(fields.get(name));
     return str;
   }
 
