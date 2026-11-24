@@ -50,6 +50,8 @@ public class ObsRefRangeTest {
     assertEquals("mg/dL", Values.getStringValue(val.getFields().get("refLowUnit")));
     assertEquals(20.0, Values.getNumberValue(val.getFields().get("refHighVal")).doubleValue());
     assertEquals("mg/dL", Values.getStringValue(val.getFields().get("refHighUnit")));
+    assertEquals(123.0, Values.getNumberValue(val.getFields().get("origVal")).doubleValue());
+    assertEquals("abc", Values.getStringValue(val.getFields().get("origUnit")));
   }
 
   @Test

@@ -62,6 +62,8 @@ phenotypeQueries:
           analysis_value,
           analysis_loinc_code,
           analysis_unit,
+          obs_valuequantity_value,
+          obs_valuequantity_code,
           obs_referencerange_low_value,
           obs_referencerange_low_code,
           obs_referencerange_high_value,
@@ -74,7 +76,8 @@ phenotypeQueries:
       distinct_obs AS (
         SELECT DISTINCT
           obs_id, obs_encounter_calculated_ref, obs_effectivedatetime,
-          analysis_value, analysis_loinc_code, analysis_unit
+          analysis_value, analysis_loinc_code, analysis_unit,
+          obs_valuequantity_value, obs_valuequantity_code
         FROM valid_obs
         WHERE NULLIF(obs_id, '') IS NOT NULL
       ),
@@ -105,17 +108,21 @@ phenotypeQueries:
         WHERE rn = 1
       )
       SELECT un.enc_id, un.da, un.va, un.co, un.analysis_unit,
+             un.obs_valuequantity_value,
+             un.obs_valuequantity_code,
              un.ref_low_val, un.ref_low_code,
              un.ref_high_val, un.ref_high_code,
              un.ref_type_code
       FROM (
-        -- 1. Observations MIT obs_id
+        -- 1. Observations with  obs_id
         SELECT
           SUBSTRING(o.obs_encounter_calculated_ref FROM 11) AS enc_id,
           o.obs_effectivedatetime AS da,
           o.analysis_value AS va,
           o.analysis_loinc_code AS co,
           o.analysis_unit,
+          o.obs_valuequantity_value,
+          o.obs_valuequantity_code,
           r.ref_low_val, r.ref_low_code,
           r.ref_high_val, r.ref_high_code,
           r.ref_type_code
@@ -128,13 +135,15 @@ phenotypeQueries:
 
         UNION ALL
 
-        -- 2. Observations OHNE obs_id
+        -- 2. Observations without obs_id
         SELECT
           SUBSTRING(v.obs_encounter_calculated_ref FROM 11) AS enc_id,
           v.obs_effectivedatetime AS da,
           v.analysis_value AS va,
           v.analysis_loinc_code AS co,
           v.analysis_unit,
+          v.obs_valuequantity_value,
+          v.obs_valuequantity_code,
           CASE WHEN v.clean_ref_type_code = 'normal' OR v.clean_ref_type_code IS NULL THEN v.obs_referencerange_low_value END AS ref_low_val,
           CASE WHEN v.clean_ref_type_code = 'normal' OR v.clean_ref_type_code IS NULL THEN v.obs_referencerange_low_code END AS ref_low_code,
           CASE WHEN v.clean_ref_type_code = 'normal' OR v.clean_ref_type_code IS NULL THEN v.obs_referencerange_high_value END AS ref_high_val,
@@ -148,13 +157,15 @@ phenotypeQueries:
 
         UNION ALL
 
-        -- 3. Aufnahmealter
+        -- 3. Age at admission
         SELECT
           enc_id,
           enc_period_start AS da,
           CAST(enc_age_at_admission AS float8) AS va,
           '29553-5' AS co,
           CAST('a' AS varchar) AS analysis_unit,
+          CAST(NULL AS float8) AS obs_valuequantity_value,
+          CAST(NULL AS varchar) AS obs_valuequantity_code,
           CAST(NULL AS float8) AS ref_low_val,
           CAST(NULL AS varchar) AS ref_low_code,
           CAST(NULL AS float8) AS ref_high_val,
@@ -173,6 +184,8 @@ phenotypeQueries:
       dateTime: da
       fields:
         unit: analysis_unit
+        origVal: obs_valuequantity_value
+        origUnit: obs_valuequantity_code
         refLowVal: ref_low_val
         refLowUnit: ref_low_code
         refHighVal: ref_high_val

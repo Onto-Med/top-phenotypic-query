@@ -25,7 +25,9 @@ class InterpolarObservationTest {
           CREATE TABLE db2dataprocessor_out.v_observation_last_version (
             obs_id VARCHAR, obs_encounter_calculated_ref VARCHAR,
             obs_effectivedatetime TIMESTAMP, analysis_value DOUBLE PRECISION,
-            analysis_loinc_code VARCHAR, analysis_unit VARCHAR, analysis_value_status VARCHAR,
+            analysis_loinc_code VARCHAR, analysis_unit VARCHAR,
+      		obs_valuequantity_code varchar NULL, obs_valuequantity_value float8 NULL,
+            analysis_value_status VARCHAR,
             obs_referencerange_low_value DOUBLE PRECISION,
             obs_referencerange_low_code VARCHAR,
             obs_referencerange_high_value DOUBLE PRECISION,

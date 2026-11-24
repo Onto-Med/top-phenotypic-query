@@ -22,20 +22,22 @@ CREATE TABLE db2dataprocessor_out.v_encounter_last_version
 
 CREATE TABLE db2dataprocessor_out.v_observation_last_version
 (
-    obs_id                       varchar NULL,
-    obs_encounter_calculated_ref varchar NULL,
-    obs_patient_ref              varchar NULL,
-    analysis_loinc_code          varchar NOT NULL,
-    obs_effectivedatetime        timestamp NULL,
+    obs_id                        varchar NULL,
+    obs_encounter_calculated_ref  varchar NULL,
+    obs_patient_ref               varchar NULL,
+    analysis_loinc_code           varchar NOT NULL,
+    obs_effectivedatetime         timestamp NULL,
     -- Existing synthetic measurements are supplied in their model's reference unit.
-    analysis_value_status       varchar DEFAULT 'already_reference_unit',
-    analysis_unit               varchar NULL,
-    analysis_value      		 float8 NULL,
-    obs_referencerange_low_value DOUBLE PRECISION,
-    obs_referencerange_low_code VARCHAR(255),
+    analysis_value_status         varchar DEFAULT 'already_reference_unit',
+    analysis_unit                 varchar NULL,
+    analysis_value      		  float8 NULL,
+    obs_valuequantity_code        varchar NULL,
+    obs_valuequantity_value       float8 NULL,
+    obs_referencerange_low_value  DOUBLE PRECISION,
+    obs_referencerange_low_code   VARCHAR(255),
     obs_referencerange_high_value DOUBLE PRECISION,
-    obs_referencerange_high_code VARCHAR(255),
-    obs_referencerange_type_code VARCHAR(255)
+    obs_referencerange_high_code  VARCHAR(255),
+    obs_referencerange_type_code  VARCHAR(255)
 );
 
 CREATE TABLE db2dataprocessor_out.v_condition_last_version
