@@ -27,7 +27,7 @@ class InterpolarObservationTest {
             obs_effectivedatetime TIMESTAMP, analysis_value DOUBLE PRECISION,
             analysis_loinc_code VARCHAR, analysis_unit VARCHAR,
       		obs_valuequantity_code varchar NULL, obs_valuequantity_value float8 NULL,
-            analysis_value_status VARCHAR,
+            analysis_value_status VARCHAR, obs_status VARCHAR,
             obs_referencerange_low_value DOUBLE PRECISION,
             obs_referencerange_low_code VARCHAR,
             obs_referencerange_high_value DOUBLE PRECISION,
@@ -37,11 +37,12 @@ class InterpolarObservationTest {
       statement.execute(
           """
           CREATE TABLE db2dataprocessor_out.v_encounter_last_version (
-            enc_id VARCHAR, enc_period_start TIMESTAMP, enc_age_at_admission INTEGER)
+            enc_id VARCHAR, enc_period_start TIMESTAMP, enc_age_at_admission INTEGER, enc_status VARCHAR)
           """);
       statement.execute(
           """
-          INSERT INTO db2dataprocessor_out.v_encounter_last_version VALUES
+          INSERT INTO db2dataprocessor_out.v_encounter_last_version
+          (enc_id, enc_period_start, enc_age_at_admission) VALUES
           ('case', '2026-01-01 00:00:00', 30),
           ('old-case', '2001-01-01 00:00:00', 42),
           ('new-case', '2026-01-01 00:00:00', 61)
@@ -189,7 +190,8 @@ class InterpolarObservationTest {
       statement.execute("TRUNCATE TABLE db2dataprocessor_out.v_encounter_last_version");
       statement.execute(
           """
-          INSERT INTO db2dataprocessor_out.v_encounter_last_version VALUES
+          INSERT INTO db2dataprocessor_out.v_encounter_last_version
+          (enc_id, enc_period_start, enc_age_at_admission) VALUES
           ('old-case', '2001-01-01 00:00:00', 42), ('new-case', '2026-01-01 00:00:00', 61),
           ('missing-age', '2026-01-01 00:00:00', NULL)
           """);

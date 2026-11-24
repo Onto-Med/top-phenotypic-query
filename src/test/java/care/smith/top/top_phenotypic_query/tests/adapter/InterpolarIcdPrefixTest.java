@@ -74,13 +74,13 @@ class InterpolarIcdPrefixTest {
             con_encounter_calculated_ref VARCHAR(100), con_code_system VARCHAR(100),
             con_code_code VARCHAR(100), con_onsetperiod_start TIMESTAMP,
             con_onsetperiod_end TIMESTAMP, con_onsetdatetime TIMESTAMP,
-            con_recordeddate TIMESTAMP)
+            con_recordeddate TIMESTAMP, con_verificationstatus_code VARCHAR(100))
           """);
       statement.execute("DROP TABLE IF EXISTS db2dataprocessor_out.v_encounter_last_version");
       statement.execute(
           """
           CREATE TABLE db2dataprocessor_out.v_encounter_last_version (
-            enc_id VARCHAR(100), enc_age_at_admission INTEGER)
+            enc_id VARCHAR(100), enc_age_at_admission INTEGER, enc_status VARCHAR(100))
           """);
       statement.execute(
           """
