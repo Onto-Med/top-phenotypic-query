@@ -17,6 +17,7 @@ CREATE TABLE db2dataprocessor_out.v_encounter_last_version
     enc_period_start 	   timestamp NULL,
     enc_period_end   	   timestamp NULL,
     enc_age_at_admission   numeric NULL,
+    enc_status             varchar,
     PRIMARY KEY (enc_id)
 );
 
@@ -33,11 +34,12 @@ CREATE TABLE db2dataprocessor_out.v_observation_last_version
     analysis_value      		  float8 NULL,
     obs_valuequantity_code        varchar NULL,
     obs_valuequantity_value       float8 NULL,
-    obs_referencerange_low_value  DOUBLE PRECISION,
-    obs_referencerange_low_code   VARCHAR(255),
-    obs_referencerange_high_value DOUBLE PRECISION,
-    obs_referencerange_high_code  VARCHAR(255),
-    obs_referencerange_type_code  VARCHAR(255)
+    obs_referencerange_low_value  double precision,
+    obs_referencerange_low_code   varchar(255),
+    obs_referencerange_high_value double precision,
+    obs_referencerange_high_code  varchar(255),
+    obs_referencerange_type_code  varchar(255),
+    obs_status                    varchar
 );
 
 CREATE TABLE db2dataprocessor_out.v_condition_last_version
@@ -54,6 +56,7 @@ CREATE TABLE db2dataprocessor_out.v_condition_last_version
     con_onsetperiod_end          timestamp NULL,
     con_onsetdatetime            timestamp NULL,
     con_recordeddate             timestamp NULL,
+    con_verificationstatus_code  varchar,
     PRIMARY KEY (con_id)
 );
 
@@ -67,6 +70,7 @@ CREATE TABLE db2dataprocessor_out.v_procedure_last_version
     proc_performeddatetime        timestamp NULL,
     proc_performedperiod_start    timestamp NULL,
     proc_performedperiod_end      timestamp NULL,
+    proc_status                   varchar,
     PRIMARY KEY (proc_id)
 );
 
@@ -80,6 +84,7 @@ CREATE TABLE db2dataprocessor_out.v_medicationadministration_last_version
     medadm_effectiveperiod_end      timestamp NULL,
     medadm_medication_system        varchar NULL,
     medadm_medication_code          varchar NULL,
+    medadm_status                   varchar,
     PRIMARY KEY (medadm_id)
 );
 
@@ -93,6 +98,7 @@ CREATE TABLE db2dataprocessor_out.v_medicationstatement_last_version
     medstat_effectiveperiod_end      timestamp NULL,
     medstat_medication_system        varchar NULL,
     medstat_medication_code          varchar NULL,
+    medstat_status                   varchar,
     PRIMARY KEY (medstat_id)
 );
 
@@ -104,5 +110,6 @@ CREATE TABLE db2dataprocessor_out.v_medicationrequest_last_version
     medreq_authoredon               timestamp NULL,
     medreq_medication_system        varchar NULL,
     medreq_medication_code          varchar NULL,
+    medreq_status                   varchar,
     PRIMARY KEY (medreq_id)
 );

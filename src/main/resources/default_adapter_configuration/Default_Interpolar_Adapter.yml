@@ -30,7 +30,7 @@
 # WHERE enc_id >= 'UKB-0009-E-1';
 baseId: encounter
 subjectQuery:
-  baseQuery: "SELECT enc_id, pat_birthdate, pat_gender FROM db2dataprocessor_out.v_patient_last_version, db2dataprocessor_out.v_encounter_last_version\nWHERE enc_patient_ref = 'Patient/' || pat_id AND enc_age_at_admission >= 18"
+  baseQuery: "SELECT enc_id, pat_birthdate, pat_gender FROM db2dataprocessor_out.v_patient_last_version, db2dataprocessor_out.v_encounter_last_version\nWHERE enc_patient_ref = 'Patient/' || pat_id AND enc_age_at_admission >= 18 AND (enc_status IS NULL OR enc_status NOT IN ('planned', 'cancelled', 'entered-in-error', 'unknown'))"
   sexListPart: "\nAND pat_gender IN ({values})"
   birthdateIntervalPart: "\nAND pat_birthdate {operator} {value}"
   output:
@@ -39,7 +39,7 @@ subjectQuery:
     birthdate: pat_birthdate
 phenotypeQueries:
   encounter:
-    baseQuery: "SELECT enc_id, enc_period_start, enc_period_end, enc_class_code FROM db2dataprocessor_out.v_encounter_last_version\nWHERE enc_type_code = 'einrichtungskontakt' AND enc_age_at_admission >= 18"
+    baseQuery: "SELECT enc_id, enc_period_start, enc_period_end, enc_class_code FROM db2dataprocessor_out.v_encounter_last_version\nWHERE enc_type_code = 'einrichtungskontakt' AND enc_age_at_admission >= 18 AND (enc_status IS NULL OR enc_status NOT IN ('planned', 'cancelled', 'entered-in-error', 'unknown'))"
     textValueListPart: "\nAND enc_class_code IN ({values})"
     startDateTimeIntervalPart: "\nAND enc_period_start {operator} {value}"
     endDateTimeIntervalPart: "\nAND (enc_period_end IS NULL OR enc_period_end {operator} {value})"
@@ -72,6 +72,7 @@ phenotypeQueries:
         FROM db2dataprocessor_out.v_observation_last_version
         WHERE analysis_value_status IN ('converted', 'already_reference_unit')
           AND analysis_value IS NOT NULL
+          AND (obs_status IS NULL OR obs_status NOT IN ('on-hold', 'registered', 'cancelled', 'entered-in-error'))
       ),
       distinct_obs AS (
         SELECT DISTINCT
@@ -114,7 +115,7 @@ phenotypeQueries:
              un.ref_high_val, un.ref_high_code,
              un.ref_type_code
       FROM (
-        -- 1. Observations with  obs_id
+        -- 1. Observations with obs_id
         SELECT
           SUBSTRING(o.obs_encounter_calculated_ref FROM 11) AS enc_id,
           o.obs_effectivedatetime AS da,
@@ -132,6 +133,7 @@ phenotypeQueries:
         JOIN db2dataprocessor_out.v_encounter_last_version enc
           ON SUBSTRING(o.obs_encounter_calculated_ref FROM 11) = enc.enc_id
         WHERE enc.enc_age_at_admission >= 18
+          AND (enc.enc_status IS NULL OR enc.enc_status NOT IN ('planned', 'cancelled', 'entered-in-error', 'unknown'))
 
         UNION ALL
 
@@ -154,6 +156,7 @@ phenotypeQueries:
           ON SUBSTRING(v.obs_encounter_calculated_ref FROM 11) = enc.enc_id
         WHERE NULLIF(v.obs_id, '') IS NULL
           AND enc.enc_age_at_admission >= 18
+          AND (enc.enc_status IS NULL OR enc.enc_status NOT IN ('planned', 'cancelled', 'entered-in-error', 'unknown'))
 
         UNION ALL
 
@@ -173,6 +176,7 @@ phenotypeQueries:
           CAST(NULL AS varchar) AS ref_type_code
         FROM db2dataprocessor_out.v_encounter_last_version
         WHERE enc_age_at_admission IS NOT NULL AND enc_age_at_admission >= 18
+          AND (enc_status IS NULL OR enc_status NOT IN ('planned', 'cancelled', 'entered-in-error', 'unknown'))
       ) AS un
       WHERE 'http://loinc.org|' || un.co IN ({codes})
     numberValueIntervalPart: "\nAND va {operator} {value}"
@@ -225,6 +229,8 @@ phenotypeQueries:
         ON SUBSTRING(con.con_encounter_calculated_ref FROM 11) = enc.enc_id
       WHERE
         enc.enc_age_at_admission >= 18 AND
+        (enc.enc_status IS NULL OR enc.enc_status NOT IN ('planned', 'cancelled', 'entered-in-error', 'unknown')) AND
+        (con.con_verificationstatus_code IS NULL OR con.con_verificationstatus_code NOT IN ('refuted', 'entered-in-error')) AND
         -- ICD prefixes have length 3, 5 or 6. Uncorrelated IN subqueries allow
         -- hashed lookups instead of testing every model prefix for every row.
         -- Normalize only model codes; suffixes on data codes are ignored.
@@ -267,7 +273,9 @@ phenotypeQueries:
           db2dataprocessor_out.v_encounter_last_version enc
           ON SUBSTRING(proc.proc_encounter_calculated_ref FROM 11) = enc.enc_id
       WHERE
-          enc.enc_age_at_admission >= 18 AND 
+          enc.enc_age_at_admission >= 18 AND
+          (enc.enc_status IS NULL OR enc.enc_status NOT IN ('planned', 'cancelled', 'entered-in-error', 'unknown')) AND
+          (proc.proc_status IS NULL OR proc.proc_status NOT IN ('entered-in-error')) AND 
       	  proc_code_system || '|' || proc_code_code IN ({codes})
     startDateTimeIntervalPart: |
         AND 
@@ -304,6 +312,8 @@ phenotypeQueries:
           ON SUBSTRING(medadm.medadm_encounter_calculated_ref FROM 11) = enc.enc_id
       WHERE
           enc.enc_age_at_admission >= 18 AND
+          (enc.enc_status IS NULL OR enc.enc_status NOT IN ('planned', 'cancelled', 'entered-in-error', 'unknown')) AND
+          (medadm.medadm_status IS NULL OR medadm.medadm_status NOT IN ('not-done', 'entered-in-error')) AND
           medadm_medication_system || '|' || medadm_medication_code IN ({codes})
     startDateTimeIntervalPart: |
           AND
@@ -338,6 +348,8 @@ phenotypeQueries:
           ON SUBSTRING(medstat.medstat_encounter_calculated_ref FROM 11) = enc.enc_id
       WHERE
           enc.enc_age_at_admission >= 18 AND
+          (enc.enc_status IS NULL OR enc.enc_status NOT IN ('planned', 'cancelled', 'entered-in-error', 'unknown')) AND
+          (medstat.medstat_status IS NULL OR medstat.medstat_status NOT IN ('entered-in-error')) AND
           medstat_medication_system || '|' || medstat_medication_code IN ({codes})
     startDateTimeIntervalPart: |
       AND
@@ -366,7 +378,9 @@ phenotypeQueries:
           db2dataprocessor_out.v_encounter_last_version enc
           ON SUBSTRING(medreq_encounter_calculated_ref FROM 11) = enc.enc_id
       WHERE
-          enc.enc_age_at_admission >= 18 AND 
+          enc.enc_age_at_admission >= 18 AND
+          (enc.enc_status IS NULL OR enc.enc_status NOT IN ('planned', 'cancelled', 'entered-in-error', 'unknown')) AND
+          (medreq_status IS NULL OR medreq_status NOT IN ('on-hold', 'cancelled', 'entered-in-error', 'stopped')) AND
           medreq_medication_system || '|' || medreq_medication_code IN ({codes})
     dateTimeIntervalPart: "\nAND medreq_authoredon {operator} {value}"
     output:
