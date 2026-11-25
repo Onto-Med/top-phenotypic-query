@@ -72,6 +72,37 @@ public class UnitConverter {
    */
   private static final Pattern BRACE_UNIT_PATTERN = Pattern.compile("^(%?)\\{[^{}]+\\}$");
 
+  /**
+   * Matches unbracketed mercury/water pressure units (e.g., "mmHg" -> "mm[Hg]", "cmH2O" ->
+   * "cm[H2O]").
+   */
+  private static final Pattern PRESSURE_UNIT_PATTERN =
+      Pattern.compile("(^|/|\\.|\\()" + PREFIX_REGEX + "m(Hg|H2O)(?=$|/|\\.|\\)|\\d|\\^|\\*|-)");
+
+  /** Matches Osmole variants ("Osm", "osmol", "Osmol" -> "osm") with optional SI prefix. */
+  private static final Pattern OSMOLE_PATTERN =
+      Pattern.compile(
+          "(^|/|\\.|\\()" + PREFIX_REGEX + "(?:Osm|osmol|Osmol)(?=$|/|\\.|\\)|\\d|\\^|\\*|-)");
+
+  /** Matches unbracketed parts-per notations ("ppm", "ppb" -> "[ppm]", "[ppb]"). */
+  private static final Pattern PARTS_PER_PATTERN =
+      Pattern.compile("(^|/|\\.|\\()(ppm|ppb)(?=$|/|\\.|\\)|\\d|\\^|\\*|-)");
+
+  /**
+   * Matches common non-UCUM clinical aliases ("mcg" -> "ug", "mcL" -> "uL", "sec"/"sek" -> "s",
+   * "hr"/"hrs" -> "h").
+   */
+  private static final Pattern CLINICAL_ALIAS_PATTERN =
+      Pattern.compile("(^|/|\\.|\\()(mcg|mcL|mcl|sec|sek|hrs?)(?=$|/|\\.|\\)|\\d|\\^|\\*|-)");
+
+  /** Matches cubic centimetre aliases ("cc", "ccm" -> "cm3") without trailing exponents. */
+  private static final Pattern CUBIC_CM_PATTERN =
+      Pattern.compile("(^|/|\\.|\\()ccm?(?=$|/|\\.|\\))");
+
+  /** Matches alternative temperature notations ("degC" -> "Cel", "degF" -> "[degF]"). */
+  private static final Pattern TEMPERATURE_ALIAS_PATTERN =
+      Pattern.compile("(^|/|\\.|\\()(degC|degF)(?=$|/|\\.|\\)|\\d|\\^|\\*|-)");
+
   public UnitConverter(InputStream ucumEssenceStream) throws UcumException {
     this.ucumService = new UcumEssenceService(ucumEssenceStream);
   }
@@ -192,6 +223,29 @@ public class UnitConverter {
     } else {
       cleaned = IU_TOKEN_PATTERN.matcher(cleaned).replaceAll("$1$2[IU]");
       cleaned = LOWERCASE_LITRE_PATTERN.matcher(cleaned).replaceAll("$1$2L");
+      cleaned = PRESSURE_UNIT_PATTERN.matcher(cleaned).replaceAll("$1$2m[$3]");
+      cleaned = OSMOLE_PATTERN.matcher(cleaned).replaceAll("$1$2osm");
+      cleaned = PARTS_PER_PATTERN.matcher(cleaned).replaceAll("$1[$2]");
+      cleaned = CUBIC_CM_PATTERN.matcher(cleaned).replaceAll("$1cm3");
+      cleaned =
+          TEMPERATURE_ALIAS_PATTERN
+              .matcher(cleaned)
+              .replaceAll(m -> m.group(1) + (m.group(2).equals("degC") ? "Cel" : "[degF]"));
+      cleaned =
+          CLINICAL_ALIAS_PATTERN
+              .matcher(cleaned)
+              .replaceAll(
+                  m -> {
+                    String replacement =
+                        switch (m.group(2)) {
+                          case "mcg" -> "ug";
+                          case "mcL", "mcl" -> "uL";
+                          case "sec", "sek" -> "s";
+                          case "hr", "hrs" -> "h";
+                          default -> m.group(2);
+                        };
+                    return m.group(1) + replacement;
+                  });
     }
 
     // 7. Validate against UCUM service (returns null when valid)

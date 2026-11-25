@@ -85,7 +85,36 @@ class UnitConverterTest {
       // ASCII and Unicode whitespace removal (e.g., non-breaking space \u00A0 from Excel/PDFs)
       "'  mg / dL  ', 'mg/dL'",
       "'mg\u00A0/\u00A0dL', 'mg/dL'",
-      "'mg / {dL} ', 'mg'"
+      "'mg / {dL} ', 'mg'",
+      // Unbracketed pressure units -> mm[Hg], cm[H2O]
+      "'mmHg', 'mm[Hg]'",
+      "'cmH2O', 'cm[H2O]'",
+      "'mH2O', 'm[H2O]'",
+      "'mmHg/s', 'mm[Hg]/s'",
+      // Osmole variants -> osm
+      "'mOsm/L', 'mosm/L'",
+      "'mOsm/kg', 'mosm/kg'",
+      "'mosmol/l', 'mosm/L'",
+      "'Osmol/L', 'osm/L'",
+      // Unbracketed parts-per notations -> [ppm], [ppb], [ppt]
+      "'ppm', '[ppm]'",
+      "'ppb', '[ppb]'",
+      // Alternative temperature notations -> Cel, [degF]
+      "'degC', 'Cel'",
+      "'degF', '[degF]'",
+      "'degC/min', 'Cel/min'",
+      // Common clinical aliases -> ug, uL, s, h, cm3
+      "'mcg/dL', 'ug/dL'",
+      "'mg/mcL', 'mg/uL'",
+      "'mg/mcl', 'mg/uL'",
+      "'mL/sec', 'mL/s'",
+      "'mL/sek', 'mL/s'",
+      "'mL/hr', 'mL/h'",
+      "'mL/hrs', 'mL/h'",
+      "'sec^2', 's2'",
+      "'cc', 'cm3'",
+      "'ccm', 'cm3'",
+      "'mg/cc', 'mg/cm3'"
     })
     void normalisesValidUnits(String raw, String expectedUcum) {
       assertEquals(Optional.of(expectedUcum), converter.normaliseToUcum(raw));
@@ -94,7 +123,7 @@ class UnitConverterTest {
 
     /** Ensures blank strings and unrecognised unit tokens return {@link Optional#empty()}. */
     @ParameterizedTest(name = "Invalid input \"{0}\" -> Optional.empty()")
-    @ValueSource(strings = {"", "   ", "invalid_unit", "mg/invalid", "foo/bar", "mg/(dL"})
+    @ValueSource(strings = {"", "   ", "invalid_unit", "mg/invalid", "foo/bar", "mg/(dL", "cc^2"})
     void returnsEmptyForInvalidOrBlankUnits(String raw) {
       assertEquals(Optional.empty(), converter.normaliseToUcum(raw));
       assertFalse(converter.isValidUnit(raw));
@@ -216,6 +245,41 @@ class UnitConverterTest {
           Optional.of(BigDecimal.ZERO),
           converter.convertLabUnits(new BigDecimal("0.00"), "mg/dL", "g/L"));
     }
+
+    /**
+     * Verifies end-to-end conversions using unbracketed clinical aliases ({@code mmHg}, {@code
+     * mOsm/kg}, {@code degC}/{@code degF}, {@code mcg}, {@code mcL}, {@code hr}, {@code ccm}).
+     */
+    @Test
+    void convertsClinicalAliasesSeamlessly() {
+      // Unbracketed pressure: 120 mmHg == 120 mm[Hg] = 15.99864 kPa
+      assertEquals(
+          Optional.of(new BigDecimal("15.99864")),
+          converter.convertLabUnits(new BigDecimal("120"), "mmHg", "kPa"));
+
+      // Osmolarity: 300 mOsm/kg = 0.3 osm/kg
+      assertEquals(
+          Optional.of(new BigDecimal("0.3")),
+          converter.convertLabUnits(new BigDecimal("300"), "mOsm/kg", "osm/kg"));
+
+      // Temperature aliases: 37 degC = 98.6 degF
+      assertEquals(
+          Optional.of(new BigDecimal("98.6")),
+          converter.convertLabUnits(new BigDecimal("37"), "degC", "degF"));
+
+      // Clinical shorthand aliases: 500 mcg/mcL = 500000 mg/L (500 g/L), 120 mL/hr = 2 mL/min, 2.5
+      // ccm = 2.5 mL
+      assertEquals(
+          Optional.of(new BigDecimal("500000")),
+          converter.convertLabUnits(new BigDecimal("500"), "mcg/mcL", "mg/L"));
+
+      assertEquals(
+          Optional.of(new BigDecimal("2")),
+          converter.convertLabUnits(new BigDecimal("120"), "mL/hr", "mL/min"));
+      assertEquals(
+          Optional.of(new BigDecimal("2.5")),
+          converter.convertLabUnits(new BigDecimal("2.5"), "ccm", "mL"));
+    }
   }
 
   // =========================================================================
@@ -312,6 +376,35 @@ class UnitConverterTest {
               .convertWithFactor(
                   new BigDecimal("100"), "mg/dL", "mmol/L", glucoseFactor, "invalid", "mmol/L")
               .isEmpty());
+    }
+
+    /**
+     * Verifies bidirectional factor conversion when source, target, or bridge anchor units use
+     * clinical shorthand aliases ({@code mcg/dL}, {@code mcg/mcL}).
+     */
+    @Test
+    void convertsBidirectionallyWithClinicalAliases() {
+      // Vitamin B12 example: 1 pg/mL = 0.738 pmol/L (equivalent to 1 ng/L = 0.738 pmol/L)
+      BigDecimal b12Factor = new BigDecimal("0.738");
+
+      // Forward: 50 mcg/dL (= 500 ug/L = 500000 ng/L) -> (* 0.738) -> 369000 pmol/L -> 369 nmol/L
+      assertEquals(
+          Optional.of(new BigDecimal("369")),
+          converter.convertLabUnits(
+              new BigDecimal("50"), "mcg/dL", "nmol/L", b12Factor, "pg/mL", "pmol/L", false, null));
+
+      // Reverse: 369 nmol/L (= 369000 pmol/L) -> (/ 0.738) -> 500000 pg/mL -> 50 mcg/dL
+      assertEquals(
+          Optional.of(new BigDecimal("50")),
+          converter.convertLabUnits(
+              new BigDecimal("369"),
+              "nmol/L",
+              "mcg/dL",
+              b12Factor,
+              "pg/mL",
+              "pmol/L",
+              false,
+              null));
     }
   }
 
