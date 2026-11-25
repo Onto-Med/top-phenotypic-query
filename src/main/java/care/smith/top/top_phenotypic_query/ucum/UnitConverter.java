@@ -112,7 +112,7 @@ public class UnitConverter {
     if (unit1 == null || unit2 == null) return false;
     String cleanedUnit1 = WHITESPACE_PATTERN.matcher(unit1).replaceAll("");
     String cleanedUnit2 = WHITESPACE_PATTERN.matcher(unit2).replaceAll("");
-    return cleanedUnit1.equalsIgnoreCase(cleanedUnit2);
+    return cleanedUnit1.equals(cleanedUnit2);
   }
 
   /**
