@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import module java.base;
 
-import care.smith.top.top_phenotypic_query.lab_units.UnitConverter;
+import care.smith.top.top_phenotypic_query.ucum.UnitConverter;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

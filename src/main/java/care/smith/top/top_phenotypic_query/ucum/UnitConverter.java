@@ -1,4 +1,4 @@
-package care.smith.top.top_phenotypic_query.lab_units;
+package care.smith.top.top_phenotypic_query.ucum;
 
 import module java.base;
 import module java.logging;
@@ -56,8 +56,32 @@ public class UnitConverter {
   private static final Pattern MULTIPLICATION_ASTERISK_PATTERN =
       Pattern.compile("(?<!(?:^|[/\\.\\(])10)\\*");
 
+  /** Matches ALL ASCII and Unicode whitespace characters (including non-breaking spaces \u00A0) */
+  private static final Pattern WHITESPACE_PATTERN =
+      Pattern.compile("\\s+", Pattern.UNICODE_CHARACTER_CLASS);
+
+  /** Matches trailing denominator annotations (e.g., "mg/{dL}", "mL/min/{1.73_m2}") */
+  private static final Pattern ANNOTATION_PATTERN = Pattern.compile("/\\{[^/]+\\}$");
+
+  /** Matches Unicode micro symbols (U+00B5 and U+03BC) */
+  private static final Pattern MICRO_PATTERN = Pattern.compile("[\u00b5\u03bc]");
+
+  /**
+   * Matches standalone UCUM curly-brace annotations (e.g. "{cells}") with an optional leading "%"
+   * (e.g. "%{vol}")
+   */
+  private static final Pattern BRACE_UNIT_PATTERN = Pattern.compile("^(%?)\\{[^{}]+\\}$");
+
   public UnitConverter(InputStream ucumEssenceStream) throws UcumException {
     this.ucumService = new UcumEssenceService(ucumEssenceStream);
+  }
+
+  public static boolean equals(String unit1, String unit2) {
+    if (unit1 == null && unit2 == null) return true;
+    if (unit1 == null || unit2 == null) return false;
+    String cleanedUnit1 = WHITESPACE_PATTERN.matcher(unit1).replaceAll("");
+    String cleanedUnit2 = WHITESPACE_PATTERN.matcher(unit2).replaceAll("");
+    return cleanedUnit1.equalsIgnoreCase(cleanedUnit2);
   }
 
   /**
@@ -93,14 +117,15 @@ public class UnitConverter {
       // Step 2: Attempt direct UCUM conversion, falling back to Step 3 (bidirectional factor
       // bridge)
       return convertDirect(measuredValue, sourceUcum.get(), targetUcum.get())
-          .or(() ->
-              convertWithFactor(
-                  measuredValue,
-                  sourceUcum.get(),
-                  targetUcum.get(),
-                  conversionFactor,
-                  factorInUnitRaw,
-                  factorOutUnitRaw));
+          .or(
+              () ->
+                  convertWithFactor(
+                      measuredValue,
+                      sourceUcum.get(),
+                      targetUcum.get(),
+                      conversionFactor,
+                      factorInUnitRaw,
+                      factorOutUnitRaw));
 
     } catch (Exception e) {
       String errorContext = (additionalErrorMessage == null) ? "" : " " + additionalErrorMessage;
@@ -143,14 +168,14 @@ public class UnitConverter {
 
   private Optional<String> normaliseToUcumUncached(String rawUnit) {
     // 1. Remove ALL ASCII and Unicode whitespace characters (including non-breaking spaces \u00A0)
-    String cleaned = rawUnit.replaceAll("(?U)\\s+", "");
+    String cleaned = WHITESPACE_PATTERN.matcher(rawUnit).replaceAll("");
 
     // 2. Strip trailing denominator annotations (e.g., "mg/{dL}" -> "mg", "mL/min/{1.73_m2}" ->
     // "mL/min")
-    cleaned = cleaned.replaceAll("/\\{[^/]+\\}$", "");
+    cleaned = ANNOTATION_PATTERN.matcher(cleaned).replaceAll("");
 
     // 3. Replace Unicode micro symbols (U+00B5 and U+03BC) with 'u' before prefix matching
-    cleaned = cleaned.replace("\u00b5", "u").replace("\u03bc", "u");
+    cleaned = MICRO_PATTERN.matcher(cleaned).replaceAll("u");
 
     // 4. Normalise unit exponents ("m^2" -> "m2") and power-of-ten carets ("10^3" -> "10*3")
     cleaned = UNIT_EXPONENT_PATTERN.matcher(cleaned).replaceAll("$1$2");
@@ -159,11 +184,11 @@ public class UnitConverter {
     // 5. Replace multiplication asterisks '*' with UCUM dots '.', preserving "10*"
     cleaned = MULTIPLICATION_ASTERISK_PATTERN.matcher(cleaned).replaceAll(".");
 
-    // 6. Normalise special clinical shorthand patterns into strict UCUM syntax
-    if (cleaned.matches("^%\\{[^{}]+\\}$")) {
-      cleaned = "%";
-    } else if (cleaned.matches("^\\{[^{}]+\\}$")) {
-      cleaned = "1";
+    // 6. Normalise standalone curly-brace units to "%" (if prefixed with "%") or "1"
+    // (dimensionless); otherwise standardise IU and litre symbols within compound units
+    Matcher braceMatcher = BRACE_UNIT_PATTERN.matcher(cleaned);
+    if (braceMatcher.matches()) {
+      cleaned = braceMatcher.group(1).isEmpty() ? "1" : "%";
     } else {
       cleaned = IU_TOKEN_PATTERN.matcher(cleaned).replaceAll("$1$2[IU]");
       cleaned = LOWERCASE_LITRE_PATTERN.matcher(cleaned).replaceAll("$1$2L");
@@ -292,10 +317,11 @@ public class UnitConverter {
             .flatMap(bridged -> convertDirect(bridged, factorOutUcum.get(), targetUcum));
 
     // Direction B (Reverse): source -> factorOut -> (/ factor) -> factorIn -> target
-    return forwardResult.or(() ->
-        convertDirect(value, sourceUcum, factorOutUcum.get())
-            .map(outValue -> outValue.divide(factor, MathContext.DECIMAL128))
-            .flatMap(bridged -> convertDirect(bridged, factorInUcum.get(), targetUcum)));
+    return forwardResult.or(
+        () ->
+            convertDirect(value, sourceUcum, factorOutUcum.get())
+                .map(outValue -> outValue.divide(factor, MathContext.DECIMAL128))
+                .flatMap(bridged -> convertDirect(bridged, factorInUcum.get(), targetUcum)));
   }
 
   // =========================================================================
