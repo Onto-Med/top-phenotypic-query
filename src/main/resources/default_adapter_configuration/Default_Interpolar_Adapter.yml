@@ -185,7 +185,13 @@ phenotypeQueries:
       FROM
           db2dataprocessor_out.v_medicationadministration_last_version medadm
       WHERE
-          medadm_medication_system || '|' || medadm_medication_code IN ({codes})
+          (CASE
+            WHEN NULLIF(medadm_medication_system, '') IS NOT NULL
+             AND NULLIF(medadm_medication_code, '') IS NOT NULL
+            THEN medadm_medication_system || '|' || medadm_medication_code
+            ELSE NULLIF(medadm_medicationcodeableconcept_system, '') || '|' ||
+                 NULLIF(medadm_medicationcodeableconcept_code, '')
+          END) IN ({codes})
     startDateTimeIntervalPart: |
           AND
             CASE
@@ -215,7 +221,13 @@ phenotypeQueries:
       FROM
           db2dataprocessor_out.v_medicationstatement_last_version medstat
       WHERE
-          medstat_medication_system || '|' || medstat_medication_code IN ({codes})
+          (CASE
+            WHEN NULLIF(medstat_medication_system, '') IS NOT NULL
+             AND NULLIF(medstat_medication_code, '') IS NOT NULL
+            THEN medstat_medication_system || '|' || medstat_medication_code
+            ELSE NULLIF(medstat_medicationcodeableconcept_system, '') || '|' ||
+                 NULLIF(medstat_medicationcodeableconcept_code, '')
+          END) IN ({codes})
     startDateTimeIntervalPart: |
       AND
         CASE
@@ -236,7 +248,16 @@ phenotypeQueries:
       endDateTime: end_date_time
       dateTime: date_time
   medication_request:
-    baseQuery: "SELECT SUBSTRING(medreq_encounter_calculated_ref FROM 11) AS enc_id, medreq_authoredon AS datetime FROM db2dataprocessor_out.v_medicationrequest_last_version\nWHERE medreq_medication_system || '|' || medreq_medication_code IN ({codes})"
+    baseQuery: |
+      SELECT SUBSTRING(medreq_encounter_calculated_ref FROM 11) AS enc_id, medreq_authoredon AS datetime FROM db2dataprocessor_out.v_medicationrequest_last_version
+      WHERE
+        (CASE
+          WHEN NULLIF(medreq_medication_system, '') IS NOT NULL
+           AND NULLIF(medreq_medication_code, '') IS NOT NULL
+          THEN medreq_medication_system || '|' || medreq_medication_code
+          ELSE NULLIF(medreq_medicationcodeableconcept_system, '') || '|' ||
+               NULLIF(medreq_medicationcodeableconcept_code, '')
+        END) IN ({codes})
     dateTimeIntervalPart: "\nAND medreq_authoredon {operator} {value}"
     output:
       subject: enc_id

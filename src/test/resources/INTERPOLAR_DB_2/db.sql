@@ -74,6 +74,8 @@ CREATE TABLE db2dataprocessor_out.v_medicationadministration_last_version
     medadm_effectiveperiod_end      timestamp NULL,
     medadm_medication_system        varchar NULL,
     medadm_medication_code          varchar NULL,
+    medadm_medicationcodeableconcept_system varchar NULL,
+    medadm_medicationcodeableconcept_code   varchar NULL,
     PRIMARY KEY (medadm_id)
 );
 
@@ -87,6 +89,8 @@ CREATE TABLE db2dataprocessor_out.v_medicationstatement_last_version
     medstat_effectiveperiod_end      timestamp NULL,
     medstat_medication_system        varchar NULL,
     medstat_medication_code          varchar NULL,
+    medstat_medicationcodeableconcept_system varchar NULL,
+    medstat_medicationcodeableconcept_code   varchar NULL,
     PRIMARY KEY (medstat_id)
 );
 
@@ -98,5 +102,7 @@ CREATE TABLE db2dataprocessor_out.v_medicationrequest_last_version
     medreq_authoredon               timestamp NULL,
     medreq_medication_system        varchar NULL,
     medreq_medication_code          varchar NULL,
+    medreq_medicationcodeableconcept_system varchar NULL,
+    medreq_medicationcodeableconcept_code   varchar NULL,
     PRIMARY KEY (medreq_id)
 );

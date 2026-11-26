@@ -1,6 +1,7 @@
 package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB_2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import module java.base;
 
@@ -37,5 +38,15 @@ public class MedicationTest {
             .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/medication.sql")
             .execute();
     assertEquals(Set.of("HOSP-0013-E-1", "HOSP-0023-E-1", "HOSP-0033-E-1"), rs.getSubjectIds());
+  }
+
+  @Test
+  void medicationFallbackRequiresAPairFromTheSameSource() throws InstantiationException {
+    ResultSet rs =
+        new Que(CONFIG, med)
+            .inc(med, Res.geLe(DateUtil.parse("2020-01-01"), DateUtil.parse("2021-01-01")))
+            .executeSqlFromResources("INTERPOLAR_DB_2/db.sql", "INTERPOLAR_DB_2/medication.sql")
+            .execute();
+    assertFalse(rs.getSubjectIds().contains("HOSP-0004-E-1"));
   }
 }
