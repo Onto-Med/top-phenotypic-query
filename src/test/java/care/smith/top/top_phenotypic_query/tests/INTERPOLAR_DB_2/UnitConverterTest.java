@@ -303,7 +303,7 @@ class UnitConverterTest {
       assertEquals(
           Optional.of(new BigDecimal("5550")),
           converter.convertLabUnits(
-              new BigDecimal("1"), "g/L", "umol/L", glucoseFactor, "mg/dL", "mmol/L", false, null));
+              new BigDecimal("1"), "g/L", "umol/L", glucoseFactor, "mg/dL", "mmol/L"));
     }
 
     /**
@@ -315,14 +315,7 @@ class UnitConverterTest {
       assertEquals(
           Optional.of(new BigDecimal("1")),
           converter.convertLabUnits(
-              new BigDecimal("5550"),
-              "umol/L",
-              "g/L",
-              glucoseFactor,
-              "mg/dL",
-              "mmol/L",
-              false,
-              null));
+              new BigDecimal("5550"), "umol/L", "g/L", glucoseFactor, "mg/dL", "mmol/L"));
     }
 
     /**
@@ -337,27 +330,13 @@ class UnitConverterTest {
       assertEquals(
           Optional.of(new BigDecimal("0.212")),
           converter.convertLabUnits(
-              new BigDecimal("10"),
-              "ug/L",
-              "U/L",
-              prolactinFactor,
-              "ng/mL",
-              "m[IU]/L",
-              false,
-              null));
+              new BigDecimal("10"), "ug/L", "U/L", prolactinFactor, "ng/mL", "m[IU]/L"));
 
       // Reverse: 0.212 U/L (= 212 m[IU]/L) -> (/ 21.2) -> 10 ng/mL -> 10 ug/L
       assertEquals(
           Optional.of(new BigDecimal("10")),
           converter.convertLabUnits(
-              new BigDecimal("0.212"),
-              "U/L",
-              "ug/L",
-              prolactinFactor,
-              "ng/mL",
-              "m[IU]/L",
-              false,
-              null));
+              new BigDecimal("0.212"), "U/L", "ug/L", prolactinFactor, "ng/mL", "m[IU]/L"));
     }
 
     /**
@@ -391,20 +370,13 @@ class UnitConverterTest {
       assertEquals(
           Optional.of(new BigDecimal("369")),
           converter.convertLabUnits(
-              new BigDecimal("50"), "mcg/dL", "nmol/L", b12Factor, "pg/mL", "pmol/L", false, null));
+              new BigDecimal("50"), "mcg/dL", "nmol/L", b12Factor, "pg/mL", "pmol/L"));
 
       // Reverse: 369 nmol/L (= 369000 pmol/L) -> (/ 0.738) -> 500000 pg/mL -> 50 mcg/dL
       assertEquals(
           Optional.of(new BigDecimal("50")),
           converter.convertLabUnits(
-              new BigDecimal("369"),
-              "nmol/L",
-              "mcg/dL",
-              b12Factor,
-              "pg/mL",
-              "pmol/L",
-              false,
-              null));
+              new BigDecimal("369"), "nmol/L", "mcg/dL", b12Factor, "pg/mL", "pmol/L"));
     }
   }
 

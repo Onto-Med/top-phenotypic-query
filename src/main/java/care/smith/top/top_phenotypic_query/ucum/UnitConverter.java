@@ -125,9 +125,7 @@ public class UnitConverter {
       String targetUnitRaw,
       BigDecimal conversionFactor,
       String factorInUnitRaw,
-      String factorOutUnitRaw,
-      boolean ignoreErrors,
-      String additionalErrorMessage) {
+      String factorOutUnitRaw) {
 
     if (measuredValue == null) {
       return Optional.empty();
@@ -148,27 +146,20 @@ public class UnitConverter {
       // Step 2: Attempt direct UCUM conversion, falling back to Step 3 (bidirectional factor
       // bridge)
       return convertDirect(measuredValue, sourceUcum.get(), targetUcum.get())
-          .or(
-              () ->
-                  convertWithFactor(
-                      measuredValue,
-                      sourceUcum.get(),
-                      targetUcum.get(),
-                      conversionFactor,
-                      factorInUnitRaw,
-                      factorOutUnitRaw));
+          .or(() ->
+              convertWithFactor(
+                  measuredValue,
+                  sourceUcum.get(),
+                  targetUcum.get(),
+                  conversionFactor,
+                  factorInUnitRaw,
+                  factorOutUnitRaw));
 
     } catch (Exception e) {
-      String errorContext = (additionalErrorMessage == null) ? "" : " " + additionalErrorMessage;
       String warningMessage =
           String.format(
-              "Error converting lab units from '%s' to '%s': %s%s",
-              measuredUnitRaw, targetUnitRaw, e.getMessage(), errorContext);
-
-      if (!ignoreErrors) {
-        LOGGER.severe(warningMessage);
-        throw new RuntimeException(warningMessage, e);
-      }
+              "Error converting lab units from '%s' to '%s': %s",
+              measuredUnitRaw, targetUnitRaw, e.getMessage());
       LOGGER.warning(warningMessage);
       return Optional.empty();
     }
@@ -177,7 +168,7 @@ public class UnitConverter {
   /** Convenience overload for direct unit conversions without a bridge factor. */
   public Optional<BigDecimal> convertLabUnits(
       BigDecimal measuredValue, String measuredUnit, String targetUnit) {
-    return convertLabUnits(measuredValue, measuredUnit, targetUnit, null, null, null, true, null);
+    return convertLabUnits(measuredValue, measuredUnit, targetUnit, null, null, null);
   }
 
   /** Checks whether a raw unit string can be normalised into a valid UCUM unit. */
@@ -234,18 +225,17 @@ public class UnitConverter {
       cleaned =
           CLINICAL_ALIAS_PATTERN
               .matcher(cleaned)
-              .replaceAll(
-                  m -> {
-                    String replacement =
-                        switch (m.group(2)) {
-                          case "mcg" -> "ug";
-                          case "mcL", "mcl" -> "uL";
-                          case "sec", "sek" -> "s";
-                          case "hr", "hrs" -> "h";
-                          default -> m.group(2);
-                        };
-                    return m.group(1) + replacement;
-                  });
+              .replaceAll(m -> {
+                String replacement =
+                    switch (m.group(2)) {
+                      case "mcg" -> "ug";
+                      case "mcL", "mcl" -> "uL";
+                      case "sec", "sek" -> "s";
+                      case "hr", "hrs" -> "h";
+                      default -> m.group(2);
+                    };
+                return m.group(1) + replacement;
+              });
     }
 
     // 7. Validate against UCUM service (returns null when valid)
@@ -371,11 +361,10 @@ public class UnitConverter {
             .flatMap(bridged -> convertDirect(bridged, factorOutUcum.get(), targetUcum));
 
     // Direction B (Reverse): source -> factorOut -> (/ factor) -> factorIn -> target
-    return forwardResult.or(
-        () ->
-            convertDirect(value, sourceUcum, factorOutUcum.get())
-                .map(outValue -> outValue.divide(factor, MathContext.DECIMAL128))
-                .flatMap(bridged -> convertDirect(bridged, factorInUcum.get(), targetUcum)));
+    return forwardResult.or(() ->
+        convertDirect(value, sourceUcum, factorOutUcum.get())
+            .map(outValue -> outValue.divide(factor, MathContext.DECIMAL128))
+            .flatMap(bridged -> convertDirect(bridged, factorInUcum.get(), targetUcum)));
   }
 
   // =========================================================================
