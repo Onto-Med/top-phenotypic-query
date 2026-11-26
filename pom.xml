@@ -191,6 +191,10 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.4</version>
+                <configuration>
+                    <!-- JMH and JOL use sun.misc.Unsafe; this avoids noisy JDK 24+ warnings. -->
+                    <argLine>--sun-misc-unsafe-memory-access=allow</argLine>
+                </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.junit.jupiter</groupId>

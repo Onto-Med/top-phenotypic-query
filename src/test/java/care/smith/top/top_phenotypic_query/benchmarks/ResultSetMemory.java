@@ -33,9 +33,17 @@ class ResultSetMemory {
         rs.addValue(String.valueOf(i), weight, null, Val.of(80, date.plusDays(j)));
       }
 
-    System.out.printf(
-        "%d subjects x %d values: %,d bytes%n",
-        subjects, values, GraphLayout.parseInstance(rs).totalSize());
+    // JOL prints attach warnings when instrumentation is unavailable; hide them.
+    PrintStream out = System.out;
+    System.setOut(new PrintStream(OutputStream.nullOutputStream()));
+    long bytes;
+    try {
+      bytes = GraphLayout.parseInstance(rs).totalSize();
+    } finally {
+      System.setOut(out);
+    }
+
+    System.out.printf("%d subjects x %d values: %,d bytes%n", subjects, values, bytes);
   }
 
   private static Phenotype phenotype(String id) {
