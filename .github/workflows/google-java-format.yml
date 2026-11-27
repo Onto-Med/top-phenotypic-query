@@ -24,6 +24,7 @@ jobs:
       - uses: axel-op/googlejavaformat-action@v4
         with:
           args: "--skip-reflowing-long-strings --replace"
-          skip-commit: true
+          skip-commit: false
+          commit-message: "Fix formatting"
       - name: Print diffs
         run: git --no-pager diff --exit-code
