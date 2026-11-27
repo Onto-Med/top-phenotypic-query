@@ -281,6 +281,18 @@ public class Values {
     return fields.get(fieldName);
   }
 
+  public static BigDecimal getFieldNumberValue(Value v, String fieldName) {
+    Value val = getField(v, fieldName);
+    if (val == null) return null;
+    return getNumberValue(val);
+  }
+
+  public static String getFieldStringValue(Value v, String fieldName) {
+    Value val = getField(v, fieldName);
+    if (val == null) return null;
+    return getStringValue(val);
+  }
+
   public static boolean hasDateTime(Value v) {
     return v.getDateTime() != null || v.getStartDateTime() != null || v.getEndDateTime() != null;
   }
