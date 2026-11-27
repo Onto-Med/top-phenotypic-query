@@ -4,7 +4,6 @@ import module java.base;
 import module java.logging;
 
 import org.fhir.ucum.Decimal;
-import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
 
@@ -23,6 +22,16 @@ public class UnitConverter {
 
   private static final Logger LOGGER = Logger.getLogger(UnitConverter.class.getName());
   private final UcumService ucumService;
+
+  private static final UnitConverter INSTANCE = new UnitConverter();
+
+  public static UnitConverter get() {
+    return INSTANCE;
+  }
+
+  private UnitConverter() {
+    this.ucumService = UCUM.getService();
+  }
 
   /** Thread-safe cache mapping raw unit strings to validated UCUM codes (or empty if invalid). */
   private final Map<String, Optional<String>> ucumCache = new ConcurrentHashMap<>();
@@ -102,10 +111,6 @@ public class UnitConverter {
   /** Matches alternative temperature notations ("degC" -> "Cel", "degF" -> "[degF]"). */
   private static final Pattern TEMPERATURE_ALIAS_PATTERN =
       Pattern.compile("(^|/|\\.|\\()(degC|degF)(?=$|/|\\.|\\)|\\d|\\^|\\*|-)");
-
-  public UnitConverter(InputStream ucumEssenceStream) throws UcumException {
-    this.ucumService = new UcumEssenceService(ucumEssenceStream);
-  }
 
   public static boolean equals(String unit1, String unit2) {
     if (unit1 == null && unit2 == null) return true;

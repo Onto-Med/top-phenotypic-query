@@ -2,7 +2,6 @@ package care.smith.top.top_phenotypic_query.tests.INTERPOLAR_DB_2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import module java.base;
@@ -36,9 +35,7 @@ class UnitConverterTest {
    */
   @BeforeAll
   static void setUp() throws Exception {
-    InputStream stream = UnitConverterTest.class.getResourceAsStream("/ucum-essence.xml");
-    assertNotNull(stream, "ucum-essence.xml must be present on the classpath");
-    converter = new UnitConverter(stream);
+    converter = UnitConverter.get();
   }
 
   // =========================================================================

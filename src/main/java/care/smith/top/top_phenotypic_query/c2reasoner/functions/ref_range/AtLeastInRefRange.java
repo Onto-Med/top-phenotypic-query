@@ -10,6 +10,7 @@ import care.smith.top.model.Value;
 import care.smith.top.top_phenotypic_query.c2reasoner.C2R;
 import care.smith.top.top_phenotypic_query.c2reasoner.Exceptions;
 import care.smith.top.top_phenotypic_query.c2reasoner.functions.FunctionEntity;
+import care.smith.top.top_phenotypic_query.ucum.UnitConverter;
 import care.smith.top.top_phenotypic_query.util.Expressions;
 import care.smith.top.top_phenotypic_query.util.Values;
 import care.smith.top.top_phenotypic_query.util.builder.Exp;
@@ -117,22 +118,96 @@ public class AtLeastInRefRange extends FunctionEntity {
     Exceptions.checkArgumentsType(getFunction(), DataType.NUMBER, args);
 
     List<Value> vals = args.get(0).getValues();
-    BigDecimal num = BigDecimal.ONE;
-    if (args.size() > 1) num = Expressions.getNumberValue(args.get(1));
+    int num = 1;
+    if (args.size() > 1) num = Expressions.getNumberValue(args.get(1)).intValue();
+
+    int hits = 0;
+    boolean valueExists = false;
+    boolean referenceExists = true;
+    boolean conversionPossible = true;
 
     for (Value v : vals) {
       BigDecimal origVal = Values.getFieldNumberValue(v, "origVal");
       if (origVal == null) continue;
+      valueExists = true;
 
       BigDecimal refLowVal = Values.getFieldNumberValue(v, "refLowVal");
       BigDecimal refHighVal = Values.getFieldNumberValue(v, "refHighVal");
+      if (refLowVal == null && refHighVal == null) {
+        referenceExists = false;
+        continue;
+      }
 
       String origUnit = Values.getFieldStringValue(v, "origUnit");
       String refLowUnit = Values.getFieldStringValue(v, "refLowUnit");
       String refHighUnit = Values.getFieldStringValue(v, "refHighUnit");
+
+      Result res =
+          new RefRange(origVal, origUnit, refLowVal, refLowUnit, refHighVal, refHighUnit).inRange();
+
+      if (res == Result.IN_RANGE) {
+        hits++;
+        if (hits >= num) return Exp.of(1);
+      } else if (res == Result.CONVERSION_NOT_POSSIBLE) conversionPossible = false;
     }
 
-    // TODO
-    return null;
+    if (!valueExists) return Exp.of(-1);
+    if (!referenceExists) return Exp.of(-2);
+    if (!conversionPossible) return Exp.of(-3);
+
+    return Exp.of(0);
+  }
+
+  private record RefRange(
+      BigDecimal origVal,
+      String origUnit,
+      BigDecimal refLowVal,
+      String refLowUnit,
+      BigDecimal refHighVal,
+      String refHighUnit) {
+
+    private String getLowUnit() {
+      return (refLowUnit != null) ? refLowUnit : refHighUnit;
+    }
+
+    private String getHighUnit() {
+      return (refHighUnit != null) ? refHighUnit : refLowUnit;
+    }
+
+    private boolean conversionRequired() {
+      return origUnit != null
+          && ((refLowUnit != null && !UnitConverter.equals(origUnit, refLowUnit))
+              || (refHighUnit != null && !UnitConverter.equals(origUnit, refHighUnit)));
+    }
+
+    private Result inRange() {
+      if (!conversionRequired()) {
+        if (refLowVal != null && origVal.compareTo(refLowVal) < 0) return Result.NOT_IN_RANGE;
+        if (refHighVal != null && origVal.compareTo(refHighVal) > 0) return Result.NOT_IN_RANGE;
+        return Result.IN_RANGE;
+      }
+
+      if (refLowVal != null) {
+        Optional<BigDecimal> conv =
+            UnitConverter.get().convertDirect(origVal, origUnit, getLowUnit());
+        if (conv.isEmpty()) return Result.CONVERSION_NOT_POSSIBLE;
+        if (origVal.compareTo(conv.get()) < 0) return Result.NOT_IN_RANGE;
+      }
+
+      if (refHighVal != null) {
+        Optional<BigDecimal> conv =
+            UnitConverter.get().convertDirect(origVal, origUnit, getHighUnit());
+        if (conv.isEmpty()) return Result.CONVERSION_NOT_POSSIBLE;
+        if (origVal.compareTo(conv.get()) < 0) return Result.NOT_IN_RANGE;
+      }
+
+      return Result.IN_RANGE;
+    }
+  }
+
+  private enum Result {
+    IN_RANGE,
+    NOT_IN_RANGE,
+    CONVERSION_NOT_POSSIBLE
   }
 }

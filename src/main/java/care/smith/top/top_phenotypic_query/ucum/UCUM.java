@@ -15,7 +15,7 @@ public class UCUM {
 
   private static UcumService SERVICE = getService();
 
-  private static UcumService getService() {
+  public static UcumService getService() {
     try {
       return new UcumEssenceService(
           UCUM.class.getClassLoader().getResourceAsStream("ucum-essence.xml"));
