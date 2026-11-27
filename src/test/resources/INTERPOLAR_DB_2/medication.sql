@@ -63,3 +63,37 @@ VALUES ('HOSP-0031-E-1-MS-1', 'Encounter/HOSP-0031-E-1', 'Patient/HOSP-0031', '2
        ('HOSP-0033-E-1-MS-1', 'Encounter/HOSP-0033-E-1', 'Patient/HOSP-0033', '2020-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
        ('HOSP-0034-E-1-MS-1', 'Encounter/HOSP-0034-E-1', 'Patient/HOSP-0034', '2020-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1'),
        ('HOSP-0035-E-1-MS-1', 'Encounter/HOSP-0035-E-1', 'Patient/HOSP-0035', '2019-01-01', null, null, 'http://fhir.de/CodeSystem/bfarm/atc', 'atc1');
+UPDATE db2dataprocessor_out.v_medicationadministration_last_version
+SET medadm_medication_system = NULL,
+    medadm_medication_code = NULL,
+    medadm_medicationcodeableconcept_system = 'http://fhir.de/CodeSystem/bfarm/atc',
+    medadm_medicationcodeableconcept_code = 'atc1'
+WHERE medadm_encounter_calculated_ref = 'Encounter/HOSP-0013-E-1';
+
+UPDATE db2dataprocessor_out.v_medicationrequest_last_version
+SET medreq_medication_system = 'urn:other',
+    medreq_medication_code = '',
+    medreq_medicationcodeableconcept_system = 'http://fhir.de/CodeSystem/bfarm/atc',
+    medreq_medicationcodeableconcept_code = 'atc1'
+WHERE medreq_encounter_calculated_ref = 'Encounter/HOSP-0023-E-1';
+
+UPDATE db2dataprocessor_out.v_medicationstatement_last_version
+SET medstat_medication_system = NULL,
+    medstat_medication_code = 'different',
+    medstat_medicationcodeableconcept_system = 'http://fhir.de/CodeSystem/bfarm/atc',
+    medstat_medicationcodeableconcept_code = 'atc1'
+WHERE medstat_encounter_calculated_ref = 'Encounter/HOSP-0033-E-1';
+
+-- A complete enriched pair takes precedence over a matching direct pair.
+UPDATE db2dataprocessor_out.v_medicationadministration_last_version
+SET medadm_effectivedatetime = '2020-06-01',
+    medadm_medicationcodeableconcept_system = 'http://fhir.de/CodeSystem/bfarm/atc',
+    medadm_medicationcodeableconcept_code = 'atc1'
+WHERE medadm_encounter_calculated_ref = 'Encounter/HOSP-0004-E-1';
+
+-- A direct code cannot borrow the system from an incomplete enriched pair.
+INSERT INTO db2dataprocessor_out.v_medicationadministration_last_version (
+    medadm_id, medadm_encounter_calculated_ref, medadm_patient_ref, medadm_effectivedatetime,
+    medadm_medication_system, medadm_medicationcodeableconcept_code)
+VALUES ('HOSP-0004-E-1-MA-2', 'Encounter/HOSP-0004-E-1', 'Patient/HOSP-0004', '2020-06-01',
+        'http://fhir.de/CodeSystem/bfarm/atc', 'atc1');
