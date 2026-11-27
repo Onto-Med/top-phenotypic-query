@@ -170,6 +170,15 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.4</version>
+                <configuration>
+                    <!--
+                      hapi-fhir-base uses java.util.ResourceBundle.Control in
+                      HapiLocalizer, which is not supported in named modules
+                      (UnsupportedOperationException). Run the tests on the
+                      class path until HAPI FHIR supports JPMS.
+                    -->
+                    <useModulePath>false</useModulePath>
+                </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.junit.jupiter</groupId>
